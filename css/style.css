@@ -1,0 +1,277 @@
+body{
+font-family:helvetica, arial, sans-serif;
+margin:0;
+color: #666666;
+}
+
+a:link, a:visited{
+text-decoration:none;
+color: #999999;
+}
+
+a:hover{
+text-decoration:none;
+border-bottom:#999 dotted 1px;
+}
+
+a img{
+	border:none;
+}
+
+h1.logo {
+width: 166px;
+height:75px;
+text-indent:-9009px;
+background:url(../images/bike-mapper-logo-small.png) 0 0 no-repeat;
+margin:3px 0 0 3px;
+}
+
+h1.logo a{
+	display:block;
+	width: 166px;
+	height:75px;
+}
+
+#header .logo img {
+	border:0;
+}
+
+ul.input_boxes{
+	padding:0;
+	margin:0;
+}
+
+ul.input_boxes li{
+	list-style-type:none;
+	padding:4px 0;
+	margin:0;
+	font-size:24px;
+	font-weight:bold;
+}
+
+.origin{
+	color:#00e132;
+}
+
+.destination{
+	color:#f76955;
+}
+
+ul.input_boxes li.location{
+	display:none;
+	font-size:12px; 
+	font-weight:normal;
+	padding:0;
+}
+
+ul.input_boxes li.location img{
+	vertical-align:middle;
+}
+
+ul.input_boxes li.location a{
+	color: red;
+	padding-left:5px;
+}
+
+ul.input_boxes li .textbox{
+	width: 230px;
+}
+
+#content{
+	position:relative;
+	overflow:hidden;
+}
+
+#sidebar{
+	position:absolute;
+	width:250px;
+}
+
+#sidebar-top{
+	max-height:410px;
+	height:410px;
+}
+
+#sidebar #inputs{
+	padding-left:5px;
+	border-bottom: solid 5px #999999;
+}
+
+#submit{
+	
+}
+
+#submit:hover{
+	filter:alpha(opacity=70);   /* Internet Explorer       */
+   	-moz-opacity:0.7;           /* Mozilla 1.6 and below   */
+   	opacity: 0.7;               /* newer Mozilla and CSS-3 */
+}
+
+#sidebar #stats{
+	padding:3px 5px;
+	font-size:14px;
+}
+
+#sidebar #stats a{
+	color:#666;
+}
+
+#sidebat #stats .links{
+	padding-top:3px;
+}
+
+#directions{
+	padding:0 5px;
+	border-top: solid 1px #999999;
+	font-size:11px;
+	overflow:auto;
+}
+
+#directions ul{
+	padding:0px;
+}
+
+#directions li{
+	list-style-type:none;
+	margin:5px 0;
+}
+
+#directions li .direction{
+	width:185px;
+	max-width:185px;
+	float:left;
+}
+
+#directions li .distance{
+	width:50px;
+	float:right;
+	display:none;
+}
+
+
+
+/* MAP */
+
+#map_wrapper{
+	clear:both;
+	border-left: solid 5px #999999;
+	margin-left:250px;
+	color:#000;
+	font-size:11px;
+	position:relative;
+}
+
+#map_canvas{
+min-height:500px;
+}
+
+#map_canvas .message {
+	font-size:14px;
+}
+
+#map_canvas a {
+	color:#5b5b68;
+	text-decoration:none;
+}
+
+#map_canvas a {
+	text-decoration:underline;
+}
+
+.popup{
+	position:absolute; 
+	display:none;
+	width:200px;
+	border:1px solid #fff;
+	background:#000 url(../images/tip.png) 10px 50% no-repeat;
+	filter:alpha(opacity=70);   /* Internet Explorer       */
+   	-moz-opacity:0.7;           /* Mozilla 1.6 and below   */
+   	opacity: 0.7;               /* newer Mozilla and CSS-3 */
+ 	text-align:left;
+	-moz-border-radius: 5px;
+	-webkit-border-radius: 5px;
+	color:#fff;
+	padding:15px 15px 15px 40px; 
+	font-size:12px; 
+	z-index:150;
+}
+
+.close{
+	border:none;
+	position:absolute;
+	top:5px;
+	right:5px;
+}
+
+#loading_image{
+	top:50%; 
+	right:50%;
+	background:#000;
+	text-align:center;
+}
+
+
+#dragtext{
+	top:10px;
+	right:50%;
+	width:250px;
+}
+
+/* Profile */
+
+#profile{
+	margin-left:250px;
+	position:relative;
+	border-top: solid 5px #999999;
+	border-left: solid 5px #999999;
+	border-style:solid 1px #999999;
+	height:190px;
+	clear:both;
+}
+
+/* FOOTER */
+#footer {
+	float:left;
+	z-index:1000;
+	background:#ccc;
+	height:30px;
+	width:80px;
+	vertical-align:bottom;
+text-align:center;
+font-size:11px;
+}
+
+#footer a:link, #footer a:visited{
+text-decoration:none;
+color: #999999;
+}
+
+#footer a:hover{
+text-decoration:underline;
+}
+
+#footer ul li {
+display:inline;
+list-style-type: none;
+padding: 0 5px;
+}
+
+
+/* simple css-based tooltip */ 
+div.tooltip { 
+    background:#000 url(../images/tip.png) 10px 50% no-repeat;
+    border:1px solid #fff; 
+    padding:15px 15px 15px 40px; 
+    width:200px; 
+    display:none; 
+    color:#fff; 
+    text-align:left; 
+    font-size:12px; 
+	z-index:150;
+ 	-moz-border-radius: 5px;
+	-webkit-border-radius: 5px;
+    /* outline radius for mozilla/firefox only */ 
+    -moz-box-shadow:0 0 10px #000; 
+    -webkit-box-shadow:0 0 10px #000; 
+}
+
