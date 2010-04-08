@@ -24,6 +24,10 @@ Application = function() {
 	 var self = Application;
 	
 	 self.showTips = true; // Show Tooltips by default
+	
+	 // Define Route Server
+	 self.routeserver = "ec2-75-101-179-98.compute-1.amazonaws.com";
+	
 	 self.tooltips();
 	 if (navigator.geolocation) {  
 	 	self.addGeoLocator();
@@ -31,19 +35,19 @@ Application = function() {
 	
       if (GBrowserIsCompatible()) {self.launchMap();}
 		
-		//bounds	
-		/*$.getJSON("http://ec2-174-129-177-60.compute-1.amazonaws.com/bounds?jsoncallback=?",
+		//Get Bounds From Route Server	
+		$.getJSON("http://"+ self.routeserver+"/bounds?jsoncallback=?",
 		        function(data){
 		        	l_lat = data[1];
 		        	h_lat = data[3];
 		        	l_lng = data[0];
 		        	h_lng = data[2];
-		        });*/
+		        });
 		
-		l_lat = 37.201897600000002;
+		/*l_lat = 37.201897600000002;
        	h_lat = 38.501967;
        	l_lng = -122.7310167;
-       	h_lng = -121.5197762;
+       	h_lng = -121.5197762;*/
 		
 		//Detect saved route from URL
 		if ($.getUrlVar('start')!=undefined && $.getUrlVar('end')!=undefined){
@@ -209,18 +213,11 @@ Application = function() {
 		var self = Application;
 		
 		$('#loading_image').show(); // show loading image, as request is about to start
-		
-		var ROUTESERVER = "ec2-75-101-179-98.compute-1.amazonaws.com";
-	
-		/* Code for detecting if BART is Best Method
-		if((sreg=="B"&&ereg=="C")||(sreg=="C"&&ereg=="B")||(sreg=="B"&&ereg=="D")||(sreg=="D"&&ereg=="B")||(sreg=="C"&&ereg=="D")||(sreg=="D"&&ereg=="C")){alert("The best way to take this trip is by hopping on BART.");}
-		*/
 	
 		if (typeof(routeoverlay) != "undefined"){routeoverlay.remove();}		
-		//see BME's comment thread for discussion on callback - http://docs.jquery.com/Ajax/jQuery.getJSON
-		//alert("http://"+ROUTESERVER+"/path?"+request+"&jsoncallback=?");
+		//alert("http://"+self.routeserver+"/path?"+request+"&jsoncallback=?");
 		
-		$.getJSON("http://"+ROUTESERVER+"/path?"+request+"&jsoncallback=?",
+		$.getJSON("http://"+self.routeserver+"/path?"+request+"&jsoncallback=?",
 		        function(data){
 			
 					geometry = data[1];
@@ -468,7 +465,6 @@ Application = function() {
   };
 
 }();
-
 
 google.load('visualization', '1', {packages:['scatterchart']});
 google.setOnLoadCallback(function(){
