@@ -280,9 +280,13 @@ Application = function() {
 					GEvent.addListener(start_marker,'dragend',function(position){self.recalc();});
 					GEvent.addListener(end_marker,'dragend',function(position){self.recalc();});
 					
-					//Stats			
+					//Set Page Title
+					document.title = $('#startbox').val()+" to "+$('#finishbox').val()+" | San Francisco Bay Area Bike Mapper";
 					
-					tripstats = "<div class='totaldistance'><img src='images/map.png'> Distance: " + Math.round(routeoverlay.getLength()/1609.344*10)/10 + " miles</div>"; //figures are in meters
+					//Stats			
+					tripstats = "<div class='title'>Directions to "+$('#finishbox').val()+"</div>"; 
+					
+					tripstats += "<div class='totaldistance'><img src='images/map.png'> Distance: " + Math.round(routeoverlay.getLength()/1609.344*10)/10 + " miles</div>"; //figures are in meters
 					
 					tripstats += "<div class='time'><img src='images/time.png'> Time: " + Math.round((routeoverlay.getLength()/1609.344)/0.166) + " to " + Math.round((routeoverlay.getLength()/1609.344)/0.125) + " min</div>";
 					
@@ -299,7 +303,7 @@ Application = function() {
 						data[0].shift();
 					}
 					
-					narrative = "<ul><li>Begin at "+data[0][0][1]+".</li>";
+					narrative = "<ol><li>Begin at "+data[0][0][1]+".</li>";
 					
 					var len=data[0].length;
 					for(var i=0; i<len; i++) {
@@ -340,10 +344,12 @@ Application = function() {
 						
 					}
 					
+					narrative += "</ol>";
 
 					//Narrative
 					
-					document.getElementById("directions").innerHTML = narrative;
+					$("#directions").show();
+					$("#directions").html(narrative);
 	
 					profile = data[2];
 					
@@ -384,7 +390,7 @@ Application = function() {
       	table.addColumn('number', 'Elevation');
       	table.addRows(profile);
 		var windowwidth = window.innerWidth;
-		chart.draw(table, {width: windowwidth-255, height: 190, titleX: 'Distance along route (mi)', titleY: 'Elevation (ft)', legend: 'none', lineSize: 2, pointSize: 0});
+		chart.draw(table, {width: windowwidth-305, height: 190, titleX: 'Distance along route (mi)', titleY: 'Elevation (ft)', legend: 'none', lineSize: 2, pointSize: 0});
 		
 	},
 

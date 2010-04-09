@@ -21,17 +21,19 @@
 				<div class="tooltip"></div>
 				<form id="inputs" onsubmit="$(Application.launch(this)); return false;" style="margin:0;" method="post" action=""> <!-- note workaround: return false to not reload page -->
 					<ul class="input_boxes">
-						<li><img src="images/green.png" alt="Origin" style="height:24px;width:24px;" /> <span class="origin">Origin</span><br /><input id="startbox" name="startbox" type="text" class="textbox" value="Concord, CA"  title="Enter your starting address, city, zip or intersection here" /></li>
-						<li id="slocation" class="location"><img src="images/geolocation.jpg" alt="GeoLocation" style="height:24px;width:24px;" /><a href="#" onclick="navigator.geolocation.getCurrentPosition(Application.getStartGeoLocator,Application.showGeoLocatorError);">Use Current Location</a></li>
-						<li><img src="images/red.png" alt="Destination" style="height:24px;width:24px;" /> <span class="destination">Destination</span><br /><input id="finishbox" name="finishbox" type="text"  class="textbox" value="Walnut Creek, CA"  title="Enter your ending address, city, zip or intersection here"/></li>
-						<li id="elocation" class="location"><img src="images/geolocation.jpg" alt="GeoLocation" style="height:24px;width:24px;" /><a href="#" onclick="navigator.geolocation.getCurrentPosition(Application.getEndGeoLocator,Application.showGeoLocatorError);">Use Current Location</a></li>
-						<li><img src="images/hill.png" alt="Hils" style="height:24px;width:24px;" /> Hills?
-						<select id="tolerancebox" name="tolerancebox">
-							<option value="80" selected="selected">Bike Mapper 1</option>
-							<option value="81">Bike Mapper 2</option>
-						</select>
+						<li><img src="images/green-24x24.png" alt="Origin" style="height:24px;width:24px;float:left;" /><input id="startbox" name="startbox" type="text" class="textbox" value="Concord, CA"  title="Enter your starting address, city, zip or intersection here" /></li>
+						<li id="slocation" class="geolocation"><img src="images/geolocation.png" alt="GeoLocation" style="height:16px;width:16px;" /><a href="#" onclick="navigator.geolocation.getCurrentPosition(Application.getStartGeoLocator,Application.showGeoLocatorError);">Use Current Location</a></li>
+						<li><img src="images/red-24x24.png" alt="Destination" style="height:24px;width:24px;float:left;" /><input id="finishbox" name="finishbox" type="text"  class="textbox" value="Walnut Creek, CA"  title="Enter your ending address, city, zip or intersection here"/></li>
+						<li id="elocation" class="geolocation"><img src="images/geolocation.png" alt="GeoLocation" style="height:16px;width:16px;" /><a href="#" onclick="navigator.geolocation.getCurrentPosition(Application.getEndGeoLocator,Application.showGeoLocatorError);">Use Current Location</a></li>
+						<li><img src="images/hill.png" alt="Hills" style="height:24px;width:24px;float:left;" />
+							<div class="hills"> Hills?
+							<select id="tolerancebox" name="tolerancebox">
+								<option value="80" selected="selected">Bike Mapper 1</option>
+								<option value="81">Bike Mapper 2</option>
+							</select>
+							</div>
 						</li>
-						<li><input id="submit" type="image" value="submit" src="images/mapit.png" title="Map It" /></li>
+						<li><input id="submit" type="submit" value="Get Directions" title="Get Directions" /></li>
 					</ul>
 				</form>
 				<div id="stats"></div>
