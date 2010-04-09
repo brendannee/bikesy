@@ -384,20 +384,35 @@ Application = function() {
     launchMap : function() { 
       var self = Application;
       self.map = new GMap2(document.getElementById("map_canvas"));
-      self.map.setMapType(G_PHYSICAL_MAP); 
+      self.map.setMapType(G_PHYSICAL_MAP);
       self.map.setCenter(new GLatLng(37.880002, -122.189941), 11);
+	  //self.googleTransit();
+	  self.googleBike();
       self.map.setUIToDefault();
 	  self.addCreditsPane();
-	  //self.googleTransit();
     },
 
-	googleTransit : function (){
+	/*googleTransit : function (){
 		var self = Application;
 		// Load Google Transit Layer
-		var gTransitTileUrlTemplate = 'http://mlt1.google.com/mapslt?lyrs=transit&x={X}&y={Y}&z={Z}&w=256&h=256&gl=us&hl=en';
+		var gTransitTileUrlTemplate = 'http://mt1.google.com/vt/lyrs=m@121,transit|vm:1&hl=en&opts=r&x={X}&y={Y}&z={Z}';
 		var tileLayerOverlay = new GTileLayerOverlay(
 		new GTileLayer(null, null, null, {
 		tileUrlTemplate: gTransitTileUrlTemplate,
+		isPng:true,
+		opacity:0.8
+		})
+		);
+		self.map.addOverlay(tileLayerOverlay);	
+	},*/
+	
+	googleBike : function (){
+		var self = Application;
+		// Load Google Bike Layer
+		var gBikeTileUrlTemplate = 'http://mt1.google.com/vt/lyrs=m@121,bike&hl=en&x={X}&y={Y}&z={Z}';
+		var tileLayerOverlay = new GTileLayerOverlay(
+		new GTileLayer(null, null, null, {
+		tileUrlTemplate: gBikeTileUrlTemplate,
 		isPng:true,
 		opacity:0.8
 		})
