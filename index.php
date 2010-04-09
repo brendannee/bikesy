@@ -25,14 +25,12 @@
 						<li id="slocation" class="location"><img src="images/geolocation.jpg" alt="GeoLocation" style="height:24px;width:24px;" /><a href="#" onclick="navigator.geolocation.getCurrentPosition(Application.getStartGeoLocator,Application.showGeoLocatorError);">Use Current Location</a></li>
 						<li><img src="images/red.png" alt="Destination" style="height:24px;width:24px;" /> <span class="destination">Destination</span><br /><input id="finishbox" name="finishbox" type="text"  class="textbox" value="Walnut Creek, CA"  title="Enter your ending address, city, zip or intersection here"/></li>
 						<li id="elocation" class="location"><img src="images/geolocation.jpg" alt="GeoLocation" style="height:24px;width:24px;" /><a href="#" onclick="navigator.geolocation.getCurrentPosition(Application.getEndGeoLocator,Application.showGeoLocatorError);">Use Current Location</a></li>
-						<!--<li><img src="images/hill.png" alt="Hils" style="height:24px;width:24px;" /> Hills?
-						<select name="tolerancebox">
-							<option value="1000">Avoid at all Costs</option>
-							<option value="100">I'd rather not</option>
-							<option value="25" selected="selected">A reasonable route</option>
-							<option value="0">Bring it on!</option>
+						<li><img src="images/hill.png" alt="Hils" style="height:24px;width:24px;" /> Hills?
+						<select id="tolerancebox" name="tolerancebox">
+							<option value="80" selected="selected">Bike Mapper 1</option>
+							<option value="81">Bike Mapper 2</option>
 						</select>
-						</li>-->
+						</li>
 						<li><input id="submit" type="image" value="submit" src="images/mapit.png" title="Map It"></input></li>
 					</ul>
 				</form>

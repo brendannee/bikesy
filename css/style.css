@@ -88,8 +88,8 @@ ul.input_boxes li .textbox{
 }
 
 #sidebar-top{
-	max-height:410px;
-	height:410px;
+	max-height:430px;
+	height:430px;
 }
 
 #sidebar #inputs{
@@ -112,12 +112,18 @@ ul.input_boxes li .textbox{
 	font-size:14px;
 }
 
+#sidebar #stats div{
+	margin-top:3px;
+}
+
 #sidebar #stats a{
 	color:#666;
 }
 
-#sidebat #stats .links{
-	padding-top:3px;
+#sidebar #stats img{
+	border:none;
+	height:12px;
+	width:12px;
 }
 
 #directions{

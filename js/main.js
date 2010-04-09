@@ -53,6 +53,7 @@ Application = function() {
 		if ($.getUrlVar('start')!=undefined && $.getUrlVar('end')!=undefined){
 			$('#startbox').val($.getUrlVar('start').replace(/\+/g,' '));
 			$('#finishbox').val($.getUrlVar('end').replace(/\+/g,' '));
+			$('#tolerancebox').val($.getUrlVar('tolerance').replace(/\+/g,' '));
 			self.launch($('form')[0]);
 		}
 		
@@ -109,7 +110,8 @@ Application = function() {
 		var self = Application;
 		
 		start = form.startbox.value;
-		end = form.finishbox.value
+		end = form.finishbox.value;
+		tolerance = form.tolerancebox.value;
 		
 		//Search for Richmond, if found add usa to end to avoid confusion with Canada
 		if (start.search(/richmond/i) != -1) {
@@ -141,7 +143,7 @@ Application = function() {
 						alert("Please Enter an Ending Address");
 					} else if(self.bounds(slat,slng,elat,elng)){
 					
-				      	self.drawpath("lat1="+slat+"&lng1="+slng+"&lat2="+elat+"&lng2="+elng, true);
+				      	self.drawpath("lat1="+slat+"&lng1="+slng+"&lat2="+elat+"&lng2="+elng, true, tolerance);
 						self.map.panTo(new GLatLng((slat+elat)/2,(slng+elng)/2));}
 	
 					else{
@@ -165,7 +167,7 @@ Application = function() {
 	  if (!response || response.Status.code != 200) {
 	  } else {
 	    place = response.Placemark[0];
-		document.inputs.startbox.value = place.address;
+		$('#startbox').val(place.address);
 	  }
 	},
 
@@ -173,7 +175,7 @@ Application = function() {
 	  if (!response || response.Status.code != 200) {
 	  } else {
 	    place = response.Placemark[0];
-		document.inputs.finishbox.value = place.address;
+		$('#finishbox').val(place.address);
 	  }
 	},
 	
@@ -185,6 +187,7 @@ Application = function() {
 			elat = end_marker.getLatLng().lat();
 			elng = end_marker.getLatLng().lng();
 			distance = self.dist(slat,elat,slng,elng);
+			var tolerance = $('#tolerancebox').val();
 			
 			
 			if(self.bounds(slat,slng,elat,elng)){
@@ -196,7 +199,7 @@ Application = function() {
 				this.getAddresses(sCoords,eCoords);
 				
 				routeoverlay.remove();
-				self.drawpath("lat1="+slat+"&lng1="+slng+"&lat2="+elat+"&lng2="+elng, false);
+				self.drawpath("lat1="+slat+"&lng1="+slng+"&lat2="+elat+"&lng2="+elng, false, tolerance);
 			
 			}
 			else{
@@ -208,7 +211,7 @@ Application = function() {
 	},
 	
 		
-	drawpath: function(request,redraw){
+	drawpath: function(request,redraw, tolerance){
 	
 		var self = Application;
 		
@@ -217,7 +220,7 @@ Application = function() {
 		if (typeof(routeoverlay) != "undefined"){routeoverlay.remove();}		
 		//alert("http://"+self.routeserver+"/path?"+request+"&jsoncallback=?");
 		
-		$.getJSON("http://"+self.routeserver+"/path?"+request+"&jsoncallback=?",
+		$.getJSON("http://"+self.routeserver+":"+tolerance+"/path?"+request+"&jsoncallback=?",
 		        function(data){
 			
 					geometry = data[1];
@@ -275,14 +278,14 @@ Application = function() {
 					
 					//Stats			
 					
-					tripstats = "<div class='totaldistance'>Total distance: " + Math.round(routeoverlay.getLength()/1609.344*10)/10 + " miles</div>"; //figures are in meters
+					tripstats = "<div class='totaldistance'><img src='images/map.png'> Distance: " + Math.round(routeoverlay.getLength()/1609.344*10)/10 + " miles</div>"; //figures are in meters
 					
-					tripstats += "<div class='time'>Time Estimate: " + Math.round((routeoverlay.getLength()/1609.344)/0.166) + " to " + Math.round((routeoverlay.getLength()/1609.344)/0.125) + " min</div>";
+					tripstats += "<div class='time'><img src='images/time.png'> Time: " + Math.round((routeoverlay.getLength()/1609.344)/0.166) + " to " + Math.round((routeoverlay.getLength()/1609.344)/0.125) + " min</div>";
 					
-					linkURL = "http://511contracosta.org/bike/?start=" + $('#startbox').val().replace(/ /g, "+") + "&end=" + $('#finishbox').val().replace(/ /g, "+");
+					linkURL = "http://511contracosta.org/bike/?start=" + $('#startbox').val().replace(/ /g, "+") + "&end=" + $('#finishbox').val().replace(/ /g, "+") + "&tolerance=" + $('#tolerancebox').val().replace(/ /g, "+");
 					
-					tripstats += "<div class='links'><a href='" + linkURL + "' title='Direct Link to this route'><img src='images/link.png'> Get Permanent Link to Route</a><br/>";
-					tripstats += "<a href='http://www.addtoany.com/add_to/twitter?linkurl=" + linkURL + "&linkname=Bike Route from " + $('#startbox').val().replace(/ /g, "+") + " to " + $('#finishbox').val().replace(/ /g, "+") + "&linknote='><img src='images/twitter.png'> Tweet This Route</a></div>";
+					tripstats += "<div class='link'><a href='" + linkURL + "' title='Direct Link to this route'><img src='images/link.png'> Get Permanent Link to Route</a></div>";
+					tripstats += "<div class='twitter'><a href='http://www.addtoany.com/add_to/twitter?linkurl=" + linkURL + "&linkname=Bike Route from " + $('#startbox').val().replace(/ /g, "+") + " to " + $('#finishbox').val().replace(/ /g, "+") + "&tolerance=" + $('#tolerancebox').val().replace(/ /g, "+") + "&linknote='><img src='images/twitter.png'> Tweet This Route</a></div>";
 					
 					document.getElementById("stats").innerHTML = tripstats;
 					
@@ -456,13 +459,13 @@ Application = function() {
 	getStartGeoLocator : function(position) {
 		sCoords = new GLatLng(position.coords.latitude,position.coords.longitude);
 		geoCoder = new GClientGeocoder();
-		geoCoder.getLocations(sCoords, function(response) {place = response.Placemark[0];document.inputs.startbox.value = place.address;});
+		geoCoder.getLocations(sCoords, function(response) {place = response.Placemark[0]; $('#startbox').val(place.address);});
 	},
 	
 	getEndGeoLocator : function(position) {
 		eCoords = new GLatLng(position.coords.latitude,position.coords.longitude);
 		geoCoder = new GClientGeocoder();
-		geoCoder.getLocations(eCoords, function(response) {place = response.Placemark[0];document.inputs.finishbox.value = place.address;});
+		geoCoder.getLocations(eCoords, function(response) {place = response.Placemark[0]; $('#finishbox').val(place.address);});
 	},
     
     proper : function (str){
