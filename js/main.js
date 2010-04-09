@@ -432,7 +432,7 @@ Application = function() {
 		  me.panel.style.width = "400px";
 		  me.panel.style.height = "15px";
 		
-		  me.panel.innerHTML = "Sponsored by <a href='http://511contracosta.org'>511 Contra Costa</a> &nbsp; Site by <a href='http://blnktag.com' title='BlinkTag Inc'>BlinkTag Inc</a>";
+		  me.panel.innerHTML = "Sponsored by <a href='http://511contracosta.org'  title='Visit 511ContraCosta.org'>511 Contra Costa</a> &nbsp; Site by <a href='http://blnktag.com' title='BlinkTag Inc'>BlinkTag Inc</a>";
 		  map.getContainer().appendChild(me.panel);
 		  return me.panel;
 		};
@@ -491,9 +491,10 @@ google.setOnLoadCallback(function(){
 		$(window).bind("resize", resizeWindow);
 		function resizeWindow( e ) {
 			var newWindowHeight = $(window).height();
+			var sidebarTopHeight = parseInt($("#sidebar-top").css("height"));
 			$("#sidebar").css("height", (newWindowHeight) );
 			$("#sidebar").css("max-height", (newWindowHeight) );
-			$("#directions").css("height", (newWindowHeight-375) );
+			$("#directions").css("height", (newWindowHeight-sidebarTopHeight));
 			$("#map_canvas").css("height", (newWindowHeight-195) );
 			$("#loading_image").css("top", ((newWindowHeight-195)/2) );
 		}

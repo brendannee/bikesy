@@ -46,6 +46,7 @@
 			<div id="dragtext" class="popup">Drag and drop icons to recalculate route<a href="#" onclick="$('#dragtext').hide();Application.showTips=false;"><img src="images/close.png" class="close" alt="close" title="Hide" /></a></div>
 		</div>
 		<div id="profile" title="Elevation Profile"></div>
+		<div id="bottomCredits">Sponsored by <a href='http://511contracosta.org' title='Visit 511ContraCosta.org'>511 Contra Costa</a> &nbsp; Site by <a href='http://blnktag.com' title='BlinkTag Inc'>BlinkTag Inc</a></div>
 	</div>
 
 	<div id="placeholder"></div>
