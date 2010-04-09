@@ -38,10 +38,10 @@ Application = function() {
 		//Get Bounds From Route Server	
 		$.getJSON("http://"+ self.routeserver+"/bounds?jsoncallback=?",
 		        function(data){
-		        	l_lat = data[1];
-		        	h_lat = data[3];
-		        	l_lng = data[0];
-		        	h_lng = data[2];
+		        	self.l_lat = data[1];
+		        	self.h_lat = data[3];
+		        	self.l_lng = data[0];
+		        	self.h_lng = data[2];
 		        });
 		
 		/*l_lat = 37.201897600000002;
@@ -53,7 +53,9 @@ Application = function() {
 		if ($.getUrlVar('start')!=undefined && $.getUrlVar('end')!=undefined){
 			$('#startbox').val($.getUrlVar('start').replace(/\+/g,' '));
 			$('#finishbox').val($.getUrlVar('end').replace(/\+/g,' '));
-			$('#tolerancebox').val($.getUrlVar('tolerance').replace(/\+/g,' '));
+			if($.getUrlVar('tolerance')!=undefined) {
+				$('#tolerancebox').val($.getUrlVar('tolerance').replace(/\+/g,' '));
+			}
 			self.launch($('form')[0]);
 		}
 		
@@ -61,7 +63,7 @@ Application = function() {
 	},
 	
 	bounds : function (lat1, lng1, lat2, lng2){
-			if(lat1>h_lat||lat2>h_lat||lat1<l_lat||lat2<l_lat||lng1>h_lng||lng2>h_lng||lng1<l_lng||lng2<l_lng){return false;}
+			if(lat1>self.h_lat||lat2>self.h_lat||lat1<self.l_lat||lat2<self.l_lat||lng1>self.h_lng||lng2>self.h_lng||lng1<self.l_lng||lng2<self.l_lng){return false;}
 			else{return true;}
 
 	},
@@ -122,6 +124,10 @@ Application = function() {
 		}
 		
 		geoCoder = new GClientGeocoder();
+		var slat;
+		var slng;
+		var elat;
+		var elng;
 		geoCoder.getLatLng(start,
 			function(coord){
 				slat = coord.lat();
