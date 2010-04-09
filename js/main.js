@@ -135,8 +135,6 @@ Application = function() {
 					elat = coord.lat();
 					elng = coord.lng();
 				
-					distance = self.dist(slat,elat,slng,elng);
-				
 					if(form.startbox.value==''){
 						alert("Please Enter a Starting Address");
 					} else if(form.finishbox.value==''){
