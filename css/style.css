@@ -146,12 +146,11 @@ ul.input_boxes li .hills{
 #directions li .direction{
 	width:185px;
 	max-width:185px;
-	float:left;
+	display:inline;
 }
 
 #directions li .distance{
 	width:50px;
-	float:right;
 	display:none;
 }
 
@@ -166,6 +165,45 @@ ul.input_boxes li .hills{
 	color:#000;
 	font-size:11px;
 	position:relative;
+}
+
+#map_wrapper a:hover{
+	border:none;
+}
+
+.map-button{
+	color:#0000cc;
+	text-align:center;
+	background-color:#FFF;
+	font:"small Arial";
+	border:1px solid #000;
+	margin:3px;
+}
+
+.map-button img{
+	vertical-align:top;
+}
+
+.map-button a{
+	color:#000;
+	display:block;
+	padding:2px;
+}
+
+#permalink{
+	position:absolute;
+	top:30px;
+	right:85px;
+	width:11em;
+	display:none;
+}
+
+#twitter{
+	position:absolute;
+	top:30px;
+	right:5px;
+	width:7em;
+	display:none;
 }
 
 #map_canvas{

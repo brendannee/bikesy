@@ -283,19 +283,25 @@ Application = function() {
 					//Set Page Title
 					document.title = $('#startbox').val()+" to "+$('#finishbox').val()+" | San Francisco Bay Area Bike Mapper";
 					
-					//Stats			
+					//Add Trip Stats			
 					tripstats = "<div class='title'>Directions to "+$('#finishbox').val()+"</div>"; 
 					
 					tripstats += "<div class='totaldistance'><img src='images/map.png'> Distance: " + Math.round(routeoverlay.getLength()/1609.344*10)/10 + " miles</div>"; //figures are in meters
 					
 					tripstats += "<div class='time'><img src='images/time.png'> Time: " + Math.round((routeoverlay.getLength()/1609.344)/0.166) + " to " + Math.round((routeoverlay.getLength()/1609.344)/0.125) + " min</div>";
 					
+					$("#stats").html(tripstats);
+					
+					//Create Link URL
 					linkURL = "http://511contracosta.org/bike/?start=" + $('#startbox').val().replace(/ /g, "+") + "&end=" + $('#finishbox').val().replace(/ /g, "+") + "&tolerance=" + $('#tolerancebox').val().replace(/ /g, "+");
 					
-					tripstats += "<div class='link'><a href='" + linkURL + "' title='Direct Link to this route'><img src='images/link.png'> Get Permanent Link to Route</a></div>";
-					tripstats += "<div class='twitter'><a href='http://www.addtoany.com/add_to/twitter?linkurl=" + linkURL + "&linkname=Bike Route from " + $('#startbox').val().replace(/ /g, "+") + " to " + $('#finishbox').val().replace(/ /g, "+") + "&tolerance=" + $('#tolerancebox').val().replace(/ /g, "+") + "&linknote='><img src='images/twitter.png'> Tweet This Route</a></div>";
+					//Add Permalink Control on top of map
+					$("#permalink").show();
+					$("#permalink").html("<a href='" + linkURL + "' title='Direct Link to this route'><img src='images/link.png'> Permalink to Route</a>");
 					
-					document.getElementById("stats").innerHTML = tripstats;
+					//Add Twitter Control on top of map
+					$("#twitter").show();
+					$("#twitter").html("<a href='http://www.addtoany.com/add_to/twitter?linkurl=" + linkURL + "&linkname=Bike Route from " + $('#startbox').val().replace(/ /g, "+") + " to " + $('#finishbox').val().replace(/ /g, "+") + "&tolerance=" + $('#tolerancebox').val().replace(/ /g, "+") + "&linknote='><img src='images/twitter.png'> Tweet This</a>");					
 					
 					//Narrative
 					if (data[0][0][1] == 'nameless') {

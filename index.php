@@ -28,8 +28,8 @@
 						<li><img src="images/hill.png" alt="Hills" style="height:24px;width:24px;float:left;" />
 							<div class="hills"> Hills?
 							<select id="tolerancebox" name="tolerancebox">
-								<option value="80" selected="selected">Bike Mapper 1</option>
-								<option value="81">Bike Mapper 2</option>
+								<option value="81" selected="selected">Bike Mapper 1</option>
+								<option value="80">Bike Mapper 2</option>
 							</select>
 							</div>
 						</li>
@@ -44,6 +44,8 @@
 		</div>
 		<div id="map_wrapper">
 			<div id="map_canvas"></div>
+			<div id="permalink" class="map-button"><a href='" + linkURL + "' title='Direct Link to this route'><img src='images/link.png'> Permalink to Route</a></div>
+			<div id="twitter" class="map-button"><a href=''><img src='images/twitter.png'> Tweet This</a></div>
 			<div id="loading_image" class="popup"><img src="images/ajax-loader.gif" alt="Loading..." /><p>Loading...</p></div>
 			<div id="dragtext" class="popup">Drag and drop icons to recalculate route<a href="#" onclick="$('#dragtext').hide();Application.showTips=false;"><img src="images/close.png" class="close" alt="close" title="Hide" /></a></div>
 		</div>
