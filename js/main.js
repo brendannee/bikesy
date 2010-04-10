@@ -243,9 +243,13 @@ Application = function() {
 		
 		$('#loading_image').show(); // show loading image, as request is about to start
 	
-		if (typeof(routeoverlay) != "undefined"){routeoverlay.remove();}		
-		//alert("http://"+self.routeserver+"/path?"+request+"&jsoncallback=?");
+		if (typeof(routeoverlay) != "undefined"){routeoverlay.remove();}	
 		
+		//Clear all points
+		self.map.clearOverlays();
+		self.googleBike();
+		
+		//alert("http://"+self.routeserver+"/path?"+request+"&jsoncallback=?");
 		$.getJSON("http://"+self.routeserver+":"+tolerance+"/path?"+request+"&jsoncallback=?",
 		        function(data){
 			
@@ -392,6 +396,10 @@ Application = function() {
 					//Show Directions
 					$("#directions").show();
 					
+					//Resize sidebar
+					var newWindowHeight = $(window).height();
+					var sidebarTopHeight = parseInt($("#sidebar-top").css("height"));
+					$("#directions").css("height", (newWindowHeight-sidebarTopHeight-parseInt($("#directions").css("border-top-width").replace(/px/g,""))));
 					
 					// Create Elevation Profile
 					profile = data[2];
@@ -533,7 +541,7 @@ google.setOnLoadCallback(function(){
 			var sidebarTopHeight = parseInt($("#sidebar-top").css("height"));
 			$("#sidebar").css("height", (newWindowHeight) );
 			$("#sidebar").css("max-height", (newWindowHeight) );
-			$("#directions").css("height", (newWindowHeight-sidebarTopHeight));
+			$("#directions").css("height", (newWindowHeight-sidebarTopHeight-parseInt($("#directions").css("border-top-width").replace(/px/g,""))));
 			$("#map_canvas").css("height", (newWindowHeight-195) );
 			$("#loading_image").css("top", ((newWindowHeight-195)/2) );
 		}
