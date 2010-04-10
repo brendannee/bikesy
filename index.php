@@ -39,7 +39,7 @@
 				<div id="stats"></div>
 				<div id="link"></div>
 			</div>
-			<div id="directions"></div>
+			<div id="directions"><ol></ol></div>
 			
 		</div>
 		<div id="map_wrapper">

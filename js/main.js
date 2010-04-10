@@ -214,9 +214,25 @@ Application = function() {
 				
 	},
 	
+	showPoint: function(i){
+		var self = Application;
+		
+		// First, hide all stop points
+		for (var j=0; j<(self.stoppoints.length+1); j++) { 
+		  if (self.stoppoints[j] != undefined) {
+		    self.stoppoints[j].hide(); 
+		  }
+		$("#direction"+j).css('background-color','inherit');
+		}
+		
+		//Show desired stop point
+		if (self.stoppoints[i] != undefined) {
+			self.stoppoints[i].show();
+		}
+		$("#direction"+i).css('background-color','#d1d1d1');
+	},
 		
 	drawpath: function(request,redraw, tolerance){
-	
 		var self = Application;
 		
 		$('#loading_image').show(); // show loading image, as request is about to start
@@ -302,14 +318,23 @@ Application = function() {
 					//Add Twitter Control on top of map
 					$("#twitter").show();
 					$("#twitter").html("<a href='http://www.addtoany.com/add_to/twitter?linkurl=" + linkURL + "&linkname=Bike Route from " + $('#startbox').val().replace(/ /g, "+") + " to " + $('#finishbox').val().replace(/ /g, "+") + "&tolerance=" + $('#tolerancebox').val().replace(/ /g, "+") + "&linknote='><img src='images/twitter.png'> Tweet This</a>");					
-					
+	
 					//Narrative
 					if (data[0][0][1] == 'nameless') {
 						// If first point is "nameless" then skip to next point for start
 						data[0].shift();
 					}
 					
-					narrative = "<ol><li>Begin at "+data[0][0][1]+".</li>";
+					//Add End point to data
+					data[0].push(new Array("Arrive at",$('#finishbox').val()));
+					//data[0].push("test");
+					//$("#directions ol").append("<li id='direction"+len+1+"' class='direction' title='Click to see this turn on map'>Arrive at "+$('#finishbox').val()+"</li>");
+					
+					
+					//Clear out old narrative and start building new one
+					$("#directions ol").html("<li id='direction0' class='direction' title='Click to see this turn on map'>Head "+data[0][0][0].replace(/start /g, "")+" on "+data[0][0][1]+"</li>");
+					
+					self.stoppoints = new Array();
 					
 					var len=data[0].length;
 					for(var i=0; i<len; i++) {
@@ -344,23 +369,31 @@ Application = function() {
 								} else {
 									self.word = 'onto';
 								}
-								narrative += "<li><div class='direction'>" + self.direction + " " + self.word + " " + self.street + "</div><div class='distance'>" + self.distance + "</div><div style='clear:both';></div></li>";
+								$("#directions ol").append("<li id='direction"+i+"' class='direction' title='Click to see this turn on map'>" + self.direction + " " + self.word + " " + self.street + "</li>");
+								
+								//Create a marker for each turn except the last one
+								if(i<(len-1)){
+									self.stoppoints[i] = new GMarker(new GLatLng(data[0][i][5][1], data[0][i][5][0]));
+									self.map.addOverlay(self.stoppoints[i]);
+									self.stoppoints[i].hide();
+								}
+								
+								//Set direction div click function to show marker when clicked
+								$("#direction"+i).click(function(){
+									self.showPoint(this.id.replace(/direction/g, ""));
+								});
 							}
-						}
-						
+						}	
 					}
 					
-					narrative += "</ol>";
-
-					//Narrative
-					
+					//Show Directions
 					$("#directions").show();
-					$("#directions").html(narrative);
-	
+					
+					
+					// Create Elevation Profile
 					profile = data[2];
 					
-					//distance along route to miles
-					
+					//convert distance along route to miles
 					for (i=0;i<profile.length;i++){profile[i][0]=profile[i][0]/1609.344;}
 					for (i=0;i<profile.length;i++){profile[i][1]=profile[i][1]*3.2808399;}
 										
@@ -405,26 +438,11 @@ Application = function() {
       self.map = new GMap2(document.getElementById("map_canvas"));
       self.map.setMapType(G_PHYSICAL_MAP);
       self.map.setCenter(new GLatLng(37.880002, -122.189941), 11);
-	  //self.googleTransit();
 	  self.googleBike();
       self.map.setUIToDefault();
 	  self.addCreditsPane();
     },
 
-	/*googleTransit : function (){
-		var self = Application;
-		// Load Google Transit Layer
-		var gTransitTileUrlTemplate = 'http://mt1.google.com/vt/lyrs=m@121,transit|vm:1&hl=en&opts=r&x={X}&y={Y}&z={Z}';
-		var tileLayerOverlay = new GTileLayerOverlay(
-		new GTileLayer(null, null, null, {
-		tileUrlTemplate: gTransitTileUrlTemplate,
-		isPng:true,
-		opacity:0.8
-		})
-		);
-		self.map.addOverlay(tileLayerOverlay);	
-	},*/
-	
 	googleBike : function (){
 		var self = Application;
 		// Load Google Bike Layer

@@ -141,20 +141,8 @@ ul.input_boxes li .hills{
 	border-bottom:1px solid #ddd;
 	margin-left:-20px;
 	padding-left:-20px;
+	cursor:pointer;
 }
-
-#directions li .direction{
-	width:185px;
-	max-width:185px;
-	display:inline;
-}
-
-#directions li .distance{
-	width:50px;
-	display:none;
-}
-
-
 
 /* MAP */
 
