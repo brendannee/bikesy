@@ -130,30 +130,36 @@ Application = function() {
 		var elng;
 		geoCoder.getLatLng(start,
 			function(coord){
-				slat = coord.lat();
-				slng = coord.lng();
-				});
-		geoCoder.getLatLng(end,
-			function(coord){
 				if(!coord){
-					 alert(end + " not found");
+					 alert(start + " not found");
 				} else {
-					elat = coord.lat();
-					elng = coord.lng();
+					slat = coord.lat();
+					slng = coord.lng();
 				
-					if(form.startbox.value==''){
-						alert("Please Enter a Starting Address");
-					} else if(form.finishbox.value==''){
-						alert("Please Enter an Ending Address");
-					} else if(self.bounds(slat,slng,elat,elng)){
+					geoCoder.getLatLng(end,
+						function(coord){
+							if(!coord){
+								 alert(end + " not found");
+							} else {
+								elat = coord.lat();
+								elng = coord.lng();
+				
+								if(form.startbox.value==''){
+									alert("Please Enter a Starting Address");
+								} else if(form.finishbox.value==''){
+									alert("Please Enter an Ending Address");
+								} else if(self.bounds(slat,slng,elat,elng)){
 					
-				      	self.drawpath("lat1="+slat+"&lng1="+slng+"&lat2="+elat+"&lng2="+elng, true, tolerance);
-						self.map.panTo(new GLatLng((slat+elat)/2,(slng+elng)/2));}
+							      	self.drawpath("lat1="+slat+"&lng1="+slng+"&lat2="+elat+"&lng2="+elng, true, tolerance);
+									self.map.panTo(new GLatLng((slat+elat)/2,(slng+elng)/2));}
 	
-					else{
-						if (typeof(routeoverlay) != "undefined"){routeoverlay.remove();}
-						alert("Bikemapper currently only works in the Bay Area.  Try making your addresses more specific by adding city and state names.");
-					}
+								else{
+									if (typeof(routeoverlay) != "undefined"){routeoverlay.remove();}
+									alert("Bikemapper currently only works in the Bay Area.  Try making your addresses more specific by adding city and state names.");
+								}
+							}
+						}
+					);
 				}
 			}
 		);
@@ -245,7 +251,6 @@ Application = function() {
 			
 					geometry = data[1];
 					if (typeof(routeoverlay) != "undefined"){routeoverlay.remove();}
-
 					
 					routeoverlay = GPolyline.fromEncoded( {points:geometry[0], 
               			 zoomFactor:32, 
@@ -263,7 +268,6 @@ Application = function() {
 					}
 					
 					//icons for start and end
-					
 					if (typeof(start_marker) != "undefined"){start_marker.remove();}
 					if (typeof(end_marker) != "undefined"){end_marker.remove();}
 					
@@ -279,32 +283,32 @@ Application = function() {
 					endIcon.iconSize = new GSize(32, 32);
 
 					//map start
-					
 					start_lat = data[0][0][5][1];
 					start_lng = data[0][0][5][0];
 					
 					start_marker = new GMarker(new GLatLng(start_lat,start_lng),{draggable: true, icon:startIcon});
-					
 					self.map.addOverlay(start_marker);
 					
 					//map end
-					
 					end_marker = new GMarker(routeoverlay.getVertex(routeoverlay.getVertexCount()-1),{draggable: true, icon:endIcon});
-					
 					self.map.addOverlay(end_marker);
 					
 					GEvent.addListener(start_marker,'dragend',function(position){self.recalc();});
 					GEvent.addListener(end_marker,'dragend',function(position){self.recalc();});
 					
+					//Clean Start and End Titles
+					self.startName = $('#startbox').val().replace(/, USA/g, "");
+					self.finishName = $('#finishbox').val().replace(/, USA/g, "");
+					
 					//Set Page Title
-					document.title = $('#startbox').val()+" to "+$('#finishbox').val()+" | San Francisco Bay Area Bike Mapper";
+					document.title = self.startName+" to "+self.finishName+" | San Francisco Bay Area Bike Mapper";
 					
 					//Add Trip Stats			
-					tripstats = "<div class='title'>Directions to "+$('#finishbox').val()+"</div>"; 
+					tripstats = "<div class='title'>Directions to "+self.finishName+"</div>"; 
 					
-					tripstats += "<div class='totaldistance'><img src='images/map.png'> Distance: " + Math.round(routeoverlay.getLength()/1609.344*10)/10 + " miles</div>"; //figures are in meters
+					tripstats += "<div class='totaldistance'><img src='images/map.png'> Distance: <span style='color:#000;'>" + Math.round(routeoverlay.getLength()/1609.344*10)/10 + " miles</span></div>"; //figures are in meters
 					
-					tripstats += "<div class='time'><img src='images/time.png'> Time: " + Math.round((routeoverlay.getLength()/1609.344)/0.166) + " to " + Math.round((routeoverlay.getLength()/1609.344)/0.125) + " min</div>";
+					tripstats += "<div class='time'><img src='images/time.png'> Time: <span style='color:#000;'>" + Math.round((routeoverlay.getLength()/1609.344)/0.166) + " to " + Math.round((routeoverlay.getLength()/1609.344)/0.125) + " min</span></div>";
 					
 					$("#stats").html(tripstats);
 					
@@ -317,7 +321,7 @@ Application = function() {
 					
 					//Add Twitter Control on top of map
 					$("#twitter").show();
-					$("#twitter").html("<a href='http://www.addtoany.com/add_to/twitter?linkurl=" + linkURL + "&linkname=Bike Route from " + $('#startbox').val().replace(/ /g, "+") + " to " + $('#finishbox').val().replace(/ /g, "+") + "&tolerance=" + $('#tolerancebox').val().replace(/ /g, "+") + "&linknote='><img src='images/twitter.png'> Tweet This</a>");					
+					$("#twitter").html("<a href='http://www.addtoany.com/add_to/twitter?linkurl=" + linkURL + "&linkname=Bike Route from " + self.startName.replace(/ /g, "+") + " to " + self.finishName.replace(/ /g, "+") + "&tolerance=" + $('#tolerancebox').val().replace(/ /g, "+") + "&linknote='><img src='images/twitter.png'> Tweet This</a>");					
 	
 					//Narrative
 					if (data[0][0][1] == 'nameless') {
@@ -326,13 +330,10 @@ Application = function() {
 					}
 					
 					//Add End point to data
-					data[0].push(new Array("Arrive at",$('#finishbox').val()));
-					//data[0].push("test");
-					//$("#directions ol").append("<li id='direction"+len+1+"' class='direction' title='Click to see this turn on map'>Arrive at "+$('#finishbox').val()+"</li>");
-					
-					
+					data[0].push(new Array("Arrive at",self.finishName));
+						
 					//Clear out old narrative and start building new one
-					$("#directions ol").html("<li id='direction0' class='direction' title='Click to see this turn on map'>Head "+data[0][0][0].replace(/start /g, "")+" on "+data[0][0][1]+"</li>");
+					$("#directions ol").html("<li id='direction0' class='direction' title='Click to see this turn on map'>Head <strong>"+data[0][0][0].replace(/start /g, "")+"</strong> on <strong>"+data[0][0][1]+"</strong></li>");
 					
 					self.stoppoints = new Array();
 					
@@ -366,10 +367,12 @@ Application = function() {
 								// Choose best term for direction
 								if (self.direction == "Continue"){
 									self.word = 'on';
+								} else if (self.direction == "Arrive at"){
+									self.word = '';
 								} else {
 									self.word = 'onto';
 								}
-								$("#directions ol").append("<li id='direction"+i+"' class='direction' title='Click to see this turn on map'>" + self.direction + " " + self.word + " " + self.street + "</li>");
+								$("#directions ol").append("<li id='direction"+i+"' class='direction' title='Click to see this turn on map'><strong>" + self.direction + "</strong> " + self.word + " <strong>" + self.street + "</strong></li>");
 								
 								//Create a marker for each turn except the last one
 								if(i<(len-1)){
