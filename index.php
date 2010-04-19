@@ -28,8 +28,9 @@
 						<li><img src="images/hill.png" alt="Hills" style="height:24px;width:24px;float:left;" />
 							<div class="hills"> Hills?
 							<select id="tolerancebox" name="tolerancebox">
-								<option value="81" selected="selected">Bike Mapper 1</option>
-								<option value="80">Bike Mapper 2</option>
+								<option value="83" selected="selected">Avoid at all Costs</option>
+								<option value="82">A reasonable Route</option>
+								<option value="81">Bring it On</option>
 							</select>
 							</div>
 						</li>
