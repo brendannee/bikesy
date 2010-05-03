@@ -545,6 +545,22 @@ google.setOnLoadCallback(function(){
 			$("#map_canvas").css("height", (newWindowHeight-195) );
 			$("#loading_image").css("top", ((newWindowHeight-195)/2) );
 		}
+		
+		$('#hideProfile').click(function(){
+       		$('#profile').slideToggle('fast');
+			$("#map_wrapper").css("height", $(window).height() );
+			$("#map_canvas").css("height", $(window).height() );
+			$('#showProfile').show();
+	       	return false;
+       });
+
+		$('#showProfile').click(function(){
+       		$('#profile').show();
+			$("#map_wrapper").css("height", ($(window).height()-195) );
+			$("#map_canvas").css("height", ($(window).height()-195) );
+			$('#showProfile').hide();
+	       	return false;
+       });
 
 	});
 	

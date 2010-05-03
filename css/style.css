@@ -237,6 +237,20 @@ min-height:500px;
 	right:5px;
 }
 
+a#hideProfile:hover{
+	border:none;
+}
+
+#showProfile{
+	position:absolute;
+	bottom:0;
+	left:0;
+	border-top: solid 5px #999999;
+	border-right: solid 5px #999999;
+	display:none;
+	background:white;
+}
+
 #loading_image{
 	top:50%; 
 	right:50%;
@@ -273,7 +287,7 @@ min-height:500px;
 	border:1px solid #a1a1a1;
 	-webkit-border-top-left-radius: 5px;
 	-moz-border-radius-topleft: 5px;
-	border-top-right-radius: 5px;
+	border-top-left-radius: 5px;
 }
 
 
