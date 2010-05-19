@@ -26,7 +26,7 @@ Application = function() {
 	 self.showTips = true; // Show Tooltips by default
 	
 	 // Define Route Server
-	 self.routeserver = "ec2-75-101-179-98.compute-1.amazonaws.com";
+	 self.routeserver = "ec2-184-73-96-123.compute-1.amazonaws.com";
 	
 	 self.tooltips();
 	 if (navigator.geolocation) {  
@@ -317,7 +317,7 @@ Application = function() {
 					$("#stats").html(tripstats);
 					
 					//Create Link URL
-					linkURL = "http://511contracosta.org/bike/?start=" + $('#startbox').val().replace(/ /g, "+") + "&end=" + $('#finishbox').val().replace(/ /g, "+") + "&tolerance=" + $('#tolerancebox').val().replace(/ /g, "+");
+					linkURL = "?start=" + $('#startbox').val().replace(/ /g, "+") + "&end=" + $('#finishbox').val().replace(/ /g, "+") + "&tolerance=" + $('#tolerancebox').val().replace(/ /g, "+");
 					
 					//Add Permalink Control on top of map
 					$("#permalink").show();
