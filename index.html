@@ -25,39 +25,29 @@
 						<li id="slocation" class="geolocation"><img src="images/geolocation.png" alt="GeoLocation" style="height:16px;width:16px;" /><a href="#" onclick="navigator.geolocation.getCurrentPosition(Application.getStartGeoLocator,Application.showGeoLocatorError);">Use Current Location</a></li>
 						<li><img src="images/red-24x24.png" alt="Destination" style="height:24px;width:24px;float:left;" /><input id="finishbox" name="finishbox" type="text"  class="textbox" value="Walnut Creek, CA"  title="Enter your ending address, city, zip or intersection here"/></li>
 						<li id="elocation" class="geolocation"><img src="images/geolocation.png" alt="GeoLocation" style="height:16px;width:16px;" /><a href="#" onclick="navigator.geolocation.getCurrentPosition(Application.getEndGeoLocator,Application.showGeoLocatorError);">Use Current Location</a></li>
-						<li><img src="images/hill.png" alt="Hills" style="height:24px;width:24px;float:left;" />
-							<div class="hills"> Hills?
-							<select id="tolerancebox" name="tolerancebox">
-								<option value="8081" selected="selected">8081</option>
-								<option value="8082">8082</option>
-								<option value="8083">8083</option>
-								<option value="8084">8084</option>
-								<option value="8085">8085</option>
-								<option value="8086">8086</option>
-								<option value="8087">8087</option>
-								<option value="8088">8088</option>
-								<option value="8089">8089</option>
-								<option value="8090">8090</option>
-								<option value="8091">8091</option>
-								<option value="8092">8092</option>
-								<option value="8093">8093</option>
-								<option value="8094">8094</option>
-								<option value="8095">8095</option>
-								<option value="8096">8096</option>
-								<option value="8097">8097</option>
-								<option value="8098">8098</option>
-								<option value="8099">8099</option>
-								<option value="8100">8100</option>
-								<option value="8101">8101</option>
-								<option value="8102">8102</option>
-								<option value="8103">8103</option>
-								<option value="8104">8104</option>
-								<option value="8105">8105</option>
-								<option value="8106">8106</option>
-								<option value="8107">8107</option>
-								<option value="8108">8108</option>
+						<li><img src="images/fitness.png" alt="Hills" style="height:24px;width:24px;vertical-align:middle;" />
+						Fitness Level:
+							<select id="fitness" name="fitness" style="float:right;">
+								<option value="low">Low Fitness</option>	
+								<option value="medium" selected="selected">Average Fitness</option>
+								<option value="high">Really Fit</option>
 							</select>
-							</div>
+						</li>
+						<li><img src="images/hill.png" alt="Hills" style="height:24px;width:24px;vertical-align:middle;" />
+							Hill Reluctance:
+							<select id="hills" name="hills" style="float:right;">
+								<option value="low">Avoid at all costs</option>	
+								<option value="medium" selected="selected">A reasonable route</option>
+								<option value="high">Bring it on!</option>
+							</select>
+						</li>
+						<li><img src="images/safety.png" alt="Hills" style="height:24px;width:24px;vertical-align:middle;" />
+							Route Safety:
+							<select id="safety" name="safety" style="float:right;">
+								<option value="low">Mostly Bike Routes</option>	
+								<option value="medium" selected="selected">A reasonable mix</option>
+								<option value="high">The most direct route</option>
+							</select>
 						</li>
 						<li><input id="submit" type="submit" value="Get Directions" title="Get Directions" /></li>
 					</ul>
@@ -83,16 +73,18 @@
 
 	<div id="placeholder"></div>
 	
-	<script type="text/javascript" src="http://www.google.com/jsapi?key=ABQIAAAAJAlMRialWQ4KYd2WXlcPxBT25onlXAE6q_n5i3QEa4nBM4-0UBS2m41_UyIFEBvYM4X_Q-dkdnPBcg"></script>
+<script type="text/javascript" src="http://www.google.com/jsapi?key=ABQIAAAAJAlMRialWQ4KYd2WXlcPxBT25onlXAE6q_n5i3QEa4nBM4-0UBS2m41_UyIFEBvYM4X_Q-dkdnPBcg"></script>
 	
-	<script type="text/javascript">
-		google.load('visualization', '1', {packages:['imagelinechart']});
-		google.load("maps", "2.x",{"other_params":"sensor=false"});
-	</script>
+<script type="text/javascript">
+	google.load('visualization', '1', {packages:['imagelinechart']});
+	google.load("maps", "2.x",{"other_params":"sensor=false"});
+</script>
 	
-  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.3.2/jquery.min.js" type="text/javascript" charset="utf-8"></script>
-  <script src="js/jquery.tools.min.js" type="text/javascript" charset="utf-8"></script>
-  <script src="js/main.js" type="text/javascript" charset="utf-8"></script>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.3.2/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="js/jquery.jsonp-2.0.1.min.js" type="text/javascript" charset="utf-8"></script>
+  
+<script src="js/jquery.tools.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="js/main.js" type="text/javascript" charset="utf-8"></script>
  
   </body>
   

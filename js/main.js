@@ -36,7 +36,7 @@ Application = function() {
       if (GBrowserIsCompatible()) {self.launchMap();}
 		
 		//Get Bounds From Route Server	
-		$.getJSON("http://"+ self.routeserver+"/bounds?jsoncallback=?",
+		$.getJSON("http://"+ self.routeserver+":8081/bounds?jsoncallback=?",
 		        function(data){
 		        	self.l_lat = data[1];
 		        	self.h_lat = data[3];
@@ -53,8 +53,15 @@ Application = function() {
 		if ($.getUrlVar('start')!=undefined && $.getUrlVar('end')!=undefined){
 			$('#startbox').val($.getUrlVar('start').replace(/\+/g,' '));
 			$('#finishbox').val($.getUrlVar('end').replace(/\+/g,' '));
-			if($.getUrlVar('tolerance')!=undefined) {
-				$('#tolerancebox').val($.getUrlVar('tolerance').replace(/\+/g,' '));
+			// Strip off trailing #
+			if($.getUrlVar('fitness')!=undefined) {
+				$('#fitness').val($.getUrlVar('fitness').replace(/#/g,''));
+			}
+			if($.getUrlVar('hills')!=undefined) {
+				$('#hills').val($.getUrlVar('hills').replace(/#/g,''));
+			}
+			if($.getUrlVar('safety')!=undefined) {
+				$('#safety').val($.getUrlVar('safety').replace(/#/g,''));
 			}
 			self.launch($('form')[0]);
 		}
@@ -66,6 +73,51 @@ Application = function() {
 			if(lat1>self.h_lat||lat2>self.h_lat||lat1<self.l_lat||lat2<self.l_lat||lng1>self.h_lng||lng2>self.h_lng||lng1<self.l_lng||lng2<self.l_lng){return false;}
 			else{return true;}
 
+	},
+	
+	translatePorts : function (fitness,hills,safety){
+		var i=0;
+		switch(fitness){
+			case "low":
+				i = i+1;
+				break;
+			case "medium":
+				i = i+2;
+				break;
+			case "high":
+				i = i+3;
+				break;
+			default:
+				i = i+2;
+		}
+		switch(hills){
+			case "low":
+				i = i+0;
+				break;
+			case "medium":
+				i = i+3;
+				break;
+			case "high":
+				i = i+6;
+				break;
+			default:
+				i = i+3;
+		}
+		switch(safety){
+			case "low":
+				i = i+0;
+				break;
+			case "medium":
+				i = i+9;
+				break;
+			case "high":
+				i = i+18;
+				break;
+			default:
+				i = i+9;
+		}
+		return i+8080;
+		alert(i+8080);
 	},
 	
 	tooltips : function (){
@@ -113,7 +165,10 @@ Application = function() {
 		
 		start = form.startbox.value;
 		end = form.finishbox.value;
-		tolerance = form.tolerancebox.value;
+		fitness = form.fitness.value;
+		hills = form.hills.value;
+		safety = form.safety.value;
+		var port = self.translatePorts(fitness,hills,safety);
 		
 		//Search for Richmond, if found add usa to end to avoid confusion with Canada
 		if (start.search(/richmond/i) != -1) {
@@ -150,7 +205,7 @@ Application = function() {
 									alert("Please Enter an Ending Address");
 								} else if(self.bounds(slat,slng,elat,elng)){
 					
-							      	self.drawpath("lat1="+slat+"&lng1="+slng+"&lat2="+elat+"&lng2="+elng, true, tolerance);
+							      	self.drawpath("lat1="+slat+"&lng1="+slng+"&lat2="+elat+"&lng2="+elng, true, port);
 									self.map.panTo(new GLatLng((slat+elat)/2,(slng+elng)/2));}
 	
 								else{
@@ -197,7 +252,10 @@ Application = function() {
 			elat = end_marker.getLatLng().lat();
 			elng = end_marker.getLatLng().lng();
 			distance = self.dist(slat,elat,slng,elng);
-			var tolerance = $('#tolerancebox').val();
+			var fitness = $('#fitness').val();
+			var hills = $('#hills').val();
+			var safety = $('#safety').val();
+			var port = self.translatePorts(fitness,hills,safety);
 			
 			
 			if(self.bounds(slat,slng,elat,elng)){
@@ -209,7 +267,7 @@ Application = function() {
 				this.getAddresses(sCoords,eCoords);
 				
 				routeoverlay.remove();
-				self.drawpath("lat1="+slat+"&lng1="+slng+"&lat2="+elat+"&lng2="+elng, false, tolerance);
+				self.drawpath("lat1="+slat+"&lng1="+slng+"&lat2="+elat+"&lng2="+elng, false, port);
 			
 			}
 			else{
@@ -237,8 +295,176 @@ Application = function() {
 		}
 		$("#direction"+i).css('background-color','#d1d1d1');
 	},
+	
+	processpath: function(data, redraw){
+		var self = Application;
+		geometry = data[1];
+		if (typeof(routeoverlay) != "undefined"){routeoverlay.remove();}
 		
-	drawpath: function(request,redraw, tolerance){
+		routeoverlay = GPolyline.fromEncoded( {points:geometry[0], 
+     			 zoomFactor:32, 
+                levels:geometry[1], 
+                numLevels:4,
+                color:"419639",
+                opacity:0.6,
+                weight:7} );
+		self.map.addOverlay( routeoverlay );
+		
+		// Center and Zoom only if its a redraw
+		if(redraw == true){
+			self.map.setZoom(self.map.getBoundsZoomLevel(routeoverlay.getBounds()));
+			self.map.panTo(routeoverlay.getBounds().getCenter());
+		}
+		
+		//icons for start and end
+		if (typeof(start_marker) != "undefined"){start_marker.remove();}
+		if (typeof(end_marker) != "undefined"){end_marker.remove();}
+		
+		startIcon = new GIcon(G_DEFAULT_ICON);
+		startIcon.image = "images/green.png";
+		startIcon.iconAnchor = new GPoint(16, 32);
+		startIcon.iconSize = new GSize(32, 32);
+		
+		
+		endIcon = new GIcon(G_DEFAULT_ICON);
+		endIcon.image = "images/red.png";
+		endIcon.iconAnchor = new GPoint(16, 32);
+		endIcon.iconSize = new GSize(32, 32);
+
+		//map start
+		start_lat = data[0][0][5][1];
+		start_lng = data[0][0][5][0];
+		
+		start_marker = new GMarker(new GLatLng(start_lat,start_lng),{draggable: true, icon:startIcon});
+		self.map.addOverlay(start_marker);
+		
+		//map end
+		end_marker = new GMarker(routeoverlay.getVertex(routeoverlay.getVertexCount()-1),{draggable: true, icon:endIcon});
+		self.map.addOverlay(end_marker);
+		
+		GEvent.addListener(start_marker,'dragend',function(position){self.recalc();});
+		GEvent.addListener(end_marker,'dragend',function(position){self.recalc();});
+		
+		//Clean Start and End Titles
+		self.startName = $('#startbox').val().replace(/, USA/g, "");
+		self.finishName = $('#finishbox').val().replace(/, USA/g, "");
+		
+		//Set Page Title
+		document.title = self.startName+" to "+self.finishName+" | San Francisco Bay Area Bike Mapper";
+		
+		//Add Trip Stats			
+		tripstats = "<div class='title'>Directions to "+self.finishName+"</div>"; 
+		
+		tripstats += "<div class='totaldistance'><img src='images/map.png'> Distance: <span style='color:#000;'>" + Math.round(routeoverlay.getLength()/1609.344*10)/10 + " miles</span></div>"; //figures are in meters
+		
+		tripstats += "<div class='time'><img src='images/time.png'> Time: <span style='color:#000;'>" + Math.round((routeoverlay.getLength()/1609.344)/0.166) + " to " + Math.round((routeoverlay.getLength()/1609.344)/0.125) + " min</span></div>";
+		
+		$("#stats").html(tripstats);
+		
+		//Create Link URL
+		linkURL = "?start=" + $('#startbox').val().replace(/ /g, "+") + "&end=" + $('#finishbox').val().replace(/ /g, "+") + "&fitness=" + $('#fitness').val().replace(/ /g, "+") + "&hills=" + $('#hills').val().replace(/ /g, "+") + "&safety=" + $('#safety').val().replace(/ /g, "+");
+		
+		//Add Permalink Control on top of map
+		$("#permalink").show();
+		$("#permalink").html("<a href='" + linkURL + "' title='Direct Link to this route'><img src='images/link.png'> Permalink to Route</a>");
+		
+		//Add Twitter Control on top of map
+		$("#twitter").show();
+		$("#twitter").html("<a href='http://www.addtoany.com/add_to/twitter?linkurl=" + linkURL + "&linkname=Bike Route from " + self.startName.replace(/ /g, "+") + " to " + self.finishName.replace(/ /g, "+") + "&fitness=" + $('#fitness').val().replace(/ /g, "+") + "&hills=" + $('#hills').val().replace(/ /g, "+") + "&safety=" + $('#safety').val().replace(/ /g, "+") + "&linknote='><img src='images/twitter.png'> Tweet This</a>");					
+
+		//Narrative
+		if (data[0][0][1] == 'nameless') {
+			// If first point is "nameless" then skip to next point for start
+			data[0].shift();
+		}
+		
+		//Add End point to data
+		data[0].push(new Array("Arrive at",self.finishName));
+			
+		//Clear out old narrative and start building new one
+		$("#directions ol").html("<li id='direction0' class='direction' title='Click to see this turn on map'>Head <strong>"+data[0][0][0].replace(/start /g, "")+"</strong> on <strong>"+data[0][0][1]+"</strong></li>");
+		
+		self.stoppoints = new Array();
+		
+		var len=data[0].length;
+		for(var i=0; i<len; i++) {
+			
+			if(i>0){
+			
+				self.direction = self.proper(data[0][i][0]);
+				self.street = data[0][i][1];
+				self.distance = data[0][i][2];
+			
+				// Skip Direction if next step's street name is "nameless" and direction is "Continue" and add distance to this step
+				if (i<len-1) {
+					if (data[0][i+1][1] == "nameless") {
+						self.distance = data[0][i][2] + data[0][i+1][2];
+						data[0][i+1][2] = 0;
+						i++;
+					}
+				}
+			
+				// Choose best units for display
+				if (Math.round(self.distance) > 100) {
+					self.distance = Math.round(self.distance/1609.344*10)/10 + " miles";
+				} else {
+					self.distance = Math.round(self.distance*3.2808)+ " ft";
+				}
+				
+				//If street is nameless, remove it
+				if (self.street != 'nameless') {
+					// Choose best term for direction
+					if (self.direction == "Continue"){
+						self.word = 'on';
+					} else if (self.direction == "Arrive at"){
+						self.word = '';
+					} else {
+						self.word = 'onto';
+					}
+					$("#directions ol").append("<li id='direction"+i+"' class='direction' title='Click to see this turn on map'><strong>" + self.direction + "</strong> " + self.word + " <strong>" + self.street + "</strong></li>");
+					
+					//Create a marker for each turn except the last one
+					if(i<(len-1)){
+						self.stoppoints[i] = new GMarker(new GLatLng(data[0][i][5][1], data[0][i][5][0]));
+						self.map.addOverlay(self.stoppoints[i]);
+						self.stoppoints[i].hide();
+					}
+					
+					//Set direction div click function to show marker when clicked
+					$("#direction"+i).click(function(){
+						self.showPoint(this.id.replace(/direction/g, ""));
+					});
+				}
+			}	
+		}
+		
+		//Show Directions
+		$("#directions").show();
+		
+		//Resize sidebar
+		var newWindowHeight = $(window).height();
+		var sidebarTopHeight = parseInt($("#sidebar-top").css("height"));
+		$("#directions").css("height", (newWindowHeight-sidebarTopHeight-parseInt($("#directions").css("border-top-width").replace(/px/g,""))));
+		
+		// Create Elevation Profile
+		profile = data[2];
+		
+		//convert distance along route to miles
+		for (i=0;i<profile.length;i++){profile[i][0]=profile[i][0]/1609.344;}
+		for (i=0;i<profile.length;i++){profile[i][1]=profile[i][1]*3.2808399;}
+							
+		self.gviz(profile);		
+		
+		$('#loading_image').hide(); // hide loading image
+		
+		if (self.showTips==true){ // Detect if we should show tips or not
+			$("#dragtext").show(); //Show Drag Tip
+		}
+		
+		$("#inputs #startbox").tooltip().hide(); //Hide entry tip
+	},
+		
+	drawpath: function(request, redraw, port){
 		var self = Application;
 		
 		$('#loading_image').show(); // show loading image, as request is about to start
@@ -248,176 +474,13 @@ Application = function() {
 		//Clear all points
 		self.map.clearOverlays();
 		self.googleBike();
-		
-		//alert("http://"+self.routeserver+"/path?"+request+"&jsoncallback=?");
-		$.getJSON("http://"+self.routeserver+":"+tolerance+"/path?"+request+"&jsoncallback=?",
-		        function(data){
-			
-					geometry = data[1];
-					if (typeof(routeoverlay) != "undefined"){routeoverlay.remove();}
-					
-					routeoverlay = GPolyline.fromEncoded( {points:geometry[0], 
-              			 zoomFactor:32, 
-                         levels:geometry[1], 
-                         numLevels:4,
-                         color:"419639",
-                         opacity:0.6,
-                         weight:7} );
-					self.map.addOverlay( routeoverlay );
-					
-					// Center and Zoom only if its a redraw
-					if(redraw == true){
-						self.map.setZoom(self.map.getBoundsZoomLevel(routeoverlay.getBounds()));
-						self.map.panTo(routeoverlay.getBounds().getCenter());
-					}
-					
-					//icons for start and end
-					if (typeof(start_marker) != "undefined"){start_marker.remove();}
-					if (typeof(end_marker) != "undefined"){end_marker.remove();}
-					
-					startIcon = new GIcon(G_DEFAULT_ICON);
-					startIcon.image = "images/green.png";
-					startIcon.iconAnchor = new GPoint(16, 32);
-					startIcon.iconSize = new GSize(32, 32);
-					
-					
-					endIcon = new GIcon(G_DEFAULT_ICON);
-					endIcon.image = "images/red.png";
-					endIcon.iconAnchor = new GPoint(16, 32);
-					endIcon.iconSize = new GSize(32, 32);
-
-					//map start
-					start_lat = data[0][0][5][1];
-					start_lng = data[0][0][5][0];
-					
-					start_marker = new GMarker(new GLatLng(start_lat,start_lng),{draggable: true, icon:startIcon});
-					self.map.addOverlay(start_marker);
-					
-					//map end
-					end_marker = new GMarker(routeoverlay.getVertex(routeoverlay.getVertexCount()-1),{draggable: true, icon:endIcon});
-					self.map.addOverlay(end_marker);
-					
-					GEvent.addListener(start_marker,'dragend',function(position){self.recalc();});
-					GEvent.addListener(end_marker,'dragend',function(position){self.recalc();});
-					
-					//Clean Start and End Titles
-					self.startName = $('#startbox').val().replace(/, USA/g, "");
-					self.finishName = $('#finishbox').val().replace(/, USA/g, "");
-					
-					//Set Page Title
-					document.title = self.startName+" to "+self.finishName+" | San Francisco Bay Area Bike Mapper";
-					
-					//Add Trip Stats			
-					tripstats = "<div class='title'>Directions to "+self.finishName+"</div>"; 
-					
-					tripstats += "<div class='totaldistance'><img src='images/map.png'> Distance: <span style='color:#000;'>" + Math.round(routeoverlay.getLength()/1609.344*10)/10 + " miles</span></div>"; //figures are in meters
-					
-					tripstats += "<div class='time'><img src='images/time.png'> Time: <span style='color:#000;'>" + Math.round((routeoverlay.getLength()/1609.344)/0.166) + " to " + Math.round((routeoverlay.getLength()/1609.344)/0.125) + " min</span></div>";
-					
-					$("#stats").html(tripstats);
-					
-					//Create Link URL
-					linkURL = "?start=" + $('#startbox').val().replace(/ /g, "+") + "&end=" + $('#finishbox').val().replace(/ /g, "+") + "&tolerance=" + $('#tolerancebox').val().replace(/ /g, "+");
-					
-					//Add Permalink Control on top of map
-					$("#permalink").show();
-					$("#permalink").html("<a href='" + linkURL + "' title='Direct Link to this route'><img src='images/link.png'> Permalink to Route</a>");
-					
-					//Add Twitter Control on top of map
-					$("#twitter").show();
-					$("#twitter").html("<a href='http://www.addtoany.com/add_to/twitter?linkurl=" + linkURL + "&linkname=Bike Route from " + self.startName.replace(/ /g, "+") + " to " + self.finishName.replace(/ /g, "+") + "&tolerance=" + $('#tolerancebox').val().replace(/ /g, "+") + "&linknote='><img src='images/twitter.png'> Tweet This</a>");					
-	
-					//Narrative
-					if (data[0][0][1] == 'nameless') {
-						// If first point is "nameless" then skip to next point for start
-						data[0].shift();
-					}
-					
-					//Add End point to data
-					data[0].push(new Array("Arrive at",self.finishName));
-						
-					//Clear out old narrative and start building new one
-					$("#directions ol").html("<li id='direction0' class='direction' title='Click to see this turn on map'>Head <strong>"+data[0][0][0].replace(/start /g, "")+"</strong> on <strong>"+data[0][0][1]+"</strong></li>");
-					
-					self.stoppoints = new Array();
-					
-					var len=data[0].length;
-					for(var i=0; i<len; i++) {
-						
-						if(i>0){
-						
-							self.direction = self.proper(data[0][i][0]);
-							self.street = data[0][i][1];
-							self.distance = data[0][i][2];
-						
-							// Skip Direction if next step's street name is "nameless" and direction is "Continue" and add distance to this step
-							if (i<len-1) {
-								if (data[0][i+1][1] == "nameless") {
-									self.distance = data[0][i][2] + data[0][i+1][2];
-									data[0][i+1][2] = 0;
-									i++;
-								}
-							}
-						
-							// Choose best units for display
-							if (Math.round(self.distance) > 100) {
-								self.distance = Math.round(self.distance/1609.344*10)/10 + " miles";
-							} else {
-								self.distance = Math.round(self.distance*3.2808)+ " ft";
-							}
-							
-							//If street is nameless, remove it
-							if (self.street != 'nameless') {
-								// Choose best term for direction
-								if (self.direction == "Continue"){
-									self.word = 'on';
-								} else if (self.direction == "Arrive at"){
-									self.word = '';
-								} else {
-									self.word = 'onto';
-								}
-								$("#directions ol").append("<li id='direction"+i+"' class='direction' title='Click to see this turn on map'><strong>" + self.direction + "</strong> " + self.word + " <strong>" + self.street + "</strong></li>");
-								
-								//Create a marker for each turn except the last one
-								if(i<(len-1)){
-									self.stoppoints[i] = new GMarker(new GLatLng(data[0][i][5][1], data[0][i][5][0]));
-									self.map.addOverlay(self.stoppoints[i]);
-									self.stoppoints[i].hide();
-								}
-								
-								//Set direction div click function to show marker when clicked
-								$("#direction"+i).click(function(){
-									self.showPoint(this.id.replace(/direction/g, ""));
-								});
-							}
-						}	
-					}
-					
-					//Show Directions
-					$("#directions").show();
-					
-					//Resize sidebar
-					var newWindowHeight = $(window).height();
-					var sidebarTopHeight = parseInt($("#sidebar-top").css("height"));
-					$("#directions").css("height", (newWindowHeight-sidebarTopHeight-parseInt($("#directions").css("border-top-width").replace(/px/g,""))));
-					
-					// Create Elevation Profile
-					profile = data[2];
-					
-					//convert distance along route to miles
-					for (i=0;i<profile.length;i++){profile[i][0]=profile[i][0]/1609.344;}
-					for (i=0;i<profile.length;i++){profile[i][1]=profile[i][1]*3.2808399;}
-										
-					self.gviz(profile);		
-					
-					$('#loading_image').hide(); // hide loading image
-					
-					if (self.showTips==true){ // Detect if we should show tips or not
-						$("#dragtext").show(); //Show Drag Tip
-					}
-					
-					$("#inputs #startbox").tooltip().hide(); //Hide entry tip
-						
+		$.jsonp({
+			"url": "http://"+self.routeserver+":"+port+"/path?"+request+"&jsoncallback=?",
+		    "success": function(json, redraw) {self.processpath(json, redraw);},
+			"error": function(){
+				$('#loading_image').hide(); // hide loading image
+				alert("There was an error retrieving the route data.  Please refresh the page and try again.");
+			}
 		});	
 		
 	},
