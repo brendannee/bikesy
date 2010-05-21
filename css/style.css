@@ -20,7 +20,7 @@ a img{
 
 h1.logo {
 width: 166px;
-height:75px;
+height:80px;
 text-indent:-9009px;
 background:url(../images/bike-mapper-logo-small.png) 0 0 no-repeat;
 margin:3px 0 0 3px;
@@ -108,20 +108,23 @@ ul.input_boxes li .hills{
 
 #sidebar #inputs{
 	padding-left:5px;
-	border-top: solid 5px #999999;
 }
 
 #submit{
-	float:right;
 	margin-right:5px;
 	margin-bottom:5px;
 }
 
-#sidebar #stats{
+#sidebar #resultsBox{
 	padding:3px 5px;
+	margin:0 10px;
 	font-size:14px;
 	clear:both;
-	border-top: solid 5px #999999;
+	border: 1px #999 solid;
+    -moz-box-shadow:3px 3px 8px #999; 
+    -webkit-box-shadow:3px 3px 8px #999;
+	display:none;
+	overflow:auto;
 }
 
 #sidebar #stats .title {
@@ -144,11 +147,9 @@ ul.input_boxes li .hills{
 }
 
 #directions{
-	padding:0 5px;
+	padding:5px 5px 0 5px;
 	font-size:11px;
 	overflow:auto;
-	border-top: solid 5px #999999;
-	display:none;
 }
 
 #directions ol{
@@ -164,11 +165,15 @@ ul.input_boxes li .hills{
 	cursor:pointer;
 }
 
+#directions li:last-of-type{
+	border-bottom:none;
+}
+
 /* MAP */
 
 #map_wrapper{
 	clear:both;
-	border-left: solid 5px #999999;
+	border-left: solid 1px #999999;
 	margin-left:300px;
 	color:#000;
 	font-size:11px;
@@ -280,9 +285,8 @@ min-height:500px;
 #profile{
 	margin-left:300px;
 	position:relative;
-	border-top: solid 5px #999999;
-	border-left: solid 5px #999999;
-	border-style:solid 1px #999999;
+	border-top: solid 1px #999999;
+	border-left: solid 1px #999999;
 	height:190px;
 	clear:both;
 	z-index:30;
@@ -301,7 +305,7 @@ min-height:500px;
 	border:none;
 	z-index:40;
 	position:absolute;
-	left:302px;
+	left:298px;
 	bottom:168px;
 	cursor:pointer;
 }
@@ -310,8 +314,8 @@ min-height:500px;
 	position:absolute;
 	bottom:0;
 	left:0;
-	border-top: solid 5px #999999;
-	border-right: solid 5px #999999;
+	border-top: solid 1px #999999;
+	border-right: solid 1px #999999;
 	display:none;
 	background:white;
 }
@@ -345,7 +349,6 @@ div.tooltip {
 	z-index:150;
  	-moz-border-radius: 5px;
 	-webkit-border-radius: 5px;
-    /* outline radius for mozilla/firefox only */ 
     -moz-box-shadow:0 0 10px #000; 
     -webkit-box-shadow:0 0 10px #000; 
 }

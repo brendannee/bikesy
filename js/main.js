@@ -449,12 +449,12 @@ Application = function() {
 		}
 		
 		//Show Directions
-		$("#directions").show();
+		$("#resultsBox").show();
 		
 		//Resize sidebar
 		var newWindowHeight = $(window).height();
 		var sidebarTopHeight = parseInt($("#sidebar-top").css("height"));
-		$("#directions").css("height", (newWindowHeight-sidebarTopHeight-parseInt($("#directions").css("border-top-width").replace(/px/g,""))));
+		$("#resultsBox").css("max-height", (newWindowHeight-sidebarTopHeight));
 		
 		// Create Elevation Profile
 		profile = data[2];
@@ -634,9 +634,9 @@ google.setOnLoadCallback(function(){
 			var sidebarTopHeight = parseInt($("#sidebar-top").css("height"));
 			$("#sidebar").css("height", (newWindowHeight) );
 			$("#sidebar").css("max-height", (newWindowHeight) );
-			$("#directions").css("height", (newWindowHeight-sidebarTopHeight-parseInt($("#directions").css("border-top-width").replace(/px/g,""))));
-			$("#map_canvas").css("height", (newWindowHeight-195) );
-			$("#loading_image").css("top", ((newWindowHeight-195)/2) );
+			$("#resultsBox").css("max-height", (newWindowHeight-sidebarTopHeight));
+			$("#map_canvas").css("height", (newWindowHeight-190) );
+			$("#loading_image").css("top", ((newWindowHeight-190)/2) );
 		}
 		
 		$('#hideProfile').click(function(){
@@ -650,8 +650,8 @@ google.setOnLoadCallback(function(){
 
 		$('#showProfile').click(function(){
        		$('#profile').show();
-			$("#map_wrapper").css("height", ($(window).height()-195) );
-			$("#map_canvas").css("height", ($(window).height()-195) );
+			$("#map_wrapper").css("height", ($(window).height()-190) );
+			$("#map_canvas").css("height", ($(window).height()-190) );
 			$('#showProfile').hide();
 			$('#hideProfile').show();
 	       	return false;
