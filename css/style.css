@@ -289,6 +289,7 @@ a#hideProfile:hover{
 	border-style:solid 1px #999999;
 	height:190px;
 	clear:both;
+	z-index:30;
 }
 
 #bottomCredits{
@@ -302,6 +303,7 @@ a#hideProfile:hover{
 	-webkit-border-top-left-radius: 5px;
 	-moz-border-radius-topleft: 5px;
 	border-top-left-radius: 5px;
+	z-index:40;
 }
 
 

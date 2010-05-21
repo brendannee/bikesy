@@ -322,7 +322,7 @@ Application = function() {
      			 zoomFactor:32, 
                 levels:geometry[1], 
                 numLevels:4,
-                color:"419639",
+                color:"004efe",
                 opacity:0.6,
                 weight:7} );
 		self.map.addOverlay( routeoverlay );
