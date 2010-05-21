@@ -54,9 +54,6 @@ Application = function() {
 			$('#startbox').val($.getUrlVar('start').replace(/\+/g,' '));
 			$('#finishbox').val($.getUrlVar('end').replace(/\+/g,' '));
 			// Strip off trailing #
-			if($.getUrlVar('fitness')!=undefined) {
-				$('#fitness').val($.getUrlVar('fitness').replace(/#/g,''));
-			}
 			if($.getUrlVar('hills')!=undefined) {
 				$('#hills').val($.getUrlVar('hills').replace(/#/g,''));
 			}
@@ -75,9 +72,9 @@ Application = function() {
 
 	},
 	
-	translatePorts : function (fitness,hills,safety){
+	translatePorts : function (hills,safety){
 		var i=0;
-		switch(fitness){
+		switch(hills){
 			case "low":
 				i = i+1;
 				break;
@@ -90,7 +87,7 @@ Application = function() {
 			default:
 				i = i+2;
 		}
-		switch(hills){
+		switch(safety){
 			case "low":
 				i = i+0;
 				break;
@@ -102,19 +99,6 @@ Application = function() {
 				break;
 			default:
 				i = i+3;
-		}
-		switch(safety){
-			case "low":
-				i = i+0;
-				break;
-			case "medium":
-				i = i+9;
-				break;
-			case "high":
-				i = i+18;
-				break;
-			default:
-				i = i+9;
 		}
 		return i+8080;
 		alert(i+8080);
@@ -166,10 +150,9 @@ Application = function() {
 		
 		start = form.startbox.value;
 		end = form.finishbox.value;
-		fitness = form.fitness.value;
 		hills = form.hills.value;
 		safety = form.safety.value;
-		var port = self.translatePorts(fitness,hills,safety);
+		var port = self.translatePorts(hills,safety);
 		
 		//Search for Richmond, if found add usa to end to avoid confusion with Canada
 		if (start.search(/richmond/i) != -1) {
@@ -270,10 +253,9 @@ Application = function() {
 			elat = end_marker.getLatLng().lat();
 			elng = end_marker.getLatLng().lng();
 			distance = self.dist(slat,elat,slng,elng);
-			var fitness = $('#fitness').val();
 			var hills = $('#hills').val();
 			var safety = $('#safety').val();
-			var port = self.translatePorts(fitness,hills,safety);
+			var port = self.translatePorts(hills,safety);
 			
 			
 			if(self.bounds(slat,slng,elat,elng)){
@@ -394,7 +376,7 @@ Application = function() {
 		$("#stats").html(tripstats);
 		
 		//Create Link URL
-		linkURL = "?start=" + $('#startbox').val().replace(/ /g, "+") + "&end=" + $('#finishbox').val().replace(/ /g, "+") + "&fitness=" + $('#fitness').val().replace(/ /g, "+") + "&hills=" + $('#hills').val().replace(/ /g, "+") + "&safety=" + $('#safety').val().replace(/ /g, "+");
+		linkURL = "?start=" + $('#startbox').val().replace(/ /g, "+") + "&end=" + $('#finishbox').val().replace(/ /g, "+") + "&hills=" + $('#hills').val().replace(/ /g, "+") + "&safety=" + $('#safety').val().replace(/ /g, "+");
 		
 		//Add Permalink Control on top of map
 		$("#permalink").show();
@@ -402,7 +384,7 @@ Application = function() {
 		
 		//Add Twitter Control on top of map
 		$("#twitter").show();
-		$("#twitter").html("<a href='http://www.addtoany.com/add_to/twitter?linkurl=" + linkURL + "&linkname=Bike Route from " + self.startName.replace(/ /g, "+") + " to " + self.finishName.replace(/ /g, "+") + "&fitness=" + $('#fitness').val().replace(/ /g, "+") + "&hills=" + $('#hills').val().replace(/ /g, "+") + "&safety=" + $('#safety').val().replace(/ /g, "+") + "&linknote='><img src='images/twitter.png'> Tweet This</a>");					
+		$("#twitter").html("<a href='http://www.addtoany.com/add_to/twitter?linkurl=" + linkURL + "&linkname=Bike Route from " + self.startName.replace(/ /g, "+") + " to " + self.finishName.replace(/ /g, "+") + "&hills=" + $('#hills').val().replace(/ /g, "+") + "&safety=" + $('#safety').val().replace(/ /g, "+") + "&linknote='><img src='images/twitter.png'> Tweet This</a>");					
 
 		//Narrative
 		if (data[0][0][1] == 'nameless') {
