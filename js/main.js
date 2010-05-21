@@ -63,7 +63,7 @@ Application = function() {
 			if($.getUrlVar('safety')!=undefined) {
 				$('#safety').val($.getUrlVar('safety').replace(/#/g,''));
 			}
-			self.launch($('form')[0]);
+			self.submitForm($('form')[0]);
 		}
 		
 		
@@ -159,7 +159,8 @@ Application = function() {
 	},
 	
 	
-	launch : function(form) {
+	submitForm : function(form) {
+		// Redraws map based on info in the form
 		
 		var self = Application;
 		
@@ -283,7 +284,10 @@ Application = function() {
 				//Reverse Geocode
 				this.getAddresses(sCoords,eCoords);
 				
-				routeoverlay.remove();
+				//Remove old overlay
+				if (typeof(routeoverlay) != "undefined"){routeoverlay.remove();}
+				
+				//Draw new route
 				self.drawpath("lat1="+slat+"&lng1="+slng+"&lat2="+elat+"&lng2="+elng, false, port);
 			
 			}
@@ -313,6 +317,34 @@ Application = function() {
 		$("#direction"+i).css('background-color','#d1d1d1');
 	},
 	
+	addMarker: function(latlng, type){
+		var self = Application;
+		
+		if(type=="start"){
+			if (typeof(start_marker) != "undefined"){start_marker.remove();}
+		
+			startIcon = new GIcon(G_DEFAULT_ICON);
+			startIcon.image = "images/green.png";
+			startIcon.iconAnchor = new GPoint(16, 32);
+			startIcon.iconSize = new GSize(32, 32);
+		
+			start_marker = new GMarker(latlng,{draggable: true, icon:startIcon});
+			self.map.addOverlay(start_marker);
+			GEvent.addListener(start_marker,'dragend',function(position){self.recalc();});
+		} else if (type=="end"){
+			if (typeof(end_marker) != "undefined"){end_marker.remove();}
+			
+			endIcon = new GIcon(G_DEFAULT_ICON);
+			endIcon.image = "images/red.png";
+			endIcon.iconAnchor = new GPoint(16, 32);
+			endIcon.iconSize = new GSize(32, 32);
+			
+			end_marker = new GMarker(latlng,{draggable: true, icon:endIcon});
+			self.map.addOverlay(end_marker);
+			GEvent.addListener(end_marker,'dragend',function(position){self.recalc();});
+		}
+	},
+	
 	processpath: function(data, redraw){
 		var self = Application;
 		geometry = data[1];
@@ -331,36 +363,15 @@ Application = function() {
 		if(redraw == true){
 			self.map.setZoom(self.map.getBoundsZoomLevel(routeoverlay.getBounds()));
 			self.map.panTo(routeoverlay.getBounds().getCenter());
+			
+			//Clear all points
+			self.map.clearOverlays();
+			self.googleBike();
 		}
 		
-		//icons for start and end
-		if (typeof(start_marker) != "undefined"){start_marker.remove();}
-		if (typeof(end_marker) != "undefined"){end_marker.remove();}
-		
-		startIcon = new GIcon(G_DEFAULT_ICON);
-		startIcon.image = "images/green.png";
-		startIcon.iconAnchor = new GPoint(16, 32);
-		startIcon.iconSize = new GSize(32, 32);
-		
-		
-		endIcon = new GIcon(G_DEFAULT_ICON);
-		endIcon.image = "images/red.png";
-		endIcon.iconAnchor = new GPoint(16, 32);
-		endIcon.iconSize = new GSize(32, 32);
-
-		//map start
-		start_lat = data[0][0][5][1];
-		start_lng = data[0][0][5][0];
-		
-		start_marker = new GMarker(new GLatLng(start_lat,start_lng),{draggable: true, icon:startIcon});
-		self.map.addOverlay(start_marker);
-		
-		//map end
-		end_marker = new GMarker(routeoverlay.getVertex(routeoverlay.getVertexCount()-1),{draggable: true, icon:endIcon});
-		self.map.addOverlay(end_marker);
-		
-		GEvent.addListener(start_marker,'dragend',function(position){self.recalc();});
-		GEvent.addListener(end_marker,'dragend',function(position){self.recalc();});
+		//icons for start and end		
+		self.addMarker(new GLatLng(data[0][0][5][1],data[0][0][5][0]), "start");
+		self.addMarker(routeoverlay.getVertex(routeoverlay.getVertexCount()-1), "end");
 		
 		//Clean Start and End Titles
 		self.startName = $('#startbox').val().replace(/, USA/g, "");
@@ -483,6 +494,7 @@ Application = function() {
 		}
 		
 		$("#inputs #startbox").tooltip().hide(); //Hide entry tip
+		$("#endpointtext").hide(); //Hide Initial Endpoint click Tip
 	},
 		
 	drawpath: function(request, redraw, port){
@@ -492,9 +504,6 @@ Application = function() {
 	
 		if (typeof(routeoverlay) != "undefined"){routeoverlay.remove();}	
 		
-		//Clear all points
-		self.map.clearOverlays();
-		self.googleBike();
 		$.jsonp({
 			"url": "http://"+self.routeserver+":"+port+"/path?"+request+"&jsoncallback=?",
 		    "success": function(json, redraw) {self.processpath(json, redraw);},
@@ -529,13 +538,26 @@ Application = function() {
 	},
 
     launchMap : function() { 
-      var self = Application;
-      self.map = new GMap2(document.getElementById("map_canvas"));
-      self.map.setMapType(G_PHYSICAL_MAP);
-      self.map.setCenter(new GLatLng(37.880002, -122.189941), 11);
-	  self.googleBike();
-      self.map.setUIToDefault();
-	  self.addCreditsPane();
+		var self = Application;
+		self.map = new GMap2(document.getElementById("map_canvas"));
+		self.map.setMapType(G_PHYSICAL_MAP);
+		self.map.setCenter(new GLatLng(37.880002, -122.189941), 11);
+		self.googleBike();
+		self.map.setUIToDefault();
+		self.addCreditsPane();
+	
+		GEvent.addListener(self.map, 'click', function(overlay,latlng){
+			// Allow for clicking on the map to assign initial start points
+			
+			if (typeof(start_marker) == "undefined"){
+				self.addMarker(latlng, "start");
+				$("#inputs #startbox").tooltip().hide();
+				$("#endpointtext").show(); //Show Endpoint Tooltip
+			} else if (typeof(start_marker) != "undefined" && typeof(end_marker) == "undefined"){
+				self.addMarker(latlng, "end");
+				self.recalc();
+			}
+		});
     },
 
 	googleBike : function (){
@@ -616,7 +638,7 @@ Application = function() {
 		var Eaddress = $('#finishbox').val();
 		$('#startbox').val(Eaddress);
 		$('#finishbox').val(Saddress);
-		self.launch($('form')[0]);
+		self.submitForm($('form')[0]);
 	}
   };
 
