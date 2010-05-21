@@ -44,11 +44,6 @@ Application = function() {
 		        	self.h_lng = data[2];
 		        });
 		
-		/*l_lat = 37.201897600000002;
-       	h_lat = 38.501967;
-       	l_lng = -122.7310167;
-       	h_lng = -121.5197762;*/
-		
 		//Detect saved route from URL
 		if ($.getUrlVar('start')!=undefined && $.getUrlVar('end')!=undefined){
 			$('#startbox').val($.getUrlVar('start').replace(/\+/g,' '));
@@ -112,13 +107,13 @@ Application = function() {
 			    position: "center right", 
 
 			    // a little tweaking of the position 
-			    offset: [-2, 2], 
+			    offset: [0, 10], 
 
 			    // use the built-in fadeIn/fadeOut effect 
 			    effect: "fade", 
 
 			    // custom opacity setting 
-			    opacity: 0.7, 
+			    opacity: 0.8, 
 
 			    // use this single tooltip element 
 			    tip: '.tooltip' 
@@ -127,7 +122,6 @@ Application = function() {
 
 			// Show Starting tooltip on page load
 			$("#inputs #startbox").tooltip().show();
-			
 	},
 	
 	
@@ -517,7 +511,7 @@ Application = function() {
       	table.addColumn('number', 'Elevation');
       	table.addRows(profile);
 		var windowwidth = window.innerWidth;
-		chart.draw(table, {width: windowwidth-305, height: 190, titleX: 'Distance along route (mi)', titleY: 'Elevation (ft)', legend: 'none', lineSize: 2, pointSize: 0});
+		chart.draw(table, {width: windowwidth-305, height: 190, titleX: 'Distance along route (mi)', titleY: 'Elevation (ft)', legend: 'none', lineSize: 2, pointSize: 0, title: 'Elevation Profile', titleFontSize: 14, fontSize:18});
 		
 	},
 
@@ -650,6 +644,7 @@ google.setOnLoadCallback(function(){
 			$("#map_wrapper").css("height", $(window).height() );
 			$("#map_canvas").css("height", $(window).height() );
 			$('#showProfile').show();
+			$('#hideProfile').hide();
 	       	return false;
        });
 
@@ -658,6 +653,7 @@ google.setOnLoadCallback(function(){
 			$("#map_wrapper").css("height", ($(window).height()-195) );
 			$("#map_canvas").css("height", ($(window).height()-195) );
 			$('#showProfile').hide();
+			$('#hideProfile').show();
 	       	return false;
        });
 

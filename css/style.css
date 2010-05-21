@@ -229,17 +229,17 @@ min-height:500px;
 .popup{
 	position:absolute; 
 	display:none;
-	width:200px;
+	width:240px;
 	border:1px solid #fff;
 	background:#000 url(../images/tip.png) 10px 50% no-repeat;
-	filter:alpha(opacity=70);   /* Internet Explorer       */
-   	-moz-opacity:0.7;           /* Mozilla 1.6 and below   */
-   	opacity: 0.7;               /* newer Mozilla and CSS-3 */
+	filter:alpha(opacity=80);   /* Internet Explorer       */
+   	-moz-opacity:0.8;           /* Mozilla 1.6 and below   */
+   	opacity: 0.8;               /* newer Mozilla and CSS-3 */
  	text-align:left;
 	-moz-border-radius: 5px;
 	-webkit-border-radius: 5px;
 	color:#fff;
-	padding:15px 15px 15px 40px; 
+	padding:15px 25px 15px 40px; 
 	font-size:12px; 
 	z-index:150;
 }
@@ -249,20 +249,6 @@ min-height:500px;
 	position:absolute;
 	top:5px;
 	right:5px;
-}
-
-a#hideProfile:hover{
-	border:none;
-}
-
-#showProfile{
-	position:absolute;
-	bottom:0;
-	left:0;
-	border-top: solid 5px #999999;
-	border-right: solid 5px #999999;
-	display:none;
-	background:white;
 }
 
 #loading_image{
@@ -298,6 +284,34 @@ a#hideProfile:hover{
 	z-index:30;
 }
 
+#profileIntro{
+	font-size:14px;
+	text-align:center;
+	color:#333;
+	font-weight:bold;
+	margin-top:20px;
+}
+
+
+#hideProfile{
+	border:none;
+	z-index:40;
+	position:absolute;
+	left:302px;
+	bottom:168px;
+	cursor:pointer;
+}
+
+#showProfile{
+	position:absolute;
+	bottom:0;
+	left:0;
+	border-top: solid 5px #999999;
+	border-right: solid 5px #999999;
+	display:none;
+	background:white;
+}
+
 #bottomCredits{
 	position:absolute;
 	bottom:0;
@@ -322,7 +336,8 @@ div.tooltip {
     display:none; 
     color:#fff; 
     text-align:left; 
-    font-size:12px; 
+    font-size:14px; 
+	line-height:18px;
 	z-index:150;
  	-moz-border-radius: 5px;
 	-webkit-border-radius: 5px;
