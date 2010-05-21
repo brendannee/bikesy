@@ -587,6 +587,14 @@ Application = function() {
 				alert("Your current location couldn't be determined.  Please enter the start and end locations manually.");
 		}
 		
+	},
+	
+	swapAddress : function(){
+		
+		var Saddress = $('#startbox').val();
+		var Eaddress = $('#finishbox').val();
+		$('#startbox').val(Eaddress);
+		$('#finishbox').val(Saddress);
 	}
   };
 
@@ -624,6 +632,10 @@ google.setOnLoadCallback(function(){
 			$('#showProfile').hide();
 	       	return false;
        });
+
+		$('#swap').click(function(){
+			Application.swapAddress();
+	   });
 
 	});
 	

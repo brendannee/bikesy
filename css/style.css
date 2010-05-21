@@ -39,6 +39,7 @@ h1.logo a{
 ul.input_boxes{
 	padding:0;
 	margin:0;
+	position:relative;
 }
 
 ul.input_boxes li{
@@ -47,6 +48,11 @@ ul.input_boxes li{
 	margin:0;
 	font-weight:bold;
 	clear:both;
+}
+
+ul.input_boxes li.inputbox{
+	float:left;
+	width:245px;
 }
 
 ul.input_boxes li.geolocation{
@@ -66,15 +72,23 @@ ul.input_boxes li.geolocation a{
 }
 
 ul.input_boxes li .textbox{
-	width: 265px;
+	width: 220px;
 	margin:0;
 	float:left;
 }
 
 ul.input_boxes li .hills{
 	float:left;
-	width:250px;
+	width:200px;
 	padding-top:3px;
+}
+
+
+#swap{
+	cursor:pointer;
+	position:absolute;
+	top:15px;
+	right:5px;
 }
 
 #content{
