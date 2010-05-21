@@ -339,7 +339,6 @@ Application = function() {
                 color:"004efe",
                 opacity:0.6,
                 weight:7} );
-		self.map.addOverlay( routeoverlay );
 		
 		// Center and Zoom only if its a redraw
 		if(redraw == true){
@@ -350,6 +349,9 @@ Application = function() {
 			self.map.clearOverlays();
 			self.googleBike();
 		}
+		
+		//Add Route Line
+		self.map.addOverlay( routeoverlay );
 		
 		//icons for start and end		
 		self.addMarker(new GLatLng(data[0][0][5][1],data[0][0][5][0]), "start");
@@ -488,7 +490,7 @@ Application = function() {
 		
 		$.jsonp({
 			"url": "http://"+self.routeserver+":"+port+"/path?"+request+"&jsoncallback=?",
-		    "success": function(json, redraw) {self.processpath(json, redraw);},
+		    "success": function(json) {self.processpath(json, redraw);},
 			"error": function(){
 				$('#loading_image').hide(); // hide loading image
 				alert("There was an error retrieving the route data.  Please refresh the page and try again.");
