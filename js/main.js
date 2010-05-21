@@ -46,8 +46,8 @@ Application = function() {
 		
 		//Detect saved route from URL
 		if ($.getUrlVar('start')!=undefined && $.getUrlVar('end')!=undefined){
-			$('#startbox').val($.getUrlVar('start').replace(/\+/g,' '));
-			$('#finishbox').val($.getUrlVar('end').replace(/\+/g,' '));
+			$('#startbox').val($.getUrlVar('start').replace(/%20/g,' '));
+			$('#finishbox').val($.getUrlVar('end').replace(/%20/g,' '));
 			// Strip off trailing #
 			if($.getUrlVar('hills')!=undefined) {
 				$('#hills').val($.getUrlVar('hills').replace(/#/g,''));
@@ -372,16 +372,16 @@ Application = function() {
 		$("#stats").html(tripstats);
 		
 		//Create Link URL
-		linkURL = "?start=" + $('#startbox').val().replace(/ /g, "+") + "&end=" + $('#finishbox').val().replace(/ /g, "+") + "&hills=" + $('#hills').val().replace(/ /g, "+") + "&safety=" + $('#safety').val().replace(/ /g, "+");
+		linkURL = "http://511contracosta.org/bike/?start=" + $('#startbox').val() + "&end=" + $('#finishbox').val() + "&hills=" + $('#hills').val() + "&safety=" + $('#safety').val();
 		
 		//Add Permalink Control on top of map
 		$("#permalink").show();
-		$("#permalink").html("<a href='" + linkURL + "' title='Direct Link to this route'><img src='images/link.png'> Permalink to Route</a>");
+		$("#permalink").html("<a href='" + linkURL.replace(/ /g, "+") + "' title='Direct Link to this route'><img src='images/link.png'> Permalink to Route</a>");
 		
 		//Add Twitter Control on top of map
 		$("#twitter").show();
-		$("#twitter").html("<a href='http://www.addtoany.com/add_to/twitter?linkurl=" + linkURL + "&linkname=Bike Route from " + self.startName.replace(/ /g, "+") + " to " + self.finishName.replace(/ /g, "+") + "&hills=" + $('#hills').val().replace(/ /g, "+") + "&safety=" + $('#safety').val().replace(/ /g, "+") + "&linknote='><img src='images/twitter.png'> Tweet This</a>");					
-
+		$("#twitter").html("<a href='http://www.addtoany.com/add_to/twitter?linkurl=" + escape(linkURL.replace(/\+/g, " ")) + "&linkname=Bike Route from " + escape(self.startName.replace(/ /g, "+")) + " to " + escape(self.finishName.replace(/ /g, "+")) + "&hills=" + $('#hills').val().replace(/ /g, "+") + "&safety=" + $('#safety').val().replace(/ /g, "+") + "&linknote='><img src='images/twitter.png'> Tweet This</a>");					
+		
 		//Narrative
 		if (data[0][0][1] == 'nameless') {
 			// If first point is "nameless" then skip to next point for start
