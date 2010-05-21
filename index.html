@@ -35,11 +35,11 @@
 				<form id="inputs" onsubmit="$(Application.submitForm(this)); return false;" style="margin:0;" method="post" action=""> <!-- note workaround: return false to not reload page -->
 					<ul class="input_boxes">
 						<img src="images/swap.png" title="Get Reverse Directions" alt="Get Reverse Directions" id="swap" />
-						<li class="inputbox"><img src="images/green-24x24.png" alt="Origin" style="height:24px;width:24px;float:left;" /><input id="startbox" name="startbox" type="text" class="textbox" value="Concord, CA"  title="Enter your starting address, city, zip or intersection <p>You can also click anywhere on the map to create the start point</p>" /></li>
+						<li class="inputbox"><img src="images/green-24x24.png" alt="Origin" class="icon" /><input id="startbox" name="startbox" type="text" class="textbox" value="Concord, CA"  title="Enter your starting address, city, zip or intersection <p>You can also click anywhere on the map to create the start point</p>" /></li>
 						<li id="slocation" class="geolocation inputbox"><img src="images/geolocation.png" alt="GeoLocation" style="height:16px;width:16px;" /><a href="#" onclick="navigator.geolocation.getCurrentPosition(Application.getStartGeoLocator,Application.showGeoLocatorError);">Use Current Location</a></li>
-						<li class="inputbox"><img src="images/red-24x24.png" alt="Destination" style="height:24px;width:24px;float:left;" /><input id="finishbox" name="finishbox" type="text"  class="textbox" value="Walnut Creek, CA"  title="Enter your ending address, city, zip or intersection"/></li>
+						<li class="inputbox"><img src="images/red-24x24.png" alt="Destination" class="icon" /><input id="finishbox" name="finishbox" type="text"  class="textbox" value="Walnut Creek, CA"  title="Enter your ending address, city, zip or intersection"/></li>
 						<li id="elocation" class="geolocation inputbox"><img src="images/geolocation.png" alt="GeoLocation" style="height:16px;width:16px;" /><a href="#" onclick="navigator.geolocation.getCurrentPosition(Application.getEndGeoLocator,Application.showGeoLocatorError);">Use Current Location</a></li>
-						<li><img src="images/hill.png" alt="Hills" style="height:24px;width:24px;vertical-align:middle;" />
+						<li><img src="images/hill.png" alt="Hills" class="icon" />
 							Hill Reluctance:
 							<select id="hills" name="hills" style="float:right;">
 								<option value="low">Avoid at all costs</option>	
@@ -47,7 +47,7 @@
 								<option value="high">Bring on the Hills!</option>
 							</select>
 						</li>
-						<li><img src="images/safety.png" alt="Hills" style="height:24px;width:24px;vertical-align:middle;" />
+						<li><img src="images/safety.png" alt="Hills" class="icon" />
 							Route Safety:
 							<select id="safety" name="safety" style="float:right;">
 								<option value="low">Mostly Bike Routes</option>	
@@ -55,7 +55,7 @@
 								<option value="high">The most direct route</option>
 							</select>
 						</li>
-						<li><input id="submit" type="submit" value="Get Directions" title="Get Directions" /></li>
+						<li><input id="submit" type="submit" value="Get Directions" title="Get Directions"  /></li>
 					</ul>
 				</form>
 				<div id="stats"></div>

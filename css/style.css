@@ -51,8 +51,8 @@ ul.input_boxes li{
 }
 
 ul.input_boxes li.inputbox{
-	float:left;
 	width:245px;
+	padding:0;
 }
 
 ul.input_boxes li.geolocation{
@@ -74,13 +74,18 @@ ul.input_boxes li.geolocation a{
 ul.input_boxes li .textbox{
 	width: 220px;
 	margin:0;
-	float:left;
 }
 
 ul.input_boxes li .hills{
 	float:left;
 	width:200px;
 	padding-top:3px;
+}
+
+.icon{
+	height:24px;
+	width:24px;
+	vertical-align:middle;
 }
 
 
@@ -178,7 +183,6 @@ ul.input_boxes li .hills{
 	color:#0000cc;
 	text-align:center;
 	background-color:#FFF;
-	font:"small Arial";
 	border:1px solid #000;
 	margin:3px;
 }
