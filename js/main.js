@@ -220,6 +220,23 @@ Application = function() {
 		);
 	},
 	
+	getElevGain : function(profile) {
+		var totalElevGain = 0;
+		for (i=0;i<(profile.length-1);i++){
+			if (profile[i][1] < profile[i+1][1]) {
+				totalElevGain += profile[i+1][1]-profile[i][1];
+			}
+		}
+		//Convert to Feet
+		return totalElevGain*3.2808399;
+	},
+	
+	getElevChange : function(profile) {
+		var totalElevChange = profile[profile.length-1][1] - profile[0][1];
+		//Convert to Feet
+		return totalElevChange*3.2808399;
+	},
+	
 	getAddresses : function(slatlng, elatlng) {
 	  if (slatlng != null && elatlng != null) {
 		geoCoder = new GClientGeocoder();
@@ -358,6 +375,10 @@ Application = function() {
 		tripstats += "<div class='totaldistance'><img src='images/map.png'> Distance: <span style='color:#000;'>" + Math.round(routeoverlay.getLength()/1609.344*10)/10 + " miles</span></div>"; //figures are in meters
 		
 		tripstats += "<div class='time'><img src='images/time.png'> Time: <span style='color:#000;'>" + Math.round((routeoverlay.getLength()/1609.344)/0.166) + " to " + Math.round((routeoverlay.getLength()/1609.344)/0.125) + " min</span></div>";
+		
+		tripstats += "<div class='elevGain'><img src='images/up.png'> Feet of Climbing: <span style='color:#000;'>"+ Math.round(self.getElevGain(data[2]))+ " ft</span></div>";
+		
+		tripstats += "<div class='elevChange'><img src='images/elevation.png'> Total Elevation Change: <span style='color:#000;'>"+ Math.round(self.getElevChange(data[2]))+ " ft</span></div>";
 		
 		$("#stats").html(tripstats);
 		
@@ -590,11 +611,12 @@ Application = function() {
 	},
 	
 	swapAddress : function(){
-		
+		var self = Application;
 		var Saddress = $('#startbox').val();
 		var Eaddress = $('#finishbox').val();
 		$('#startbox').val(Eaddress);
 		$('#finishbox').val(Saddress);
+		self.launch($('form')[0]);
 	}
   };
 
