@@ -338,11 +338,12 @@ Application = function() {
 		if(redraw == true){
 			self.map.setZoom(self.map.getBoundsZoomLevel(routeoverlay.getBounds()));
 			self.map.panTo(routeoverlay.getBounds().getCenter());
-			
-			//Clear all points
-			self.map.clearOverlays();
-			self.googleBike();
+		
 		}
+		
+		//Clear all points
+		self.map.clearOverlays();
+		self.googleBike();
 		
 		//Add Route Line
 		self.map.addOverlay( routeoverlay );
