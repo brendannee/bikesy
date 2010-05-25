@@ -46,8 +46,8 @@ Application = function() {
 		
 		//Detect saved route from URL
 		if ($.getUrlVar('start')!=undefined && $.getUrlVar('end')!=undefined){
-			$('#startbox').val($.getUrlVar('start').replace(/%20/g,' '));
-			$('#finishbox').val($.getUrlVar('end').replace(/%20/g,' '));
+			$('#startbox').val($.getUrlVar('start').replace(/\+/g,' '));
+			$('#finishbox').val($.getUrlVar('end').replace(/\+/g,' '));
 			// Strip off trailing #
 			if($.getUrlVar('hills')!=undefined) {
 				$('#hills').val($.getUrlVar('hills').replace(/#/g,''));
