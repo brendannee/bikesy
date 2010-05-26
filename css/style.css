@@ -115,9 +115,25 @@ ul.input_boxes li .hills{
 	margin-bottom:5px;
 }
 
+#route{
+	padding:0 6px;
+	overflow:hidden;
+}
+
+.routeno{
+	width:89px;
+	float:left;
+	text-align:center;
+	font-weight:bold;
+	padding:5px 0;
+	border:1px solid #ccc;
+	margin:0 2px;
+	cursor:pointer;
+}
+
 #sidebar #resultsBox{
 	padding:3px 5px;
-	margin:0 10px;
+	margin:10px;
 	font-size:14px;
 	clear:both;
 	border: 1px #999 solid;
@@ -127,20 +143,24 @@ ul.input_boxes li .hills{
 	overflow:auto;
 }
 
-#sidebar #stats .title {
+#sidebar .stats{
+	clear:both;
+}
+
+#sidebar .stats .title {
 	font-weight:bold;
 	color: #000;
 }
 
-#sidebar #stats div{
+#sidebar .stats div{
 	margin-top:3px;
 }
 
-#sidebar #stats a{
+#sidebar .stats a{
 	color:#666;
 }
 
-#sidebar #stats img{
+#sidebar .stats img{
 	border:none;
 	height:12px;
 	width:12px;
@@ -267,6 +287,12 @@ min-height:500px;
 	text-align:center;
 }
 
+#tooltip {
+	background-color:#ffffff;
+	font-weight:bold;
+	border:1px #999999 solid;
+}
+
 
 #dragtext{
 	top:10px;
@@ -339,7 +365,7 @@ min-height:500px;
 div.tooltip { 
     background:#000 url(../images/tip.png) 10px 50% no-repeat;
     border:1px solid #fff; 
-    padding:15px 15px 15px 40px; 
+    padding:6px 10px 10px 40px; 
     width:200px; 
     display:none; 
     color:#fff; 
