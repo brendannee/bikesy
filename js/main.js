@@ -373,6 +373,9 @@ Application = function() {
 		$("#routeno"+routeno).css("color", "#000");
 		$("#routeno"+routeno).css("border", "#333 solid 1px");
 		
+		//Show Profile
+		self.gviz(self.profile[routeno]);	
+		
 
 	},
 	
@@ -570,13 +573,12 @@ Application = function() {
 		$("#resultsBox").css("max-height", (newWindowHeight-sidebarTopHeight));
 		
 		// Create Elevation Profile
-		profile = data[2];
+		self.profile[routeno] = data[2];
 		
 		//convert distance along route to miles
-		for (i=0;i<profile.length;i++){profile[i][0]=profile[i][0]/1609.344;}
-		for (i=0;i<profile.length;i++){profile[i][1]=profile[i][1]*3.2808399;}
-							
-		self.gviz(profile);		
+		for (i=0;i<self.profile[routeno].length;i++){self.profile[routeno][i][0]=self.profile[routeno][i][0]/1609.344;}
+		for (i=0;i<self.profile[routeno].length;i++){self.profile[routeno][i][1]=self.profile[routeno][i][1]*3.2808399;}
+								
 		
 		$('#loading_image').hide(); // hide loading image
 		
@@ -608,6 +610,7 @@ Application = function() {
 		self.routelines = new Array();
 		self.tripstats = new Array();
 		self.distance = new Array();
+		self.profile = new Array();
 		
 		$.jsonp({
 			"url": "http://"+self.routeserver+":"+ port +"/path?"+request+"&jsoncallback=?",
@@ -637,7 +640,6 @@ Application = function() {
 	},
 	
 	gviz: function(profile){
-		
 		var self = Application;
 		
 		if (typeof(table) == "undefined"){
