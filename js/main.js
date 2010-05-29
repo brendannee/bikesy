@@ -780,8 +780,8 @@ google.setOnLoadCallback(function(){
 			$("#sidebar").css("height", (newWindowHeight) );
 			$("#sidebar").css("max-height", (newWindowHeight) );
 			$("#resultsBox").css("max-height", (newWindowHeight-sidebarTopHeight));
-			$("#map_canvas").css("height", (newWindowHeight-191) );
-			$("#loading_image").css("top", ((newWindowHeight-191)/2) );
+			$("#map_canvas").css("height", (newWindowHeight-206) );
+			$("#loading_image").css("top", ((newWindowHeight-206)/2) );
 		}
 		
 		$('#hideProfile').click(function(){
@@ -795,8 +795,8 @@ google.setOnLoadCallback(function(){
 
 		$('#showProfile').click(function(){
        		$('#profile').show();
-			$("#map_wrapper").css("height", ($(window).height()-191) );
-			$("#map_canvas").css("height", ($(window).height()-19) );
+			$("#map_wrapper").css("height", ($(window).height()-206) );
+			$("#map_canvas").css("height", ($(window).height()-206) );
 			$('#showProfile').hide();
 			$('#hideProfile').show();
 	       	return false;
