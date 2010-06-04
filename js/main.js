@@ -435,15 +435,15 @@ Application = function() {
 		switch(routeno){
 			case 0:
 				coloron="fe0030";
-				coloroff="fed1da"
+				coloroff="fe879e"
 				break;
 			case 1:
 				coloron="a700fe";
-				coloroff="f4e1fe";
+				coloroff="d992fe";
 				break;
 			case 2:
 				coloron="004efe";
-				coloroff="e1eafe";
+				coloroff="94b5fe";
 				break;
 		}
 		
@@ -452,7 +452,7 @@ Application = function() {
                 levels:geometry[1], 
                 numLevels:4,
                 color:coloron,
-                opacity:0.6,
+                opacity:0.4,
                 weight:7} );
 
 		self.routelines[routeno] = GPolyline.fromEncoded( {points:geometry[0], 
@@ -460,7 +460,7 @@ Application = function() {
                 levels:geometry[1], 
                 numLevels:4,
                 color:coloroff,
-                opacity:0.6,
+                opacity:0.4,
                 weight:7} );
 		
 		// Center and Zoom only if its a redraw
