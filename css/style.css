@@ -68,7 +68,7 @@ ul.input_boxes li.geolocation img{
 
 ul.input_boxes li.geolocation a{
 	color: red;
-	padding-left:5px;
+	padding-left:2px;
 }
 
 ul.input_boxes li .textbox{
@@ -115,20 +115,36 @@ ul.input_boxes li .hills{
 	margin-bottom:5px;
 }
 
-#route{
+#summary{
 	padding:0 6px;
+	overflow:hidden;
+	display:none;
+	height:110px;
+}
+
+#summary div{
+	border:1px solid #ccc;
+	cursor:pointer;
 	overflow:hidden;
 }
 
-.routeno{
-	width:89px;
+#summary .title{
+	padding:5px;
+	border:none;
+	margin:0;
+	width:100px;
 	float:left;
-	text-align:center;
 	font-weight:bold;
-	padding:5px 0;
-	border:1px solid #ccc;
-	margin:0 2px;
-	cursor:pointer;
+}
+
+#summary .info{
+	padding:3px;
+	border:none;
+	margin:0;
+	width:100px;
+	float:right;
+	text-align:right;
+	font-size:11px;
 }
 
 #sidebar #resultsBox{
@@ -281,6 +297,13 @@ min-height:500px;
 }
 
 #loading_image{
+	top:50%; 
+	right:50%;
+	background:#000;
+	text-align:center;
+}
+
+#welcome_screen{
 	top:50%; 
 	right:50%;
 	background:#000;

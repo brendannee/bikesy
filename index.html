@@ -35,13 +35,13 @@
 				<form id="inputs" onsubmit="$(Application.submitForm(this)); return false;" style="margin:0;" method="post" action=""> <!-- note workaround: return false to not reload page -->
 					<ul class="input_boxes">
 						<img src="images/swap.png" title="Get Reverse Directions" alt="Get Reverse Directions" id="swap" />
-						<li class="inputbox"><img src="images/green-24x24.png" alt="Origin" class="icon" /><input id="startbox" name="startbox" type="text" class="textbox" value="Concord, CA"  title="Enter your starting address, city, zip or intersection <p>You can also click anywhere on the map to create the start point</p>" /></li>
-						<li id="slocation" class="geolocation inputbox"><img src="images/geolocation.png" alt="GeoLocation" style="height:16px;width:16px;" /><a href="#" onclick="navigator.geolocation.getCurrentPosition(Application.getStartGeoLocator,Application.showGeoLocatorError);">Use Current Location</a></li>
+						<li class="inputbox"><img src="images/green-24x24.png" alt="Origin" class="icon" /><input id="startbox" name="startbox" type="text" class="textbox" value="Concord, CA"  title="Enter your starting address, city, zip or intersection" /></li>
+						<li id="slocation" class="geolocation inputbox"><img src="images/geolocation.png" alt="GeoLocation" style="height:16px;width:16px;" /><a href="#" onclick="navigator.geolocation.getCurrentPosition(Application.getStartGeoLocator,Application.showGeoLocatorError);">Map from my current location</a></li>
 						<li class="inputbox"><img src="images/red-24x24.png" alt="Destination" class="icon" /><input id="finishbox" name="finishbox" type="text"  class="textbox" value="Danville, CA"  title="Enter your ending address, city, zip or intersection"/></li>
-						<li id="elocation" class="geolocation inputbox"><img src="images/geolocation.png" alt="GeoLocation" style="height:16px;width:16px;" /><a href="#" onclick="navigator.geolocation.getCurrentPosition(Application.getEndGeoLocator,Application.showGeoLocatorError);">Use Current Location</a></li>
+						<li id="elocation" class="geolocation inputbox"><img src="images/geolocation.png" alt="GeoLocation" style="height:16px;width:16px;" /><a href="#" onclick="navigator.geolocation.getCurrentPosition(Application.getEndGeoLocator,Application.showGeoLocatorError);">Map to my current location</a></li>
 						<li><img src="images/hill.png" alt="Hills" class="icon" />
 							Hill Reluctance:
-							<select id="hills" name="hills" style="float:right;">
+							<select id="hills" name="hills" style="float:right;" title="Choose how much you like to ride up hills">
 								<option value="low">Avoid at all costs</option>	
 								<option value="medium" selected="selected">A reasonable route</option>
 								<option value="high">Bring on the Hills!</option>
@@ -59,10 +59,10 @@
 					</ul>
 				</form>
 			</div>
-			<div id="route">
-				<div id="routeno0" class="routeno" style="background-color:#94b5fe;">Safe</div>
-				<div id="routeno1" class="routeno" style="background-color:#d992fe;">Safer</div>
-				<div id="routeno2" class="routeno" style="background-color:#fe879e;">Safest</div>
+			<div id="summary">
+				<div id="summary0" style="background-color:#e1eafe;" title="More Direct Route"><div class="title">Safe</div><div class="info"></div></div>
+				<div id="summary1" style="background-color:#f4e1fe;" title="Some bike lanes and bike routes"><div class="title">Safer</div><div class="info"></div></div>
+				<div id="summary2" style="background-color:#fed1da;" title="Attempts to find routes with mostly bike lanes and bike routes"><div class="title">Safest</div><div class="info"></div></div>
 			</div>
 			<div id="resultsBox">
 				<div id="stats0" class="stats"></div>
@@ -78,8 +78,9 @@
 			<div id="permalink" class="map-button"><a href='" + linkURL + "' title='Direct Link to this route'><img src='images/link.png'> Permalink to Route</a></div>
 			<div id="twitter" class="map-button"><a href=''><img src='images/twitter.png'> Tweet This</a></div>
 			<div id="loading_image" class="popup"><img src="images/ajax-loader.gif" alt="Loading..." /><p>Loading...</p></div>
-			<div id="dragtext" class="popup">Drag and drop icons to recalculate route<a href="#" onclick="$('#dragtext').hide();Application.showTips=false;"><img src="images/close.png" class="close" alt="close" title="Hide" /></a></div>
-			<div id="endpointtext" class="popup">Now click anywhere to choose your endpoint<a href="#" onclick="$('#endpointtext').hide();Application.showTips=false;"><img src="images/close.png" class="close" alt="close" title="Hide" /></a></div>
+			<div id="welcome_screen" class="popup" style="padding:15px;width:350px"><h2>Welcome to Bike Mapper</h2><ol style="text-align:left;"><li>Click anywhere to set the start point for your trip</li><Li>Click again to set the end point</li><li>Drag-and-drop markers to recalculate the route</li><li>Use the address boxes on the left to enter a specific address or landmark</li></ol><a href="#" onclick="$('#welcome_screen').fadeOut();Application.showTips=false;"><img src="images/close.png" class="close" alt="close" title="Close" /></a></div>
+			<div id="dragtext" class="popup">Drag and drop icons to recalculate route<a href="#" onclick="$('#dragtext').fadeOut();Application.showTips=false;"><img src="images/close.png" class="close" alt="close" title="Hide" /></a></div>
+			<div id="endpointtext" class="popup">Now click anywhere to choose your endpoint<a href="#" onclick="$('#endpointtext').fadeOut();Application.showTips=false;"><img src="images/close.png" class="close" alt="close" title="Hide" /></a></div>
 			<div id="showProfile"><a href="#" title="Show Elevation Profile"><img src="images/upright.png"></a></div>
 		</div>
 		<div id="bottomCredits">Sponsored by <a href='http://511contracosta.org' title='Visit 511ContraCosta.org'>511 Contra Costa</a> &nbsp;|&nbsp; Developed by <a href='http://blnktag.com' title='BlinkTag Inc'>BlinkTag Inc</a> &nbsp;|&nbsp; <a href="mailto:info@blinktag.com" title="Email Us">Contact Us</a></div>

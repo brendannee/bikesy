@@ -86,7 +86,7 @@ Application = function() {
 	tooltips : function (){
 			var self = Application;
 			// select all desired input fields and attach tooltips to them 
-			$("#inputs #startbox,#inputs #finishbox").tooltip({ 
+			$("#inputs #startbox,#inputs #finishbox,#inputs #hills").tooltip({ 
 			    // place tooltip on the right edge 
 			    position: "center right", 
 
@@ -104,8 +104,6 @@ Application = function() {
 
 			});
 
-			// Show Starting tooltip on page load
-			$("#inputs #startbox").tooltip().show();
 	},
 	
 	
@@ -289,6 +287,8 @@ Application = function() {
 			start_marker = new GMarker(latlng,{draggable: true, icon:startIcon});
 			self.map.addOverlay(start_marker);
 			GEvent.addListener(start_marker,'dragend',function(position){self.recalc();});
+			
+			//GEvent.addListener(start_marker,'mouseover',function(){self.showtweets(start_marker);});
 		} else if (type=="end"){
 			if (typeof(end_marker) != "undefined"){end_marker.remove();}
 			
@@ -316,18 +316,38 @@ Application = function() {
 		switch(routeno){
 			case 0:
 				coloron="fe0030";
-				coloroff="fe879e"
-				safetyTitle = "Safe (shortest route)";
+				coloroff="fed1da"
+				safetyTitle = "Safe (more direct)";
 				break;
 			case 1:
 				coloron="a700fe";
-				coloroff="d992fe";
-				safetyTitle = "Safer (some bike lanes, " + Math.round((self.distance[1]-self.distance[0])*100)/100 + " miles longer)";
+				coloroff="f4e1fe";
+				if (self.distance[1]>self.distance[0]) {
+					lengthdif = Math.round((self.distance[1]-self.distance[0])*100)/100 + " miles longer";
+				} else {
+					lengthdif = Math.round((self.distance[0]-self.distance[1])*100)/100 + " miles shorter";
+				}
+				if (self.elevation[1]>self.elevation[0]) {
+					elevdif = Math.round((self.elevation[1]-self.elevation[0])*100)/100 + " ft more climbing";
+				} else {
+					elevdif = Math.round((self.elevation[0]-self.elevation[1])*100)/100 + " ft less climbing";
+				}
+				safetyTitle = "Safer (some bike lanes, " + lengthdif + ", " +  elevdif + ")";
 				break;
 			case 2:
 				coloron="004efe";
-				coloroff="94b5fe";
-				safetyTitle = "Safest (mostly bike lanes, " + Math.round((self.distance[2]-self.distance[0])*100)/100 + " miles longer)";
+				coloroff="e1eafe";
+				if (self.distance[2]>self.distance[0]) {
+					lengthdif = Math.round((self.distance[2]-self.distance[0])*100)/100 + " miles longer";
+				} else {
+					lengthdif = Math.round((self.distance[0]-self.distance[2])*100)/100 + " miles shorter";
+				}
+				if (self.elevation[2]>self.elevation[0]) {
+					elevdif = Math.round((self.elevation[2]-self.elevation[0])*100)/100 + " ft more climbing";
+				} else {
+					elevdif = Math.round((self.elevation[0]-self.elevation[2])*100)/100 + " ft less climbing";
+				}
+				safetyTitle = "Safest (mostly bike lanes, " + lengthdif + ", " +  elevdif + ")";
 				break;
 		}
 		
@@ -368,10 +388,10 @@ Application = function() {
 		self.map.removeOverlay( self.routelines[routeno] );
 		self.map.addOverlay( self.routelines[routeno+"on"] );
 		
-		//Highlight Route Choice Box
-		$("#routeno"+routeno).css("background-color", coloron);
-		$("#routeno"+routeno).css("color", "#000");
-		$("#routeno"+routeno).css("border", "#333 solid 1px");
+		//Highlight Summary Box
+		$("#summary"+routeno).css("background-color", coloron);
+		$("#summary"+routeno).css("color", "#000");
+		$("#summary"+routeno).css("border", "#333 solid 1px");
 		
 		//Show Profile
 		self.gviz(self.profile[routeno]);	
@@ -386,18 +406,15 @@ Application = function() {
 			switch(i){
 				case 0:
 					coloron="fe0030";
-					coloroff="fe879e"
-					safetyTitle = "Safe (more direct)";
+					coloroff="fed1da"
 					break;
 				case 1:
 					coloron="a700fe";
-					coloroff="d992fe";
-					safetyTitle = "Safer (some bike lanes)";
+					coloroff="f4e1fe";
 					break;
 				case 2:
 					coloron="004efe";
-					coloroff="94b5fe";
-					safetyTitle = "Safest (most bike routes)";
+					coloroff="e1eafe";
 					break;
 			}
 			$("#stats"+i).hide();
@@ -405,9 +422,9 @@ Application = function() {
 			self.map.removeOverlay( self.routelines[i+"on"] );
 			self.map.addOverlay( self.routelines[i] );
 			//Remove Highlight Route Choice Box
-			$("#routeno"+i).css("background-color", coloroff);
-			$("#routeno"+i).css("color", "#333");
-			$("#routeno"+i).css("border", "#ccc solid 1px");
+			$("#summary"+i).css("background-color", coloroff);
+			$("#summary"+i).css("color", "#333");
+			$("#summary"+i).css("border", "#ccc solid 1px");
 		}
 	},
 	
@@ -418,18 +435,15 @@ Application = function() {
 		switch(routeno){
 			case 0:
 				coloron="fe0030";
-				coloroff="fe879e"
-				safetyTitle = "Safest (Most Bike Lanes)";
+				coloroff="fed1da"
 				break;
 			case 1:
 				coloron="a700fe";
-				coloroff="d992fe";
-				safetyTitle = "Safer";
+				coloroff="f4e1fe";
 				break;
 			case 2:
 				coloron="004efe";
-				coloroff="94b5fe";
-				safetyTitle = "Safe (More Direct)";
+				coloroff="e1eafe";
 				break;
 		}
 		
@@ -492,14 +506,19 @@ Application = function() {
 		
 		self.distance[routeno] = Math.round(self.routelines[routeno].getLength()/1609.344*10)/10;
 		
+		self.elevation[routeno] = Math.round(self.getElevGain(data[2]));
+		
 		//Add Trip Stats for Route		
 		self.tripstats[routeno] = "<div class='title'>Directions to "+self.finishName+"</div>"; 
 		
 		self.tripstats[routeno] += "<div class='totaldistance'><img src='images/map.png'> Distance: <span style='color:#000;'>" + self.distance[routeno] + " miles</span></div>"; //figures are in meters
+		self.tripsummary[routeno] = self.distance[routeno] + " miles";
 		
-		self.tripstats[routeno] += "<div class='time'><img src='images/time.png'> Time: <span style='color:#000;'>" + Math.round((self.routelines[routeno].getLength()/1609.344)/0.166) + " to " + Math.round((self.routelines[routeno].getLength()/1609.344)/0.125) + " min</span></div>";
+		self.tripstats[routeno] += "<div class='time'><img src='images/time.png'> Time: <span style='color:#000;'>" + Math.round(self.distance[routeno]/0.166) + " to " + Math.round(self.distance[routeno]/0.125) + " min</span></div>";
 		
-		self.tripstats[routeno] += "<div class='elevGain'><img src='images/up.png'> Feet of Climbing: <span style='color:#000;'>"+ Math.round(self.getElevGain(data[2]))+ " ft</span></div>";
+		self.tripstats[routeno] += "<div class='elevGain'><img src='images/up.png'> Feet of Climbing: <span style='color:#000;'>"+ self.elevation[routeno] + " ft</span></div>";
+		self.tripsummary[routeno] += "<br>" + self.elevation[routeno] + " ft";
+		
 		
 		self.tripstats[routeno] += "<div class='elevChange'><img src='images/elevation.png'> Total Elevation Change: <span style='color:#000;'>"+ Math.round(self.getElevChange(data[2]))+ " ft</span></div>";
 		
@@ -565,11 +584,13 @@ Application = function() {
 		$("#stats"+routeno).hide();
 		
 		//Show Directions
-		$("#resultsBox").show();
+		$("#resultsBox").fadeIn();
+		$("#summary"+routeno+ " .info").html(self.tripsummary[routeno]);
+		$("#summary").fadeIn();
 		
 		//Resize sidebar
 		var newWindowHeight = $(window).height();
-		var sidebarTopHeight = parseInt($("#sidebar-top").css("height"));
+		var sidebarTopHeight = parseInt($("#sidebar-top").css("height"))+parseInt($("#summary").css("height"))+parseInt($("#resultsBox").css("margin-top"))+parseInt($("#resultsBox").css("margin-bottom"));
 		$("#resultsBox").css("max-height", (newWindowHeight-sidebarTopHeight));
 		
 		// Create Elevation Profile
@@ -580,10 +601,10 @@ Application = function() {
 		for (i=0;i<self.profile[routeno].length;i++){self.profile[routeno][i][1]=self.profile[routeno][i][1]*3.2808399;}
 								
 		
-		$('#loading_image').hide(); // hide loading image
+		$('#loading_image').fadeOut(); // hide loading image
 		
 		if (self.showTips==true){ // Detect if we should show tips or not
-			$("#dragtext").show(); //Show Drag Tip
+			$("#dragtext").fadeIn(); //Show Drag Tip
 		}
 		
 		$("#inputs #startbox").tooltip().hide(); //Hide entry tip
@@ -594,6 +615,8 @@ Application = function() {
 		
 	drawpath: function(request, redraw, port){
 		var self = Application;
+		
+		$('#welcome_screen').fadeOut(); // hide welcome screen if its still up
 		
 		$('#loading_image').show(); // show loading image, as request is about to start
 		
@@ -609,7 +632,9 @@ Application = function() {
 		
 		self.routelines = new Array();
 		self.tripstats = new Array();
+		self.tripsummary = new Array();
 		self.distance = new Array();
+		self.elevation = new Array();
 		self.profile = new Array();
 		
 		$.jsonp({
@@ -668,14 +693,16 @@ Application = function() {
 		self.googleBike();
 		self.map.setUIToDefault();
 		self.addCreditsPane();
+		
+		$('#welcome_screen').fadeIn();
 	
 		GEvent.addListener(self.map, 'click', function(overlay,latlng){
 			// Allow for clicking on the map to assign initial start points
 			
 			if (typeof(start_marker) == "undefined"){
 				self.addMarker(latlng, "start");
-				$("#inputs #startbox").tooltip().hide();
-				$("#endpointtext").show(); //Show Endpoint Tooltip
+				$("#inputs #startbox").tooltip().fadeOut();
+				$("#endpointtext").fadeIn(); //Show Endpoint Tooltip
 			} else if (typeof(start_marker) != "undefined" && typeof(end_marker) == "undefined"){
 				self.addMarker(latlng, "end");
 				self.recalc();
@@ -762,7 +789,28 @@ Application = function() {
 		$('#startbox').val(Eaddress);
 		$('#finishbox').val(Saddress);
 		self.submitForm($('form')[0]);
-	}
+	},
+	
+	showtweets : function(m) {
+
+	        api = 'TJzwp7XwDN';
+
+	        var self = Application;
+	        lat = m.getLatLng().lat()
+	        lng = m.getLatLng().lng()
+	        nhood_url = 'http://api.geoapi.com/v1/parents?lat=' + lat + '&lon=' + lng + '&apikey=' + api + "&jsoncallback=?";
+	        $.getJSON(nhood_url,
+	            function(data){
+	                nhood = data.result.parents[0].meta.name;
+	                guid = data.result.parents[0].guid;
+
+	                $.getJSON("http://api.geoapi.com/v1/e/" + guid + "/view/weather?apikey=" + api + "&jsoncallback=?",    
+	                    function(data){
+	                        alert("Weather in " + nhood + " as of " + data.result[0].UpdateTime + ".  Daily Rain: " + data.result[0].DailyRain + " Temp: " + data.result[0].Temperature);
+	                    });
+	                //alert("Nhood: " + nhood);
+	            });
+	    }
   };
 
 }();
@@ -776,7 +824,7 @@ google.setOnLoadCallback(function(){
 		$(window).bind("resize", resizeWindow);
 		function resizeWindow( e ) {
 			var newWindowHeight = $(window).height();
-			var sidebarTopHeight = parseInt($("#sidebar-top").css("height"));
+			var sidebarTopHeight = parseInt($("#sidebar-top").css("height"))+parseInt($("#summary").css("height"))+parseInt($("#resultsBox").css("margin-top"))+parseInt($("#resultsBox").css("margin-bottom"));
 			$("#sidebar").css("height", (newWindowHeight) );
 			$("#sidebar").css("max-height", (newWindowHeight) );
 			$("#resultsBox").css("max-height", (newWindowHeight-sidebarTopHeight));
@@ -802,15 +850,15 @@ google.setOnLoadCallback(function(){
 	       	return false;
        });
 
-		$('#routeno0').hover(function(){
+		$('#summary0').hover(function(){
 			Application.showRoute(0, "click");
 		});
 		
-		$('#routeno1').hover(function(){
+		$('#summary1').hover(function(){
 			Application.showRoute(1, "click");
 		});
 		
-		$('#routeno2').hover(function(){
+		$('#summary2').hover(function(){
 			Application.showRoute(2, "click");
 		});
 
