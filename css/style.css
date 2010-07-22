@@ -19,10 +19,9 @@ a img{
 }
 
 h1.logo {
-width: 166px;
-height:80px;
+height:60px;
 text-indent:-9009px;
-background:url(../images/bike-mapper-logo-small.png) 0 0 no-repeat;
+background:url(../images/bikesy-logo.png) center 5px no-repeat;
 margin:3px 0 0 3px;
 }
 
@@ -290,8 +289,12 @@ min-height:500px;
 	-webkit-border-radius: 5px;
 	color:#fff;
 	padding:15px 25px 15px 40px; 
-	font-size:12px; 
+	font-size:14px; 
 	z-index:150;
+}
+
+.popup li{
+	padding:3px 0;
 }
 
 .close{
@@ -383,6 +386,7 @@ min-height:500px;
 	font-size:12px;
 	background:#eee;
 	border:1px solid #999;
+	border-bottom:0;
 	-webkit-border-top-left-radius: 5px;
 	-moz-border-radius-topleft: 5px;
 	border-top-left-radius: 5px;
