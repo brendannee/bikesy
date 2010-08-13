@@ -641,7 +641,7 @@ Application = function() {
 		
 		self.errorAlert=0;
 		$.jsonp({
-			"url": "http://"+self.routeserver+":"+ port +"/bbbpath?"+request+"&jsoncallback=?",
+			"url": "http://"+self.routeserver+":"+ port +"/path?"+request+"&jsoncallback=?",
 		    "success": function(json) {self.processpath(json, redraw, 0);},
 			"error": function(){
 				$('#loading_image').hide(); // hide loading image
