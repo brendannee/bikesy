@@ -315,13 +315,13 @@ Application = function() {
 		
 		switch(routeno){
 			case 0:
-				coloron="fe0030";
-				coloroff="fed1da"
+				coloron="c2403a";
+				coloroff="ed817e";
 				safetyTitle = "Safe (more direct)";
 				break;
 			case 1:
-				coloron="a700fe";
-				coloroff="f4e1fe";
+				coloron="fff600";
+				coloroff="ecf869";
 				if (self.distance[1]>self.distance[0]) {
 					lengthdif = Math.round((self.distance[1]-self.distance[0])*100)/100 + " miles longer";
 				} else {
@@ -335,8 +335,8 @@ Application = function() {
 				safetyTitle = "Safer (some bike lanes, " + lengthdif + ", " +  elevdif + ")";
 				break;
 			case 2:
-				coloron="004efe";
-				coloroff="e1eafe";
+				coloron="10dd00";
+				coloroff="90ff7a";
 				if (self.distance[2]>self.distance[0]) {
 					lengthdif = Math.round((self.distance[2]-self.distance[0])*100)/100 + " miles longer";
 				} else {
@@ -381,6 +381,7 @@ Application = function() {
 			self.safetytip = new ToolTipPane();
 		
 			self.map.addControl(self.safetytip);
+			
 		}
 		
 		// Show Route Line Stong Color
@@ -405,16 +406,16 @@ Application = function() {
 		for (var i=0; i<3; i++){
 			switch(i){
 				case 0:
-					coloron="fe0030";
-					coloroff="fed1da"
+					coloron="c2403a";
+					coloroff="ed817e";
 					break;
 				case 1:
-					coloron="a700fe";
-					coloroff="f4e1fe";
+					coloron="fff600";
+					coloroff="ecf869";
 					break;
 				case 2:
-					coloron="004efe";
-					coloroff="e1eafe";
+					coloron="10dd00";
+					coloroff="90ff7a"
 					break;
 			}
 			$("#stats"+i).hide();
@@ -434,16 +435,16 @@ Application = function() {
 		
 		switch(routeno){
 			case 0:
-				coloron="fe0030";
-				coloroff="fe879e"
+				coloron="c2403a";
+				coloroff="ed817e";
 				break;
 			case 1:
-				coloron="a700fe";
-				coloroff="d992fe";
+				coloron="fff600";
+				coloroff="ecf869";
 				break;
 			case 2:
-				coloron="004efe";
-				coloroff="94b5fe";
+				coloron="10dd00";
+				coloroff="90ff7a"
 				break;
 		}
 		

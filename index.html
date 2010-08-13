@@ -35,9 +35,9 @@
 				<form id="inputs" onsubmit="$(Application.submitForm(this)); return false;" style="margin:0;" method="post" action=""> <!-- note workaround: return false to not reload page -->
 					<ul class="input_boxes">
 						<img src="images/swap.png" title="Get Reverse Directions" alt="Get Reverse Directions" id="swap" />
-						<li class="inputbox"><img src="images/green-24x24.png" alt="Origin" class="icon" /><input id="startbox" name="startbox" type="text" class="textbox" value="Concord, CA"  title="Enter your starting address, city, zip or intersection" /></li>
+						<li class="inputbox"><img src="images/green-24x24.png" alt="Origin" class="icon" /><input id="startbox" name="startbox" type="text" class="textbox" value="Indiana &amp; 23rd, SF"  title="Enter your starting address, city, zip or intersection" /></li>
 						<li id="slocation" class="geolocation inputbox"><img src="images/geolocation.png" alt="GeoLocation" style="height:16px;width:16px;" /><a href="#" onclick="navigator.geolocation.getCurrentPosition(Application.getStartGeoLocator,Application.showGeoLocatorError);">Map from my current location</a></li>
-						<li class="inputbox"><img src="images/red-24x24.png" alt="Destination" class="icon" /><input id="finishbox" name="finishbox" type="text"  class="textbox" value="Danville, CA"  title="Enter your ending address, city, zip or intersection"/></li>
+						<li class="inputbox"><img src="images/red-24x24.png" alt="Destination" class="icon" /><input id="finishbox" name="finishbox" type="text"  class="textbox" value="Haight &amp; Ashbury"  title="Enter your ending address, city, zip or intersection"/></li>
 						<li id="elocation" class="geolocation inputbox"><img src="images/geolocation.png" alt="GeoLocation" style="height:16px;width:16px;" /><a href="#" onclick="navigator.geolocation.getCurrentPosition(Application.getEndGeoLocator,Application.showGeoLocatorError);">Map to my current location</a></li>
 						<li><img src="images/hill.png" alt="Hills" class="icon" />
 							Hill Reluctance:
@@ -76,7 +76,7 @@
 			<div id="endpointtext" class="popup">Now click anywhere to choose your endpoint<a href="#" onclick="$('#endpointtext').fadeOut();Application.showTips=false;"><img src="images/close.png" class="close" alt="close" title="Hide" /></a></div>
 			<div id="showProfile"><a href="#" title="Show Elevation Profile"><img src="images/upright.png"></a></div>
 		</div>
-		<div id="bottomCredits">Developed by <a href='http://blinktag.com' title='BlinkTag Inc'>BlinkTag Inc</a> &nbsp;|&nbsp; <a href="http://blog.bikesy.com/source" title="Developers">Developers</a>  &nbsp;|&nbsp; <a href="http://blog.bikesy.com/about" title="About">About</a> &nbsp;|&nbsp; <a href="mailto:info@blinktag.com" title="Email Us">Contact Us</a></div>
+		<div id="bottomCredits">Developed by <a href='http://blinktag.com' title='BlinkTag Inc'>BlinkTag Inc</a> &nbsp;|&nbsp; <a href="http://blog.bikesy.com/source" title="Developers">Developers</a>  &nbsp;|&nbsp; <a href="http://blog.bikesy.com/about" title="About">About</a> &nbsp;|&nbsp; <a href="mailto:info@bikesy.com" title="Email Us">Contact Us</a></div>
 		<div id="hideProfile" title="Hide Elevation Profile"><img src="images/close2.png"></div>
 		<div id="profile" title="Elevation Profile"><div id="profileIntro">Your Elevation Profile will go here once you select a route</div></div>
 		
