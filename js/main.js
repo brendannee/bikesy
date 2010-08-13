@@ -622,7 +622,9 @@ Application = function() {
 		
 		if (typeof(self.routelines) != "undefined"){
 			for (var i=0; i< self.routelines.length; i++){
-			{self.routelines[i].remove();}	
+				if(self.routelines[i] != undefined) {
+					self.routelines[i].remove();
+				}	
 			}
 		}
 		
@@ -637,12 +639,16 @@ Application = function() {
 		self.elevation = new Array();
 		self.profile = new Array();
 		
+		self.errorAlert=0;
 		$.jsonp({
-			"url": "http://"+self.routeserver+":"+ port +"/path?"+request+"&jsoncallback=?",
+			"url": "http://"+self.routeserver+":"+ port +"/bbbpath?"+request+"&jsoncallback=?",
 		    "success": function(json) {self.processpath(json, redraw, 0);},
 			"error": function(){
 				$('#loading_image').hide(); // hide loading image
-				alert("There was an error retrieving the route data.  Please refresh the page and try again.");
+				if(self.errorAlert==0){
+					alert("There was an error retrieving the route data.  Please refresh the page and try again.");
+				}
+				self.errorAlert = 1;
 			}
 		});	
 		$.jsonp({
@@ -650,7 +656,11 @@ Application = function() {
 		    "success": function(json) {self.processpath(json, redraw, 1);},
 			"error": function(){
 				$('#loading_image').hide(); // hide loading image
-				alert("There was an error retrieving the route data.  Please refresh the page and try again.");
+				if(self.errorAlert==0){
+					alert("There was an error retrieving the route data.  Please refresh the page and try again.");
+				}
+				self.errorAlert = 1;
+				
 			}
 		});
 		$.jsonp({
@@ -658,10 +668,13 @@ Application = function() {
 		    "success": function(json) {self.processpath(json, redraw, 2);},
 			"error": function(){
 				$('#loading_image').hide(); // hide loading image
-				alert("There was an error retrieving the route data.  Please refresh the page and try again.");
+				if(self.errorAlert==0){
+					alert("There was an error retrieving the route data.  Please refresh the page and try again.");
+				}
+				self.errorAlert = 1;
 			}
 		});
-
+		
 	},
 	
 	gviz: function(profile){
