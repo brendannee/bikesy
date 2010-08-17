@@ -832,60 +832,56 @@ Application = function() {
 google.load('visualization', '1', {packages:['scatterchart']});
 google.setOnLoadCallback(function(){
 	
-	if (navigator.appName!='Microsoft Internet Explorer') {
-		$(document).ready(function(){
-			resizeWindow();
-			//If the User resizes the window, adjust the #container height
-			$(window).bind("resize", resizeWindow);
-			function resizeWindow( e ) {
-				var newWindowHeight = $(window).height();
-				var sidebarTopHeight = parseInt($("#sidebar-top").css("height"))+parseInt($("#summary").css("height"))+parseInt($("#resultsBox").css("margin-top"))+parseInt($("#resultsBox").css("margin-bottom"));
-				$("#sidebar").css("height", (newWindowHeight) );
-				$("#sidebar").css("max-height", (newWindowHeight) );
-				$("#resultsBox").css("max-height", (newWindowHeight-sidebarTopHeight));
-				$("#map_canvas").css("height", (newWindowHeight-206) );
-				$("#loading_image").css("top", ((newWindowHeight-206)/2) );
-			}
-		
-			$('#hideProfile').click(function(){
-	       		$('#profile').slideToggle('fast');
-				$("#map_wrapper").css("height", $(window).height() );
-				$("#map_canvas").css("height", $(window).height() );
-				$('#showProfile').show();
-				$('#hideProfile').hide();
-		       	return false;
-	       });
+	$(document).ready(function(){
+		resizeWindow();
+		//If the User resizes the window, adjust the #container height
+		$(window).bind("resize", resizeWindow);
+		function resizeWindow( e ) {
+			var newWindowHeight = $(window).height();
+			var sidebarTopHeight = parseInt($("#sidebar-top").height())+parseInt($("#summary").height())+parseInt($("#resultsBox").css("margin-top"))+parseInt($("#resultsBox").css("margin-bottom"));
+			$("#sidebar").css("height", (newWindowHeight) );
+			$("#sidebar").css("max-height", (newWindowHeight) );
+			$("#resultsBox").css("max-height", (newWindowHeight-sidebarTopHeight));
+			$("#map_canvas").css("height", (newWindowHeight-206) );
+			$("#loading_image").css("top", ((newWindowHeight-206)/2) );
+		}
+	
+		$('#hideProfile').click(function(){
+       		$('#profile').slideToggle('fast');
+			$("#map_wrapper").css("height", $(window).height() );
+			$("#map_canvas").css("height", $(window).height() );
+			$('#showProfile').show();
+			$('#hideProfile').hide();
+	       	return false;
+       });
 
-			$('#showProfile').click(function(){
-	       		$('#profile').show();
-				$("#map_wrapper").css("height", ($(window).height()-206) );
-				$("#map_canvas").css("height", ($(window).height()-206) );
-				$('#showProfile').hide();
-				$('#hideProfile').show();
-		       	return false;
-	       });
+		$('#showProfile').click(function(){
+       		$('#profile').show();
+			$("#map_wrapper").css("height", ($(window).height()-206) );
+			$("#map_canvas").css("height", ($(window).height()-206) );
+			$('#showProfile').hide();
+			$('#hideProfile').show();
+	       	return false;
+       });
 
-			$('#summary0').hover(function(){
-				Application.showRoute(0, "click");
-			});
-		
-			$('#summary1').hover(function(){
-				Application.showRoute(1, "click");
-			});
-		
-			$('#summary2').hover(function(){
-				Application.showRoute(2, "click");
-			});
-
-			$('#swap').click(function(){
-				Application.swapAddress();
-		   });
-
+		$('#summary0').hover(function(){
+			Application.showRoute(0, "click");
 		});
 	
-		$(Application.init);
-	} else {
-		alert('Bikesy only works in Firefox, Chrome, Safari or Opera.  It does not work in Internet Explorer.')
-	}
+		$('#summary1').hover(function(){
+			Application.showRoute(1, "click");
+		});
+	
+		$('#summary2').hover(function(){
+			Application.showRoute(2, "click");
+		});
+
+		$('#swap').click(function(){
+			Application.swapAddress();
+	   });
+
+	});
+
+	$(Application.init);
 	
 });
