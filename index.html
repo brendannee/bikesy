@@ -29,16 +29,16 @@
 	<div id="content">
 		<div id="sidebar">
 			<div id="sidebar-top">
-				<h1 class="logo"><a href="http://511contracosta.org/bike/">511 Contra Costa Bike Mapper</a></h1>
+				<h1 class="logo"><a href="http://bikesy.com">Bikesy.com</a></h1>
 			
 				<div class="tooltip"></div>
 				<form id="inputs" onsubmit="$(Application.submitForm(this)); return false;" style="margin:0;" method="post" action=""> <!-- note workaround: return false to not reload page -->
 					<ul class="input_boxes">
 						<img src="images/swap.png" title="Get Reverse Directions" alt="Get Reverse Directions" id="swap" />
 						<li class="inputbox"><img src="images/green-24x24.png" alt="Origin" class="icon" /><input id="startbox" name="startbox" type="text" class="textbox" value="Indiana &amp; 23rd, SF"  title="Enter your starting address, city, zip or intersection" /></li>
-						<li id="slocation" class="geolocation inputbox"><img src="images/geolocation.png" alt="GeoLocation" style="height:16px;width:16px;" /><a href="#" onclick="navigator.geolocation.getCurrentPosition(Application.getStartGeoLocator,Application.showGeoLocatorError);">Map from my current location</a></li>
+						<li id="slocation" class="geolocation inputbox"><img src="images/geolocation.png" alt="GeoLocation" style="height:16px;width:16px;" /><a href="#" onclick="navigator.geolocation.getCurrentPosition(Application.getStartGeoLocator,Application.showGeoLocatorError);" title="Works best from smartphones and laptops">Map from my current location</a></li>
 						<li class="inputbox"><img src="images/red-24x24.png" alt="Destination" class="icon" /><input id="finishbox" name="finishbox" type="text"  class="textbox" value="Haight &amp; Ashbury"  title="Enter your ending address, city, zip or intersection"/></li>
-						<li id="elocation" class="geolocation inputbox"><img src="images/geolocation.png" alt="GeoLocation" style="height:16px;width:16px;" /><a href="#" onclick="navigator.geolocation.getCurrentPosition(Application.getEndGeoLocator,Application.showGeoLocatorError);">Map to my current location</a></li>
+						<li id="elocation" class="geolocation inputbox"><img src="images/geolocation.png" alt="GeoLocation" style="height:16px;width:16px;" /><a href="#" onclick="navigator.geolocation.getCurrentPosition(Application.getEndGeoLocator,Application.showGeoLocatorError);" title="Works best from smartphones and laptops">Map to my current location</a></li>
 						<li><img src="images/hill.png" alt="Hills" class="icon" />
 							Hill Reluctance:
 							<select id="hills" name="hills" style="float:right;" title="Choose how much you like to ride up hills">
