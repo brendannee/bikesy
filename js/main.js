@@ -591,7 +591,7 @@ Application = function() {
 		
 		//Resize sidebar
 		var newWindowHeight = $(window).height();
-		var sidebarTopHeight = parseInt($("#sidebar-top").css("height"))+parseInt($("#summary").css("height"))+parseInt($("#resultsBox").css("margin-top"))+parseInt($("#resultsBox").css("margin-bottom"));
+		var sidebarTopHeight = parseInt($("#sidebar-top").height())+parseInt($("#summary").height())+parseInt($("#resultsBox").css("margin-top"))+parseInt($("#resultsBox").css("margin-bottom"));
 		$("#resultsBox").css("max-height", (newWindowHeight-sidebarTopHeight));
 		
 		// Create Elevation Profile
