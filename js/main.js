@@ -36,13 +36,18 @@ Application = function() {
       if (GBrowserIsCompatible()) {self.launchMap();}
 		
 		//Get Bounds From Route Server	
-		$.getJSON("http://"+ self.routeserver+":8081/bounds?jsoncallback=?",
+		/*$.getJSON("http://"+ self.routeserver+":8081/bounds?jsoncallback=?",
 		        function(data){
 		        	self.l_lat = data[1];
 		        	self.h_lat = data[3];
 		        	self.l_lng = data[0];
 		        	self.h_lng = data[2];
-		        });
+		        });*/
+		//Hard code map bounds
+    	self.l_lat = 37.306399999999996;
+       	self.h_lat = 38.316994299999998;
+       	self.l_lng = -123.02877599999999;
+       	self.h_lng = -121.637;
 		
 		//Detect saved route from URL
 		if ($.getUrlVar('start')!=undefined && $.getUrlVar('end')!=undefined){
@@ -386,8 +391,10 @@ Application = function() {
 		
 		// Show Route Line Stong Color
 		$("#stats"+routeno).show();
-		self.map.removeOverlay( self.routelines[routeno] );
-		self.map.addOverlay( self.routelines[routeno+"on"] );
+		if (typeof(self.routelines[routeno]) != "undefined"){
+			self.map.removeOverlay( self.routelines[routeno] );
+			self.map.addOverlay( self.routelines[routeno+"on"] );
+		}
 		
 		//Highlight Summary Box
 		$("#summary"+routeno).css("background-color", coloron);
@@ -395,8 +402,9 @@ Application = function() {
 		$("#summary"+routeno).css("border", "#333 solid 1px");
 		
 		//Show Profile
-		self.gviz(self.profile[routeno]);	
-		
+		if (typeof(self.profile[routeno]) != "undefined"){
+			self.gviz(self.profile[routeno]);
+		}
 
 	},
 	
@@ -420,8 +428,10 @@ Application = function() {
 			}
 			$("#stats"+i).hide();
 			self.map.removeControl(self.safetytip);
-			self.map.removeOverlay( self.routelines[i+"on"] );
-			self.map.addOverlay( self.routelines[i] );
+			if (typeof(self.routelines[i+"on"]) != "undefined"){
+				self.map.removeOverlay( self.routelines[i+"on"] );
+				self.map.addOverlay( self.routelines[i] );
+			}
 			//Remove Highlight Route Choice Box
 			$("#summary"+i).css("background-color", coloroff);
 			$("#summary"+i).css("color", "#333");
