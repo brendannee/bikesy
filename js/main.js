@@ -61,6 +61,9 @@ Application = function() {
 		}
 		
 		
+		self.errorAlert=0;
+		
+		
 	},
 	
 	bounds : function (lat1, lng1, lat2, lng2){
@@ -650,39 +653,58 @@ Application = function() {
 		self.elevation = new Array();
 		self.profile = new Array();
 		
-		self.errorAlert=0;
 		$.jsonp({
 			"url": "http://"+self.routeserver+":"+ port +"/path?"+request+"&jsoncallback=?",
-		    "success": function(json) {self.processpath(json, redraw, 0);},
+		  "success": function(json) {self.processpath(json, redraw, 0);},
 			"error": function(){
-				$('#loading_image').hide(); // hide loading image
-				if(self.errorAlert==0){
-					alert("There was an error retrieving the route data.  Please refresh the page and try again.");
-				}
-				self.errorAlert = 1;
+				//On error, try again
+				$.jsonp({
+					"url": "http://"+self.routeserver+":"+ port +"/path?"+request+"&jsoncallback=?",
+			    "success": function(json) {self.processpath(json, redraw, 0);},
+					"error": function(){
+						$('#loading_image').hide(); // hide loading image
+						if(self.errorAlert==0){
+							alert("There was an error retrieving the route data.  Please refresh the page and try again.");
+						}
+						self.errorAlert = 1;
+					}
+				});
 			}
 		});	
 		$.jsonp({
 			"url": "http://"+self.routeserver+":"+ (port+3) +"/path?"+request+"&jsoncallback=?",
-		    "success": function(json) {self.processpath(json, redraw, 1);},
+		  "success": function(json) {self.processpath(json, redraw, 1);},
 			"error": function(){
-				$('#loading_image').hide(); // hide loading image
-				if(self.errorAlert==0){
-					alert("There was an error retrieving the route data.  Please refresh the page and try again.");
+					//On error, try again
+					$.jsonp({
+						"url": "http://"+self.routeserver+":"+ (port+3) +"/path?"+request+"&jsoncallback=?",
+					  "success": function(json) {self.processpath(json, redraw, 1);},
+						"error": function(){
+							$('#loading_image').hide(); // hide loading image
+							if(self.errorAlert==0){
+								alert("There was an error retrieving the route data.  Please refresh the page and try again.");
+							}
+							self.errorAlert = 1;
+						}
+					});
 				}
-				self.errorAlert = 1;
-				
-			}
 		});
 		$.jsonp({
 			"url": "http://"+self.routeserver+":"+ (port+6) +"/path?"+request+"&jsoncallback=?",
-		    "success": function(json) {self.processpath(json, redraw, 2);},
+		  "success": function(json) {self.processpath(json, redraw, 2);},
 			"error": function(){
-				$('#loading_image').hide(); // hide loading image
-				if(self.errorAlert==0){
-					alert("There was an error retrieving the route data.  Please refresh the page and try again.");
-				}
-				self.errorAlert = 1;
+					//On error, try again
+					$.jsonp({
+						"url": "http://"+self.routeserver+":"+ (port+6) +"/path?"+request+"&jsoncallback=?",
+					  "success": function(json) {self.processpath(json, redraw, 2);},
+						"error": function(){
+							$('#loading_image').hide(); // hide loading image
+							if(self.errorAlert==0){
+								alert("There was an error retrieving the route data.  Please refresh the page and try again.");
+							}
+							self.errorAlert = 1;
+						}
+				});
 			}
 		});
 		
