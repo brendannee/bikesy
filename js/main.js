@@ -323,13 +323,13 @@ Application = function() {
 		
 		switch(routeno){
 			case 0:
-				coloron="c2403a";
-				coloroff="ed817e";
+				coloron="#c2403a";
+				coloroff="#ed817e";
 				safetyTitle = "Safe (more direct)";
 				break;
 			case 1:
-				coloron="fff600";
-				coloroff="ecf869";
+				coloron="#fff600";
+				coloroff="#ecf869";
 				if (self.distance[1]>self.distance[0]) {
 					lengthdif = Math.round((self.distance[1]-self.distance[0])*100)/100 + " miles longer";
 				} else {
@@ -343,8 +343,8 @@ Application = function() {
 				safetyTitle = "Safer (some bike lanes, " + lengthdif + ", " +  elevdif + ")";
 				break;
 			case 2:
-				coloron="10dd00";
-				coloroff="90ff7a";
+				coloron="#10dd00";
+				coloroff="#90ff7a";
 				if (self.distance[2]>self.distance[0]) {
 					lengthdif = Math.round((self.distance[2]-self.distance[0])*100)/100 + " miles longer";
 				} else {
@@ -417,16 +417,16 @@ Application = function() {
 		for (var i=0; i<3; i++){
 			switch(i){
 				case 0:
-					coloron="c2403a";
-					coloroff="ed817e";
+					coloron="#c2403a";
+					coloroff="#ed817e";
 					break;
 				case 1:
-					coloron="fff600";
-					coloroff="ecf869";
+					coloron="#fff600";
+					coloroff="#ecf869";
 					break;
 				case 2:
-					coloron="10dd00";
-					coloroff="90ff7a"
+					coloron="#10dd00";
+					coloroff="#90ff7a"
 					break;
 			}
 			$("#stats"+i).hide();
@@ -448,16 +448,16 @@ Application = function() {
 		
 		switch(routeno){
 			case 0:
-				coloron="c2403a";
-				coloroff="ed817e";
+				coloron="#c2403a";
+				coloroff="#ed817e";
 				break;
 			case 1:
-				coloron="fff600";
-				coloroff="ecf869";
+				coloron="#fff600";
+				coloroff="#ecf869";
 				break;
 			case 2:
-				coloron="10dd00";
-				coloroff="90ff7a"
+				coloron="#10dd00";
+				coloroff="#90ff7a"
 				break;
 		}
 		
