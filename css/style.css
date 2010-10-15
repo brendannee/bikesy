@@ -429,3 +429,11 @@ div.tooltip {
     -webkit-box-shadow:0 0 10px #000; 
 }
 
+#ie6msg{
+	display:none;
+	width:800px;
+	margin:10px auto;
+}
+#ie6msg a{
+	text-decoration:underline;
+}
