@@ -39,6 +39,7 @@ ul.input_boxes{
 	padding:0;
 	margin:0;
 	position:relative;
+	font-size:12px;
 }
 
 ul.input_boxes li{
@@ -71,14 +72,25 @@ ul.input_boxes li.geolocation a{
 }
 
 ul.input_boxes li .textbox{
-	width: 220px;
+	width: 210px;
 	margin:0;
 }
 
-ul.input_boxes li .hills{
-	float:left;
-	width:200px;
+ul.input_boxes #hillsline{
 	padding-top:3px;
+}
+
+ul.input_boxes #hillsline label{
+	width:100px;
+	float:left;
+	padding-top:3px;
+	font-size:13px;
+}
+
+ul.input_boxes #hillsline select{
+	float:right;
+	width:150px;
+	margin-right:2px;
 }
 
 .icon{
@@ -102,6 +114,7 @@ ul.input_boxes li .hills{
 
 #sidebar{
 	position:absolute;
+	left:0;
 	width:300px;
 }
 

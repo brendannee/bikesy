@@ -10,6 +10,9 @@
 
 	<meta name="description" content="Find Your Way Around Contra Costa County by Bike.  Avoid Hills." />
 	<meta name="keywords" content="biking, maps, bicycles, Contra Costa, California, Hills, trip planner" />
+  <!--[if lt IE 9]>
+  <script src="http://ie7-js.googlecode.com/svn/version/2.1(beta4)/IE9.js"></script>
+  <![endif]-->
   </head>
   <body onunload="GUnload()">
 	<script type="text/javascript">
@@ -39,9 +42,9 @@
 						<li id="slocation" class="geolocation inputbox"><img src="images/geolocation.png" alt="GeoLocation" style="height:16px;width:16px;" /><a href="#" onclick="navigator.geolocation.getCurrentPosition(Application.getStartGeoLocator,Application.showGeoLocatorError);" title="Works best from smartphones and laptops">Map from my current location</a></li>
 						<li class="inputbox"><img src="images/red-24x24.png" alt="Destination" class="icon" /><input id="finishbox" name="finishbox" type="text"  class="textbox" value="Haight &amp; Ashbury"  title="Enter your ending address, city, zip or intersection"/></li>
 						<li id="elocation" class="geolocation inputbox"><img src="images/geolocation.png" alt="GeoLocation" style="height:16px;width:16px;" /><a href="#" onclick="navigator.geolocation.getCurrentPosition(Application.getEndGeoLocator,Application.showGeoLocatorError);" title="Works best from smartphones and laptops">Map to my current location</a></li>
-						<li><img src="images/hill.png" alt="Hills" class="icon" />
-							Hill Reluctance:
-							<select id="hills" name="hills" style="float:right;" title="Choose how much you like to ride up hills">
+						<li id="hillsline"><img src="images/hill.png" alt="Hills" class="icon" style="float:left;" />
+							<label>Hill Reluctance:</label>
+							<select id="hills" name="hills" title="Choose how much you like to ride up hills">
 								<option value="low">Avoid at all costs</option>	
 								<option value="medium" selected="selected">A reasonable route</option>
 								<option value="high">Bring on the Hills!</option>
