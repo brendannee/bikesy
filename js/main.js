@@ -453,12 +453,16 @@ Application = function() {
 		if(hours1 == 0 && hours2 ==0 ){
 		  times = minutes1 + ' to ' + minutes2 + ' min';
 		} else {
-	  	if (hours1 == 1){
+		  if (hours1 == 0){
+		    times = minutes1 + ' mins to ';
+	  	} else if (hours1 == 1){
   		  times = hours1 + ' hour ' + minutes1 + ' mins to ';
   		} else {
   		  times = hours1 + ' hours ' + minutes1 + ' mins to ';
   		}
-  		if (hours2 == 1){
+  		if (hours2 == 0){
+  		  times += minutes2 + ' mins';
+  		} else if (hours2 == 1){
   		 times += hours2 + ' hour ' + minutes2 + ' mins';
   		} else{
    		 times += hours2 + ' hours ' + minutes2 + ' mins';
