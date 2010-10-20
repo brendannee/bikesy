@@ -442,6 +442,31 @@ Application = function() {
 		}
 	},
 	
+	formatTime: function(minutes1, minutes2){
+	  times = '';
+	  minutes1 = Math.round(minutes1);
+	  minutes2 = Math.round(minutes2);
+	  hours1 = Math.floor(minutes1/60);
+	  minutes1 = minutes1%60;
+	  hours2 = Math.floor(minutes2/60);
+	  minutes2 = minutes2%60;		  
+		if(hours1 == 0 && hours2 ==0 ){
+		  times = minutes1 + ' to ' + minutes2 + ' min';
+		} else {
+	  	if (hours1 == 1){
+  		  times = hours1 + ' hour ' + minutes1 + ' mins to ';
+  		} else {
+  		  times = hours1 + ' hours ' + minutes1 + ' mins to ';
+  		}
+  		if (hours2 == 1){
+  		 times += hours2 + ' hour ' + minutes2 + ' mins';
+  		} else{
+   		 times += hours2 + ' hours ' + minutes2 + ' mins';
+   		}
+   	}
+		return times;
+	},
+	
 	processpath: function(data, redraw, routeno){
 		var self = Application;
 		geometry = data[1];
@@ -528,7 +553,7 @@ Application = function() {
 		self.tripstats[routeno] += "<div class='totaldistance'><img src='images/map.png'> Distance: <span style='color:#000;'>" + self.distance[routeno] + " miles</span></div>"; //figures are in meters
 		self.tripsummary[routeno] = self.distance[routeno] + " miles";
 		
-		self.tripstats[routeno] += "<div class='time'><img src='images/time.png'> Time: <span style='color:#000;'>" + Math.round(self.distance[routeno]/0.166) + " to " + Math.round(self.distance[routeno]/0.125) + " min</span></div>";
+		self.tripstats[routeno] += "<div class='time'><img src='images/time.png'> Time: <span style='color:#000;'>" + self.formatTime(self.distance[routeno]/0.166, self.distance[routeno]/0.125) + "</span></div>";
 		
 		self.tripstats[routeno] += "<div class='elevGain'><img src='images/up.png'> Feet of Climbing: <span style='color:#000;'>"+ self.elevation[routeno] + " ft</span></div>";
 		self.tripsummary[routeno] += "<br>" + self.elevation[routeno] + " ft";
