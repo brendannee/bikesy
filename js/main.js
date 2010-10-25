@@ -770,17 +770,19 @@ Application = function() {
 		self.addCreditsPane();
 		
 		$('#welcome_screen').fadeIn();
-	
 		GEvent.addListener(self.map, 'click', function(overlay,latlng){
 			// Allow for clicking on the map to assign initial start points
 			
 			if (typeof(start_marker) == "undefined"){
 				self.addMarker(latlng, "start");
-				$("#inputs #startbox").tooltip().fadeOut();
+				self.startpoint = latlng;
+				$("#inputs #startbox").tooltip().hide();
 				$("#endpointtext").fadeIn(); //Show Endpoint Tooltip
 			} else if (typeof(start_marker) != "undefined" && typeof(end_marker) == "undefined"){
-				self.addMarker(latlng, "end");
-				self.recalc();
+			  if(self.startpoint.toString()!=latlng.toString()){
+  				self.addMarker(latlng, "end");
+  				self.recalc();
+  			}
 			}
 		});
     },
