@@ -204,11 +204,14 @@ Application = function() {
 		return totalElevChange*3.2808399;
 	},
 	
-	getAddresses : function(slatlng, elatlng) {
-	  if (slatlng != null && elatlng != null) {
-		geoCoder = new GClientGeocoder();
-		geoCoder.getLocations(slatlng, this.updateSAddress);
-		geoCoder.getLocations(elatlng, this.updateEAddress);
+	getAddress : function(latlng, marker_name) {
+	  if (latlng) {
+	    geoCoder = new GClientGeocoder();
+	    if(marker_name=='start'){
+    	  geoCoder.getLocations(latlng, this.updateSAddress);
+    	} else if(marker_name=='end'){
+    	  geoCoder.getLocations(latlng, this.updateEAddress);
+    	}
 	  }
 	},
 
@@ -228,7 +231,7 @@ Application = function() {
 	  }
 	},
 	
-	recalc : function() {
+	recalc : function(marker_name) {
 		if (typeof(start_marker) != "undefined"){
 			var self = Application;
 			slat = start_marker.getLatLng().lat();
@@ -246,7 +249,14 @@ Application = function() {
 				eCoords = new GLatLng(elat,elng);
 				
 				//Reverse Geocode
-				this.getAddresses(sCoords,eCoords);
+				if(marker_name=='start'){
+				  this.getAddress(sCoords, 'start');
+				} else if(marker_name=='end'){
+				  this.getAddress(eCoords, 'end');
+				} else if(marker_name=='both'){
+				  this.getAddress(sCoords, 'start');
+				  this.getAddress(eCoords, 'end');
+				}
 				
 				//Remove old overlay
 				if (typeof(routeoverlay) != "undefined"){routeoverlay.remove();}
@@ -294,7 +304,7 @@ Application = function() {
 		
 			start_marker = new GMarker(latlng,{draggable: true, icon:startIcon});
 			self.map.addOverlay(start_marker);
-			GEvent.addListener(start_marker,'dragend',function(position){self.recalc();});
+			GEvent.addListener(start_marker,'dragend',function(position){self.recalc('start');});
 			
 			//GEvent.addListener(start_marker,'mouseover',function(){self.showtweets(start_marker);});
 		} else if (type=="end"){
@@ -307,7 +317,7 @@ Application = function() {
 			
 			end_marker = new GMarker(latlng,{draggable: true, icon:endIcon});
 			self.map.addOverlay(end_marker);
-			GEvent.addListener(end_marker,'dragend',function(position){self.recalc();});
+			GEvent.addListener(end_marker,'dragend',function(position){self.recalc('end');});
 		}
 	},
 	
@@ -781,7 +791,7 @@ Application = function() {
 			} else if (typeof(start_marker) != "undefined" && typeof(end_marker) == "undefined"){
 			  if(self.startpoint.toString()!=latlng.toString()){
   				self.addMarker(latlng, "end");
-  				self.recalc();
+  				self.recalc('both');
   			}
 			}
 		});
