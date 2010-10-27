@@ -537,7 +537,7 @@ Application = function() {
 		document.title = self.startName+" to "+self.finishName+" | San Francisco Bay Area Bike Mapper";
 		
 		//Create Link URL
-		linkURL = "http://511contracosta.org/bike/?start=" + $('#startbox').val() + "&end=" + $('#finishbox').val() + "&hills=" + $('#hills').val();
+		linkURL = "?start=" + $('#startbox').val().replace(/&/g, "and") + "&end=" + $('#finishbox').val().replace(/&/g, "and") + "&hills=" + $('#hills').val();
 		
 		//Add Permalink Control on top of map
 		$("#permalink").show();
