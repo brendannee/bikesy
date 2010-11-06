@@ -17,7 +17,13 @@ a:hover{
 a img{
 	border:none;
 }
+#logo2{
+padding-left:10px;
+padding-top:10px;
 
+
+
+}
 h1.logo {
 height:60px;
 text-indent:-9009px;
@@ -332,6 +338,7 @@ min-height:500px;
 }
 
 #tooltip {
+
 	background-color:#ffffff;
 	font-weight:bold;
 	border:1px #999999 solid;
