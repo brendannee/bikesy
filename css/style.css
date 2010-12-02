@@ -351,7 +351,6 @@ min-height:500px;
 }
 
 #tooltip {
-
 	background-color:#ffffff;
 	font-weight:bold;
 	border:1px #999999 solid;
@@ -438,20 +437,20 @@ min-height:500px;
 
 /* simple css-based tooltip */ 
 div.tooltip { 
-    background:#000 url(../images/tip.png) 10px 50% no-repeat;
-    border:1px solid #fff; 
-    padding:6px 10px 10px 40px; 
-    width:200px; 
-    display:none; 
-    color:#fff; 
-    text-align:left; 
-    font-size:14px; 
-	line-height:18px;
-	z-index:150;
- 	-moz-border-radius: 5px;
-	-webkit-border-radius: 5px;
-    -moz-box-shadow:0 0 10px #000; 
-    -webkit-box-shadow:0 0 10px #000; 
+  background:#333 url(../images/tip.png) 10px 50% no-repeat;
+  padding:6px 10px 10px 40px; 
+  width:200px; 
+  display:none; 
+  color:#fff; 
+  text-align:left; 
+  font-size:14px; 
+  line-height:18px;
+  z-index:150;
+  -moz-border-radius: 3px;
+  -webkit-border-radius: 3px;
+  border-radius: 3px;
+  -moz-box-shadow:0 0 10px #000; 
+  -webkit-box-shadow:0 0 10px #000; 
 }
 
 #ie6msg{
