@@ -1,5 +1,5 @@
 body{
-font-family:helvetica, arial, sans-serif;
+font-family:Arimo, helvetica, arial, sans-serif;
 margin:0;
 color: #666;
 }
@@ -17,27 +17,35 @@ a:hover{
 a img{
 	border:none;
 }
-#logo2{
-padding-left:10px;
-padding-top:10px;
 
-
-
+#logo{
+  position:absolute;
+	top:0px;
+	left:85px;
+	width:120px;
+	height:80px;
+	background:#333333;
+	text-align:center;
+  -webkit-border-bottom-right-radius: 3px;
+  -webkit-border-bottom-left-radius: 3px;
+  -moz-border-radius-bottomright: 3px;
+  -moz-border-radius-bottomleft: 3px;
+  border-bottom-right-radius: 3px;
+  border-bottom-left-radius: 3px;
+  -moz-box-shadow:0px 0px 5px #000; 
+  -webkit-box-shadow:0px 0px 5px #000;
+  box-shadow:0px 0px 5px #000; 
+  z-index:100;
 }
-h1.logo {
-height:60px;
+
+#logo h1 {
 text-indent:-9009px;
-background:url(../images/bikesy-logo.png) center 5px no-repeat;
-margin:3px 0 0 3px;
+margin:0;
+padding:0;
+height:10px;
 }
 
-h1.logo a{
-	display:block;
-	width: 166px;
-	height:75px;
-}
-
-#header .logo img {
+#logo img {
 	border:0;
 }
 
@@ -124,6 +132,10 @@ ul.input_boxes #hillsline select{
 	width:300px;
 }
 
+#sidebar-top{
+  padding-top:10px;
+}
+
 #sidebar #inputs{
 	padding-left:5px;
 }
@@ -171,8 +183,8 @@ ul.input_boxes #hillsline select{
 	font-size:14px;
 	clear:both;
 	border: 1px #999 solid;
-    -moz-box-shadow:3px 3px 8px #999; 
-    -webkit-box-shadow:3px 3px 8px #999;
+-moz-box-shadow:3px 3px 8px #999; 
+-webkit-box-shadow:3px 3px 8px #999;
 	display:none;
 	overflow:auto;
 }
@@ -304,6 +316,7 @@ min-height:500px;
    	-moz-opacity:0.8;           /* Mozilla 1.6 and below   */
    	opacity: 0.8;               /* newer Mozilla and CSS-3 */
  	text-align:left;
+ 	border-radius: 5px;
 	-moz-border-radius: 5px;
 	-webkit-border-radius: 5px;
 	color:#fff;
@@ -402,17 +415,22 @@ min-height:500px;
 	position:absolute;
 	bottom:0;
 	right:0;
+	color:#FFF;
 	padding:2px 10px 0 2px;
 	font-size:12px;
-	background:#eee;
-	border:1px solid #999;
-	border-bottom:0;
-	-webkit-border-top-left-radius: 5px;
-	-moz-border-radius-topleft: 5px;
-	border-top-left-radius: 5px;
+	background:#333;
+	height:13px;
+	-webkit-border-top-left-radius: 3px;
+	-moz-border-radius-topleft: 3px;
+	border-top-left-radius: 3px;
+	-moz-box-shadow:0px 0px 5px #000; 
+  -webkit-box-shadow:0px 0px 5px #000;
+  box-shadow:0px 0px 5px #000;
 	z-index:40;
 }
-
+#bottomCredits a{
+  color:#FFF;
+}
 
 #bottomCredits a:hover{
 	text-decoration:underline;

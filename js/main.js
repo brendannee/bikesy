@@ -643,7 +643,7 @@ Application = function() {
 		
 		//Resize sidebar
 		var newWindowHeight = $(window).height();
-		var sidebarTopHeight = parseInt($("#sidebar-top").height())+parseInt($("#summary").height())+parseInt($("#resultsBox").css("margin-top"))+parseInt($("#resultsBox").css("margin-bottom"));
+		var sidebarTopHeight = parseInt($("#sidebar-top").height())+parseInt($("#sidebar-top").css("padding-top"))+parseInt($("#summary").height())+parseInt($("#resultsBox").css("margin-top"))+parseInt($("#resultsBox").css("margin-bottom"));
 		$("#resultsBox").css("max-height", (newWindowHeight-sidebarTopHeight));
 		
 		// Create Elevation Profile
@@ -911,7 +911,7 @@ google.setOnLoadCallback(function(){
 		$(window).bind("resize", resizeWindow);
 		function resizeWindow( e ) {
 			var newWindowHeight = $(window).height();
-			var sidebarTopHeight = parseInt($("#sidebar-top").height())+parseInt($("#summary").height())+parseInt($("#resultsBox").css("margin-top"))+parseInt($("#resultsBox").css("margin-bottom"));
+			var sidebarTopHeight = parseInt($("#sidebar-top").height())+parseInt($("#sidebar-top").css("padding-top"))+parseInt($("#summary").height())+parseInt($("#resultsBox").css("margin-top"))+parseInt($("#resultsBox").css("margin-bottom"));
 			$("#sidebar").css("height", (newWindowHeight) );
 			$("#sidebar").css("max-height", (newWindowHeight) );
 			$("#resultsBox").css("max-height", (newWindowHeight-sidebarTopHeight));

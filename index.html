@@ -6,6 +6,7 @@
 	<meta http-equiv="X-UA-Compatible" content="chrome=1">
 	
 	<title>San Francisco Bay Area Bike Mapper - Bikesy</title>
+	<link href='http://fonts.googleapis.com/css?family=Arimo:regular,bold&subset=latin' rel='stylesheet' type='text/css'>
 	<link rel="stylesheet" type="text/css" href="css/style.css" media="screen" />
     <link rel="stylesheet" type="text/css" href="css/print.css" media="print" />
 	<meta name="description" content="Avoid hills and find bike routes with Bikesy.com, an innovative and open-source bike mapping system specially designed to find flat, safe, and fast bike routes anywhere in the San Francisco Bay Area. San Francisco isn’t New York – they might have taller buildings, but we’ve got bigger hills. Since we couldn’t find another service that lets you choose slightly longer but less steep routes, we made our own. Even better, Bikesy automatically gives you an elevation profile for your ride to help you prepare for the tough parts." />
@@ -29,8 +30,6 @@
 	<div id="content">
 		<div id="sidebar">
 			<div id="sidebar-top">
-				
-			    <div id="logo2"><a href="http://bikesy.com"><img src="images/bikesy-logo.png"/></a>		      </div>
 			    <div class="tooltip"></div>
 				<form id="inputs" onsubmit="$(Application.submitForm(this)); return false;" style="margin:0;" method="post" action=""> <!-- note workaround: return false to not reload page -->
 					<ul class="input_boxes">
@@ -66,12 +65,12 @@
 			
 		</div>
 		<div id="map_wrapper">
-			<div id="map_canvas">
-			</div>
+			<div id="logo"><h1>Bikesy.com - San Francisco Bay Area Bike Mapper</h1><a href="http://bikesy.com" title="Bikesy.com"><img src="images/bikesy-logo.png"/></a></div>
+			<div id="map_canvas"></div>
 			<div id="permalink" class="map-button"><a href='" + linkURL + "' title='Direct Link to this route'><img src='images/link.png'> Permalink to Route</a></div>
 			<div id="twitter" class="map-button"><a href=''><img src='images/twitter.png'> Tweet This</a></div>
 			<div id="loading_image" class="popup"><img src="images/ajax-loader.gif" alt="Loading..." /><p>Loading...</p></div>
-			<div id="welcome_screen" class="popup" style="padding:15px;width:350px"><h2>Welcome to Bikesy</h2><ol style="text-align:left;"><li>Click anywhere to set the start point for your trip</li><Li>Click again to set the end point</li><li>Drag-and-drop markers to recalculate the route</li><li>Use the address boxes on the left to enter a specific address or landmark</li></ol><a href="#" onclick="$('#welcome_screen').fadeOut();Application.showTips=false;"><img src="images/close.png" class="close" alt="close" title="Close" /></a></div>
+			<div id="welcome_screen" class="popup" style="padding:15px;width:350px"><img src="images/welcome-to-bikesy.png" alt="Welcome to Bikesy" style="width:285px;height:51px;"/><ol style="text-align:left;"><li>Click anywhere to set the start point for your trip</li><Li>Click again to set the end point</li><li>Drag-and-drop markers to recalculate the route</li><li>Use the address boxes on the left to enter a specific address or landmark</li></ol><a href="#" onclick="$('#welcome_screen').fadeOut();Application.showTips=false;"><img src="images/close.png" class="close" alt="close" title="Close" /></a></div>
 			<div id="dragtext" class="popup">Drag and drop icons to recalculate route<a href="#" onclick="$('#dragtext').fadeOut();Application.showTips=false;"><img src="images/close.png" class="close" alt="close" title="Hide" /></a></div>
 			<div id="endpointtext" class="popup">Now click anywhere to choose your endpoint<a href="#" onclick="$('#endpointtext').fadeOut();Application.showTips=false;"><img src="images/close.png" class="close" alt="close" title="Hide" /></a></div>
 			<div id="showProfile"><a href="#" title="Show Elevation Profile"><img src="images/upright.png"></a></div>

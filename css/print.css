@@ -17,27 +17,13 @@ a:hover{
 a img{
 	border:none;
 }
-#logo2{
-padding-left:10px;
-padding-top:10px;
-
-
-
-}
-h1.logo {
-height:60px;
-text-indent:-9009px;
-background:url(../images/bikesy-logo.png) center 5px no-repeat;
-margin:3px 0 0 3px;
+#logo{
 }
 
-h1.logo a{
-	display:block;
-	width: 166px;
-	height:75px;
+#logo h1 {
 }
 
-#header .logo img {
+#logo img {
 	border:0;
 }
 
@@ -145,7 +131,7 @@ left:0;
 
 #summary div{
 display:none;
-	border:1px solid #ccc;
+	border:none;
 	cursor:pointer;
 	overflow:hidden;
 }
@@ -245,7 +231,7 @@ display:none;
 
 #map_wrapper{
 	clear:both;
-	border-left: solid 1px #999999;
+	border-left: none;
 	margin-left:0px;
 	color:#000;
 	font-size:11px;
@@ -398,8 +384,7 @@ visibility:hidden;
 #profile{
 	margin-left:0px;
 	position:relative;
-	border-top: solid 1px #999999;
-	border-left: solid 1px #999999;
+	border: none;
 	height:190px;
 	clear:both;
 	z-index:30;
