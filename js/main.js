@@ -304,7 +304,11 @@ Application = function() {
 		
 			start_marker = new GMarker(latlng,{draggable: true, icon:startIcon});
 			self.map.addOverlay(start_marker);
-			GEvent.addListener(start_marker,'dragend',function(position){self.recalc('start');});
+			GEvent.addListener(start_marker,'dragend',function(position){
+			  self.showTips = false;
+			  $("#dragtext").fadeOut();
+			  self.recalc('start');
+			});
 			
 			//GEvent.addListener(start_marker,'mouseover',function(){self.showtweets(start_marker);});
 		} else if (type=="end"){
@@ -317,7 +321,11 @@ Application = function() {
 			
 			end_marker = new GMarker(latlng,{draggable: true, icon:endIcon});
 			self.map.addOverlay(end_marker);
-			GEvent.addListener(end_marker,'dragend',function(position){self.recalc('end');});
+			GEvent.addListener(end_marker,'dragend',function(position){
+			  self.showTips = false;
+			  $("#dragtext").fadeOut();
+			  self.recalc('end');
+			});
 		}
 	},
 	
