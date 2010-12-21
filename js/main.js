@@ -398,7 +398,7 @@ Application = function() {
 				var point=self.map.getCurrentMapType().getProjection().fromLatLngToPixel(self.map.getBounds().getSouthWest(),self.map.getZoom());
 				var offset=self.map.getCurrentMapType().getProjection().fromLatLngToPixel(self.cursorpos,self.map.getZoom())
 				return new GControlPosition(
-				G_ANCHOR_BOTTOM_LEFT, new GSize(offset.x-point.x,point.y-offset.y));
+				G_ANCHOR_BOTTOM_LEFT, new GSize(offset.x-point.x,point.y-offset.y+40));
 			};
 
 			ToolTipPane.prototype.getPanel = function() {
@@ -407,7 +407,6 @@ Application = function() {
 			self.safetytip = new ToolTipPane();
 		
 			self.map.addControl(self.safetytip);
-			
 		}
 		
 		// Show Route Line Stong Color

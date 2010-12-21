@@ -310,11 +310,11 @@ min-height:500px;
 	position:absolute; 
 	display:none;
 	width:240px;
-	border:1px solid #fff;
+	border:2px solid #fff;
 	background:#000 url(../images/tip.png) 10px 50% no-repeat;
-	filter:alpha(opacity=80);   /* Internet Explorer       */
-   	-moz-opacity:0.8;           /* Mozilla 1.6 and below   */
-   	opacity: 0.8;               /* newer Mozilla and CSS-3 */
+	filter:alpha(opacity=80);
+  -moz-opacity:0.8;
+  opacity: 0.8;
  	text-align:left;
  	border-radius: 5px;
 	-moz-border-radius: 5px;
@@ -323,6 +323,9 @@ min-height:500px;
 	padding:15px 25px 15px 40px; 
 	font-size:14px; 
 	z-index:150;
+	-moz-box-shadow: 5px 5px 10px #333;
+  -webkit-box-shadow: 5px 5px 10px #333;
+  box-shadow: 5px 5px 10px #333;
 }
 
 .popup li{
@@ -346,8 +349,15 @@ min-height:500px;
 #welcome_screen{
 	top:50%; 
 	right:50%;
-	background:#000;
+	background:#333;
+	filter:alpha(opacity=100);
+  -moz-opacity:1;
+  opacity: 1;
 	text-align:center;
+	padding:15px;
+  font-size:16px;
+  line-height:20px;
+	width:380px;
 }
 
 #tooltip {
@@ -422,9 +432,6 @@ min-height:500px;
 	-webkit-border-top-left-radius: 3px;
 	-moz-border-radius-topleft: 3px;
 	border-top-left-radius: 3px;
-	-moz-box-shadow:0px 0px 5px #000; 
-  -webkit-box-shadow:0px 0px 5px #000;
-  box-shadow:0px 0px 5px #000;
 	z-index:40;
 }
 #bottomCredits a{
