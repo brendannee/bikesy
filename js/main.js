@@ -555,15 +555,15 @@ Application = function() {
 		document.title = self.startName+" to "+self.finishName+" | San Francisco Bay Area Bike Mapper";
 		
 		//Create Link URL
-		linkURL = "?start=" + $('#startbox').val().replace(/&/g, "and") + "&end=" + $('#finishbox').val().replace(/&/g, "and") + "&hills=" + $('#hills').val();
+		linkURL = "?start=" + $('#startbox').val().replace(/&/g, "and").replace(/ /g, "+") + "&end=" + $('#finishbox').val().replace(/&/g, "and").replace(/ /g, "+") + "&hills=" + $('#hills').val();
 		
 		//Add Permalink Control on top of map
 		$("#permalink").show();
-		$("#permalink").html("<a href='" + linkURL.replace(/ /g, "+") + "' title='Direct Link to this route'><img src='images/link.png'> Permalink to Route</a>");
+		$("#permalink").html("<a href='" + linkURL + "' title='Direct Link to this route'><img src='images/link.png'> Permalink to Route</a>");
 		
 		//Add Twitter Control on top of map
 		$("#twitter").show();
-		$("#twitter").html("<a href='http://www.addtoany.com/add_to/twitter?linkurl=" + escape(linkURL.replace(/\+/g, " ")) + "&linkname=Bike Route from " + escape(self.startName.replace(/ /g, "+")) + " to " + escape(self.finishName.replace(/ /g, "+")) + "&hills=" + $('#hills').val().replace(/ /g, "+") + "&linknote='><img src='images/twitter.png'> Tweet This</a>");					
+		$("#twitter").html("<a href='http://www.addtoany.com/add_to/twitter?linkurl=" + encodeURIComponent("http://bikesy.com"+linkURL) + "&linkname=" + encodeURIComponent("Bike Route from " + self.startName.replace(/\+/g, "").replace(/&/g, "and") + " to " + self.finishName.replace(/\+/g, "").replace(/&/g, "and"))+"'><img src='images/twitter.png'> Tweet This</a>");
 		
 		self.distance[routeno] = Math.round(self.routelines[routeno].getLength()/1609.344*10)/10;
 		
