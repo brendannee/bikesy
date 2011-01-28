@@ -445,6 +445,7 @@ min-height:500px;
 /* simple css-based tooltip */ 
 div.tooltip { 
   background:#333 url(../images/tip.png) 10px 50% no-repeat;
+  background-color:rgba(30,30,30,.7);
   padding:6px 10px 10px 40px; 
   width:200px; 
   display:none; 

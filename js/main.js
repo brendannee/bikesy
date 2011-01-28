@@ -376,7 +376,7 @@ Application = function() {
 				safetyTitle = "Safest (mostly bike lanes, " + lengthdif + ", " +  elevdif + ")";
 				break;
 		}
-		
+		/*
 		if(click != "click"){
 		// Add custom pane
 			function ToolTipPane() {}
@@ -407,7 +407,8 @@ Application = function() {
 			self.safetytip = new ToolTipPane();
 		
 			self.map.addControl(self.safetytip);
-		}
+			
+		}*/
 		
 		// Show Route Line Stong Color
 		$("#stats"+routeno).show();
@@ -447,7 +448,7 @@ Application = function() {
 					break;
 			}
 			$("#stats"+i).hide();
-			self.map.removeControl(self.safetytip);
+			//self.map.removeControl(self.safetytip);
 			if (typeof(self.routelines[i+"on"]) != "undefined"){
 				self.map.removeOverlay( self.routelines[i+"on"] );
 				self.map.addOverlay( self.routelines[i] );
