@@ -107,6 +107,11 @@ ul.input_boxes #hillsline select{
 	margin-right:2px;
 }
 
+.error{
+  border-color:#b22828;
+  background-color:#ffd5d5;
+}
+
 .icon{
 	height:24px;
 	width:24px;

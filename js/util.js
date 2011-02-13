@@ -95,6 +95,16 @@ function submitForm() {
   hills = $('#hills').val();
   var port = translatePorts(hills);
 
+  //Validate inputs
+  if(start==''){
+    $('#startbox').addClass('error');
+    return false;
+  } else {$('#startbox').removeClass('error');}
+  if(end==''){
+    $('#finishbox').addClass('error');
+    return false;
+  } else {$('#finishbox').removeClass('error');}
+
   //Search for Richmond, if found add usa to end to avoid confusion with Canada
   if (start.search(/richmond/i) != -1) {
     start = start + ", usa";
@@ -123,12 +133,7 @@ function submitForm() {
             } else {
               elat = coord.lat();
               elng = coord.lng();
-    
-              if(start == ''){
-                alert("Please Enter a Starting Address");
-              } else if(end == ''){
-                alert("Please Enter an Ending Address");
-              } else if(bounds(slat,slng,elat,elng)){
+              if(bounds(slat,slng,elat,elng)){
                 drawpath("lat1="+slat+"&lng1="+slng+"&lat2="+elat+"&lng2="+elng, true, port);
                 map.panTo(new GLatLng((slat+elat)/2,(slng+elng)/2));
               } else {
