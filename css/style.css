@@ -158,6 +158,18 @@ ul.input_boxes #hillsline select{
 	overflow:hidden;
 }
 
+#summary0{
+  background-color:#ed817e;
+}
+
+#summary1{
+  background-color:#ecf869;
+}
+
+#summary2{
+  background-color:#90ff7a;
+}
+
 #summary .title{
 	padding:5px;
 	border:none;
