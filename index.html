@@ -1,112 +1,104 @@
-<!DOCTYPE html "-//W3C//DTD XHTML 1.0 Strict//EN" 
-  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd    ">
-
-<html xmlns="http://www.w3.org/1999/xhtml">
-  <head><meta http-equiv="content-type" content="text/html; charset=utf-8"/>
-	<meta http-equiv="X-UA-Compatible" content="chrome=1">
-	
-	<title>San Francisco Bay Area Bike Mapper - Bikesy</title>
-	<link href='http://fonts.googleapis.com/css?family=Arimo:regular,bold&subset=latin' rel='stylesheet' type='text/css'>
-	<link rel="stylesheet" href="css/style.css" media="screen" />
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>San Francisco Bay Area Bike Mapper - Bikesy</title>
+  <link href='http://fonts.googleapis.com/css?family=Arimo:regular,bold&subset=latin' rel='stylesheet' type='text/css'>
+  <link rel="stylesheet" href="css/style.css" media="screen" />
   <link rel="stylesheet" href="css/print.css" media="print" />
-	<meta name="description" content="Avoid hills and find bike routes with Bikesy.com, an innovative and open-source bike mapping system specially designed to find flat, safe, and fast bike routes anywhere in the San Francisco Bay Area. San Francisco isn’t New York – they might have taller buildings, but we’ve got bigger hills. Since we couldn’t find another service that lets you choose slightly longer but less steep routes, we made our own. Even better, Bikesy automatically gives you an elevation profile for your ride to help you prepare for the tough parts." />
-	<meta name="keywords" content="biking, maps, bicycles, Contra Costa, California, Hills, trip planner" />
-	<script src="js/redirection_mobile.min.js"></script>
+  <meta name="description" content="Avoid hills and find bike routes with Bikesy.com, an innovative and open-source bike mapping system specially designed to find flat, safe, and fast bike routes anywhere in the San Francisco Bay Area. San Francisco isn’t New York – they might have taller buildings, but we’ve got bigger hills. Since we couldn’t find another service that lets you choose slightly longer but less steep routes, we made our own. Even better, Bikesy automatically gives you an elevation profile for your ride to help you prepare for the tough parts." />
+  <meta name="keywords" content="biking, maps, bicycles, Contra Costa, California, Hills, trip planner" />
+  <script src="js/redirection_mobile.min.js"></script>
   <script>
        SA.redirection_mobile ({
           mobile_url : "bikesy.com/mobile"
       });
   </script>
-  </head>
-  <body onunload="GUnload()">
-	<script type="text/javascript">
-		//Analytics for Bikesy.com
-	  var _gaq = _gaq || [];
-	  _gaq.push(['_setAccount', 'UA-306190-15']);
-	  _gaq.push(['_trackPageview']);
+</head>
+<body onunload="GUnload()">
+  <script type="text/javascript">
+    //Analytics for Bikesy.com
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-306190-15']);
+    _gaq.push(['_trackPageview']);
 
-	  (function() {
-	    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-	    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-	    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-	  })();
-
-	</script>
-	
-	<div id="content">
-		<div id="sidebar">
-			<div id="sidebar-top">
-			    <div class="tooltip"></div>
-				<form id="inputs" style="margin:0;" method="post" action=""> <!-- note workaround: return false to not reload page -->
-					<ul class="input_boxes">
-						<img src="images/swap.png" title="Get Reverse Directions" alt="Get Reverse Directions" id="swap" />
-						<li class="inputbox"><img src="images/green-24x24.png" alt="Origin" class="icon" /><input id="startbox" name="startbox" type="text" class="textbox" value="Indiana &amp; 23rd, SF"  title="Enter your starting address, city, zip or intersection" /></li>
-						<li id="slocation" class="geolocation inputbox"><img src="images/geolocation.png" alt="GeoLocation" style="height:16px;width:16px;" /><a href="#" title="Works best from smartphones and laptops">Map from my current location</a></li>
-						<li class="inputbox"><img src="images/red-24x24.png" alt="Destination" class="icon" /><input id="finishbox" name="finishbox" type="text"  class="textbox" value="Haight &amp; Ashbury"  title="Enter your ending address, city, zip or intersection"/></li>
-						<li id="elocation" class="geolocation inputbox"><img src="images/geolocation.png" alt="GeoLocation" style="height:16px;width:16px;" /><a href="#" title="Works best from smartphones and laptops">Map to my current location</a></li>
-						<li id="hillsline"><img src="images/hill.png" alt="Hills" class="icon" style="float:left;" />
-							<label>Hill Reluctance:</label>
-							<select id="hills" name="hills" title="Choose how much you like to ride up hills">
-								<option value="low">Avoid at all costs</option>	
-								<option value="medium" selected="selected">A reasonable route</option>
-								<option value="high">Bring on the Hills!</option>
-							</select>
-						</li>
-						<li style="text-align:right;"><input id="submit" type="submit" value="Get Directions" title="Get Directions"  /></li>
-					</ul>
-				</form>
-			</div>
-			<div id="summary">
-				<div id="summary0" title="More Direct Route"><div class="title">Safe</div><div class="info"></div></div>
-				<div id="summary1" title="Some bike lanes and bike routes"><div class="title">Safer</div><div class="info"></div></div>
-				<div id="summary2" title="Attempts to find routes with mostly bike lanes and bike routes"><div class="title">Safest</div><div class="info"></div></div>
-			</div>
-			<div id="resultsBox">
-				<div id="stats0" class="stats"></div>
-				<div id="stats1" class="stats"></div>
-				<div id="stats2" class="stats"></div>
-				<div id="directions"><ol></ol></div>
-				<div id="disclaimer">We offer no guarantee regarding roadway conditions or safety of the proposed routes. Use your best judgment when choosing a route. Obey all vehicle code provisions.</div>
-			</div>
-			
-		</div>
-		<div id="map_wrapper">
-			<div id="logo"><h1>Bikesy.com - San Francisco Bay Area Bike Mapper</h1><a href="http://bikesy.com" title="Bikesy.com"><img src="images/bikesy-logo.png"/></a></div>
-			<div id="map_canvas"></div>
-			<div id="permalink" class="map-button"><a href='" + linkURL + "' title='Direct Link to this route'><img src='images/link.png'> Permalink to Route</a></div>
-			<div id="twitter" class="map-button"><a href=''><img src='images/twitter.png'> Tweet This</a></div>
-			<div id="loading_image" class="popup"><img src="images/ajax-loader.gif" alt="Loading..." /><p>Loading...</p></div>
-			<div id="welcome_screen" class="popup"><img src="images/welcome-to-bikesy.png" alt="Welcome to Bikesy" style="width:285px;height:51px;"/>
-			  <ol style="text-align:left;">
-			    <li>Click anywhere to set the start and end points for your trip</li>
-			    <li>Drag-and-drop markers to recalculate the route</li>
-			    <li>Use the address boxes on the left to enter a specific address or landmark</li>
-			  </ol>
-			  <a href="#" onclick="$('#welcome_screen').fadeOut();showTips=false;"><img src="images/close.png" class="close" alt="close" title="Close" /></a></div>
-			<div id="dragtext" class="popup">Drag-and-drop markers to recalculate the route<a href="#" onclick="$('#dragtext').fadeOut();showTips=false;"><img src="images/close.png" class="close" alt="close" title="Hide" /></a></div>
-			<div id="endpointtext" class="popup">Now click anywhere to choose your endpoint<a href="#" onclick="$('#endpointtext').fadeOut();showTips=false;"><img src="images/close.png" class="close" alt="close" title="Hide" /></a></div>
-			<div id="showProfile"><a href="#" title="Show Elevation Profile"><img src="images/upright.png"></a></div>
-		</div>
-		<div id="bottomCredits">Developed by <a href='http://blinktag.com' title='BlinkTag Inc'>BlinkTag Inc</a> &nbsp;|&nbsp; <a href="http://blog.bikesy.com/source" title="Developers">Developers</a>  &nbsp;|&nbsp; <a href="http://blog.bikesy.com/about" title="About">About</a> &nbsp;|&nbsp; <a href="mailto:info@bikesy.com" title="Email Us">Contact Us</a></div>
-		<div id="hideProfile" title="Hide Elevation Profile"><img src="images/close2.png"></div>
-		<div id="profile" title="Elevation Profile"><div id="profileIntro">Your Elevation Profile will go here once you select a route</div></div>
-		
-	</div>
-
-	
-	
-	<div id="ie6msg"><h1>Upgrade Needed</h1>Bike Mapper only works in newer browsers.  You should upgrade your browser. Using an outdated and unsecure browser is bad for you, bad for business and bad for the Web! <br><br><a href="http://www.browserupgrade.info/how-to-upgrade/">Upgrade now</a>: its easy and a matter of minutes.</div>
-	
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+  
+  <div id="content">
+    <div id="sidebar">
+      <div id="sidebar-top">
+          <div class="tooltip"></div>
+        <form id="inputs" style="margin:0;" method="post" action="">
+          <ul class="input_boxes">
+            <img src="images/swap.png" title="Get Reverse Directions" alt="Get Reverse Directions" id="swap" />
+            <li class="inputbox"><img src="images/green-24x24.png" alt="Origin" class="icon" /><input id="startbox" name="startbox" type="text" class="textbox" value="Indiana &amp; 23rd, SF"  title="Enter your starting address, city, zip or intersection" /></li>
+            <li id="slocation" class="geolocation inputbox"><img src="images/geolocation.png" alt="GeoLocation" style="height:16px;width:16px;" /><a href="#" title="Works best from smartphones and laptops">Map from my current location</a></li>
+            <li class="inputbox"><img src="images/red-24x24.png" alt="Destination" class="icon" /><input id="finishbox" name="finishbox" type="text"  class="textbox" value="Haight &amp; Ashbury"  title="Enter your ending address, city, zip or intersection"/></li>
+            <li id="elocation" class="geolocation inputbox"><img src="images/geolocation.png" alt="GeoLocation" style="height:16px;width:16px;" /><a href="#" title="Works best from smartphones and laptops">Map to my current location</a></li>
+            <li id="hillsline"><img src="images/hill.png" alt="Hills" class="icon" style="float:left;" />
+              <label>Hill Reluctance:</label>
+              <select id="hills" name="hills" title="Choose how much you like to ride up hills">
+                <option value="low">Avoid at all costs</option> 
+                <option value="medium" selected="selected">A reasonable route</option>
+                <option value="high">Bring on the Hills!</option>
+              </select>
+            </li>
+            <li style="text-align:right;"><input id="submit" type="submit" value="Get Directions" title="Get Directions"  /></li>
+          </ul>
+        </form>
+      </div>
+      <div id="summary">
+        <div id="summary0" title="More Direct Route"><div class="title">Safe</div><div class="info"></div></div>
+        <div id="summary1" title="Some bike lanes and bike routes"><div class="title">Safer</div><div class="info"></div></div>
+        <div id="summary2" title="Attempts to find routes with mostly bike lanes and bike routes"><div class="title">Safest</div><div class="info"></div></div>
+      </div>
+      <div id="resultsBox">
+        <div id="stats0" class="stats"></div>
+        <div id="stats1" class="stats"></div>
+        <div id="stats2" class="stats"></div>
+        <div id="directions"><ol></ol></div>
+        <div id="disclaimer">We offer no guarantee regarding roadway conditions or safety of the proposed routes. Use your best judgment when choosing a route. Obey all vehicle code provisions.</div>
+      </div>
+      
+    </div>
+    <div id="map_wrapper">
+      <div id="logo"><h1>Bikesy.com - San Francisco Bay Area Bike Mapper</h1><a href="http://bikesy.com" title="Bikesy.com"><img src="images/bikesy-logo.png"/></a></div>
+      <div id="map_canvas"></div>
+      <div id="permalink" class="map-button"><a href='" + linkURL + "' title='Direct Link to this route'><img src='images/link.png'> Permalink to Route</a></div>
+      <div id="twitter" class="map-button"><a href=''><img src='images/twitter.png'> Tweet This</a></div>
+      <div id="loading_image" class="popup"><img src="images/ajax-loader.gif" alt="Loading..." /><p>Loading...</p></div>
+      <div id="welcome_screen" class="popup"><img src="images/welcome-to-bikesy.png" alt="Welcome to Bikesy" style="width:285px;height:51px;"/>
+        <ol style="text-align:left;">
+          <li>Click anywhere to set the start and end points for your trip</li>
+          <li>Drag-and-drop markers to recalculate the route</li>
+          <li>Use the address boxes on the left to enter a specific address or landmark</li>
+        </ol>
+        <a href="#" onclick="$('#welcome_screen').fadeOut();showTips=false;"><img src="images/close.png" class="close" alt="close" title="Close" /></a></div>
+      <div id="dragtext" class="popup">Drag-and-drop markers to recalculate the route<a href="#" onclick="$('#dragtext').fadeOut();showTips=false;"><img src="images/close.png" class="close" alt="close" title="Hide" /></a></div>
+      <div id="endpointtext" class="popup">Now click anywhere to choose your endpoint<a href="#" onclick="$('#endpointtext').fadeOut();showTips=false;"><img src="images/close.png" class="close" alt="close" title="Hide" /></a></div>
+      <div id="showProfile"><a href="#" title="Show Elevation Profile"><img src="images/upright.png"></a></div>
+    </div>
+    <div id="bottomCredits">Developed by <a href='http://blinktag.com' title='BlinkTag Inc'>BlinkTag Inc</a> &nbsp;|&nbsp; <a href="http://blog.bikesy.com/source" title="Developers">Developers</a>  &nbsp;|&nbsp; <a href="http://blog.bikesy.com/about" title="About">About</a> &nbsp;|&nbsp; <a href="mailto:info@bikesy.com" title="Email Us">Contact Us</a></div>
+    <div id="hideProfile" title="Hide Elevation Profile"><img src="images/close2.png"></div>
+    <div id="profile" title="Elevation Profile"><div id="profileIntro">Your Elevation Profile will go here once you select a route</div></div>
+  </div>
+  <div id="ie6msg"><h1>Upgrade Needed</h1>Bike Mapper only works in newer browsers.  You should upgrade your browser. Using an outdated and unsecure browser is bad for you, bad for business and bad for the Web! <br><br><a href="http://www.browserupgrade.info/how-to-upgrade/">Upgrade now</a>: its easy and a matter of minutes.</div>
+  
 <script type="text/javascript" src="http://www.google.com/jsapi?key=ABQIAAAA7ryB86mtzsqx_XU57t8PNhTMTGztSySO4_rR2h0VlHQYebwNHBQfKBMwuobg9gRDpM6rxsFgfXCnug"></script>
-	
+  
 <script type="text/javascript">
-	google.load('visualization', '1', {packages:['imagelinechart','scatterchart']});
-	google.load('maps', '2.x',{"other_params":"sensor=false"});
-	google.load('jquery','1');
+  google.load('visualization', '1', {packages:['imagelinechart','scatterchart']});
+  google.load('maps', '2.x',{"other_params":"sensor=false"});
+  google.load('jquery','1');
 </script>
-	
-<script src="js/jquery.jsonp-2.1.4.min.js" type="text/javascript" charset="utf-8"></script>
-<script src="js/jquery.tools.min.js" type="text/javascript" charset="utf-8"></script>
+  
+<script src="js/jquery.jsonp-2.1.4.min.js" type="text/javascript"></script>
+<script src="js/jquery.tools.min.js" type="text/javascript"></script>
 
 <!--[if lt IE 7]>
 <script type="text/javascript">
@@ -115,8 +107,8 @@
 </script>
 <![endif]-->
 
-<script src="js/util.js" type="text/javascript" charset="utf-8"></script>
-<script src="js/main.js" type="text/javascript" charset="utf-8"></script>
+<script src="js/util.js" type="text/javascript"></script>
+<script src="js/main.js" type="text/javascript"></script>
 
 <script type="text/javascript" charset="utf-8">
   var is_ssl = ("https:" == document.location.protocol);
@@ -124,7 +116,7 @@
   document.write(unescape("%3Cscript src='" + asset_host + "javascripts/feedback-v2.js' type='text/javascript'%3E%3C/script%3E"));
 </script>
 
-<script type="text/javascript" charset="utf-8">
+<script type="text/javascript">
   var feedback_widget_options = {};
 
   feedback_widget_options.display = "overlay";  
@@ -137,5 +129,5 @@
   var feedback_widget = new GSFN.feedback_widget(feedback_widget_options);
 </script>
  
-  </body>
+</body>
 </html>
