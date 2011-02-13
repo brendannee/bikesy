@@ -87,3 +87,139 @@ function translatePorts(hills){
   return i+8080;
   alert(i+8080);
 }
+
+function submitForm() {
+  // Redraws map based on info in the form
+  form = $('form')[0];
+  start = form.startbox.value;
+  end = form.finishbox.value;
+  hills = form.hills.value;
+  var port = translatePorts(hills);
+
+  //Search for Richmond, if found add usa to end to avoid confusion with Canada
+  if (start.search(/richmond/i) != -1) {
+    start = form.startbox.value+", usa";
+  }
+  if (end.search(/richmond/i) != -1) {
+    end = form.finishbox.value+", usa";
+  }
+
+  geoCoder = new GClientGeocoder();
+  var slat;
+  var slng;
+  var elat;
+  var elng;
+  geoCoder.getLatLng(start,
+    function(coord){
+      if(!coord){
+         alert(start + " not found");
+      } else {
+        slat = coord.lat();
+        slng = coord.lng();
+    
+        geoCoder.getLatLng(end,
+          function(coord){
+            if(!coord){
+               alert(end + " not found");
+            } else {
+              elat = coord.lat();
+              elng = coord.lng();
+    
+              if(form.startbox.value==''){
+                alert("Please Enter a Starting Address");
+              } else if(form.finishbox.value==''){
+                alert("Please Enter an Ending Address");
+              } else if(bounds(slat,slng,elat,elng)){
+                drawpath("lat1="+slat+"&lng1="+slng+"&lat2="+elat+"&lng2="+elng, true, port);
+                map.panTo(new GLatLng((slat+elat)/2,(slng+elng)/2));
+              } else {
+                if (typeof(routeoverlay) != "undefined"){routeoverlay.remove();}
+                alert("Bikemapper currently only works in the Bay Area.  Try making your addresses more specific by adding city and state names.");
+              }
+            }
+          }
+        );
+      }
+    }
+  );
+return false;
+}
+  
+function googleBike(){
+  // Load Google Bike Layer
+  var gBikeTileUrlTemplate = 'http://mt1.google.com/vt/lyrs=m@121,bike&hl=en&x={X}&y={Y}&z={Z}';
+  var tileLayerOverlay = new GTileLayerOverlay(
+    new GTileLayer(null, null, null, 
+      {
+        tileUrlTemplate: gBikeTileUrlTemplate,
+        isPng:true,
+        opacity:0.8
+      }
+    )
+  );
+  map.addOverlay(tileLayerOverlay);  
+}
+  
+function getElevGain(profile) {
+  var totalElevGain = 0;
+  for (i=0;i<(profile.length-1);i++){
+    if (profile[i][1] < profile[i+1][1]) {
+      totalElevGain += profile[i+1][1]-profile[i][1];
+    }
+  }
+  //Convert to Feet
+  return totalElevGain*3.2808399;
+}
+  
+function getElevChange(profile) {
+  var totalElevChange = profile[profile.length-1][1] - profile[0][1];
+  //Convert to Feet
+  return totalElevChange*3.2808399;
+}
+  
+function getAddress(latlng, marker_name) {
+  if (latlng) {
+    geoCoder = new GClientGeocoder();
+    if(marker_name=='start'){
+      geoCoder.getLocations(latlng, this.updateSAddress);
+    } else if(marker_name=='end'){
+      geoCoder.getLocations(latlng, this.updateEAddress);
+    }
+  }
+}
+
+function updateSAddress(response) {
+  if (!response || response.Status.code != 200) {
+  } else {
+    place = response.Placemark[0];
+  $('#startbox').val(place.address);
+  }
+}
+
+function updateEAddress(response) {
+  if (!response || response.Status.code != 200) {
+  } else {
+    place = response.Placemark[0];
+  $('#finishbox').val(place.address);
+  }
+}
+
+function getStartGeoLocator(position) {
+  sCoords = new GLatLng(position.coords.latitude,position.coords.longitude);
+  geoCoder = new GClientGeocoder();
+  geoCoder.getLocations(sCoords, function(response) {place = response.Placemark[0]; $('#startbox').val(place.address);});
+}
+  
+function getEndGeoLocator(position) {
+  eCoords = new GLatLng(position.coords.latitude,position.coords.longitude);
+  geoCoder = new GClientGeocoder();
+  geoCoder.getLocations(eCoords, function(response) {place = response.Placemark[0]; $('#finishbox').val(place.address);});
+}
+  
+function showGeoLocatorError(error){
+  if(error.code==1){
+    alert("To determine your current location you must click \"Share Location\" in the top bar in your browser.");
+  } else if (error.code==2 || error.code==3 || error.code==0){
+    alert("Your current location couldn't be determined.  Please enter the start and end locations manually.");
+  } 
+}
