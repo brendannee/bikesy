@@ -90,18 +90,17 @@ function translatePorts(hills){
 
 function submitForm() {
   // Redraws map based on info in the form
-  form = $('form')[0];
-  start = form.startbox.value;
-  end = form.finishbox.value;
-  hills = form.hills.value;
+  start = $('#startbox').val();
+  end = $('#finishbox').val();
+  hills = $('#hills').val();
   var port = translatePorts(hills);
 
   //Search for Richmond, if found add usa to end to avoid confusion with Canada
   if (start.search(/richmond/i) != -1) {
-    start = form.startbox.value+", usa";
+    start = start + ", usa";
   }
   if (end.search(/richmond/i) != -1) {
-    end = form.finishbox.value+", usa";
+    end = end + ", usa";
   }
 
   geoCoder = new GClientGeocoder();
@@ -125,9 +124,9 @@ function submitForm() {
               elat = coord.lat();
               elng = coord.lng();
     
-              if(form.startbox.value==''){
+              if(start == ''){
                 alert("Please Enter a Starting Address");
-              } else if(form.finishbox.value==''){
+              } else if(end == ''){
                 alert("Please Enter an Ending Address");
               } else if(bounds(slat,slng,elat,elng)){
                 drawpath("lat1="+slat+"&lng1="+slng+"&lat2="+elat+"&lng2="+elng, true, port);
@@ -143,6 +142,71 @@ function submitForm() {
     }
   );
 return false;
+}
+
+function drawpath(request, redraw, port){
+  $('#welcome_screen').fadeOut(); // hide welcome screen if its still up
+  $('#loading_image').show(); // show loading image, as request is about to start
+  
+  //Clear all points
+  map.clearOverlays();
+  googleBike();
+  routelines = [];
+  
+  $.jsonp({
+    "url": "http://"+routeserver+":"+ port +"/path?"+request+"&jsoncallback=?",
+    "success": function(json) {processpath(json, redraw, 0);},
+    "error": function(){
+      //On error, try again
+      $.jsonp({
+        "url": "http://"+routeserver+":"+ port +"/path?"+request+"&jsoncallback=?",
+        "success": function(json) {processpath(json, redraw, 0);},
+        "error": function(){
+          $('#loading_image').hide(); // hide loading image
+          if(errorAlert==0){
+            alert("There was an error retrieving the route data.  Please refresh the page and try again.");
+          }
+          errorAlert = 1;
+        }
+      });
+    }
+  }); 
+  $.jsonp({
+    "url": "http://"+routeserver+":"+ (port+3) +"/path?"+request+"&jsoncallback=?",
+    "success": function(json) {processpath(json, redraw, 1);},
+    "error": function(){
+        //On error, try again
+        $.jsonp({
+          "url": "http://"+routeserver+":"+ (port+3) +"/path?"+request+"&jsoncallback=?",
+          "success": function(json) {processpath(json, redraw, 1);},
+          "error": function(){
+            $('#loading_image').hide(); // hide loading image
+            if(errorAlert==0){
+              alert("There was an error retrieving the route data.  Please refresh the page and try again.");
+            }
+            errorAlert = 1;
+          }
+        });
+      }
+  });
+  $.jsonp({
+    "url": "http://"+routeserver+":"+ (port+6) +"/path?"+request+"&jsoncallback=?",
+    "success": function(json) {processpath(json, redraw, 2);},
+    "error": function(){
+        //On error, try again
+        $.jsonp({
+          "url": "http://"+routeserver+":"+ (port+6) +"/path?"+request+"&jsoncallback=?",
+          "success": function(json) {processpath(json, redraw, 2);},
+          "error": function(){
+            $('#loading_image').hide(); // hide loading image
+            if(errorAlert==0){
+              alert("There was an error retrieving the route data.  Please refresh the page and try again.");
+            }
+            errorAlert = 1;
+          }
+      });
+    }
+  });
 }
   
 function googleBike(){
