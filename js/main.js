@@ -31,23 +31,13 @@ var errorAlert=0;
 function tooltips(){
   // select all desired input fields and attach tooltips to them 
   $("#inputs #startbox,#inputs #finishbox,#inputs #hills").tooltip({ 
-    // place tooltip on the right edge 
-    position: "center right", 
-
-    // a little tweaking of the position 
-    offset: [0, 10], 
-
-    // use the built-in fadeIn/fadeOut effect 
-    effect: "fade", 
-
-    // custom opacity setting 
-    opacity: 0.8, 
-
-    // use this single tooltip element 
+    position: "center right",
+    offset: [0, 10],
+    effect: "fade",
+    opacity: 0.8,
     tip: '.tooltip'
   });
 }
-
   
 function recalc(marker_name) {
   if (typeof(start_marker) != "undefined"){
@@ -222,8 +212,6 @@ function showRoute(routeno) {
 }
   
 function processpath(data, redraw, routeno){
-  geometry = data[1];
-  
   switch(routeno){
     case 0:
       coloron="#c2403a";
@@ -239,21 +227,29 @@ function processpath(data, redraw, routeno){
       break;
   }
   
-  routelines[routeno+"on"] = GPolyline.fromEncoded( {points:geometry[0], 
-         zoomFactor:32, 
-              levels:geometry[1], 
-              numLevels:4,
-              color:coloron,
-              opacity:0.4,
-              weight:7} );
+  routelines[routeno+"on"] = GPolyline.fromEncoded(
+    {
+      points:data[1][0],
+      zoomFactor:32,
+      levels:data[1][1],
+      numLevels:4,
+      color:coloron,
+      opacity:0.4,
+      weight:7
+    }
+  );
 
-  routelines[routeno] = GPolyline.fromEncoded( {points:geometry[0], 
-         zoomFactor:32, 
-              levels:geometry[1], 
-              numLevels:4,
-              color:coloroff,
-              opacity:0.4,
-              weight:7} );
+  routelines[routeno] = GPolyline.fromEncoded(
+    {
+      points:data[1][0],
+      zoomFactor:32,
+      levels:data[1][1],
+      numLevels:4,
+      color:coloroff,
+      opacity:0.4,
+      weight:7
+    }
+  );
   
   // Center and Zoom only if its a redraw
   if(redraw == true){
@@ -336,8 +332,7 @@ function processpath(data, redraw, routeno){
     
       direction = proper(data[0][i][0]);
       street = data[0][i][1];
-      
-    
+
       // Skip Direction if next step's street name is "nameless" and direction is "Continue" and add distance to this step
       if (i<len-1) {
         if (data[0][i+1][1] == "nameless") {
