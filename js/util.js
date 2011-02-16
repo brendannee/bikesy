@@ -1,3 +1,29 @@
+google.maps.Polyline.prototype.getBounds = function() {
+  //Extends google maps API v3 to allow getting bounds of a polyline
+  var bounds = new google.maps.LatLngBounds();
+  this.getPath().forEach(function(e) {
+    bounds.extend(e);
+  });
+  return bounds;
+};
+
+google.maps.LatLng.prototype.miTo = function(a){ 
+  //Extends google maps API V3 to allow getting the length of a polyline
+  var e = Math, ra = e.PI/180; 
+  var b = this.lat() * ra, c = a.lat() * ra, d = b - c; 
+  var g = this.lng() * ra - a.lng() * ra; 
+  var f = 2 * e.asin(e.sqrt(e.pow(e.sin(d/2), 2) + e.cos(b) * e.cos 
+(c) * e.pow(e.sin(g/2), 2))); 
+  return f * 3963.1676; 
+}
+google.maps.Polyline.prototype.inMiles = function(n){ 
+  var a = this.getPath(n), len = a.getLength(), dist = 0; 
+  for(var i=0; i<len-1; i++){ 
+    dist += a.getAt(i).miTo(a.getAt(i+1)); 
+  } 
+  return dist; 
+}
+
 $.extend({
   //Extends jQuery to get parameters from URL
   getUrlVars: function(){
@@ -113,39 +139,37 @@ function submitForm() {
     end = end + ", usa";
   }
 
-  geoCoder = new GClientGeocoder();
+  geocoder = new google.maps.Geocoder();
   var slat;
   var slng;
   var elat;
   var elng;
-  geoCoder.getLatLng(start,
-    function(coord){
-      if(!coord){
-         alert(start + " not found");
-      } else {
-        slat = coord.lat();
-        slng = coord.lng();
-    
-        geoCoder.getLatLng(end,
-          function(coord){
-            if(!coord){
-               alert(end + " not found");
-            } else {
-              elat = coord.lat();
-              elng = coord.lng();
-              if(bounds(slat,slng,elat,elng)){
-                drawpath("lat1="+slat+"&lng1="+slng+"&lat2="+elat+"&lng2="+elng, true, port);
-                map.panTo(new GLatLng((slat+elat)/2,(slng+elng)/2));
-              } else {
-                if (typeof(routeoverlay) != "undefined"){routeoverlay.remove();}
-                alert("Bikemapper currently only works in the Bay Area.  Try making your addresses more specific by adding city and state names.");
-              }
-            }
+  geocoder.geocode({address:start}, function(results, status){
+    if (status == google.maps.GeocoderStatus.OK) {
+      slat = results[0].geometry.location.lat();
+      slng = results[0].geometry.location.lng();
+      //Now geocode end address
+      geocoder.geocode({address:end}, function(results, status){
+        if (status == google.maps.GeocoderStatus.OK) {
+          elat = results[0].geometry.location.lat();
+          elng = results[0].geometry.location.lng();
+          //Now move along
+          if(bounds(slat,slng,elat,elng)){
+            drawpath("lat1="+slat+"&lng1="+slng+"&lat2="+elat+"&lng2="+elng, true, port);
+            map.panTo(new google.maps.LatLng((slat+elat)/2,(slng+elng)/2));
+          } else {
+            alert("Bikemapper currently only works in the Bay Area.  Try making your addresses more specific by adding city and state names.");
           }
-        );
-      }
+        } else {
+          alert(end + " not found");
+          return false;
+        }
+      });
+    } else {
+      alert(start + " not found");
+      return false;
     }
-  );
+  });
 return false;
 }
 
@@ -153,10 +177,10 @@ function drawpath(request, redraw, port){
   $('#welcome_screen').fadeOut(); // hide welcome screen if its still up
   $('#loading_image').show(); // show loading image, as request is about to start
   
-  //Clear all points
-  map.clearOverlays();
-  googleBike();
-  routelines = [];
+  //Hide lines
+  for(i in routelines){
+    routelines[i].setMap(null);
+  }
   
   $.jsonp({
     "url": "http://"+routeserver+":"+ port +"/path?"+request+"&jsoncallback=?",
@@ -214,21 +238,6 @@ function drawpath(request, redraw, port){
   });
 }
   
-function googleBike(){
-  // Load Google Bike Layer
-  var gBikeTileUrlTemplate = 'http://mt1.google.com/vt/lyrs=m@121,bike&hl=en&x={X}&y={Y}&z={Z}';
-  var tileLayerOverlay = new GTileLayerOverlay(
-    new GTileLayer(null, null, null, 
-      {
-        tileUrlTemplate: gBikeTileUrlTemplate,
-        isPng:true,
-        opacity:0.8
-      }
-    )
-  );
-  map.addOverlay(tileLayerOverlay);  
-}
-  
 function getElevGain(profile) {
   var totalElevGain = 0;
   for (i=0;i<(profile.length-1);i++){
@@ -247,42 +256,36 @@ function getElevChange(profile) {
 }
   
 function getAddress(latlng, marker_name) {
-  if (latlng) {
-    geoCoder = new GClientGeocoder();
-    if(marker_name=='start'){
-      geoCoder.getLocations(latlng, this.updateSAddress);
-    } else if(marker_name=='end'){
-      geoCoder.getLocations(latlng, this.updateEAddress);
+  geocoder = new google.maps.Geocoder();
+  geocoder.geocode({'latLng': latlng}, function(results, status) {
+    if (status == google.maps.GeocoderStatus.OK) {
+      if(marker_name=='start') {
+        $('#startbox').val(results[0].formatted_address);
+      } else if(marker_name=='end') {
+        $('#finishbox').val(results[0].formatted_address);
+      }
     }
-  }
-}
-
-function updateSAddress(response) {
-  if (!response || response.Status.code != 200) {
-  } else {
-    place = response.Placemark[0];
-  $('#startbox').val(place.address);
-  }
-}
-
-function updateEAddress(response) {
-  if (!response || response.Status.code != 200) {
-  } else {
-    place = response.Placemark[0];
-  $('#finishbox').val(place.address);
-  }
+  });
 }
 
 function getStartGeoLocator(position) {
-  sCoords = new GLatLng(position.coords.latitude,position.coords.longitude);
-  geoCoder = new GClientGeocoder();
-  geoCoder.getLocations(sCoords, function(response) {place = response.Placemark[0]; $('#startbox').val(place.address);});
+  sCoords = new google.maps.LatLng(position.coords.latitude,position.coords.longitude);
+  geocoder = new google.maps.Geocoder();
+  geocoder.geocode({'latLng': sCoords}, function(results, status) {
+    if (status == google.maps.GeocoderStatus.OK) {
+      $('#startbox').val(results[1].formatted_address);
+    }
+  });
 }
   
 function getEndGeoLocator(position) {
-  eCoords = new GLatLng(position.coords.latitude,position.coords.longitude);
-  geoCoder = new GClientGeocoder();
-  geoCoder.getLocations(eCoords, function(response) {place = response.Placemark[0]; $('#finishbox').val(place.address);});
+  eCoords = new google.maps.LatLng(position.coords.latitude,position.coords.longitude);
+  geocoder = new google.maps.Geocoder();
+  geocoder.geocode({'latLng': eCoords}, function(results, status) {
+    if (status == google.maps.GeocoderStatus.OK) {
+      $('#finishbox').val(results[1].formatted_address);
+    }
+  });
 }
   
 function showGeoLocatorError(error){

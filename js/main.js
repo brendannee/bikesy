@@ -41,18 +41,18 @@ function tooltips(){
   
 function recalc(marker_name) {
   if (typeof(start_marker) != "undefined"){
-    slat = start_marker.getLatLng().lat();
-    slng = start_marker.getLatLng().lng();
-    elat = end_marker.getLatLng().lat();
-    elng = end_marker.getLatLng().lng();
+    slat = start_marker.getPosition().lat();
+    slng = start_marker.getPosition().lng();
+    elat = end_marker.getPosition().lat();
+    elng = end_marker.getPosition().lng();
     distance = dist(slat,elat,slng,elng);
     var hills = $('#hills').val();
     var port = translatePorts(hills);
     
     if(bounds(slat,slng,elat,elng)){
     
-      sCoords = new GLatLng(slat,slng);
-      eCoords = new GLatLng(elat,elng);
+      sCoords = new google.maps.LatLng(slat,slng);
+      eCoords = new google.maps.LatLng(elat,elng);
       
       //Reverse Geocode
       if(marker_name=='start'){
@@ -65,65 +65,81 @@ function recalc(marker_name) {
       }
       
       //Remove old overlay
-      if (typeof(routeoverlay) != "undefined"){routeoverlay.remove();}
+      if (typeof(routeoverlay) != "undefined"){routeoverlay.setMap(null);}
       
       //Draw new route
       drawpath("lat1="+slat+"&lng1="+slng+"&lat2="+elat+"&lng2="+elng, false, port);
     }
-    else{
-      if (typeof(routeoverlay) != "undefined"){routeoverlay.remove();}
-      alert("Bikemapper currently only works in the Bay Area.");}
-  }
-  else {alert("Please search once using input boxes.");}     
+    else{alert("Bikemapper currently only works in the Bay Area.");}
+  }   
 }
   
 function showPoint(i){
   // First, hide all stop points
   for (var j=0; j<(stoppoints.length+1); j++) { 
     if (stoppoints[j] != undefined) {
-      stoppoints[j].hide(); 
+      stoppoints[j].setVisible(false); 
     }
   $("#direction"+j).css('background-color','inherit');
   }
   
   //Show desired stop point
   if (stoppoints[i] != undefined) {
-    stoppoints[i].show();
+    stoppoints[i].setVisible(true);
   }
   $("#direction"+i).css('background-color','#d1d1d1');
 }
   
 function addMarker(latlng, type){
   if(type=="start"){
-    if (typeof(start_marker) != "undefined"){start_marker.remove();}
-  
-    startIcon = new GIcon(G_DEFAULT_ICON);
-    startIcon.image = "images/green.png";
-    startIcon.iconAnchor = new GPoint(16, 32);
-    startIcon.iconSize = new GSize(32, 32);
-  
-    start_marker = new GMarker(latlng,{draggable: true, icon:startIcon});
-    map.addOverlay(start_marker);
-    GEvent.addListener(start_marker,'dragend',function(position){
-      showTips = false;
-      $("#dragtext").fadeOut();
-      recalc('start');
-    });
+    
+    if (typeof(start_marker) == "undefined"){
+      shadow = new google.maps.MarkerImage(
+        "images/shadow.png",
+        new google.maps.Size(32, 32)
+      );
+      startIcon = new google.maps.MarkerImage(
+        "images/green.png",
+        new google.maps.Size(32, 32)
+      );
+      start_marker = new google.maps.Marker({
+        map:map,
+        shadow:shadow,
+        draggable:true,
+        icon:startIcon
+      });
+      google.maps.event.addListener(start_marker,'dragend',function(position){
+        showTips = false;
+        $("#dragtext").fadeOut();
+        recalc('start');
+      });
+    }
+    
+    start_marker.setOptions({ position: latlng });
   } else if (type=="end"){
-    if (typeof(end_marker) != "undefined"){end_marker.remove();}
+    if (typeof(end_marker) == "undefined"){
+      shadow = new google.maps.MarkerImage(
+        "images/shadow.png",
+        new google.maps.Size(32, 32)
+      );
+      endIcon = new google.maps.MarkerImage(
+        "images/red.png",
+        new google.maps.Size(32, 32)
+      );
+      end_marker = new google.maps.Marker({
+        map:map,
+        shadow:shadow,
+        draggable:true,
+        icon:endIcon
+      });
+      google.maps.event.addListener(end_marker,'dragend',function(position){
+        showTips = false;
+        $("#dragtext").fadeOut();
+        recalc('end');
+      });
+    }
     
-    endIcon = new GIcon(G_DEFAULT_ICON);
-    endIcon.image = "images/red.png";
-    endIcon.iconAnchor = new GPoint(16, 32);
-    endIcon.iconSize = new GSize(32, 32);
-    
-    end_marker = new GMarker(latlng,{draggable: true, icon:endIcon});
-    map.addOverlay(end_marker);
-    GEvent.addListener(end_marker,'dragend',function(position){
-      showTips = false;
-      $("#dragtext").fadeOut();
-      recalc('end');
-    });
+    end_marker.setOptions({ position: latlng });
   }
 }
   
@@ -145,9 +161,8 @@ function showRoute(routeno) {
         break;
     }
     $("#stats"+i).hide();
-    if (typeof(routelines[i+"on"]) != "undefined"){
-      map.removeOverlay( routelines[i+"on"] );
-      map.addOverlay( routelines[i] );
+    if (typeof(routelines[routeno]) != "undefined"){
+      routelines[routeno].setOptions({ strokeColor: coloroff });
     }
     //Remove Highlight Route Choice Box
     $("#summary"+i).css("background-color", coloroff);
@@ -196,8 +211,7 @@ function showRoute(routeno) {
   // Show Route Line Stong Color
   $("#stats"+routeno).show();
   if (typeof(routelines[routeno]) != "undefined"){
-    map.removeOverlay( routelines[routeno] );
-    map.addOverlay( routelines[routeno+"on"] );
+    routelines[routeno].setOptions({ strokeColor: coloron });
   }
   
   //Highlight Summary Box
@@ -227,49 +241,30 @@ function processpath(data, redraw, routeno){
       break;
   }
   
-  routelines[routeno+"on"] = GPolyline.fromEncoded(
-    {
-      points:data[1][0],
-      zoomFactor:32,
-      levels:data[1][1],
-      numLevels:4,
-      color:coloron,
-      opacity:0.4,
-      weight:7
-    }
-  );
+  var decodedPoints = google.maps.geometry.encoding.decodePath(data[1][0]);
 
-  routelines[routeno] = GPolyline.fromEncoded(
-    {
-      points:data[1][0],
-      zoomFactor:32,
-      levels:data[1][1],
-      numLevels:4,
-      color:coloroff,
-      opacity:0.4,
-      weight:7
-    }
-  );
+  if(typeof(routelines[routeno])=="undefined"){
+    routelines[routeno] = new google.maps.Polyline();
+    // Add listener to route lines
+    new google.maps.event.addListener(routelines[routeno], "mouseover", function() { showRoute(routeno); });
+  }
+
+  routelines[routeno].setOptions({
+    strokeColor: coloroff,
+    strokeOpacity: 0.4,
+    strokeWeight: 7,
+    path: decodedPoints,
+    map:map
+  });
   
   // Center and Zoom only if its a redraw
   if(redraw == true){
-    map.setZoom(map.getBoundsZoomLevel(routelines[routeno].getBounds()));
-    map.panTo(routelines[routeno].getBounds().getCenter());
+    map.fitBounds(routelines[routeno].getBounds());
   }
   
-  //Add Route Line
-  map.addOverlay( routelines[routeno] );
-  
-  // Add listener to cursor position
-  GEvent.addDomListener(map,'mousemove', 
-  function(point){cursorpos=point;});
-  
-  // Add listener to route lines
-  GEvent.addListener(routelines[routeno], "mouseover", function() { showRoute(routeno); });
-  
-  //icons for start and end   
-  addMarker(new GLatLng(data[0][0][5][1],data[0][0][5][0]), "start");
-  addMarker(routelines[routeno].getVertex(routelines[routeno].getVertexCount()-1), "end");
+  //icons for start and end
+  addMarker(new google.maps.LatLng(data[0][0][5][1],data[0][0][5][0]), "start");
+  addMarker(routelines[routeno].getPath().getAt(routelines[routeno].getPath().getLength()-1), "end");
   
   //Clean Start and End Titles
   startName = $('#startbox').val().replace(/, USA/g, "");
@@ -292,8 +287,7 @@ function processpath(data, redraw, routeno){
   var distance = new Array();
   var elevation = new Array();
   var tripstats = new Array();
-  
-  distance[routeno] = Math.round(routelines[routeno].getLength()/1609.344*10)/10;
+  distance[routeno] = Math.round(routelines[routeno].inMiles()*10)/10;
   
   elevation[routeno] = Math.round(getElevGain(data[2]));
   
@@ -351,21 +345,21 @@ function processpath(data, redraw, routeno){
         } else {
           word = 'onto';
         }
-        tripstats[routeno] += "<li id='direction"+routeno+i+"' class='direction' title='Click to see this turn on map'><strong>" + direction + "</strong> " + word + " <strong>" + street + "</strong></li>";
+        tripstats[routeno] += "<li id='direction"+routeno.toString()+i.toString()+"' class='direction' title='Click to see this turn on map'><strong>" + direction + "</strong> " + word + " <strong>" + street + "</strong></li>";
         
         //Create a marker for each turn except the last one
         if(i<(len-1)){
-          stoppoints[i] = new GMarker(new GLatLng(data[0][i][5][1], data[0][i][5][0]));
-          map.addOverlay(stoppoints[i]);
-          stoppoints[i].hide();
+          stoppoints[i] = new google.maps.Marker(new google.maps.LatLng(data[0][i][5][1], data[0][i][5][0]));
+          stoppoints[i].setMap(map);
+          stoppoints[i].setVisible(false);
         }
-        
-        //Set direction div click function to show marker when clicked
-        $("#direction"+routeno+i).click(function(){
-          showPoint(this.id.replace(/direction/g, ""));
-        });
       }
-    } 
+    }
+    //Set direction div click function to show marker when clicked
+    $(".direction").click(function(){
+      console.log(this.id.replace(/direction/g, ""));
+      showPoint(this.id.replace(/direction/g, ""));
+    });
   }
   
   $("#stats"+routeno).html(tripstats[routeno]);
@@ -418,14 +412,18 @@ function gviz(profile){
 }
 
 function launchMap(){
-  map = new GMap2(map_canvas);
-  map.setMapType(G_PHYSICAL_MAP);
-  map.setCenter(new GLatLng(37.880002, -122.189941), 11);
-  googleBike();
-  map.setUIToDefault();
+  var myOptions = {
+    zoom: 10,
+    center: new google.maps.LatLng(37.880002, -122.189941),
+    mapTypeId: google.maps.MapTypeId.ROADMAP
+  }
+  map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);
+  
+  var bikeLayer = new google.maps.BicyclingLayer();
+  bikeLayer.setMap(map);
   
   //Add credits pane
-  function CreditsPane() {}
+  /*function CreditsPane() {}
   CreditsPane.prototype = new GControl;
   CreditsPane.prototype.initialize = function(map) {
     var me = this;
@@ -446,21 +444,21 @@ function launchMap(){
   CreditsPane.prototype.getPanel = function() {
     return me.panel;
   }
-  map.addControl(new CreditsPane());
+  map.addControl(new CreditsPane());*/
   
   //Add welcome screen
   $('#welcome_screen').fadeIn();
   
   // Allow for clicking on the map to assign initial start points
-  GEvent.addListener(map, 'click', function(overlay,latlng){
+  google.maps.event.addListener(map, 'click', function(event) {
     if (typeof(start_marker) == "undefined"){
-      addMarker(latlng, "start");
-      startpoint = latlng;
+      addMarker(event.latLng, "start");
+      startpoint = event.latLng;
       $("#inputs #startbox").tooltip().hide();
       $("#endpointtext").fadeIn(); //Show Endpoint Tooltip
     } else if (typeof(start_marker) != "undefined" && typeof(end_marker) == "undefined"){
-      if(startpoint.toString()!=latlng.toString()){
-        addMarker(latlng, "end");
+      if(startpoint.toString()!=event.latLng.toString()){
+        addMarker(event.latLng, "end");
         recalc('both');
       }
     }
@@ -536,7 +534,7 @@ google.setOnLoadCallback(function(){
     return false;
   });
 
-  if(GBrowserIsCompatible()) { launchMap(); }
+  launchMap();
 
   //Detect saved route from URL
   if($.getUrlVar('start')!=undefined && $.getUrlVar('end')!=undefined){
