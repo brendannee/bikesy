@@ -21,6 +21,7 @@ var showTips = true; // Show Tooltips by default
 
 var routelines = new Array();
 var tripstats = new Array();
+var stoppoints = new Array();
 var tripsummary = new Array();
 var distance = new Array();
 var elevation = new Array();
@@ -72,22 +73,6 @@ function recalc(marker_name) {
     }
     else{alert("Bikemapper currently only works in the Bay Area.");}
   }   
-}
-  
-function showPoint(i){
-  // First, hide all stop points
-  for (var j=0; j<(stoppoints.length+1); j++) { 
-    if (stoppoints[j] != undefined) {
-      stoppoints[j].setVisible(false); 
-    }
-  $("#direction"+j).css('background-color','inherit');
-  }
-  
-  //Show desired stop point
-  if (stoppoints[i] != undefined) {
-    stoppoints[i].setVisible(true);
-  }
-  $("#direction"+i).css('background-color','#d1d1d1');
 }
   
 function addMarker(latlng, type){
@@ -315,12 +300,11 @@ function processpath(data, redraw, routeno){
   data[0].push(new Array("Arrive at",finishName));
     
   //Clear out old narrative and start building new one
-  tripstats[routeno] += "<div id='directions'><ol><li id='direction0' class='direction' title='Click to see this turn on map'>Head <strong>"+data[0][0][0].replace(/start /g, "")+"</strong> on <strong>"+data[0][0][1]+"</strong></li>";
+  tripstats[routeno] += "<div id='directions'><ol><li id='direction-0-0' class='direction' title='Click to see this turn on map'>Head <strong>"+data[0][0][0].replace(/start /g, "")+"</strong> on <strong>"+data[0][0][1]+"</strong></li>";
   
-  stoppoints = new Array();
+  stoppoints[routeno] = new Array();
   
-  var len=data[0].length;
-  for(var i=0; i<len; i++) {
+  for(var i=0; i<data[0].length; i++) {
     
     if(i>0){
     
@@ -328,7 +312,7 @@ function processpath(data, redraw, routeno){
       street = data[0][i][1];
 
       // Skip Direction if next step's street name is "nameless" and direction is "Continue" and add distance to this step
-      if (i<len-1) {
+      if (i<data[0].length-1) {
         if (data[0][i+1][1] == "nameless") {
           data[0][i+1][2] = 0;
           i++;
@@ -345,24 +329,40 @@ function processpath(data, redraw, routeno){
         } else {
           word = 'onto';
         }
-        tripstats[routeno] += "<li id='direction"+routeno.toString()+i.toString()+"' class='direction' title='Click to see this turn on map'><strong>" + direction + "</strong> " + word + " <strong>" + street + "</strong></li>";
+        tripstats[routeno] += "<li id='direction-"+routeno.toString()+"-"+i.toString()+"' class='direction' title='Click to see this turn on map'><strong>" + direction + "</strong> " + word + " <strong>" + street + "</strong></li>";
         
         //Create a marker for each turn except the last one
-        if(i<(len-1)){
-          stoppoints[i] = new google.maps.Marker(new google.maps.LatLng(data[0][i][5][1], data[0][i][5][0]));
-          stoppoints[i].setMap(map);
-          stoppoints[i].setVisible(false);
+        if(i<(data[0].length-1)){
+          stoppoints[routeno][i] = new google.maps.Marker({
+            position: new google.maps.LatLng(data[0][i][5][1], data[0][i][5][0]),
+            map:map,
+            visible:false
+          });
         }
       }
     }
-    //Set direction div click function to show marker when clicked
-    $(".direction").click(function(){
-      console.log(this.id.replace(/direction/g, ""));
-      showPoint(this.id.replace(/direction/g, ""));
-    });
   }
   
   $("#stats"+routeno).html(tripstats[routeno]);
+  //Set direction div click function to show marker when clicked
+  $(".direction").click(function(){
+    pointID = this.id.replace(/direction/g, "").split("-");
+    console.log(pointID);
+    // First, hide all stop points
+    for (i in stoppoints) { 
+      for (j in stoppoints[i]){
+        if (stoppoints[i][j] != undefined) {
+          stoppoints[i][j].setVisible(false); 
+        }
+        $("#direction-"+i+"-"+j).css('background-color','inherit');
+      }
+    }
+    //Show desired stop point
+    if (stoppoints[pointID[1]][pointID[2]] != undefined) {
+      stoppoints[pointID[1]][pointID[2]].setVisible(true);
+      $("#direction-"+pointID[1]+"-"+pointID[2]).css('background-color','#d1d1d1');
+    }
+  });
   $("#stats"+routeno).hide();
   
   //Show Directions
