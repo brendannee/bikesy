@@ -261,12 +261,9 @@ function processpath(data, redraw, routeno){
   //Create Link URL
   linkURL = "?start=" + $('#startbox').val().replace(/&/g, "and").replace(/ /g, "+") + "&end=" + $('#finishbox').val().replace(/&/g, "and").replace(/ /g, "+") + "&hills=" + $('#hills').val();
   
-  //Add Permalink Control on top of map
-  $("#permalink").show();
+  //Add Controls to top of map
+  $("#map-buttons").show();
   $("#permalink").html("<a href='" + linkURL + "' title='Direct Link to this route'><img src='images/link.png'> Permalink to Route</a>");
-  
-  //Add Twitter Control on top of map
-  $("#twitter").show();[0]
   $("#twitter").html("<a href='http://www.addtoany.com/add_to/twitter?linkurl=" + encodeURIComponent("http://bikesy.com"+linkURL) + "&linkname=" + encodeURIComponent("Bike Route from " + startName.replace(/\+/g, "").replace(/&/g, "and") + " to " + finishName.replace(/\+/g, "").replace(/&/g, "and"))+"'><img src='images/twitter.png'> Tweet This</a>");
   
   var distance = new Array();
@@ -347,7 +344,6 @@ function processpath(data, redraw, routeno){
   //Set direction div click function to show marker when clicked
   $(".direction").click(function(){
     pointID = this.id.replace(/direction/g, "").split("-");
-    console.log(pointID);
     // First, hide all stop points
     for (i in stoppoints) { 
       for (j in stoppoints[i]){
@@ -412,39 +408,14 @@ function gviz(profile){
 }
 
 function launchMap(){
-  var myOptions = {
+  map = new google.maps.Map(document.getElementById("map_canvas"), {
     zoom: 10,
     center: new google.maps.LatLng(37.880002, -122.189941),
     mapTypeId: google.maps.MapTypeId.ROADMAP
-  }
-  map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);
+  });
   
   var bikeLayer = new google.maps.BicyclingLayer();
   bikeLayer.setMap(map);
-  
-  //Add credits pane
-  /*function CreditsPane() {}
-  CreditsPane.prototype = new GControl;
-  CreditsPane.prototype.initialize = function(map) {
-    var me = this;
-    me.panel = document.createElement("div");
-    me.panel.style.width = "400px";
-    me.panel.style.height = "15px";
-  
-    me.panel.innerHTML = "Sponsored by <a href='http://511contracosta.org'  title='Visit 511ContraCosta.org'>511 Contra Costa</a> &nbsp; Site by <a href='http://blnktag.com' title='BlinkTag Inc'>BlinkTag Inc</a>";
-    map.getContainer().appendChild(me.panel);
-    return me.panel;
-  };
-
-  CreditsPane.prototype.getDefaultPosition = function() {
-    return new GControlPosition(
-        G_ANCHOR_BOTTOM_LEFT, new GSize(180, 0));
-  };
-
-  CreditsPane.prototype.getPanel = function() {
-    return me.panel;
-  }
-  map.addControl(new CreditsPane());*/
   
   //Add welcome screen
   $('#welcome_screen').fadeIn();

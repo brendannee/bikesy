@@ -272,38 +272,42 @@ ul.input_boxes #hillsline select{
 	border:none;
 }
 
-.map-button{
-	color:#0000cc;
-	text-align:center;
-	background-color:#FFF;
-	border:1px solid #000;
-	margin:3px;
+#map-buttons{
+  position:absolute;
+	top:5px;
+	right:160px;
 }
 
-.map-button img{
-	vertical-align:top;
+.map-button{
+	overflow-x: hidden; 
+	overflow-y: hidden; 
+	text-align: center; 
+	-webkit-user-select: none; 
+	font-size: 12px; 
+	line-height: 160%; 
+	padding: 0px 6px;
+	-webkit-box-shadow: rgba(0, 0, 0, 0.347656) 2px 2px 3px; 
+	box-shadow: rgba(0, 0, 0, 0.347656) 2px 2px 3px; 
+	min-width: 47px; 
+	color: black; 
+	border-width: 1px;
+	border-style: solid;
+	border-color: rgb(169, 187, 223);
+	border-radius: 2px 2px;
+	font-weight: normal; 
+	background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, from(rgb(254, 254, 254)), to(rgb(243, 243, 243))); 
+	background-attachment: initial; 
+	background-origin: initial; 
+	background-clip: initial; 
+	background-color: initial; 
+	background-position: initial initial; 
+	background-repeat: initial initial;
+	display:inline-block;
 }
 
 .map-button a{
-	color:#000;
 	display:block;
-	padding:2px;
-}
-
-#permalink{
-	position:absolute;
-	top:30px;
-	right:85px;
-	width:11em;
-	display:none;
-}
-
-#twitter{
-	position:absolute;
-	top:30px;
-	right:5px;
-	width:7em;
-	display:none;
+	color:#000;
 }
 
 #map_canvas{
