@@ -40,94 +40,6 @@ function tooltips(){
   });
 }
   
-function recalc(marker_name) {
-  if (typeof(start_marker) != "undefined"){
-    slat = start_marker.getPosition().lat();
-    slng = start_marker.getPosition().lng();
-    elat = end_marker.getPosition().lat();
-    elng = end_marker.getPosition().lng();
-    distance = dist(slat,elat,slng,elng);
-    var hills = $('#hills').val();
-    var port = translatePorts(hills);
-    
-    if(bounds(slat,slng,elat,elng)){
-    
-      sCoords = new google.maps.LatLng(slat,slng);
-      eCoords = new google.maps.LatLng(elat,elng);
-      
-      //Reverse Geocode
-      if(marker_name=='start'){
-        this.getAddress(sCoords, 'start');
-      } else if(marker_name=='end'){
-        this.getAddress(eCoords, 'end');
-      } else if(marker_name=='both'){
-        this.getAddress(sCoords, 'start');
-        this.getAddress(eCoords, 'end');
-      }
-      
-      //Remove old overlay
-      if (typeof(routeoverlay) != "undefined"){routeoverlay.setMap(null);}
-      
-      //Draw new route
-      drawpath("lat1="+slat+"&lng1="+slng+"&lat2="+elat+"&lng2="+elng, false, port);
-    }
-    else{alert("Bikemapper currently only works in the Bay Area.");}
-  }   
-}
-  
-function addMarker(latlng, type){
-  if(type=="start"){
-    
-    if (typeof(start_marker) == "undefined"){
-      shadow = new google.maps.MarkerImage(
-        "images/shadow.png",
-        new google.maps.Size(32, 32)
-      );
-      startIcon = new google.maps.MarkerImage(
-        "images/green.png",
-        new google.maps.Size(32, 32)
-      );
-      start_marker = new google.maps.Marker({
-        map:map,
-        shadow:shadow,
-        draggable:true,
-        icon:startIcon
-      });
-      google.maps.event.addListener(start_marker,'dragend',function(position){
-        showTips = false;
-        $("#dragtext").fadeOut();
-        recalc('start');
-      });
-    }
-    
-    start_marker.setOptions({ position: latlng });
-  } else if (type=="end"){
-    if (typeof(end_marker) == "undefined"){
-      shadow = new google.maps.MarkerImage(
-        "images/shadow.png",
-        new google.maps.Size(32, 32)
-      );
-      endIcon = new google.maps.MarkerImage(
-        "images/red.png",
-        new google.maps.Size(32, 32)
-      );
-      end_marker = new google.maps.Marker({
-        map:map,
-        shadow:shadow,
-        draggable:true,
-        icon:endIcon
-      });
-      google.maps.event.addListener(end_marker,'dragend',function(position){
-        showTips = false;
-        $("#dragtext").fadeOut();
-        recalc('end');
-      });
-    }
-    
-    end_marker.setOptions({ position: latlng });
-  }
-}
-  
 function showRoute(routeno) {
   //Hide routes
   for (var i=0; i<3; i++){
@@ -206,7 +118,8 @@ function showRoute(routeno) {
   
   //Show Profile
   if (typeof(profile[routeno]) != "undefined"){
-    gviz(profile[routeno]);
+    var windowwidth = window.innerWidth;
+    gviz(profile[routeno],windowwidth-305,190);
   }
 }
   
@@ -390,22 +303,6 @@ function processpath(data, redraw, routeno){
   
   showRoute(1);
 }
-  
-function gviz(profile){
-  if (typeof(table) == "undefined"){
-    table = new google.visualization.DataTable();
-    chart = new google.visualization.ScatterChart(document.getElementById('profile'));
-  } else {
-    table.removeColumn(0);
-    table.removeColumn(0);
-  }
-  
-  table.addColumn('number', 'Distance');
-  table.addColumn('number', 'Elevation');
-  table.addRows(profile);
-  var windowwidth = window.innerWidth;
-  chart.draw(table, {width: windowwidth-305, height: 190, titleX: 'Distance along route (mi)', titleY: 'Elevation (ft)', legend: 'none', lineSize: 2, pointSize: 0, title: 'Elevation Profile', titleFontSize: 14, fontSize:18});
-}
 
 function launchMap(){
   map = new google.maps.Map(document.getElementById("map_canvas"), {
@@ -432,6 +329,71 @@ function launchMap(){
         addMarker(event.latLng, "end");
         recalc('both');
       }
+    }
+  });
+}
+
+function drawpath(request, redraw, port){
+  $('#welcome_screen').fadeOut(); // hide welcome screen if its still up
+  $('#loading_image').show(); // show loading image, as request is about to start
+  
+  //Hide lines
+  for(i in routelines){
+    routelines[i].setMap(null);
+  }
+  
+  $.jsonp({
+    "url": "http://"+routeserver+":"+ port +"/path?"+request+"&jsoncallback=?",
+    "success": function(json) {processpath(json, redraw, 0);},
+    "error": function(){
+      //On error, try again
+      $.jsonp({
+        "url": "http://"+routeserver+":"+ port +"/path?"+request+"&jsoncallback=?",
+        "success": function(json) {processpath(json, redraw, 0);},
+        "error": function(){
+          $('#loading_image').hide(); // hide loading image
+          if(errorAlert==0){
+            alert("There was an error retrieving the route data.  Please refresh the page and try again.");
+          }
+          errorAlert = 1;
+        }
+      });
+    }
+  }); 
+  $.jsonp({
+    "url": "http://"+routeserver+":"+ (port+3) +"/path?"+request+"&jsoncallback=?",
+    "success": function(json) {processpath(json, redraw, 1);},
+    "error": function(){
+        //On error, try again
+        $.jsonp({
+          "url": "http://"+routeserver+":"+ (port+3) +"/path?"+request+"&jsoncallback=?",
+          "success": function(json) {processpath(json, redraw, 1);},
+          "error": function(){
+            $('#loading_image').hide(); // hide loading image
+            if(errorAlert==0){
+              alert("There was an error retrieving the route data.  Please refresh the page and try again.");
+            }
+            errorAlert = 1;
+          }
+        });
+      }
+  });
+  $.jsonp({
+    "url": "http://"+routeserver+":"+ (port+6) +"/path?"+request+"&jsoncallback=?",
+    "success": function(json) {processpath(json, redraw, 2);},
+    "error": function(){
+        //On error, try again
+        $.jsonp({
+          "url": "http://"+routeserver+":"+ (port+6) +"/path?"+request+"&jsoncallback=?",
+          "success": function(json) {processpath(json, redraw, 2);},
+          "error": function(){
+            $('#loading_image').hide(); // hide loading image
+            if(errorAlert==0){
+              alert("There was an error retrieving the route data.  Please refresh the page and try again.");
+            }
+            errorAlert = 1;
+          }
+      });
     }
   });
 }
