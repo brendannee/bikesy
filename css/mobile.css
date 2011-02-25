@@ -27,10 +27,10 @@ h1.logo{
 }
 
 #inputs label{
-  font-size:26px;
+  font-size:20px;
   line-height:26px;
   margin-bottom:2px;
-  margin-top:15px;
+  margin-top:5px;
 }
 
 .ui-select{
@@ -40,6 +40,7 @@ h1.logo{
 .geolocation{
   text-align:right;
   margin:0;
+  font-size:11px;
 }
 
 .geolocation a{
