@@ -176,7 +176,7 @@ function processpath(data, redraw, routeno){
   
   //Add Controls to top of map
   $("#map-buttons").show();
-  $("#permalink").html("<a href='" + linkURL + "' title='Direct Link to this route'><img src='images/link.png'> Permalink to Route</a>");
+  $("#permalink").html("<a href='" + window.location.href + linkURL + "' title='Direct Link to this route'><img src='images/link.png'> Permalink to Route</a>");
   $("#twitter").html("<a href='http://www.addtoany.com/add_to/twitter?linkurl=" + encodeURIComponent("http://bikesy.com"+linkURL) + "&linkname=" + encodeURIComponent("Bike Route from " + startName.replace(/\+/g, "").replace(/&/g, "and") + " to " + finishName.replace(/\+/g, "").replace(/&/g, "and"))+"'><img src='images/twitter.png'> Tweet This</a>");
   
   var distance = new Array();

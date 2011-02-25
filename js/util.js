@@ -272,8 +272,21 @@ function gviz(profile, width, height){
   
   table.addColumn('number', 'Distance');
   table.addColumn('number', 'Elevation');
+  // Round profile values
+  for (i in profile){
+    profile[i][0] = Math.round(profile[i][0]*100)/100;
+    profile[i][1] = Math.round(profile[i][1]);
+  }
+  
+  //Determine appropriate chart padding
+  if(width>400){
+    var area = {left: 80, width:(width-90)};
+  } else {
+    var area = {left: 40, width:(width-50)};
+  }
+  
   table.addRows(profile);
-  chart.draw(table, {width: width, height: height, titleX: 'Distance along route (mi)', titleY: 'Elevation (ft)', legend: 'none', lineSize: 2, pointSize: 0, title: 'Elevation Profile', titleFontSize: 14, fontSize:18});
+  chart.draw(table, {width: width, height: height, legend: 'none', lineWidth: 2, pointSize: 0, title: 'Elevation Profile', titleTextStyle: {fontSize: '16'}, vAxis:{title:'Elevation (ft)', textStyle:{fontSize: '12'}}, hAxis:{title:'Distance along route (mi)', textStyle:{fontSize: '12'}}, chartArea:area});
 }
   
 function getElevGain(profile) {
