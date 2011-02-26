@@ -409,6 +409,11 @@ function swapAddress(){
 google.setOnLoadCallback(function(){
   
   $(document).ready(function(){
+    //Chrome Frame check
+    CFInstall.check({
+      mode:'overlay'
+    });
+    
     resizeWindow();
     //If the User resizes the window, adjust the #container height
     $(window).bind("resize", resizeWindow);
