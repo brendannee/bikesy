@@ -10,10 +10,11 @@ var routeserver = "ec2-184-73-96-123.compute-1.amazonaws.com";
     h_lng = data[2];
   });*/
 //Hard code map bounds
-var l_lat = 37.306399999999996;
-var h_lat = 38.316994299999998;
-var l_lng = -123.02877599999999;
-var h_lng = -121.637;
+var bounds = new Object();
+bounds.l_lat = 37.306399999999996;
+bounds.h_lat = 38.316994299999998;
+bounds.l_lng = -123.02877599999999;
+bounds.h_lng = -121.637;
 
 var map;
 
@@ -179,9 +180,6 @@ function processpath(data, redraw, routeno){
   $("#permalink").html("<a href='" + window.location.href + linkURL + "' title='Direct Link to this route'><img src='images/link.png'> Permalink to Route</a>");
   $("#twitter").html("<a href='http://www.addtoany.com/add_to/twitter?linkurl=" + encodeURIComponent("http://bikesy.com"+linkURL) + "&linkname=" + encodeURIComponent("Bike Route from " + startName.replace(/\+/g, "").replace(/&/g, "and") + " to " + finishName.replace(/\+/g, "").replace(/&/g, "and"))+"'><img src='images/twitter.png'> Tweet This</a>");
   
-  var distance = new Array();
-  var elevation = new Array();
-  var tripstats = new Array();
   distance[routeno] = Math.round(routelines[routeno].inMiles()*10)/10;
   
   elevation[routeno] = Math.round(getElevGain(data[2]));
@@ -304,35 +302,6 @@ function processpath(data, redraw, routeno){
   showRoute(1);
 }
 
-function launchMap(){
-  map = new google.maps.Map(document.getElementById("map_canvas"), {
-    zoom: 10,
-    center: new google.maps.LatLng(37.880002, -122.189941),
-    mapTypeId: google.maps.MapTypeId.ROADMAP
-  });
-  
-  var bikeLayer = new google.maps.BicyclingLayer();
-  bikeLayer.setMap(map);
-  
-  //Add welcome screen
-  $('#welcome_screen').fadeIn();
-  
-  // Allow for clicking on the map to assign initial start points
-  google.maps.event.addListener(map, 'click', function(event) {
-    if (typeof(start_marker) == "undefined"){
-      addMarker(event.latLng, "start");
-      startpoint = event.latLng;
-      $("#inputs #startbox").tooltip().hide();
-      $("#endpointtext").fadeIn(); //Show Endpoint Tooltip
-    } else if (typeof(start_marker) != "undefined" && typeof(end_marker) == "undefined"){
-      if(startpoint.toString()!=event.latLng.toString()){
-        addMarker(event.latLng, "end");
-        recalc('both');
-      }
-    }
-  });
-}
-
 function drawpath(request, redraw, port){
   $('#welcome_screen').fadeOut(); // hide welcome screen if its still up
   $('#loading_image').show(); // show loading image, as request is about to start
@@ -410,9 +379,11 @@ google.setOnLoadCallback(function(){
   
   $(document).ready(function(){
     //Chrome Frame check
-    CFInstall.check({
-      mode:'overlay'
-    });
+    if(typeof CFInstall != 'undefined'){
+      CFInstall.check({
+        mode:'overlay'
+      });
+    }
     
     resizeWindow();
     //If the User resizes the window, adjust the #container height
@@ -473,6 +444,24 @@ google.setOnLoadCallback(function(){
   });
 
   launchMap();
+  
+  //Add welcome screen
+  $('#welcome_screen').fadeIn();
+  
+  // Allow for clicking on the map to assign initial start points
+  google.maps.event.addListener(map, 'click', function(event) {
+    if (typeof(start_marker) == "undefined"){
+      addMarker(event.latLng, "start");
+      startpoint = event.latLng;
+      $("#inputs #startbox").tooltip().hide();
+      $("#endpointtext").fadeIn(); //Show Endpoint Tooltip
+    } else if (typeof(start_marker) != "undefined" && typeof(end_marker) == "undefined"){
+      if(startpoint.toString()!=event.latLng.toString()){
+        addMarker(event.latLng, "end");
+        recalc('both');
+      }
+    }
+  });
 
   //Detect saved route from URL
   if($.getUrlVar('start')!=undefined && $.getUrlVar('end')!=undefined){

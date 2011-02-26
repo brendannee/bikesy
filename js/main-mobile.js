@@ -2,10 +2,11 @@
 var routeserver = "ec2-184-73-96-123.compute-1.amazonaws.com";
 
 //Hard code map bounds
-var l_lat = 37.306399999999996;
-var h_lat = 38.316994299999998;
-var l_lng = -123.02877599999999;
-var h_lng = -121.637;
+var bounds = new Object();
+bounds.l_lat = 37.306399999999996;
+bounds.h_lat = 38.316994299999998;
+bounds.l_lng = -123.02877599999999;
+bounds.h_lng = -121.637;
 
 var map;
 
@@ -20,23 +21,6 @@ var elevation = new Array();
 var profile = new Array();
 
 var errorAlert=0;
-
-function launchMap(){
-  map = new google.maps.Map(document.getElementById("map_canvas"), {
-    zoom: 10,
-    center: new google.maps.LatLng(37.880002, -122.189941),
-    mapTypeId: google.maps.MapTypeId.ROADMAP
-  });
-  
-  var bikeLayer = new google.maps.BicyclingLayer();
-  bikeLayer.setMap(map);
-  
-  $("#map_canvas").parent().bind('pageshow',function(){
-    //Resize map to fit screen
-    $("#map_canvas").css('height',$(window).height()-parseInt($('#profile').css('height'))-2-parseInt($('#map .ui-header').css('height')));
-    google.maps.event.trigger(map,'resize'); //tell google maps to resize itself
-  });
-}
 
 function processpath(data, redraw, routeno){
   switch(routeno){
@@ -55,12 +39,6 @@ function processpath(data, redraw, routeno){
   }
   
   var decodedPoints = google.maps.geometry.encoding.decodePath(data[1][0]);
-
-  if(typeof(routelines[routeno])=="undefined"){
-    routelines[routeno] = new google.maps.Polyline();
-    // Add listener to route lines
-    new google.maps.event.addListener(routelines[routeno], "mouseover", function() { showRoute(routeno); });
-  }
 
   routelines[routeno].setOptions({
     strokeColor: coloroff,
@@ -94,9 +72,6 @@ function processpath(data, redraw, routeno){
   $("#permalink").html("<a href='" + window.location.href + linkURL + "' title='Direct Link to this route' rel='external'><img src='images/link.png'> Permalink to Route</a>");
   $("#twitter").html("<a href='http://www.addtoany.com/add_to/twitter?linkurl=" + encodeURIComponent("http://bikesy.com"+linkURL) + "&linkname=" + encodeURIComponent("Bike Route from " + startName.replace(/\+/g, "").replace(/&/g, "and") + " to " + finishName.replace(/\+/g, "").replace(/&/g, "and"))+"'><img src='images/twitter.png'> Tweet This</a>");
   
-  var distance = new Array();
-  var elevation = new Array();
-  var tripstats = new Array();
   distance[routeno] = Math.round(routelines[routeno].inMiles()*10)/10;
   elevation[routeno] = Math.round(getElevGain(data[2]));
   
@@ -412,6 +387,12 @@ google.setOnLoadCallback(function(){
   });
 
   launchMap();
+
+  $("#map_canvas").parent().bind('pageshow',function(){
+    //Resize map to fit screen
+    $("#map_canvas").css('height',$(window).height()-parseInt($('#profile').css('height'))-2-parseInt($('#map .ui-header').css('height')));
+    google.maps.event.trigger(map,'resize'); //tell google maps to resize itself
+  });
 
   //Detect saved route from URL
   if($.getUrlVar('start')!=undefined && $.getUrlVar('end')!=undefined){

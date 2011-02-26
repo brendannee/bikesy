@@ -87,8 +87,8 @@ function proper(str){
     return str.replace(/\w\S*/, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
 }
 
-function bounds(lat1, lng1, lat2, lng2){
-  if(lat1>h_lat || lat2>h_lat || lat1<l_lat || lat2<l_lat || lng1>h_lng || lng2>h_lng || lng1<l_lng || lng2<l_lng){
+function checkBounds(lat1, lng1, lat2, lng2){
+  if(lat1>bounds.h_lat || lat2>bounds.h_lat || lat1<bounds.l_lat || lat2<bounds.l_lat || lng1>bounds.h_lng || lng2>bounds.h_lng || lng1<bounds.l_lng || lng2<bounds.l_lng){
     return false;
   } else { 
     return true;
@@ -112,6 +112,24 @@ function translatePorts(hills){
   }
   return i+8080;
   alert(i+8080);
+}
+
+function launchMap(){
+  map = new google.maps.Map(document.getElementById("map_canvas"), {
+    zoom: 10,
+    center: new google.maps.LatLng(37.880002, -122.189941),
+    mapTypeId: google.maps.MapTypeId.ROADMAP
+  });
+  
+  var bikeLayer = new google.maps.BicyclingLayer();
+  bikeLayer.setMap(map);
+  
+  //Setup route lines
+  for(i=0;i<3;i++){
+    routelines[i] = new google.maps.Polyline();
+    // Add listener to route lines
+    new google.maps.event.addListener(routelines[i], "mouseover", function() { showRoute(i); });
+  }
 }
 
 function submitForm() {
@@ -154,7 +172,7 @@ function submitForm() {
           elat = results[0].geometry.location.lat();
           elng = results[0].geometry.location.lng();
           //Now move along
-          if(bounds(slat,slng,elat,elng)){
+          if(checkBounds(slat,slng,elat,elng)){
             drawpath("lat1="+slat+"&lng1="+slng+"&lat2="+elat+"&lng2="+elng, true, port);
             map.panTo(new google.maps.LatLng((slat+elat)/2,(slng+elng)/2));
           } else {
@@ -236,7 +254,7 @@ function recalc(marker_name) {
     var hills = $('#hills').val();
     var port = translatePorts(hills);
     
-    if(bounds(slat,slng,elat,elng)){
+    if(checkBounds(slat,slng,elat,elng)){
     
       sCoords = new google.maps.LatLng(slat,slng);
       eCoords = new google.maps.LatLng(elat,elng);
