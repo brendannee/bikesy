@@ -277,10 +277,11 @@ function showRoute(routeno) {
     routelines[routeno].setOptions({ strokeColor: coloron });
   }
   
-  //Show Profile
+  //Detect SVG Show Profile
   if (typeof(profile[routeno]) != "undefined"){
-    
-    gviz(profile[routeno],$(window).width(),100);
+    if(document.implementation.hasFeature("http://www.w3.org/TR/SVG11/feature#BasicStructure", "1.1")==true){
+      gviz(profile[routeno],$(window).width(),100);
+    }
   }
 }
 

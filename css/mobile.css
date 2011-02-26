@@ -51,8 +51,12 @@ h1.logo{
   overflow-y:hidden;
 }
 
-#profile{
+.portrait #profile{
   height:100px;
+}
+
+.landscape #profile{
+  height:0px;
 }
 
 #map_canvas{
