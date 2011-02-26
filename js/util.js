@@ -324,7 +324,7 @@ function getStartGeoLocator(position) {
   geocoder = new google.maps.Geocoder();
   geocoder.geocode({'latLng': sCoords}, function(results, status) {
     if (status == google.maps.GeocoderStatus.OK) {
-      $('#startbox').val(results[1].formatted_address);
+      $('#startbox').val(results[0].formatted_address).replace(/, CA, USA/g, "");;
     }
   });
 }
@@ -334,7 +334,7 @@ function getEndGeoLocator(position) {
   geocoder = new google.maps.Geocoder();
   geocoder.geocode({'latLng': eCoords}, function(results, status) {
     if (status == google.maps.GeocoderStatus.OK) {
-      $('#finishbox').val(results[1].formatted_address);
+      $('#finishbox').val(results[0].formatted_address).replace(/, CA, USA/g, "");;
     }
   });
 }
