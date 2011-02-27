@@ -67,6 +67,7 @@ ul.input_boxes li{
 ul.input_boxes li.inputbox{
 	width:245px;
 	padding:0;
+	position:relative;
 }
 
 ul.input_boxes li.geolocation{
@@ -83,6 +84,16 @@ ul.input_boxes li.geolocation img{
 ul.input_boxes li.geolocation a{
 	color: red;
 	padding-left:2px;
+}
+
+.geolocationwaiting{
+  background: url(../images/loading.gif) 0 0 no-repeat;
+  width:16px;
+  height:16px;
+  position:absolute;
+  left:26px;
+  top:3px;
+  display:none;
 }
 
 ul.input_boxes li .textbox{

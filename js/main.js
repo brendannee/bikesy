@@ -434,11 +434,13 @@ google.setOnLoadCallback(function(){
     $("#elocation").show();
   }
   $("#slocation a").click(function(){
+    $('.geolocationwaiting.start').fadeIn();
     navigator.geolocation.getCurrentPosition(getStartGeoLocator,showGeoLocatorError);
     return false;
   });
   
   $("#elocation a").click(function(){
+    $('.geolocationwaiting.end').fadeIn();
     navigator.geolocation.getCurrentPosition(getEndGeoLocator,showGeoLocatorError);
     return false;
   });

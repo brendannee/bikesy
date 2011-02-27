@@ -342,6 +342,7 @@ function getStartGeoLocator(position) {
   geocoder = new google.maps.Geocoder();
   geocoder.geocode({'latLng': sCoords}, function(results, status) {
     if (status == google.maps.GeocoderStatus.OK) {
+      $('#geolocationwaiting').fadeOut();
       $('#startbox').val(results[0].formatted_address).replace(/, CA, USA/g, "");;
     }
   });
@@ -352,12 +353,14 @@ function getEndGeoLocator(position) {
   geocoder = new google.maps.Geocoder();
   geocoder.geocode({'latLng': eCoords}, function(results, status) {
     if (status == google.maps.GeocoderStatus.OK) {
+      $('#geolocationwaiting').fadeOut();
       $('#finishbox').val(results[0].formatted_address).replace(/, CA, USA/g, "");;
     }
   });
 }
   
 function showGeoLocatorError(error){
+  $('#geolocationwaiting').fadeOut();
   if(error.code==1){
     alert("To determine your current location you must click \"Share Location\" in the top bar in your browser.");
   } else if (error.code==2 || error.code==3 || error.code==0){
