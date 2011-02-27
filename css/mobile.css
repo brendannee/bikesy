@@ -33,6 +33,16 @@ h1.logo{
   margin-top:5px;
 }
 
+.geolocationwaiting{
+  background: url(../images/loading.gif) 0 0 no-repeat;
+  width:16px;
+  height:16px;
+  position:absolute;
+  left:26px;
+  top:3px;
+  display:none;
+}
+
 .ui-select{
   margin-bottom:20px;
 }
