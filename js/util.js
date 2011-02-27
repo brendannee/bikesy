@@ -342,7 +342,7 @@ function getStartGeoLocator(position) {
   geocoder = new google.maps.Geocoder();
   geocoder.geocode({'latLng': sCoords}, function(results, status) {
     if (status == google.maps.GeocoderStatus.OK) {
-      $('#geolocationwaiting').fadeOut();
+      $('.geolocationwaiting').fadeOut();
       $('#startbox').val(results[0].formatted_address).replace(/, CA, USA/g, "");;
     }
   });
@@ -353,7 +353,7 @@ function getEndGeoLocator(position) {
   geocoder = new google.maps.Geocoder();
   geocoder.geocode({'latLng': eCoords}, function(results, status) {
     if (status == google.maps.GeocoderStatus.OK) {
-      $('#geolocationwaiting').fadeOut();
+      $('.geolocationwaiting').fadeOut();
       $('#finishbox').val(results[0].formatted_address).replace(/, CA, USA/g, "");;
     }
   });
