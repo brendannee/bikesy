@@ -1,34 +1,4 @@
-// Define Route Server
-var routeserver = "ec2-184-73-96-123.compute-1.amazonaws.com";
-
-//Get Bounds From Route Server  
-/*$.getJSON("http://"+ routeserver+":8081/bounds?jsoncallback=?",
-  function(data){
-    l_lat = data[1];
-    h_lat = data[3];
-    l_lng = data[0];
-    h_lng = data[2];
-  });*/
-//Hard code map bounds
-var bounds = new Object();
-bounds.l_lat = 37.306399999999996;
-bounds.h_lat = 38.316994299999998;
-bounds.l_lng = -123.02877599999999;
-bounds.h_lng = -121.637;
-
-var map;
-
-var showTips = true; // Show Tooltips by default
-
-var routelines = new Array();
-var tripstats = new Array();
-var stoppoints = new Array();
-var tripsummary = new Array();
-var distance = new Array();
-var elevation = new Array();
-var profile = new Array();
-
-var errorAlert=0;
+var mobile = false;
 
 function tooltips(){
   // select all desired input fields and attach tooltips to them 
@@ -59,8 +29,8 @@ function showRoute(routeno) {
         break;
     }
     $("#stats"+i).hide();
-    if (typeof(routelines[routeno]) != "undefined"){
-      routelines[routeno].setOptions({ strokeColor: coloroff });
+    if (typeof(routes[routeno].routeline) != "undefined"){
+      routes[routeno].routeline.setOptions({ strokeColor: coloroff });
     }
     //Remove Highlight Route Choice Box
     $("#summary"+i).css("background-color", coloroff);
@@ -77,15 +47,15 @@ function showRoute(routeno) {
     case 1:
       coloron="#fff600";
       coloroff="#ecf869";
-      if (distance[1]>distance[0]) {
-        lengthdif = Math.round((distance[1]-distance[0])*100)/100 + " miles longer";
+      if (routes[1].distance>routes[0].distance) {
+        lengthdif = Math.round((routes[1].distance-routes[0].distance)*100)/100 + " miles longer";
       } else {
-        lengthdif = Math.round((distance[0]-distance[1])*100)/100 + " miles shorter";
+        lengthdif = Math.round((routes[0].distance-routes[1].distance)*100)/100 + " miles shorter";
       }
-      if (elevation[1]>elevation[0]) {
-        elevdif = Math.round((elevation[1]-elevation[0])*100)/100 + " ft more climbing";
+      if (routes[1].elevation>routes[0].elevation) {
+        elevdif = Math.round((routes[1].elevation-routes[0].elevation)*100)/100 + " ft more climbing";
       } else {
-        elevdif = Math.round((elevation[0]-elevation[1])*100)/100 + " ft less climbing";
+        elevdif = Math.round((routes[0].elevation-routes[1].elevation)*100)/100 + " ft less climbing";
       }
       safetyTitle = "Safer (some bike lanes, " + lengthdif + ", " +  elevdif + ")";
       break;
@@ -93,14 +63,14 @@ function showRoute(routeno) {
       coloron="#10dd00";
       coloroff="#90ff7a";
       if (distance[2]>distance[0]) {
-        lengthdif = Math.round((distance[2]-distance[0])*100)/100 + " miles longer";
+        lengthdif = Math.round((routes[2].distance-routes[0].distance)*100)/100 + " miles longer";
       } else {
-        lengthdif = Math.round((distance[0]-distance[2])*100)/100 + " miles shorter";
+        lengthdif = Math.round((routes[0].distance-routes[2].distance)*100)/100 + " miles shorter";
       }
-      if (elevation[2]>elevation[0]) {
-        elevdif = Math.round((elevation[2]-elevation[0])*100)/100 + " ft more climbing";
+      if (routes[2].elevation>routes[0].elevation) {
+        elevdif = Math.round((routes[2].elevation-routes[0].elevation)*100)/100 + " ft more climbing";
       } else {
-        elevdif = Math.round((elevation[0]-elevation[2])*100)/100 + " ft less climbing";
+        elevdif = Math.round((routes[0].elevation-routes[2].elevation)*100)/100 + " ft less climbing";
       }
       safetyTitle = "Safest (mostly bike lanes, " + lengthdif + ", " +  elevdif + ")";
       break;
@@ -108,8 +78,8 @@ function showRoute(routeno) {
   
   // Show Route Line Stong Color
   $("#stats"+routeno).show();
-  if (typeof(routelines[routeno]) != "undefined"){
-    routelines[routeno].setOptions({ strokeColor: coloron });
+  if (typeof(routes[routeno].routeline) != "undefined"){
+    routes[routeno].routeline.setOptions({ strokeColor: coloron });
   }
   
   //Highlight Summary Box
@@ -118,37 +88,41 @@ function showRoute(routeno) {
   $("#summary"+routeno).css("border", "#333 solid 1px");
   
   //Show Profile
-  if (typeof(profile[routeno]) != "undefined"){
+  if (typeof(routes[routeno].elevprof) != "undefined"){
     var windowwidth = window.innerWidth;
-    gviz(profile[routeno],windowwidth-305,190);
+    gviz(routes[routeno].elevprof,windowwidth-305,190);
   }
 }
   
-function processpath(data, redraw, routeno){
-  switch(routeno){
-    case 0:
+function processpath(data, redraw, safety){
+  var routeno;
+  switch(safety){
+    case "low":
       coloron="#c2403a";
       coloroff="#ed817e";
+      routeno=0;
       break;
-    case 1:
+    case "medium":
       coloron="#fff600";
       coloroff="#ecf869";
+      routeno=1;
       break;
-    case 2:
+    case "high":
       coloron="#10dd00";
-      coloroff="#90ff7a"
+      coloroff="#90ff7a";
+      routeno=2;
       break;
   }
   
   var decodedPoints = google.maps.geometry.encoding.decodePath(data[1][0]);
 
-  if(typeof(routelines[routeno])=="undefined"){
-    routelines[routeno] = new google.maps.Polyline();
+  if(typeof(routes[routeno].routeline)=="undefined"){
+    routes[routeno].routeline = new google.maps.Polyline();
     // Add listener to route lines
-    new google.maps.event.addListener(routelines[routeno], "mouseover", function() { showRoute(routeno); });
+    new google.maps.event.addListener(routes[routeno].routeline, "mouseover", function() { showRoute(routeno); });
   }
 
-  routelines[routeno].setOptions({
+  routes[routeno].routeline.setOptions({
     strokeColor: coloroff,
     strokeOpacity: 0.4,
     strokeWeight: 7,
@@ -158,12 +132,12 @@ function processpath(data, redraw, routeno){
   
   // Center and Zoom only if its a redraw
   if(redraw == true){
-    map.fitBounds(routelines[routeno].getBounds());
+    map.fitBounds(routes[routeno].routeline.getBounds());
   }
   
   //icons for start and end
   addMarker(new google.maps.LatLng(data[0][0][5][1],data[0][0][5][0]), "start");
-  addMarker(routelines[routeno].getPath().getAt(routelines[routeno].getPath().getLength()-1), "end");
+  addMarker(routes[routeno].routeline.getPath().getAt(routes[routeno].routeline.getPath().getLength()-1), "end");
   
   //Clean Start and End Titles
   startName = $('#startbox').val().replace(/, USA/g, "");
@@ -173,30 +147,30 @@ function processpath(data, redraw, routeno){
   document.title = startName+" to "+finishName+" | San Francisco Bay Area Bike Mapper";
   
   //Create Link URL
-  linkURL = "?start=" + $('#startbox').val().replace(/&/g, "and").replace(/ /g, "+") + "&end=" + $('#finishbox').val().replace(/&/g, "and").replace(/ /g, "+") + "&hills=" + $('#hills').val();
+  linkURL = "?start=" + $('#startbox').val().replace(/&/g, "and").replace(/ /g, "+") + "&end=" + $('#finishbox').val().replace(/&/g, "and").replace(/ /g, "+") + "&hill=" + $('#hills').val();
   
   //Add Controls to top of map
   $("#map-buttons").show();
   $("#permalink").html("<a href='" + window.location.href + linkURL + "' title='Direct Link to this route'><img src='images/link.png'> Permalink to Route</a>");
   $("#twitter").html("<a href='http://www.addtoany.com/add_to/twitter?linkurl=" + encodeURIComponent("http://bikesy.com"+linkURL) + "&linkname=" + encodeURIComponent("Bike Route from " + startName.replace(/\+/g, "").replace(/&/g, "and") + " to " + finishName.replace(/\+/g, "").replace(/&/g, "and"))+"'><img src='images/twitter.png'> Tweet This</a>");
   
-  distance[routeno] = Math.round(routelines[routeno].inMiles()*10)/10;
+  routes[routeno].distance = Math.round(routes[routeno].routeline.inMiles()*10)/10;
   
-  elevation[routeno] = Math.round(getElevGain(data[2]));
+  routes[routeno].elevation = Math.round(getElevGain(data[2]));
   
   //Add Trip Stats for Route    
-  tripstats[routeno] = "<div class='title'>Directions to "+finishName+"</div>"; 
+  routes[routeno].tripstat = "<div class='title'>Directions to "+finishName+"</div>"; 
   
-  tripstats[routeno] += "<div class='totaldistance'><img src='images/map.png'> Distance: <span style='color:#000;'>" + distance[routeno] + " miles</span></div>"; //figures are in meters
-  tripsummary[routeno] = distance[routeno] + " miles";
+  routes[routeno].tripstat += "<div class='totaldistance'><img src='images/map.png'> Distance: <span style='color:#000;'>" + routes[routeno].distance + " miles</span></div>"; //figures are in meters
+  routes[routeno].tripsummary = routes[routeno].distance + " miles";
   
-  tripstats[routeno] += "<div class='time'><img src='images/time.png'> Time: <span style='color:#000;'>" + formatTime(distance[routeno]/0.166, distance[routeno]/0.125) + "</span></div>";
+  routes[routeno].tripstat += "<div class='time'><img src='images/time.png'> Time: <span style='color:#000;'>" + formatTime(routes[routeno].distance/0.166, routes[routeno].distance/0.125) + "</span></div>";
   
-  tripstats[routeno] += "<div class='elevGain'><img src='images/up.png'> Feet of Climbing: <span style='color:#000;'>"+ elevation[routeno] + " ft</span></div>";
-  tripsummary[routeno] += "<br>" + elevation[routeno] + " ft";
+  routes[routeno].tripstat += "<div class='elevGain'><img src='images/up.png'> Feet of Climbing: <span style='color:#000;'>"+ routes[routeno].elevation + " ft</span></div>";
+  routes[routeno].tripsummary += "<br>" + routes[routeno].elevation + " ft";
   
   
-  tripstats[routeno] += "<div class='elevChange'><img src='images/elevation.png'> Total Elevation Change: <span style='color:#000;'>"+ Math.round(getElevChange(data[2]))+ " ft</span></div>";
+  routes[routeno].tripstat += "<div class='elevChange'><img src='images/elevation.png'> Total Elevation Change: <span style='color:#000;'>"+ Math.round(getElevChange(data[2]))+ " ft</span></div>";
   
   //Narrative
   if (data[0][0][1] == 'nameless') {
@@ -208,9 +182,9 @@ function processpath(data, redraw, routeno){
   data[0].push(new Array("Arrive at",finishName));
     
   //Clear out old narrative and start building new one
-  tripstats[routeno] += "<div id='directions'><ol><li id='direction-0-0' class='direction' title='Click to see this turn on map'>Head <strong>"+data[0][0][0].replace(/start /g, "")+"</strong> on <strong>"+data[0][0][1]+"</strong></li>";
+  routes[routeno].tripstat += "<div id='directions'><ol><li id='direction-0-0' class='direction' title='Click to see this turn on map'>Head <strong>"+data[0][0][0].replace(/start /g, "")+"</strong> on <strong>"+data[0][0][1]+"</strong></li>";
   
-  stoppoints[routeno] = new Array();
+  routes[routeno].stoppoints = new Array();
   
   for(var i=0; i<data[0].length; i++) {
     
@@ -237,11 +211,11 @@ function processpath(data, redraw, routeno){
         } else {
           word = 'onto';
         }
-        tripstats[routeno] += "<li id='direction-"+routeno.toString()+"-"+i.toString()+"' class='direction' title='Click to see this turn on map'><strong>" + direction + "</strong> " + word + " <strong>" + street + "</strong></li>";
+        routes[routeno].tripstat += "<li id='direction-"+routeno.toString()+"-"+i.toString()+"' class='direction' title='Click to see this turn on map'><strong>" + direction + "</strong> " + word + " <strong>" + street + "</strong></li>";
         
         //Create a marker for each turn except the last one
         if(i<(data[0].length-1)){
-          stoppoints[routeno][i] = new google.maps.Marker({
+          routes[routeno].stoppoints[i] = new google.maps.Marker({
             position: new google.maps.LatLng(data[0][i][5][1], data[0][i][5][0]),
             map:map,
             visible:false
@@ -251,22 +225,22 @@ function processpath(data, redraw, routeno){
     }
   }
   
-  $("#stats"+routeno).html(tripstats[routeno]);
+  $("#stats"+routeno).html(routes[routeno].tripstat);
   //Set direction div click function to show marker when clicked
   $(".direction").click(function(){
     pointID = this.id.replace(/direction/g, "").split("-");
     // First, hide all stop points
-    for (i in stoppoints) { 
-      for (j in stoppoints[i]){
-        if (stoppoints[i][j] != undefined) {
-          stoppoints[i][j].setVisible(false); 
+    for (i in routes[routeno].stoppoints) { 
+      for (j in routes[routeno].stoppoints[i]){
+        if (routes[routeno].stoppoints[i][j] != undefined) {
+          routes[routeno].stoppoints[i][j].setVisible(false); 
         }
         $("#direction-"+i+"-"+j).css('background-color','inherit');
       }
     }
     //Show desired stop point
-    if (stoppoints[pointID[1]][pointID[2]] != undefined) {
-      stoppoints[pointID[1]][pointID[2]].setVisible(true);
+    if (routes[routeno].stoppoints[pointID[1]][pointID[2]] != undefined) {
+      routes[routeno].stoppoints[pointID[1]][pointID[2]].setVisible(true);
       $("#direction-"+pointID[1]+"-"+pointID[2]).css('background-color','#d1d1d1');
     }
   });
@@ -274,7 +248,7 @@ function processpath(data, redraw, routeno){
   
   //Show Directions
   $("#resultsBox").fadeIn();
-  $("#summary"+routeno+ " .info").html(tripsummary[routeno]);
+  $("#summary"+routeno+ " .info").html(routes[routeno].tripsummary);
   $("#summary").fadeIn();
   
   //Resize sidebar
@@ -283,11 +257,11 @@ function processpath(data, redraw, routeno){
   $("#resultsBox").css("max-height", (newWindowHeight-sidebarTopHeight));
   
   // Create Elevation Profile
-  profile[routeno] = data[2];
+  routes[routeno].elevprof = data[2];
   
   //convert distance along route to miles
-  for (i=0;i<profile[routeno].length;i++){profile[routeno][i][0]=profile[routeno][i][0]/1609.344;}
-  for (i=0;i<profile[routeno].length;i++){profile[routeno][i][1]=profile[routeno][i][1]*3.2808399;}
+  for (i=0;i<routes[routeno].elevprof.length;i++){routes[routeno].elevprof[i][0]=routes[routeno].elevprof[i][0]/1609.344;}
+  for (i=0;i<routes[routeno].elevprof.length;i++){routes[routeno].elevprof[i][1]=routes[routeno].elevprof[i][1]*3.2808399;}
               
   
   $('#loading_image').fadeOut(); // hide loading image
@@ -302,71 +276,6 @@ function processpath(data, redraw, routeno){
   showRoute(1);
 }
 
-function drawpath(request, redraw, port){
-  $('#welcome_screen').fadeOut(); // hide welcome screen if its still up
-  $('#loading_image').show(); // show loading image, as request is about to start
-  
-  //Hide lines
-  for(i in routelines){
-    routelines[i].setMap(null);
-  }
-  
-  $.jsonp({
-    "url": "http://"+routeserver+":"+ port +"/path?"+request+"&jsoncallback=?",
-    "success": function(json) {processpath(json, redraw, 0);},
-    "error": function(){
-      //On error, try again
-      $.jsonp({
-        "url": "http://"+routeserver+":"+ port +"/path?"+request+"&jsoncallback=?",
-        "success": function(json) {processpath(json, redraw, 0);},
-        "error": function(){
-          $('#loading_image').hide(); // hide loading image
-          if(errorAlert==0){
-            alert("There was an error retrieving the route data.  Please refresh the page and try again.");
-          }
-          errorAlert = 1;
-        }
-      });
-    }
-  }); 
-  $.jsonp({
-    "url": "http://"+routeserver+":"+ (port+3) +"/path?"+request+"&jsoncallback=?",
-    "success": function(json) {processpath(json, redraw, 1);},
-    "error": function(){
-        //On error, try again
-        $.jsonp({
-          "url": "http://"+routeserver+":"+ (port+3) +"/path?"+request+"&jsoncallback=?",
-          "success": function(json) {processpath(json, redraw, 1);},
-          "error": function(){
-            $('#loading_image').hide(); // hide loading image
-            if(errorAlert==0){
-              alert("There was an error retrieving the route data.  Please refresh the page and try again.");
-            }
-            errorAlert = 1;
-          }
-        });
-      }
-  });
-  $.jsonp({
-    "url": "http://"+routeserver+":"+ (port+6) +"/path?"+request+"&jsoncallback=?",
-    "success": function(json) {processpath(json, redraw, 2);},
-    "error": function(){
-        //On error, try again
-        $.jsonp({
-          "url": "http://"+routeserver+":"+ (port+6) +"/path?"+request+"&jsoncallback=?",
-          "success": function(json) {processpath(json, redraw, 2);},
-          "error": function(){
-            $('#loading_image').hide(); // hide loading image
-            if(errorAlert==0){
-              alert("There was an error retrieving the route data.  Please refresh the page and try again.");
-            }
-            errorAlert = 1;
-          }
-      });
-    }
-  });
-}
-  
 function swapAddress(){
   var Saddress = $('#startbox').val();
   var Eaddress = $('#finishbox').val();
@@ -465,16 +374,7 @@ google.setOnLoadCallback(function(){
     }
   });
 
-  //Detect saved route from URL
-  if($.getUrlVar('start')!=undefined && $.getUrlVar('end')!=undefined){
-    $('#startbox').val($.getUrlVar('start').replace(/\+/g,' '));
-    $('#finishbox').val($.getUrlVar('end').replace(/\+/g,' '));
-    // Strip off trailing #
-    if($.getUrlVar('hills')!=undefined) {
-      $('#hills').val($.getUrlVar('hills').replace(/#/g,''));
-    }
-    submitForm();
-  }
+  detectRouteFromURL();
   
   $('#inputs').submit(submitForm)
   

@@ -1,3 +1,15 @@
+//Hard code map bounds
+var bounds = new Object();
+bounds.l_lat = 37.306399999999996;
+bounds.h_lat = 38.316994299999998;
+bounds.l_lng = -123.02877599999999;
+bounds.h_lng = -121.637;
+
+var map;
+var showTips = true; // Show Tooltips by default
+var routes = new Array();
+var errorAlert=0;
+
 google.maps.Polyline.prototype.getBounds = function() {
   //Extends google maps API v3 to allow getting bounds of a polyline
   var bounds = new google.maps.LatLngBounds();
@@ -95,25 +107,6 @@ function checkBounds(lat1, lng1, lat2, lng2){
   }
 }
 
-function translatePorts(hills){
-  var i=0;
-  switch(hills){
-    case "low":
-      i = i+1;
-      break;
-    case "medium":
-      i = i+2;
-      break;
-    case "high":
-      i = i+3;
-      break;
-    default:
-      i = i+2;
-  }
-  return i+8080;
-  alert(i+8080);
-}
-
 function launchMap(){
   map = new google.maps.Map(document.getElementById("map_canvas"), {
     zoom: 10,
@@ -126,9 +119,10 @@ function launchMap(){
   
   //Setup route lines
   for(i=0;i<3;i++){
-    routelines[i] = new google.maps.Polyline();
+    routes[i] = new Object();
+    routes[i].routeline = new google.maps.Polyline();
     // Add listener to route lines
-    new google.maps.event.addListener(routelines[i], "mouseover", function() { showRoute(i); });
+    new google.maps.event.addListener(routes[i].routeline, "mouseover", function() { showRoute(i); });
   }
 }
 
@@ -136,8 +130,7 @@ function submitForm() {
   // Redraws map based on info in the form
   start = $('#startbox').val();
   end = $('#finishbox').val();
-  hills = $('#hills').val();
-  var port = translatePorts(hills);
+  hill = $('#hills').val();
 
   //Validate inputs
   if(start==''){
@@ -158,23 +151,31 @@ function submitForm() {
   }
 
   geocoder = new google.maps.Geocoder();
-  var slat;
-  var slng;
-  var elat;
-  var elng;
+  var lat1;
+  var lng1;
+  var lat2;
+  var lng2;
   geocoder.geocode({address:start}, function(results, status){
     if (status == google.maps.GeocoderStatus.OK) {
-      slat = results[0].geometry.location.lat();
-      slng = results[0].geometry.location.lng();
+      lat1 = results[0].geometry.location.lat();
+      lng1 = results[0].geometry.location.lng();
       //Now geocode end address
       geocoder.geocode({address:end}, function(results, status){
         if (status == google.maps.GeocoderStatus.OK) {
-          elat = results[0].geometry.location.lat();
-          elng = results[0].geometry.location.lng();
+          lat2 = results[0].geometry.location.lat();
+          lng2 = results[0].geometry.location.lng();
           //Now move along
-          if(checkBounds(slat,slng,elat,elng)){
-            drawpath("lat1="+slat+"&lng1="+slng+"&lat2="+elat+"&lng2="+elng, true, port);
-            map.panTo(new google.maps.LatLng((slat+elat)/2,(slng+elng)/2));
+          if(checkBounds(lat1,lng1,lat2,lng2)){
+            // Draw 3 paths, one for each safety level
+            drawpath(lat1, lng1, lat2, lng2, hill, "low", true);
+            drawpath(lat1, lng1, lat2, lng2, hill, "medium", true);
+            drawpath(lat1, lng1, lat2, lng2, hill, "high", true);
+            
+            if(mobile==true){
+              $.mobile.changePage($('#map'),"slide");
+            }
+            
+            map.panTo(new google.maps.LatLng((lat1+lat2)/2,(lng1+lng2)/2));
           } else {
             alert("Bikemapper currently only works in the Bay Area.  Try making your addresses more specific by adding city and state names.");
           }
@@ -190,6 +191,38 @@ function submitForm() {
   });
 return false;
 }
+
+function drawpath(lat1, lng1, lat2, lng2, hill, safety, redraw){
+  $('#welcome_screen').fadeOut(); // hide welcome screen if its still up
+  $('#loading_image').show(); // show loading image, as request is about to start
+  
+  //Hide lines
+  for(i in routes){
+    routes[i].routeline.setMap(null);
+  }
+  // Define Route Server
+  var routeserver = "http://api.bikesy.com";
+  
+  $.jsonp({
+    "url": routeserver+"?lat1="+lat1+"&lng1="+lng1+"&lat2="+lat2+"&lng2="+lng2+"&hill="+hill+"&safety="+safety+"&format=json&jsoncallback=?",
+    "success": function(json) {processpath(json, redraw, safety);},
+    "error": function(){
+      //On error, try again
+      $.jsonp({
+        "url": routeserver+"?lat1="+lat1+"&lng1="+lng1+"&lat2="+lat2+"&lng2="+lng2+"&hill="+hill+"&safety="+safety+"&format=json&jsoncallback=?",
+        "success": function(json) {processpath(json, redraw, safety);},
+        "error": function(){
+          $('#loading_image').hide(); // hide loading image
+          if(errorAlert==0){
+            alert("There was an error retrieving the route data.  Please refresh the page and try again.");
+          }
+          errorAlert = 1;
+        }
+      });
+    }
+  });
+}
+
 
 function addMarker(latlng, type){
   if(type=="start"){
@@ -246,18 +279,17 @@ function addMarker(latlng, type){
 
 function recalc(marker_name) {
   if (typeof(start_marker) != "undefined"){
-    slat = start_marker.getPosition().lat();
-    slng = start_marker.getPosition().lng();
-    elat = end_marker.getPosition().lat();
-    elng = end_marker.getPosition().lng();
-    distance = dist(slat,elat,slng,elng);
-    var hills = $('#hills').val();
-    var port = translatePorts(hills);
+    lat1 = start_marker.getPosition().lat();
+    lng1 = start_marker.getPosition().lng();
+    lat2 = end_marker.getPosition().lat();
+    lng2 = end_marker.getPosition().lng();
+    distance = dist(lat1,lat2,lng1,lng2);
+    var hill = $('#hills').val();
     
-    if(checkBounds(slat,slng,elat,elng)){
+    if(checkBounds(lat1,lng1,lat2,lng2)){
     
-      sCoords = new google.maps.LatLng(slat,slng);
-      eCoords = new google.maps.LatLng(elat,elng);
+      sCoords = new google.maps.LatLng(lat1,lng1);
+      eCoords = new google.maps.LatLng(lat2,lng2);
       
       //Reverse Geocode
       if(marker_name=='start'){
@@ -272,8 +304,10 @@ function recalc(marker_name) {
       //Remove old overlay
       if (typeof(routeoverlay) != "undefined"){routeoverlay.setMap(null);}
       
-      //Draw new route
-      drawpath("lat1="+slat+"&lng1="+slng+"&lat2="+elat+"&lng2="+elng, false, port);
+      // Draw 3 paths, one for each safety level
+      drawpath(lat1, lng1, lat2, lng2, hill, "low", true);
+      drawpath(lat1, lng1, lat2, lng2, hill, "medium", true);
+      drawpath(lat1, lng1, lat2, lng2, hill, "high", true);
     }
     else{alert("Bikemapper currently only works in the Bay Area.");}
   }   
@@ -366,4 +400,17 @@ function showGeoLocatorError(error){
   } else if (error.code==2 || error.code==3 || error.code==0){
     alert("Your current location couldn't be determined.  Please enter the start and end locations manually.");
   } 
+}
+
+function detectRouteFromURL(){
+  //Detect saved route from URL
+  if($.getUrlVar('start')!=undefined && $.getUrlVar('end')!=undefined){
+    $('#startbox').val($.getUrlVar('start').replace(/\+/g,' '));
+    $('#finishbox').val($.getUrlVar('end').replace(/\+/g,' '));
+    // Strip off trailing #
+    if($.getUrlVar('hill')!=undefined) {
+     $('#hills').val($.getUrlVar('hill').replace(/#/g,''));
+    }
+    submitForm();
+  }
 }

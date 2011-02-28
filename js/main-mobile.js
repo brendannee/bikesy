@@ -1,46 +1,28 @@
-// Define Route Server
-var routeserver = "ec2-184-73-96-123.compute-1.amazonaws.com";
+var mobile = true;
 
-//Hard code map bounds
-var bounds = new Object();
-bounds.l_lat = 37.306399999999996;
-bounds.h_lat = 38.316994299999998;
-bounds.l_lng = -123.02877599999999;
-bounds.h_lng = -121.637;
-
-var map;
-
-var showTips = true; // Show Tooltips by default
-
-var routelines = new Array();
-var tripstats = new Array();
-var stoppoints = new Array();
-var tripsummary = new Array();
-var distance = new Array();
-var elevation = new Array();
-var profile = new Array();
-
-var errorAlert=0;
-
-function processpath(data, redraw, routeno){
-  switch(routeno){
-    case 0:
+function processpath(data, redraw, safety){
+  var routeno;
+  switch(safety){
+    case "low":
       coloron="#c2403a";
       coloroff="#ed817e";
+      routeno=0;
       break;
-    case 1:
+    case "medium":
       coloron="#fff600";
       coloroff="#ecf869";
+      routeno=1;
       break;
-    case 2:
+    case "high":
       coloron="#10dd00";
-      coloroff="#90ff7a"
+      coloroff="#90ff7a";
+      routeno=2;
       break;
   }
   
   var decodedPoints = google.maps.geometry.encoding.decodePath(data[1][0]);
 
-  routelines[routeno].setOptions({
+  routes[routeno].routeline.setOptions({
     strokeColor: coloroff,
     strokeOpacity: 0.4,
     strokeWeight: 7,
@@ -50,12 +32,12 @@ function processpath(data, redraw, routeno){
   
   // Center and Zoom only if its a redraw
   if(redraw == true){
-    map.fitBounds(routelines[routeno].getBounds());
+    map.fitBounds(routes[routeno].routeline.getBounds());
   }
   
   //icons for start and end
   addMarker(new google.maps.LatLng(data[0][0][5][1],data[0][0][5][0]), "start");
-  addMarker(routelines[routeno].getPath().getAt(routelines[routeno].getPath().getLength()-1), "end");
+  addMarker(routes[routeno].routeline.getPath().getAt(routes[routeno].routeline.getPath().getLength()-1), "end");
   
   //Clean Start and End Titles
   startName = $('#startbox').val().replace(/, USA/g, "");
@@ -69,55 +51,55 @@ function processpath(data, redraw, routeno){
   
   //Add Controls to top of map
   $("#map-buttons").show();
-  $("#permalink").html("<a href='" + window.location.href + linkURL + "' title='Direct Link to this route' rel='external'><img src='images/link.png'> Permalink to Route</a>");
+  $("#permalink").html("<a href='" + window.location.href.replace(/#.*/,'') + linkURL + "' title='Direct Link to this route' rel='external'><img src='images/link.png'> Permalink to Route</a>");
   $("#twitter").html("<a href='http://www.addtoany.com/add_to/twitter?linkurl=" + encodeURIComponent("http://bikesy.com"+linkURL) + "&linkname=" + encodeURIComponent("Bike Route from " + startName.replace(/\+/g, "").replace(/&/g, "and") + " to " + finishName.replace(/\+/g, "").replace(/&/g, "and"))+"'><img src='images/twitter.png'> Tweet This</a>");
   
-  distance[routeno] = Math.round(routelines[routeno].inMiles()*10)/10;
-  elevation[routeno] = Math.round(getElevGain(data[2]));
+  routes[routeno].distance = Math.round(routes[routeno].routeline.inMiles()*10)/10;
+  routes[routeno].elevation = Math.round(getElevGain(data[2]));
   
   //Add Trip Stats for Route
   $('#directionsname').html('Directions to '+finishName);
   
   switch(routeno){
     case 0:
-      tripstats[routeno] = "<div>Safe (more direct)</div>";
+      routes[routeno].tripstat = "<div>Safe (more direct)</div>";
       break;
     case 1:
-      if (distance[1]>distance[0]) {
-        lengthdif = Math.round((distance[1]-distance[0])*100)/100 + " miles longer";
+      if (routes[1].distance>routes[0].distance) {
+        lengthdif = Math.round((routes[1].distance-routes[0].distance)*100)/100 + " miles longer";
       } else {
-        lengthdif = Math.round((distance[0]-distance[1])*100)/100 + " miles shorter";
+        lengthdif = Math.round((routes[0].distance-routes[1].distance)*100)/100 + " miles shorter";
       }
-      if (elevation[1]>elevation[0]) {
-        elevdif = Math.round((elevation[1]-elevation[0])*100)/100 + " ft more climbing";
+      if (routes[1].elevation>routes[0].elevation) {
+        elevdif = Math.round((routes[1].elevation-routes[0].elevation)*100)/100 + " ft more climbing";
       } else {
-        elevdif = Math.round((elevation[0]-elevation[1])*100)/100 + " ft less climbing";
+        elevdif = Math.round((routes[0].elevation-routes[1].elevation)*100)/100 + " ft less climbing";
       }
-      tripstats[routeno] = "<div>Safer (some bike lanes, " + lengthdif + ", " +  elevdif + ")</div>";
+      routes[routeno].tripstat = "<div>Safer (some bike lanes, " + lengthdif + ", " +  elevdif + ")</div>";
       break;
     case 2:
-      if (distance[2]>distance[0]) {
-        lengthdif = Math.round((distance[2]-distance[0])*100)/100 + " miles longer";
+      if (routes[2].distance>routes[0].distance) {
+        lengthdif = Math.round((routes[2].distance-routes[0].distance)*100)/100 + " miles longer";
       } else {
-        lengthdif = Math.round((distance[0]-distance[2])*100)/100 + " miles shorter";
+        lengthdif = Math.round((routes[0].distance-routes[2].distance)*100)/100 + " miles shorter";
       }
-      if (elevation[2]>elevation[0]) {
-        elevdif = Math.round((elevation[2]-elevation[0])*100)/100 + " ft more climbing";
+      if (routes[2].elevation>routes[0].elevation) {
+        elevdif = Math.round((routes[2].elevation-routes[0].elevation)*100)/100 + " ft more climbing";
       } else {
-        elevdif = Math.round((elevation[0]-elevation[2])*100)/100 + " ft less climbing";
+        elevdif = Math.round((routes[0].elevation-routes[2].elevation)*100)/100 + " ft less climbing";
       }
-      tripstats[routeno] = "<div>Safest (mostly bike lanes, " + lengthdif + ", " +  elevdif + ")</div>";
+      routes[routeno].tripstat = "<div>Safest (mostly bike lanes, " + lengthdif + ", " +  elevdif + ")</div>";
       break;
   }
   
-  tripstats[routeno] += "<div class='totaldistance'><img src='images/map.png'> " + distance[routeno] + " miles</div>"; //figures are in meters
+  routes[routeno].tripstat += "<div class='totaldistance'><img src='images/map.png'> " + routes[routeno].distance + " miles</div>"; //figures are in meters
   
-  tripstats[routeno] += "<div class='time'><img src='images/time.png'> " + formatTime(distance[routeno]/0.166, distance[routeno]/0.125) + "</div>";
+  routes[routeno].tripstat += "<div class='time'><img src='images/time.png'> " + formatTime(routes[routeno].distance/0.166, routes[routeno].distance/0.125) + "</div>";
   
-  tripstats[routeno] += "<div class='elevGain'><img src='images/up.png'> " + elevation[routeno] + " ft</div>";
+  routes[routeno].tripstat += "<div class='elevGain'><img src='images/up.png'> " + routes[routeno].elevation + " ft</div>";
   
   
-  tripstats[routeno] += "<div class='elevChange'><img src='images/elevation.png'> Total Elevation Change: <span>"+ Math.round(getElevChange(data[2]))+ " ft</span></div>";
+  routes[routeno].tripstat += "<div class='elevChange'><img src='images/elevation.png'> Total Elevation Change: <span>"+ Math.round(getElevChange(data[2]))+ " ft</span></div>";
   
   //Narrative
   if (data[0][0][1] == 'nameless') {
@@ -129,9 +111,9 @@ function processpath(data, redraw, routeno){
   data[0].push(new Array("Arrive at",finishName));
     
   //Clear out old narrative and start building new one
-  tripstats[routeno] += "<div id='directionslist'><ol><li id='direction-0-0' class='direction' title='Click to see this turn on map'>Head <strong>"+data[0][0][0].replace(/start /g, "")+"</strong> on <strong>"+data[0][0][1]+"</strong></li>";
+  routes[routeno].tripstat += "<div id='directionslist'><ol><li id='direction-0-0' class='direction' title='Click to see this turn on map'>Head <strong>"+data[0][0][0].replace(/start /g, "")+"</strong> on <strong>"+data[0][0][1]+"</strong></li>";
   
-  stoppoints[routeno] = new Array();
+  routes[routeno].stoppoints = new Array();
   
   for(var i=0; i<data[0].length; i++) {
     
@@ -158,11 +140,11 @@ function processpath(data, redraw, routeno){
         } else {
           word = 'onto';
         }
-        tripstats[routeno] += "<li id='direction-"+routeno.toString()+"-"+i.toString()+"' class='direction' title='Click to see this turn on map'><strong>" + direction + "</strong> " + word + " <strong>" + street + "</strong></li>";
+        routes[routeno].tripstat += "<li id='direction-"+routeno.toString()+"-"+i.toString()+"' class='direction' title='Click to see this turn on map'><strong>" + direction + "</strong> " + word + " <strong>" + street + "</strong></li>";
         
         //Create a marker for each turn except the last one
         if(i<(data[0].length-1)){
-          stoppoints[routeno][i] = new google.maps.Marker({
+          routes[routeno].stoppoints[i] = new google.maps.Marker({
             position: new google.maps.LatLng(data[0][i][5][1], data[0][i][5][0]),
             map:map,
             visible:false
@@ -172,33 +154,33 @@ function processpath(data, redraw, routeno){
     }
   }
   
-  $("#stats"+routeno).html(tripstats[routeno]);
+  $("#stats"+routeno).html(routes[routeno].tripstat);
   //Set direction div click function to show marker when clicked
   $(".direction").click(function(){
     pointID = this.id.replace(/direction/g, "").split("-");
     // First, hide all stop points
-    for (i in stoppoints) { 
-      for (j in stoppoints[i]){
-        if (stoppoints[i][j] != undefined) {
-          stoppoints[i][j].setVisible(false); 
+    for (i in routes[routeno].stoppoints) { 
+      for (j in routes[routeno].stoppoints[i]){
+        if (routes[routeno].stoppoints[i][j] != undefined) {
+          routes[routeno].stoppoints[i][j].setVisible(false); 
         }
         $("#direction-"+i+"-"+j).css('background-color','inherit');
       }
     }
     //Show desired stop point
-    if (stoppoints[pointID[1]][pointID[2]] != undefined) {
-      stoppoints[pointID[1]][pointID[2]].setVisible(true);
+    if (routes[routeno].stoppoints[pointID[1]][pointID[2]] != undefined) {
+      routes[routeno].stoppoints[pointID[1]][pointID[2]].setVisible(true);
       $("#direction-"+pointID[1]+"-"+pointID[2]).css('background-color','#d1d1d1');
     }
   });
   $("#stats"+routeno).hide();
   
   // Create Elevation Profile
-  profile[routeno] = data[2];
+  routes[routeno].profelev = data[2];
   
   //convert distance along route to miles
-  for (i=0;i<profile[routeno].length;i++){profile[routeno][i][0]=profile[routeno][i][0]/1609.344;}
-  for (i=0;i<profile[routeno].length;i++){profile[routeno][i][1]=profile[routeno][i][1]*3.2808399;}
+  for (i=0;i<routes[routeno].profelev.length;i++){routes[routeno].profelev[i][0]=routes[routeno].profelev[i][0]/1609.344;}
+  for (i=0;i<routes[routeno].profelev.length;i++){routes[routeno].profelev[i][1]=routes[routeno].profelev[i][1]*3.2808399;}
               
   
   $('#loading_image').fadeOut(); // hide loading image
@@ -228,129 +210,45 @@ function showRoute(routeno) {
         break;
     }
     $("#stats"+i).hide();
-    if (typeof(routelines[routeno]) != "undefined"){
-      routelines[routeno].setOptions({ strokeColor: coloroff });
+    if (typeof(routes[i]) != "undefined"){
+      if (typeof(routes[i].routeline) != "undefined"){
+        routes[i].routeline.setOptions({ strokeColor: coloroff });
+      }
     }
   }
   
+  // Show Route Line Stong Color
   switch(routeno){
     case 0:
       coloron="#c2403a";
       coloroff="#ed817e";
-      safetyTitle = "Safe (more direct)";
       break;
     case 1:
       coloron="#fff600";
       coloroff="#ecf869";
-      if (distance[1]>distance[0]) {
-        lengthdif = Math.round((distance[1]-distance[0])*100)/100 + " miles longer";
-      } else {
-        lengthdif = Math.round((distance[0]-distance[1])*100)/100 + " miles shorter";
-      }
-      if (elevation[1]>elevation[0]) {
-        elevdif = Math.round((elevation[1]-elevation[0])*100)/100 + " ft more climbing";
-      } else {
-        elevdif = Math.round((elevation[0]-elevation[1])*100)/100 + " ft less climbing";
-      }
-      safetyTitle = "Safer (some bike lanes, " + lengthdif + ", " +  elevdif + ")";
       break;
     case 2:
       coloron="#10dd00";
-      coloroff="#90ff7a";
-      if (distance[2]>distance[0]) {
-        lengthdif = Math.round((distance[2]-distance[0])*100)/100 + " miles longer";
-      } else {
-        lengthdif = Math.round((distance[0]-distance[2])*100)/100 + " miles shorter";
-      }
-      if (elevation[2]>elevation[0]) {
-        elevdif = Math.round((elevation[2]-elevation[0])*100)/100 + " ft more climbing";
-      } else {
-        elevdif = Math.round((elevation[0]-elevation[2])*100)/100 + " ft less climbing";
-      }
-      safetyTitle = "Safest (mostly bike lanes, " + lengthdif + ", " +  elevdif + ")";
+      coloroff="#90ff7a"
       break;
   }
   
-  // Show Route Line Stong Color
   $("#stats"+routeno).show();
-  if (typeof(routelines[routeno]) != "undefined"){
-    routelines[routeno].setOptions({ strokeColor: coloron });
+  if (typeof(routes[routeno]) != "undefined"){
+    if (typeof(routes[routeno].routeline) != "undefined"){
+      routes[routeno].routeline.setOptions({ strokeColor: coloron });
+    }
   }
   
   //Detect SVG Show Profile
-  if (typeof(profile[routeno]) != "undefined"){
-    if(document.implementation.hasFeature("http://www.w3.org/TR/SVG11/feature#BasicStructure", "1.1")==true){
-      gviz(profile[routeno],$(window).width(),100);
-    }
-  }
-}
-
-function drawpath(request, redraw, port){
-  if(redraw==true){
-    $.mobile.changePage($('#map'),"slide");
-  }
-  
-  //Hide lines
-  for(i in routelines){
-    routelines[i].setMap(null);
-  }
-  
-  $.jsonp({
-    "url": "http://"+routeserver+":"+ port +"/path?"+request+"&jsoncallback=?",
-    "success": function(json) {processpath(json, redraw, 0);},
-    "error": function(){
-      //On error, try again
-      $.jsonp({
-        "url": "http://"+routeserver+":"+ port +"/path?"+request+"&jsoncallback=?",
-        "success": function(json) {processpath(json, redraw, 0);},
-        "error": function(){
-          $('#loading_image').hide(); // hide loading image
-          if(errorAlert==0){
-            alert("There was an error retrieving the route data.  Please refresh the page and try again.");
-          }
-          errorAlert = 1;
-        }
-      });
-    }
-  }); 
-  $.jsonp({
-    "url": "http://"+routeserver+":"+ (port+3) +"/path?"+request+"&jsoncallback=?",
-    "success": function(json) {processpath(json, redraw, 1);},
-    "error": function(){
-        //On error, try again
-        $.jsonp({
-          "url": "http://"+routeserver+":"+ (port+3) +"/path?"+request+"&jsoncallback=?",
-          "success": function(json) {processpath(json, redraw, 1);},
-          "error": function(){
-            $('#loading_image').hide(); // hide loading image
-            if(errorAlert==0){
-              alert("There was an error retrieving the route data.  Please refresh the page and try again.");
-            }
-            errorAlert = 1;
-          }
-        });
+  if (typeof(routes[routeno]) != "undefined"){
+    if (typeof(routes[routeno].profelev) != "undefined"){
+      if(document.implementation.hasFeature("http://www.w3.org/TR/SVG11/feature#BasicStructure", "1.1")==true){
+        gviz(routes[routeno].profelev,$(window).width(),100);
       }
-  });
-  $.jsonp({
-    "url": "http://"+routeserver+":"+ (port+6) +"/path?"+request+"&jsoncallback=?",
-    "success": function(json) {processpath(json, redraw, 2);},
-    "error": function(){
-        //On error, try again
-        $.jsonp({
-          "url": "http://"+routeserver+":"+ (port+6) +"/path?"+request+"&jsoncallback=?",
-          "success": function(json) {processpath(json, redraw, 2);},
-          "error": function(){
-            $('#loading_image').hide(); // hide loading image
-            if(errorAlert==0){
-              alert("There was an error retrieving the route data.  Please refresh the page and try again.");
-            }
-            errorAlert = 1;
-          }
-      });
     }
-  });
+  }
 }
-
 
 google.setOnLoadCallback(function(){
   //Show form elements after everything is loaded
@@ -391,16 +289,7 @@ google.setOnLoadCallback(function(){
     google.maps.event.trigger(map,'resize'); //tell google maps to resize itself
   });
 
-  //Detect saved route from URL
-  if($.getUrlVar('start')!=undefined && $.getUrlVar('end')!=undefined){
-    $('#startbox').val($.getUrlVar('start').replace(/\+/g,' '));
-    $('#finishbox').val($.getUrlVar('end').replace(/\+/g,' '));
-    // Strip off trailing #
-    if($.getUrlVar('hills')!=undefined) {
-     $('#hills').val($.getUrlVar('hills').replace(/#/g,''));
-    }
-    submitForm();
-  }
+  detectRouteFromURL();
 
   $('#inputs').submit(submitForm)
 
