@@ -26,6 +26,10 @@ h1.logo{
   background-color:#ffd5d5 !important;
 }
 
+#inputs{
+  position:relative;
+}
+
 #inputs label{
   font-size:20px;
   line-height:26px;
@@ -35,11 +39,11 @@ h1.logo{
 
 .geolocationwaiting{
   background: url(../images/loading.gif) 0 0 no-repeat;
-  width:16px;
-  height:16px;
+  width:43px;
+  height:11px;
   position:absolute;
-  left:26px;
-  top:3px;
+  left:16px;
+  top:45px;
   display:none;
 }
 

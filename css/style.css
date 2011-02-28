@@ -88,11 +88,11 @@ ul.input_boxes li.geolocation a{
 
 .geolocationwaiting{
   background: url(../images/loading.gif) 0 0 no-repeat;
-  width:16px;
-  height:16px;
+  width:43px;
+  height:11px;
   position:absolute;
-  left:26px;
-  top:3px;
+  left:32px;
+  top:5px;
   display:none;
 }
 
