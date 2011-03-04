@@ -1,0 +1,21 @@
+{
+"name": "Bikesy",
+"description": "Avoid hills and find safe bike routes with Bikesy, a cycle mapping system for the San Francisco Bay Area.",
+"version": "1.1",
+"icons": {
+"128": "128.png"
+},
+"app": {
+"urls": [
+"http://bikesy.com/"
+],
+"launch": {
+"web_url": "http://bikesy.com"
+}
+},
+"permissions": [
+"unlimitedStorage",
+"notifications",
+"geolocation"
+]
+}
