@@ -306,6 +306,7 @@ ul.input_boxes #hillsline select{
 	border-color: rgb(169, 187, 223);
 	border-radius: 2px 2px;
 	font-weight: normal; 
+	background:#FFF;
 	background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, from(rgb(254, 254, 254)), to(rgb(243, 243, 243))); 
 	background-attachment: initial; 
 	background-origin: initial; 
