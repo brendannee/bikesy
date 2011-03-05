@@ -71,6 +71,7 @@ h1.logo{
 
 .landscape #profile{
   height:0px;
+  overflow:hidden;
 }
 
 #map_canvas{

@@ -189,7 +189,7 @@ function processpath(data, redraw, safety){
     $("#dragtext").fadeIn(); //Show Drag Tip
   }
   
-  showRoute(1);
+  $('.safer').trigger('click');
 }
 
 function showRoute(routeno) {
