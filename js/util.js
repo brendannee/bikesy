@@ -128,6 +128,9 @@ function launchMap(){
 
 function submitForm() {
   // Redraws map based on info in the form
+  if(mobile){
+    $.mobile.pageLoading();	
+  }
   start = $('#startbox').val();
   end = $('#finishbox').val();
   hill = $('#hills').val();
@@ -171,11 +174,13 @@ function submitForm() {
             drawpath(lat1, lng1, lat2, lng2, hill, "medium", true);
             drawpath(lat1, lng1, lat2, lng2, hill, "high", true);
             
-            if(mobile==true){
+            map.panTo(new google.maps.LatLng((lat1+lat2)/2,(lng1+lng2)/2));
+            
+            if(mobile){
+              $.mobile.pageLoading( true );
               $.mobile.changePage($('#map'),"slide");
             }
             
-            map.panTo(new google.maps.LatLng((lat1+lat2)/2,(lng1+lng2)/2));
           } else {
             alert("Bikemapper currently only works in the Bay Area.  Try making your addresses more specific by adding city and state names.");
           }
