@@ -47,6 +47,11 @@ h1.logo{
   display:none;
 }
 
+html.landscape .geolocationwaiting{
+  left: 23%;
+  top: 14px;
+}
+
 .ui-select{
   margin-bottom:20px;
 }
