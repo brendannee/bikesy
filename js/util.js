@@ -1,9 +1,10 @@
 //Hard code map bounds
-var bounds = new Object();
-bounds.l_lat = 37.306399999999996;
-bounds.h_lat = 38.316994299999998;
-bounds.l_lng = -123.02877599999999;
-bounds.h_lng = -121.637;
+var bounds = {
+  l_lat: 37.306399999999996,
+  h_lat: 38.316994299999998,
+  l_lng: -123.02877599999999,
+  h_lng: -121.637
+}
 
 var map;
 var showTips = true; // Show Tooltips by default
@@ -60,14 +61,13 @@ function formatTime(minutes1, minutes2){
 }
 
 function dist(lat1,lat2,lon1,lon2) {
-  
-    var R = 6371; // km
+    var R = 3963.1676; // mi
     var dLat = (lat2-lat1)*3.14/180;
     var dLon = (lon2-lon1)*3.14/180; 
     var a = Math.sin(dLat/2) * Math.sin(dLat/2) + Math.cos(lat1*3.14/180) * Math.cos(lat2*3.14/180) * Math.sin(dLon/2) * Math.sin(dLon/2); 
     var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
     var d = R * c;
-    return d*.62;  //mi
+    return d;
 }
 
 function proper(str){
@@ -75,11 +75,7 @@ function proper(str){
 }
 
 function checkBounds(lat1, lng1, lat2, lng2){
-  if(lat1>bounds.h_lat || lat2>bounds.h_lat || lat1<bounds.l_lat || lat2<bounds.l_lat || lng1>bounds.h_lng || lng2>bounds.h_lng || lng1<bounds.l_lng || lng2<bounds.l_lng){
-    return false;
-  } else { 
-    return true;
-  }
+  return (lat1>bounds.h_lat || lat2>bounds.h_lat || lat1<bounds.l_lat || lat2<bounds.l_lat || lng1>bounds.h_lng || lng2>bounds.h_lng || lng1<bounds.l_lng || lng2<bounds.l_lng) ? false : true;
 }
 
 function launchMap(){
@@ -94,8 +90,9 @@ function launchMap(){
   
   //Setup route lines
   for(i=0;i<3;i++){
-    routes[i] = new Object();
-    routes[i].routeline = new google.maps.Polyline();
+    routes[i] = {
+      routeline: new google.maps.Polyline()
+    }
     // Add listener to route lines
     new google.maps.event.addListener(routes[i].routeline, "mouseover", function() { showRoute(i); });
   }
@@ -275,13 +272,17 @@ function recalc(marker_name) {
       eCoords = new google.maps.LatLng(lat2,lng2);
       
       //Reverse Geocode
-      if(marker_name=='start'){
-        this.getAddress(sCoords, 'start');
-      } else if(marker_name=='end'){
-        this.getAddress(eCoords, 'end');
-      } else if(marker_name=='both'){
-        this.getAddress(sCoords, 'start');
-        this.getAddress(eCoords, 'end');
+      switch(marker_name){
+        case 'start':
+          this.getAddress(sCoords, 'start');
+          break;
+        case 'end':
+          this.getAddress(eCoords, 'end');
+          break;
+        case 'both':
+          this.getAddress(sCoords, 'start');
+          this.getAddress(eCoords, 'end');
+          break;
       }
       
       //Remove old overlay
@@ -314,11 +315,7 @@ function gviz(profile, width, height){
   }
   
   //Determine appropriate chart padding
-  if(width>400){
-    var area = {left: 80, width:(width-90)};
-  } else {
-    var area = {left: 40, width:(width-50)};
-  }
+  var area = (width>400) ? {left: 80, width:(width-90)} : {left: 40, width:(width-50)};
   
   table.addRows(profile);
   chart.draw(table, {width: width, height: height, legend: 'none', lineWidth: 2, pointSize: 0, title: 'Elevation Profile', titleTextStyle: {fontSize: '16'}, vAxis:{title:'Elevation (ft)', textStyle:{fontSize: '12'}}, hAxis:{title:'Distance along route (mi)', textStyle:{fontSize: '12'}}, chartArea:area});
