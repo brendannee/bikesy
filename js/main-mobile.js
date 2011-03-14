@@ -288,10 +288,22 @@ google.setOnLoadCallback(function(){
 
   launchMap();
 
+  //Resize map when map page is shown
   $("#map_canvas").parent().bind('pageshow',function(){
-    //Resize map to fit screen, check if device supports SVG
+    //check if device supports SVG
     if(document.implementation.hasFeature("http://www.w3.org/TR/SVG11/feature#BasicStructure", "1.1")==true){
       var mapheight = $(window).height()-parseInt($('#profile').css('height'))-2-parseInt($('#map .ui-header').css('height'))
+    } else {
+      var mapheight = $(window).height()-parseInt($('#map .ui-header').css('height'))
+    }
+    $("#map_canvas").css('height',mapheight);
+    google.maps.event.trigger(map,'resize');
+  });
+  
+  //Resize map when orientation is changed
+  $(window).bind('orientationchange',function(e){
+    if(e.orientation == 'portrait' && document.implementation.hasFeature("http://www.w3.org/TR/SVG11/feature#BasicStructure", "1.1")==true){
+      var mapheight = $(window).height()-parseInt($('#profile').css('height'))-2-parseInt($('#map .ui-header').css('height')) 
     } else {
       var mapheight = $(window).height()-parseInt($('#map .ui-header').css('height'))
     }

@@ -47,12 +47,12 @@
       
       <form id="inputs" style="margin:0;" method="post" action="">
         <label for="startbox"><img src="images/green-24x24.png" alt="Origin" class="icon">Start Location:</label>
-        <input id="startbox" name="startbox" type="text" class="textbox" placeholder="Indiana &amp; 23rd, SF"  title="Enter your starting address, city, zip or intersection"><div class="geolocationwaiting start"></div>
+        <input id="startbox" name="startbox" type="text" class="textbox" placeholder="Indiana &amp; 23rd, SF"  title="Enter your starting address, city, zip or intersection" tabindex="1"><div class="geolocationwaiting start"></div>
         <p class="geolocation" id="slocation"><a href="#">Map from my current location</a></p>
         <label for="finishbox"><img src="images/red-24x24.png" alt="Destination" class="icon">End Location:</label>
-        <input id="finishbox" name="finishbox" type="text"  class="textbox" placeholder="Haight &amp; Ashbury"  title="Enter your ending address, city, zip or intersection">
+        <input id="finishbox" name="finishbox" type="text"  class="textbox" placeholder="Haight &amp; Ashbury"  title="Enter your ending address, city, zip or intersection" tabindex="2">
         <label for="hills"><img src="images/hill.png" alt="Hills" class="icon">Hill Reluctance:</label>
-        <select id="hills" name="hills" title="Choose how much you like to ride up hills">
+        <select id="hills" name="hills" title="Choose how much you like to ride up hills" tabindex="3">
           <option value="low">Avoid at all costs</option> 
           <option value="medium" selected="selected">A reasonable route</option>
           <option value="high">Bring on the Hills!</option>
