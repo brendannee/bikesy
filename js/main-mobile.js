@@ -301,14 +301,16 @@ google.setOnLoadCallback(function(){
   });
   
   //Resize map when orientation is changed
-  $(window).bind('orientationchange',function(e){
-    if(e.orientation == 'portrait' && document.implementation.hasFeature("http://www.w3.org/TR/SVG11/feature#BasicStructure", "1.1")==true){
+  $(window).bind('resize',function(e){
+    //Check if window is landscape by looking and height and SVG support to decide if to show Profile
+    if($(window).height()<250 && document.implementation.hasFeature("http://www.w3.org/TR/SVG11/feature#BasicStructure", "1.1")==true){
       var mapheight = $(window).height()-parseInt($('#profile').css('height'))-2-parseInt($('#map .ui-header').css('height')) 
     } else {
       var mapheight = $(window).height()-parseInt($('#map .ui-header').css('height'))
     }
     $("#map_canvas").css('height',mapheight);
     google.maps.event.trigger(map,'resize');
+    map.fitBounds(routes[0].routeline.getBounds());
   });
 
   detectRouteFromURL();
