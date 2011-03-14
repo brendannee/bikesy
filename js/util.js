@@ -56,32 +56,7 @@ $.extend({
 
 
 function formatTime(minutes1, minutes2){
-  times = '';
-  minutes1 = Math.round(minutes1);
-  minutes2 = Math.round(minutes2);
-  hours1 = Math.floor(minutes1/60);
-  minutes1 = minutes1%60;
-  hours2 = Math.floor(minutes2/60);
-  minutes2 = minutes2%60;     
-  if(hours1 == 0 && hours2 ==0 ){
-    times = minutes1 + ' to ' + minutes2 + ' min';
-  } else {
-    if (hours1 == 0){
-      times = minutes1 + ' mins to ';
-    } else if (hours1 == 1){
-      times = hours1 + ' hour ' + minutes1 + ' mins to ';
-    } else {
-      times = hours1 + ' hours ' + minutes1 + ' mins to ';
-    }
-    if (hours2 == 0){
-      times += minutes2 + ' mins';
-    } else if (hours2 == 1){
-     times += hours2 + ' hour ' + minutes2 + ' mins';
-    } else{
-     times += hours2 + ' hours ' + minutes2 + ' mins';
-    }
-  }
-  return times;
+  return (minutes1<60 && minutes2<60) ? Math.round(minutes1) + ' to ' + Math.round(minutes2) + ' min' : Math.round((minutes1/60)*10)/10 + ' to ' + Math.round((minutes2/60)*10)/10 + ' hours';
 }
 
 function dist(lat1,lat2,lon1,lon2) {
