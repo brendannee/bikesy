@@ -283,6 +283,9 @@ function addMarker(latlng, type){
 }
 
 function recalc(marker_name) {
+  if(mobile){
+    $.mobile.pageLoading();	
+  }
   if (typeof(start_marker) != "undefined"){
     lat1 = start_marker.getPosition().lat();
     lng1 = start_marker.getPosition().lng();

@@ -185,6 +185,11 @@ function processpath(data, redraw, safety){
   
   $('#loading_image').fadeOut(); // hide loading image
   
+  if(mobile){
+    //Hide mobile loading image
+     $.mobile.pageLoading( true );
+  }
+  
   if (showTips==true){ // Detect if we should show tips or not
     $("#dragtext").fadeIn(); //Show Drag Tip
   }
@@ -284,9 +289,14 @@ google.setOnLoadCallback(function(){
   launchMap();
 
   $("#map_canvas").parent().bind('pageshow',function(){
-    //Resize map to fit screen
-    $("#map_canvas").css('height',$(window).height()-parseInt($('#profile').css('height'))-2-parseInt($('#map .ui-header').css('height')));
-    google.maps.event.trigger(map,'resize'); //tell google maps to resize itself
+    //Resize map to fit screen, check if device supports SVG
+    if(document.implementation.hasFeature("http://www.w3.org/TR/SVG11/feature#BasicStructure", "1.1")==true){
+      var mapheight = $(window).height()-parseInt($('#profile').css('height'))-2-parseInt($('#map .ui-header').css('height'))
+    } else {
+      var mapheight = $(window).height()-parseInt($('#map .ui-header').css('height'))
+    }
+    $("#map_canvas").css('height',mapheight);
+    google.maps.event.trigger(map,'resize');
   });
 
   detectRouteFromURL();
