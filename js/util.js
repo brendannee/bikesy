@@ -101,6 +101,7 @@ function launchMap(){
 function submitForm() {
   // Redraws map based on info in the form
   if(mobile){
+    $('#inputs input').blur();
     $.mobile.pageLoading();	
   }
   start = $('#startbox').val();
@@ -356,9 +357,9 @@ function getStartGeoLocator(position) {
   geocoder = new google.maps.Geocoder();
   geocoder.geocode({'latLng': sCoords}, function(results, status) {
     if (status == google.maps.GeocoderStatus.OK) {
-      $('.geolocationwaiting').fadeOut();
       $('#startbox').val(results[0].formatted_address).replace(/, CA, USA/g, "");;
     }
+    $('.geolocationwaiting').fadeOut();
   });
 }
   
@@ -367,9 +368,9 @@ function getEndGeoLocator(position) {
   geocoder = new google.maps.Geocoder();
   geocoder.geocode({'latLng': eCoords}, function(results, status) {
     if (status == google.maps.GeocoderStatus.OK) {
-      $('.geolocationwaiting').fadeOut();
       $('#finishbox').val(results[0].formatted_address).replace(/, CA, USA/g, "");;
     }
+    $('.geolocationwaiting').fadeOut();
   });
 }
   
