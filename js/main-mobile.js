@@ -255,8 +255,18 @@ function showRoute(routeno) {
   }
 }
 
+function isiPhone(){
+    return (
+        (navigator.platform.indexOf("iPhone") != -1) ||
+        (navigator.platform.indexOf("iPod") != -1)
+    );
+}
+
 google.setOnLoadCallback(function(){
+  
+  //Hide top address bar
   window.top.scrollTo(0, 1);
+  
   //Show form elements after everything is loaded
   $('#home').show();
   
@@ -291,25 +301,42 @@ google.setOnLoadCallback(function(){
 
   //Resize map when map page is shown
   $("#map_canvas").parent().bind('pageshow',function(){
+    //Hide top address bar
+    window.top.scrollTo(0, 1);
+    
     //Check if window is landscape by looking and height and SVG support to decide if to show Profile
-    if($(window).height()>250 && document.implementation.hasFeature("http://www.w3.org/TR/SVG11/feature#BasicStructure", "1.1")==true){
-      var mapheight = $(window).height()-102-parseInt($('#map .ui-header').css('height')) 
+    if(isiPhone()){
+      if(window.orientation==0 && document.implementation.hasFeature("http://www.w3.org/TR/SVG11/feature#BasicStructure", "1.1")==true){
+        var mapheight = $(window).height()-40-parseInt($('#map .ui-header').css('height'));
+      } else {
+        var mapheight = $(window).height()+60-parseInt($('#map .ui-header').css('height'));
+      }
     } else {
-      var mapheight = $(window).height()-parseInt($('#map .ui-header').css('height'))
+      var mapheight = $(window).height()-parseInt($('#map .ui-header').css('height'));
     }
     $("#map_canvas").css('height',mapheight);
+    $("#map").css('height',$(window).height());
     google.maps.event.trigger(map,'resize');
   });
   
   //Resize map when orientation is changed
   $(window).bind('resize',function(e){
+
+    //Hide top address bar
+    window.top.scrollTo(0, 1);
+    
     //Check if window is landscape by looking and height and SVG support to decide if to show Profile
-    if($(window).height()>250 && document.implementation.hasFeature("http://www.w3.org/TR/SVG11/feature#BasicStructure", "1.1")==true){
-      var mapheight = $(window).height()-102-parseInt($('#map .ui-header').css('height')) 
+    if(isiPhone()){
+      if(window.orientation==0 && document.implementation.hasFeature("http://www.w3.org/TR/SVG11/feature#BasicStructure", "1.1")==true){
+        var mapheight = $(window).height()-40-parseInt($('#map .ui-header').css('height'));
+      } else {
+        var mapheight = $(window).height()+60-parseInt($('#map .ui-header').css('height'));
+      }
     } else {
-      var mapheight = $(window).height()-parseInt($('#map .ui-header').css('height'))
+      var mapheight = $(window).height()-parseInt($('#map .ui-header').css('height'));
     }
     $("#map_canvas").css('height',mapheight);
+    $("#map").css('height',$(window).height());
     google.maps.event.trigger(map,'resize');
     map.fitBounds(routes[0].routeline.getBounds());
   });
