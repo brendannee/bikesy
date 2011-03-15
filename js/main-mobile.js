@@ -256,6 +256,7 @@ function showRoute(routeno) {
 }
 
 google.setOnLoadCallback(function(){
+  window.top.scrollTo(0, 1);
   //Show form elements after everything is loaded
   $('#home').show();
   
@@ -290,9 +291,9 @@ google.setOnLoadCallback(function(){
 
   //Resize map when map page is shown
   $("#map_canvas").parent().bind('pageshow',function(){
-    //check if device supports SVG
-    if(document.implementation.hasFeature("http://www.w3.org/TR/SVG11/feature#BasicStructure", "1.1")==true){
-      var mapheight = $(window).height()-parseInt($('#profile').css('height'))-2-parseInt($('#map .ui-header').css('height'))
+    //Check if window is landscape by looking and height and SVG support to decide if to show Profile
+    if($(window).height()>250 && document.implementation.hasFeature("http://www.w3.org/TR/SVG11/feature#BasicStructure", "1.1")==true){
+      var mapheight = $(window).height()-102-parseInt($('#map .ui-header').css('height')) 
     } else {
       var mapheight = $(window).height()-parseInt($('#map .ui-header').css('height'))
     }
@@ -303,8 +304,8 @@ google.setOnLoadCallback(function(){
   //Resize map when orientation is changed
   $(window).bind('resize',function(e){
     //Check if window is landscape by looking and height and SVG support to decide if to show Profile
-    if($(window).height()<250 && document.implementation.hasFeature("http://www.w3.org/TR/SVG11/feature#BasicStructure", "1.1")==true){
-      var mapheight = $(window).height()-parseInt($('#profile').css('height'))-2-parseInt($('#map .ui-header').css('height')) 
+    if($(window).height()>250 && document.implementation.hasFeature("http://www.w3.org/TR/SVG11/feature#BasicStructure", "1.1")==true){
+      var mapheight = $(window).height()-102-parseInt($('#map .ui-header').css('height')) 
     } else {
       var mapheight = $(window).height()-parseInt($('#map .ui-header').css('height'))
     }
