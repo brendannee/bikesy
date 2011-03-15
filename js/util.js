@@ -111,10 +111,18 @@ function submitForm() {
   //Validate inputs
   if(start==''){
     $('#startbox').addClass('error');
+    if(mobile){
+      $('#startbox').focus();
+      $.mobile.pageLoading(true);	
+    }
     return false;
   } else {$('#startbox').removeClass('error');}
   if(end==''){
     $('#finishbox').addClass('error');
+    if(mobile){
+      $('#finishbox').focus();
+      $.mobile.pageLoading(true);	
+    }
     return false;
   } else {$('#finishbox').removeClass('error');}
 
