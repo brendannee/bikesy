@@ -81,6 +81,7 @@ html.landscape .geolocationwaiting{
 
 #map_canvas{
     text-shadow:none;
+    height:150px;
 }
 
 #map-buttons{
