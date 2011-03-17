@@ -262,6 +262,30 @@ function isiPhone(){
     );
 }
 
+function resizeMobile(){
+  //Check if window is landscape by looking and height and SVG support to decide if to show Profile
+  var mapheight;
+  if(isiPhone()){
+    //Hide top address bar
+    window.top.scrollTo(0, 1);
+    if(window.orientation==0 && document.implementation.hasFeature("http://www.w3.org/TR/SVG11/feature#BasicStructure", "1.1")==true){
+      mapheight = $(window).height()-40-parseInt($('#map .ui-header').css('height'));
+    } else {
+      mapheight = $(window).height()+60-parseInt($('#map .ui-header').css('height'));
+    }
+  } else {
+    //Not iphone
+    if($(window).height()>500 && document.implementation.hasFeature("http://www.w3.org/TR/SVG11/feature#BasicStructure", "1.1")==true){
+      mapheight = $(window).height()-100-parseInt($('#map .ui-header').css('height'));
+    } else {
+      mapheight = $(window).height()-parseInt($('#map .ui-header').css('height'));
+    }
+  }
+  $("#map_canvas").css('height',mapheight);
+  $("#map").css('height',$(window).height());
+  google.maps.event.trigger(map,'resize');
+}
+
 google.setOnLoadCallback(function(){
   
   //Hide top address bar
@@ -300,44 +324,11 @@ google.setOnLoadCallback(function(){
   launchMap();
 
   //Resize map when map page is shown
-  $("#map_canvas").parent().bind('pageshow',function(){
-    //Hide top address bar
-    window.top.scrollTo(0, 1);
-    
-    //Check if window is landscape by looking and height and SVG support to decide if to show Profile
-    if(isiPhone()){
-      if(window.orientation==0 && document.implementation.hasFeature("http://www.w3.org/TR/SVG11/feature#BasicStructure", "1.1")==true){
-        var mapheight = $(window).height()-40-parseInt($('#map .ui-header').css('height'));
-      } else {
-        var mapheight = $(window).height()+60-parseInt($('#map .ui-header').css('height'));
-      }
-    } else {
-      var mapheight = $(window).height()-parseInt($('#map .ui-header').css('height'));
-    }
-    $("#map_canvas").css('height',mapheight);
-    $("#map").css('height',$(window).height());
-    google.maps.event.trigger(map,'resize');
-  });
+  $("#map_canvas").parent().bind('pageshow',resizeMobile);
   
   //Resize map when orientation is changed
   $(window).bind('resize',function(e){
-
-    //Hide top address bar
-    window.top.scrollTo(0, 1);
-    
-    //Check if window is landscape by looking and height and SVG support to decide if to show Profile
-    if(isiPhone()){
-      if(window.orientation==0 && document.implementation.hasFeature("http://www.w3.org/TR/SVG11/feature#BasicStructure", "1.1")==true){
-        var mapheight = $(window).height()-40-parseInt($('#map .ui-header').css('height'));
-      } else {
-        var mapheight = $(window).height()+60-parseInt($('#map .ui-header').css('height'));
-      }
-    } else {
-      var mapheight = $(window).height()-parseInt($('#map .ui-header').css('height'));
-    }
-    $("#map_canvas").css('height',mapheight);
-    $("#map").css('height',$(window).height());
-    google.maps.event.trigger(map,'resize');
+    resizeMobile();
     map.fitBounds(routes[0].routeline.getBounds());
   });
 
