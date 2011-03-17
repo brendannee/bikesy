@@ -6,7 +6,7 @@ var bounds = {
   h_lng: -121.637
 }
 
-var map;
+var map, start_marker, end_marker;
 var showTips = true; // Show Tooltips by default
 var routes = new Array();
 var errorAlert=0;
@@ -89,12 +89,14 @@ function launchMap(){
   bikeLayer.setMap(map);
   
   //Setup route lines
-  for(i=0;i<3;i++){
-    routes[i] = {
-      routeline: new google.maps.Polyline()
-    }
-    // Add listener to route lines
-    new google.maps.event.addListener(routes[i].routeline, "mouseover", function() { showRoute(i); });
+  for(var i=0;i<3;i++){
+    (function(i){
+      routes[i] = {
+        routeline: new google.maps.Polyline()
+      }
+      // Add listener to route lines
+      new google.maps.event.addListener(routes[i].routeline, "mouseover", function() { showRoute(i); });
+    })(i);
   }
 }
 
@@ -104,9 +106,9 @@ function submitForm() {
     $('#inputs input').blur();
     $.mobile.pageLoading();	
   }
-  start = $('#startbox').val();
-  end = $('#finishbox').val();
-  hill = $('#hills').val();
+  var start = $('#startbox').val();
+  var end = $('#finishbox').val();
+  var hill = $('#hills').val();
 
   //Validate inputs
   if(start==''){
@@ -135,19 +137,15 @@ function submitForm() {
   }
 
   geocoder = new google.maps.Geocoder();
-  var lat1;
-  var lng1;
-  var lat2;
-  var lng2;
   geocoder.geocode({address:start}, function(results, status){
     if (status == google.maps.GeocoderStatus.OK) {
-      lat1 = results[0].geometry.location.lat();
-      lng1 = results[0].geometry.location.lng();
+      var lat1 = results[0].geometry.location.lat();
+      var lng1 = results[0].geometry.location.lng();
       //Now geocode end address
       geocoder.geocode({address:end}, function(results, status){
         if (status == google.maps.GeocoderStatus.OK) {
-          lat2 = results[0].geometry.location.lat();
-          lng2 = results[0].geometry.location.lng();
+          var lat2 = results[0].geometry.location.lat();
+          var lng2 = results[0].geometry.location.lng();
           //Now move along
           if(checkBounds(lat1,lng1,lat2,lng2)){
             // Draw 3 paths, one for each safety level
@@ -212,13 +210,12 @@ function drawpath(lat1, lng1, lat2, lng2, hill, safety, redraw){
 
 function addMarker(latlng, type){
   if(type=="start"){
-    
     if (typeof(start_marker) == "undefined"){
-      shadow = new google.maps.MarkerImage(
+      var shadow = new google.maps.MarkerImage(
         "images/shadow.png",
         new google.maps.Size(32, 32)
       );
-      startIcon = new google.maps.MarkerImage(
+      var startIcon = new google.maps.MarkerImage(
         "images/green.png",
         new google.maps.Size(32, 32)
       );
@@ -238,11 +235,11 @@ function addMarker(latlng, type){
     start_marker.setOptions({ position: latlng });
   } else if (type=="end"){
     if (typeof(end_marker) == "undefined"){
-      shadow = new google.maps.MarkerImage(
+      var shadow = new google.maps.MarkerImage(
         "images/shadow.png",
         new google.maps.Size(32, 32)
       );
-      endIcon = new google.maps.MarkerImage(
+      var endIcon = new google.maps.MarkerImage(
         "images/red.png",
         new google.maps.Size(32, 32)
       );
@@ -268,17 +265,17 @@ function recalc(marker_name) {
     $.mobile.pageLoading();	
   }
   if (typeof(start_marker) != "undefined"){
-    lat1 = start_marker.getPosition().lat();
-    lng1 = start_marker.getPosition().lng();
-    lat2 = end_marker.getPosition().lat();
-    lng2 = end_marker.getPosition().lng();
+    var lat1 = start_marker.getPosition().lat();
+    var lng1 = start_marker.getPosition().lng();
+    var lat2 = end_marker.getPosition().lat();
+    var lng2 = end_marker.getPosition().lng();
     distance = dist(lat1,lat2,lng1,lng2);
     var hill = $('#hills').val();
     
     if(checkBounds(lat1,lng1,lat2,lng2)){
     
-      sCoords = new google.maps.LatLng(lat1,lng1);
-      eCoords = new google.maps.LatLng(lat2,lng2);
+      var sCoords = new google.maps.LatLng(lat1,lng1);
+      var eCoords = new google.maps.LatLng(lat2,lng2);
       
       //Reverse Geocode
       switch(marker_name){
@@ -308,8 +305,8 @@ function recalc(marker_name) {
 
 function gviz(profile, width, height){
   if (typeof(table) == "undefined"){
-    table = new google.visualization.DataTable();
-    chart = new google.visualization.ScatterChart(document.getElementById('profile'));
+    var table = new google.visualization.DataTable();
+    var chart = new google.visualization.ScatterChart(document.getElementById('profile'));
   } else {
     table.removeColumn(0);
     table.removeColumn(0);
@@ -348,7 +345,7 @@ function getElevChange(profile) {
 }
   
 function getAddress(latlng, marker_name) {
-  geocoder = new google.maps.Geocoder();
+  var geocoder = new google.maps.Geocoder();
   geocoder.geocode({'latLng': latlng}, function(results, status) {
     if (status == google.maps.GeocoderStatus.OK) {
       if(marker_name=='start') {
@@ -361,8 +358,8 @@ function getAddress(latlng, marker_name) {
 }
 
 function getStartGeoLocator(position) {
-  sCoords = new google.maps.LatLng(position.coords.latitude,position.coords.longitude);
-  geocoder = new google.maps.Geocoder();
+  var sCoords = new google.maps.LatLng(position.coords.latitude,position.coords.longitude);
+  var geocoder = new google.maps.Geocoder();
   geocoder.geocode({'latLng': sCoords}, function(results, status) {
     if (status == google.maps.GeocoderStatus.OK) {
       $('#startbox').val(results[0].formatted_address).replace(/, CA, USA/g, "");;
@@ -372,8 +369,8 @@ function getStartGeoLocator(position) {
 }
   
 function getEndGeoLocator(position) {
-  eCoords = new google.maps.LatLng(position.coords.latitude,position.coords.longitude);
-  geocoder = new google.maps.Geocoder();
+  var eCoords = new google.maps.LatLng(position.coords.latitude,position.coords.longitude);
+  var geocoder = new google.maps.Geocoder();
   geocoder.geocode({'latLng': eCoords}, function(results, status) {
     if (status == google.maps.GeocoderStatus.OK) {
       $('#finishbox').val(results[0].formatted_address).replace(/, CA, USA/g, "");;

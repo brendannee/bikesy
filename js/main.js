@@ -12,8 +12,10 @@ function tooltips(){
 }
   
 function showRoute(routeno) {
-  //Hide routes
+  
+  //Loop though each route and hide/show routes
   for (var i=0; i<3; i++){
+    var coloron,coloroff;
     switch(i){
       case 0:
         coloron="#c2403a";
@@ -28,74 +30,39 @@ function showRoute(routeno) {
         coloroff="#90ff7a"
         break;
     }
-    $("#stats"+i).hide();
-    if (typeof(routes[routeno].routeline) != "undefined"){
-      routes[routeno].routeline.setOptions({ strokeColor: coloroff });
+    if(i!=routeno){
+      $("#stats"+i).hide();
+      if (typeof(routes[i]) != "undefined"){
+        routes[i].routeline.setOptions({ strokeColor: coloroff });
+      }
+      //Remove Highlight Route Choice Box
+      $("#summary"+i).css("background-color", coloroff);
+      $("#summary"+i).css("color", "#333");
+      $("#summary"+i).css("border-color", coloroff);
+    } else {
+      // Show Route Line Stong Color
+      $("#stats"+i).show();
+      if (typeof(routes[i]) != "undefined"){
+        routes[i].routeline.setOptions({ strokeColor: coloron });
+      }
+      //Highlight Summary Box
+      $("#summary"+i).css("background-color", coloron);
+      $("#summary"+i).css("color", "#000");
+      $("#summary"+i).css("border-color", "#333");
     }
-    //Remove Highlight Route Choice Box
-    $("#summary"+i).css("background-color", coloroff);
-    $("#summary"+i).css("color", "#333");
-    $("#summary"+i).css("border", "#ccc solid 1px");
   }
-  
-  switch(routeno){
-    case 0:
-      coloron="#c2403a";
-      coloroff="#ed817e";
-      safetyTitle = "Safe (more direct)";
-      break;
-    case 1:
-      coloron="#fff600";
-      coloroff="#ecf869";
-      if (routes[1].distance>routes[0].distance) {
-        lengthdif = Math.round((routes[1].distance-routes[0].distance)*100)/100 + " miles longer";
-      } else {
-        lengthdif = Math.round((routes[0].distance-routes[1].distance)*100)/100 + " miles shorter";
-      }
-      if (routes[1].elevation>routes[0].elevation) {
-        elevdif = Math.round((routes[1].elevation-routes[0].elevation)*100)/100 + " ft more climbing";
-      } else {
-        elevdif = Math.round((routes[0].elevation-routes[1].elevation)*100)/100 + " ft less climbing";
-      }
-      safetyTitle = "Safer (some bike lanes, " + lengthdif + ", " +  elevdif + ")";
-      break;
-    case 2:
-      coloron="#10dd00";
-      coloroff="#90ff7a";
-      if (distance[2]>distance[0]) {
-        lengthdif = Math.round((routes[2].distance-routes[0].distance)*100)/100 + " miles longer";
-      } else {
-        lengthdif = Math.round((routes[0].distance-routes[2].distance)*100)/100 + " miles shorter";
-      }
-      if (routes[2].elevation>routes[0].elevation) {
-        elevdif = Math.round((routes[2].elevation-routes[0].elevation)*100)/100 + " ft more climbing";
-      } else {
-        elevdif = Math.round((routes[0].elevation-routes[2].elevation)*100)/100 + " ft less climbing";
-      }
-      safetyTitle = "Safest (mostly bike lanes, " + lengthdif + ", " +  elevdif + ")";
-      break;
-  }
-  
-  // Show Route Line Stong Color
-  $("#stats"+routeno).show();
-  if (typeof(routes[routeno].routeline) != "undefined"){
-    routes[routeno].routeline.setOptions({ strokeColor: coloron });
-  }
-  
-  //Highlight Summary Box
-  $("#summary"+routeno).css("background-color", coloron);
-  $("#summary"+routeno).css("color", "#000");
-  $("#summary"+routeno).css("border", "#333 solid 1px");
   
   //Show Profile
-  if (typeof(routes[routeno].elevprof) != "undefined"){
-    var windowwidth = window.innerWidth;
-    gviz(routes[routeno].elevprof,windowwidth-305,190);
+  if (typeof(routes[routeno]) != "undefined"){
+    if (typeof(routes[routeno].elevprof) != "undefined"){
+      var windowwidth = window.innerWidth;
+      gviz(routes[routeno].elevprof,windowwidth-305,190);
+    }
   }
 }
   
 function processpath(data, redraw, safety){
-  var routeno;
+  var routeno, coloron, coloroff;
   switch(safety){
     case "low":
       coloron="#c2403a";
@@ -116,12 +83,6 @@ function processpath(data, redraw, safety){
   
   var decodedPoints = google.maps.geometry.encoding.decodePath(data[1][0]);
 
-  if(typeof(routes[routeno].routeline)=="undefined"){
-    routes[routeno].routeline = new google.maps.Polyline();
-    // Add listener to route lines
-    new google.maps.event.addListener(routes[routeno].routeline, "mouseover", function() { showRoute(routeno); });
-  }
-
   routes[routeno].routeline.setOptions({
     strokeColor: coloroff,
     strokeOpacity: 0.4,
@@ -140,8 +101,8 @@ function processpath(data, redraw, safety){
   addMarker(routes[routeno].routeline.getPath().getAt(routes[routeno].routeline.getPath().getLength()-1), "end");
   
   //Clean Start and End Titles
-  startName = $('#startbox').val().replace(/, USA/g, "");
-  finishName = $('#finishbox').val().replace(/, USA/g, "");
+  var startName = $('#startbox').val().replace(/, USA/g, "");
+  var finishName = $('#finishbox').val().replace(/, USA/g, "");
   
   //Set Page Title
   document.title = startName+" to "+finishName+" | San Francisco Bay Area Bike Mapper";
@@ -189,9 +150,8 @@ function processpath(data, redraw, safety){
   for(var i=0; i<data[0].length; i++) {
     
     if(i>0){
-    
-      direction = proper(data[0][i][0]);
-      street = data[0][i][1];
+      var direction = proper(data[0][i][0]);
+      var street = data[0][i][1];
 
       // Skip Direction if next step's street name is "nameless" and direction is "Continue" and add distance to this step
       if (i<data[0].length-1) {
@@ -203,6 +163,7 @@ function processpath(data, redraw, safety){
       
       //If street is nameless, remove it
       if (street != 'nameless') {
+        var word;
         // Choose best term for direction
         if (direction == "Continue"){
           word = 'on';
@@ -226,24 +187,6 @@ function processpath(data, redraw, safety){
   }
   
   $("#stats"+routeno).html(routes[routeno].tripstat);
-  //Set direction div click function to show marker when clicked
-  $(".direction").click(function(){
-    pointID = this.id.replace(/direction/g, "").split("-");
-    // First, hide all stop points
-    for (i in routes[routeno].stoppoints) { 
-      for (j in routes[routeno].stoppoints[i]){
-        if (routes[routeno].stoppoints[i][j] != undefined) {
-          routes[routeno].stoppoints[i][j].setVisible(false); 
-        }
-        $("#direction-"+i+"-"+j).css('background-color','inherit');
-      }
-    }
-    //Show desired stop point
-    if (routes[routeno].stoppoints[pointID[1]][pointID[2]] != undefined) {
-      routes[routeno].stoppoints[pointID[1]][pointID[2]].setVisible(true);
-      $("#direction-"+pointID[1]+"-"+pointID[2]).css('background-color','#d1d1d1');
-    }
-  });
   $("#stats"+routeno).hide();
   
   //Show Directions
@@ -285,54 +228,51 @@ function swapAddress(){
 }
   
 google.setOnLoadCallback(function(){
-  
-  $(document).ready(function(){
-    //Chrome Frame check
-    if(typeof CFInstall != 'undefined'){
-      CFInstall.check({
-        mode:'overlay'
-      });
-    }
-    
-    resizeWindow();
-    //If the User resizes the window, adjust the #container height
-    $(window).bind("resize", resizeWindow);
-    function resizeWindow( e ) {
-      var newWindowHeight = $(window).height();
-      var sidebarTopHeight = parseInt($("#sidebar-top").height())+parseInt($("#sidebar-top").css("padding-top"))+parseInt($("#summary").height())+parseInt($("#resultsBox").css("margin-top"))+parseInt($("#resultsBox").css("margin-bottom"));
-      $("#sidebar").css("height", (newWindowHeight) );
-      $("#sidebar").css("max-height", (newWindowHeight) );
-      $("#resultsBox").css("max-height", (newWindowHeight-sidebarTopHeight));
-      $("#map_canvas").css("height", (newWindowHeight-206) );
-      $("#loading_image").css("top", ((newWindowHeight-206)/2) );
-    }
-  
-    $('#hideProfile').click(function(){
-      $('#profile').slideToggle('fast');
-      $("#map_wrapper").css("height", $(window).height() );
-      $("#map_canvas").css("height", $(window).height() );
-      $('#showProfile').show();
-      $('#hideProfile').hide();
-      return false;
+  //Chrome Frame check
+  if(typeof CFInstall != 'undefined'){
+    CFInstall.check({
+      mode:'overlay'
     });
-
-    $('#showProfile').click(function(){
-      $('#profile').show();
-      $("#map_wrapper").css("height", ($(window).height()-206) );
-      $("#map_canvas").css("height", ($(window).height()-206) );
-      $('#showProfile').hide();
-      $('#hideProfile').show();
-      return false;
-    });
-
-    $('#summary0').hover(function(){ showRoute(0); });
+  }
   
-    $('#summary1').hover(function(){ showRoute(1); });
-  
-    $('#summary2').hover(function(){ showRoute(2); });
+  resizeWindow();
+  //If the User resizes the window, adjust the #container height
+  $(window).bind("resize", resizeWindow);
+  function resizeWindow( e ) {
+    var newWindowHeight = $(window).height();
+    var sidebarTopHeight = parseInt($("#sidebar-top").height())+parseInt($("#sidebar-top").css("padding-top"))+parseInt($("#summary").height())+parseInt($("#resultsBox").css("margin-top"))+parseInt($("#resultsBox").css("margin-bottom"));
+    $("#sidebar").css("height", (newWindowHeight) );
+    $("#sidebar").css("max-height", (newWindowHeight) );
+    $("#resultsBox").css("max-height", (newWindowHeight-sidebarTopHeight));
+    $("#map_canvas").css("height", (newWindowHeight-206) );
+    $("#loading_image").css("top", ((newWindowHeight-206)/2) );
+  }
 
-    $('#swap').click(function(){ swapAddress(); });
+  $('#hideProfile').click(function(){
+    $('#profile').slideToggle('fast');
+    $("#map_wrapper").css("height", $(window).height() );
+    $("#map_canvas").css("height", $(window).height() );
+    $('#showProfile').show();
+    $('#hideProfile').hide();
+    return false;
   });
+
+  $('#showProfile').click(function(){
+    $('#profile').show();
+    $("#map_wrapper").css("height", ($(window).height()-206) );
+    $("#map_canvas").css("height", ($(window).height()-206) );
+    $('#showProfile').hide();
+    $('#hideProfile').show();
+    return false;
+  });
+
+  $('#summary0').hover(function(){ showRoute(0); });
+
+  $('#summary1').hover(function(){ showRoute(1); });
+
+  $('#summary2').hover(function(){ showRoute(2); });
+
+  $('#swap').click(function(){ swapAddress(); });
 
   //Show tooltips
   tooltips();
@@ -356,6 +296,9 @@ google.setOnLoadCallback(function(){
 
   launchMap();
   
+  // Read route parameters from URL
+  detectRouteFromURL();
+  
   //Add welcome screen
   $('#welcome_screen').fadeIn();
   
@@ -373,9 +316,24 @@ google.setOnLoadCallback(function(){
       }
     }
   });
-
-  detectRouteFromURL();
   
-  $('#inputs').submit(submitForm)
+  //Set direction div click function to show marker when clicked
+  $(".direction").live('click',function(){
+    pointID = this.id.split("-");
+    // First, hide all stop points
+    for (var i in routes) {
+      for (var j in routes[i].stoppoints){
+        routes[i].stoppoints[j].setVisible(false); 
+        $("#direction-"+i+"-"+j).css('background-color','inherit');
+      }
+    }
+    //Show desired stop point
+    if (routes[pointID[1]].stoppoints[pointID[2]] != undefined) {
+      routes[pointID[1]].stoppoints[pointID[2]].setVisible(true);
+      $("#direction-"+pointID[1]+"-"+pointID[2]).css('background-color','#d1d1d1');
+    }
+  });
+  
+  $('#inputs').submit(submitForm);
   
 });
