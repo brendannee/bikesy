@@ -23,7 +23,7 @@ function processpath(data, redraw, safety){
   var decodedPoints = google.maps.geometry.encoding.decodePath(data[1][0]);
 
   routes[routeno].routeline.setOptions({
-    strokeColor: coloroff,
+    strokeColor: coloron,
     strokeOpacity: 0.4,
     strokeWeight: 7,
     path: decodedPoints,
@@ -62,7 +62,7 @@ function processpath(data, redraw, safety){
   
   switch(routeno){
     case 0:
-      routes[routeno].tripstat = "<div>Safe (more direct)</div>";
+      routes[routeno].tripstat = "<div>Bike Lanes: More Direct Route, Hills: " + $('#hills option:selected').text() + "</div>";
       break;
     case 1:
       if (routes[1].distance>routes[0].distance) {
@@ -75,7 +75,7 @@ function processpath(data, redraw, safety){
       } else {
         elevdif = Math.round((routes[0].elevation-routes[1].elevation)*100)/100 + " ft less climbing";
       }
-      routes[routeno].tripstat = "<div>Safer (some bike lanes, " + lengthdif + ", " +  elevdif + ")</div>";
+      routes[routeno].tripstat = "<div>Bike Lanes: Some Bike Lanes, Hills: " + $('#hills option:selected').text() + "</div>";
       break;
     case 2:
       if (routes[2].distance>routes[0].distance) {
@@ -88,7 +88,7 @@ function processpath(data, redraw, safety){
       } else {
         elevdif = Math.round((routes[0].elevation-routes[2].elevation)*100)/100 + " ft less climbing";
       }
-      routes[routeno].tripstat = "<div>Safest (mostly bike lanes, " + lengthdif + ", " +  elevdif + ")</div>";
+      routes[routeno].tripstat = "<div>Bike Lanes: Mostly bike lanes, Hills: " + $('#hills option:selected').text() + "</div>";
       break;
   }
   
@@ -173,7 +173,6 @@ function processpath(data, redraw, safety){
       $("#direction-"+pointID[1]+"-"+pointID[2]).css('background-color','#d1d1d1');
     }
   });
-  $("#stats"+routeno).hide();
   
   // Create Elevation Profile
   routes[routeno].profelev = data[2];
@@ -181,9 +180,7 @@ function processpath(data, redraw, safety){
   //convert distance along route to miles
   for (i=0;i<routes[routeno].profelev.length;i++){routes[routeno].profelev[i][0]=routes[routeno].profelev[i][0]/1609.344;}
   for (i=0;i<routes[routeno].profelev.length;i++){routes[routeno].profelev[i][1]=routes[routeno].profelev[i][1]*3.2808399;}
-              
   
-  $('#loading_image').fadeOut(); // hide loading image
   
   //Hide mobile loading image
   $.mobile.pageLoading( true );
