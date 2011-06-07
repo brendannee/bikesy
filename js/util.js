@@ -94,8 +94,10 @@ function launchMap(){
       routes[i] = {
         routeline: new google.maps.Polyline()
       }
-      // Add listener to route lines
-      new google.maps.event.addListener(routes[i].routeline, "mouseover", function() { showRoute(i); });
+      // Add listener to route lines for non-mobile
+      if(!mobile){
+        new google.maps.event.addListener(routes[i].routeline, "click", function() { showRoute(i); });
+      }
     })(i);
   }
 }
@@ -105,6 +107,7 @@ function submitForm() {
   if(mobile){
     $('#inputs input').blur();
     $.mobile.pageLoading();	
+    var safety = $('#safety').val();
   }
   var start = $('#startbox').val();
   var end = $('#finishbox').val();
@@ -148,10 +151,14 @@ function submitForm() {
           var lng2 = results[0].geometry.location.lng();
           //Now move along
           if(checkBounds(lat1,lng1,lat2,lng2)){
-            // Draw 3 paths, one for each safety level
-            drawpath(lat1, lng1, lat2, lng2, hill, "low", true);
-            drawpath(lat1, lng1, lat2, lng2, hill, "medium", true);
-            drawpath(lat1, lng1, lat2, lng2, hill, "high", true);
+            // Draw 3 paths, one for each safety level for desktop, for mobile, only draw one
+            if(!mobile){
+              drawpath(lat1, lng1, lat2, lng2, hill, "low", true);
+              drawpath(lat1, lng1, lat2, lng2, hill, "medium", true);
+              drawpath(lat1, lng1, lat2, lng2, hill, "high", true);
+            } else {
+              drawpath(lat1, lng1, lat2, lng2, hill, safety, true);
+            }
             
             map.panTo(new google.maps.LatLng((lat1+lat2)/2,(lng1+lng2)/2));
             
@@ -181,7 +188,7 @@ function drawpath(lat1, lng1, lat2, lng2, hill, safety, redraw){
   $('#loading_image').show(); // show loading image, as request is about to start
   
   //Hide lines
-  for(i in routes){
+  for(var i in routes){
     routes[i].routeline.setMap(null);
   }
   // Define Route Server
@@ -271,6 +278,7 @@ function recalc(marker_name) {
     var lng2 = end_marker.getPosition().lng();
     distance = dist(lat1,lat2,lng1,lng2);
     var hill = $('#hills').val();
+    var safety = $('#safety').val();
     
     if(checkBounds(lat1,lng1,lat2,lng2)){
     
@@ -294,12 +302,22 @@ function recalc(marker_name) {
       //Remove old overlay
       if (typeof(routeoverlay) != "undefined"){routeoverlay.setMap(null);}
       
-      // Draw 3 paths, one for each safety level
-      drawpath(lat1, lng1, lat2, lng2, hill, "low", true);
-      drawpath(lat1, lng1, lat2, lng2, hill, "medium", true);
-      drawpath(lat1, lng1, lat2, lng2, hill, "high", true);
+      // Draw 3 paths, one for each safety level for Desktop, draw only one for mobile
+      if(!mobile){
+        drawpath(lat1, lng1, lat2, lng2, hill, "low", true);
+        drawpath(lat1, lng1, lat2, lng2, hill, "medium", true);
+        drawpath(lat1, lng1, lat2, lng2, hill, "high", true);
+      } else {
+        drawpath(lat1, lng1, lat2, lng2, hill, safety, true);
+      }
     }
-    else{alert("Bikemapper currently only works in the Bay Area.");}
+    else{
+      //Outside Bay Area
+      if(mobile){
+        $.mobile.pageLoading( false );
+      }
+      alert("Bikemapper currently only works in the Bay Area.");
+    }
   }   
 }
 

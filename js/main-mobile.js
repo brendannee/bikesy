@@ -185,74 +185,8 @@ function processpath(data, redraw, safety){
   
   $('#loading_image').fadeOut(); // hide loading image
   
-  if(mobile){
-    //Hide mobile loading image
-     $.mobile.pageLoading( true );
-  }
-  
-  if (showTips==true){ // Detect if we should show tips or not
-    $("#dragtext").fadeIn(); //Show Drag Tip
-  }
-  
-  $('.safer').trigger('click');
-}
-
-function showRoute(routeno) {
-  //Hide routes
-  for (var i=0; i<3; i++){
-    switch(i){
-      case 0:
-        coloron="#c2403a";
-        coloroff="#ed817e";
-        break;
-      case 1:
-        coloron="#fff600";
-        coloroff="#ecf869";
-        break;
-      case 2:
-        coloron="#10dd00";
-        coloroff="#90ff7a"
-        break;
-    }
-    $("#stats"+i).hide();
-    if (typeof(routes[i]) != "undefined"){
-      if (typeof(routes[i].routeline) != "undefined"){
-        routes[i].routeline.setOptions({ strokeColor: coloroff });
-      }
-    }
-  }
-  
-  // Show Route Line Stong Color
-  switch(routeno){
-    case 0:
-      coloron="#c2403a";
-      coloroff="#ed817e";
-      break;
-    case 1:
-      coloron="#fff600";
-      coloroff="#ecf869";
-      break;
-    case 2:
-      coloron="#10dd00";
-      coloroff="#90ff7a"
-      break;
-  }
-  
-  $("#stats"+routeno).show();
-  if (typeof(routes[routeno]) != "undefined"){
-    if (typeof(routes[routeno].routeline) != "undefined"){
-      routes[routeno].routeline.setOptions({ strokeColor: coloron });
-    }
-  }
-  
-  //Detect SVG Show Profile
-  if (typeof(routes[routeno]) != "undefined"){
-    if (typeof(routes[routeno].profelev) != "undefined"){
-      if(document.implementation.hasFeature("http://www.w3.org/TR/SVG11/feature#BasicStructure", "1.1")==true){
-        gviz(routes[routeno].profelev,$(window).width(),100);
-      }
-    }
-  }
+  //Hide mobile loading image
+  $.mobile.pageLoading( true );
 }
 
 function isiPhone(){
@@ -305,22 +239,6 @@ google.setOnLoadCallback(function(){
    $('.geolocationwaiting.start').fadeIn();
    navigator.geolocation.getCurrentPosition(getStartGeoLocator,showGeoLocatorError);
    return false;
-  });
-  
-  $('.safe').click(function(){
-    showRoute(0);
-    $('.safety ul li a').removeClass('ui-btn-active');
-    $('.safe').addClass('ui-btn-active');
-  });
-  $('.safer').click(function(){
-    showRoute(1);
-    $('.safety ul li a').removeClass('ui-btn-active');
-    $('.safer').addClass('ui-btn-active');
-  });
-  $('.safest').click(function(){
-    showRoute(2);
-    $('.safety ul li a').removeClass('ui-btn-active');
-    $('.safest').addClass('ui-btn-active');
   });
 
   launchMap();
