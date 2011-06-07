@@ -181,6 +181,10 @@ function processpath(data, redraw, safety){
   for (i=0;i<routes[routeno].profelev.length;i++){routes[routeno].profelev[i][0]=routes[routeno].profelev[i][0]/1609.344;}
   for (i=0;i<routes[routeno].profelev.length;i++){routes[routeno].profelev[i][1]=routes[routeno].profelev[i][1]*3.2808399;}
   
+  //Detect SVG, if supported show profile
+  if(document.implementation.hasFeature("http://www.w3.org/TR/SVG11/feature#BasicStructure", "1.1")==true){
+    gviz(routes[routeno].profelev,$(window).width(),100);
+  }
   
   //Hide mobile loading image
   $.mobile.pageLoading( true );
@@ -200,7 +204,7 @@ function resizeMobile(){
     //Hide top address bar
     window.top.scrollTo(0, 1);
     if(window.orientation==0){
-      //Show profile bar if portriat mode
+      //Show profile bar if portrait mode
       mapheight = $(window).height()-40-parseInt($('#map .ui-header').css('height'));
     } else {
       mapheight = $(window).height()+60-parseInt($('#map .ui-header').css('height'));
