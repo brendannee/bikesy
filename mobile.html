@@ -63,7 +63,15 @@
           <option value="medium" selected="selected">A reasonable route</option>
           <option value="high">Bring on the Hills!</option>
         </select>
-        <input id="submit" type="submit" value="Get Directions" title="Get Directions">
+        <label for="safety"><img src="images/safety.png" alt="Safety" class="icon">Bike Lanes:</label>
+        <select id="safety" name="safety" title="Choose how much you'd like to reroute to get on bike lanes and bike routes" tabindex="3">
+          <option value="low">More Direct Route</option> 
+          <option value="medium" selected="selected">Some Bike Lanes</option>
+          <option value="high">Mostly Bike Lanes</option>
+        </select>
+        <div class="submitContainer">
+          <input id="submit" type="submit" value="Get Directions" title="Get Directions">
+        </div>
       </form>
     </div> 
     <div data-role="footer">
