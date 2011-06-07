@@ -54,9 +54,9 @@ function showRoute(routeno) {
   
   //Show Profile
   if (typeof(routes[routeno]) != "undefined"){
-    if (typeof(routes[routeno].elevprof) != "undefined"){
+    if (typeof(routes[routeno].profelev) != "undefined"){
       var windowwidth = window.innerWidth;
-      gviz(routes[routeno].elevprof,windowwidth-305,190);
+      gviz(routes[routeno].profelev,windowwidth-305,190);
     }
   }
 }
@@ -200,11 +200,11 @@ function processpath(data, redraw, safety){
   $("#resultsBox").css("max-height", (newWindowHeight-sidebarTopHeight));
   
   // Create Elevation Profile
-  routes[routeno].elevprof = data[2];
+  routes[routeno].profelev = data[2];
   
   //convert distance along route to miles
-  for (i=0;i<routes[routeno].elevprof.length;i++){routes[routeno].elevprof[i][0]=routes[routeno].elevprof[i][0]/1609.344;}
-  for (i=0;i<routes[routeno].elevprof.length;i++){routes[routeno].elevprof[i][1]=routes[routeno].elevprof[i][1]*3.2808399;}
+  for (i=0;i<routes[routeno].profelev.length;i++){routes[routeno].profelev[i][0]=routes[routeno].profelev[i][0]/1609.344;}
+  for (i=0;i<routes[routeno].profelev.length;i++){routes[routeno].profelev[i][1]=routes[routeno].profelev[i][1]*3.2808399;}
               
   
   $('#loading_image').fadeOut(); // hide loading image
