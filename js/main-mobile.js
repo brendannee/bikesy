@@ -214,6 +214,7 @@ function resizeMobile(){
     if($(window).height()>500 && document.implementation.hasFeature("http://www.w3.org/TR/SVG11/feature#BasicStructure", "1.1")==true){
       //Show profile if enough room ans SVG supported
       mapheight = $(window).height()-100-parseInt($('#map .ui-header').css('height'));
+      $('.landscape #profile').height('100');
     } else {
       mapheight = $(window).height()-parseInt($('#map .ui-header').css('height'));
     }
