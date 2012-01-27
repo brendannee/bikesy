@@ -205,7 +205,7 @@ function drawpath(lat1, lng1, lat2, lng2, hill, safety, redraw){
         "error": function(){
           $('#loading_image').hide(); // hide loading image
           if(errorAlert==0){
-            alert("There was an error retrieving the route data.  Please refresh the page and try again.");
+            alert("Bikesy is currently undergoing maintenance - please check back later.");
           }
           errorAlert = 1;
         }
