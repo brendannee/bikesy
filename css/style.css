@@ -346,26 +346,21 @@ ul.input_boxes #hillsline select{
   width:12px;
 }
 
-#directions{
+.directions{
   padding:5px 5px 0 5px;
   font-size:11px;
   overflow:auto;
-}
-
-#directions ol{
   list-style-type:decimal;
   margin-top:0;
 }
 
-#directions li{
+.directions li{
   padding:5px 0;
   border-bottom:1px solid #ddd;
-  margin-left:-20px;
-  padding-left:-20px;
   cursor:pointer;
 }
 
-#directions li:last-of-type{
+.directions li:last-of-type{
   border-bottom:none;
 }
 

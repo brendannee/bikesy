@@ -16,7 +16,7 @@
   <!-- Google Chrome Frame -->
   <!--[if (IE 8)|(IE 7)|(IE 6)|(IE 5)]><script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/chrome-frame/1/CFInstall.min.js"></script><![endif]--> 
   
-  <script src="js/redirection_mobile.min.js"></script>
+  <script src="js/lib/redirection_mobile.min.js"></script>
   <script>
        SA.redirection_mobile ({
           mobile_url : "bikesy.com/mobile"
@@ -24,19 +24,6 @@
   </script>
 </head>
 <body>
-  <script type="text/javascript">
-    //Analytics for Bikesy.com
-    var _gaq = _gaq || [];
-    _gaq.push(['_setAccount', 'UA-306190-15']);
-    _gaq.push(['_trackPageview']);
-
-    (function() {
-      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-    })();
-  </script>
-  
   <div id="content">
     <div id="sidebar">
       <div id="sidebar-top">
@@ -66,15 +53,35 @@
         </form>
       </div>
       <div id="summary">
-        <div id="summary0" title="More Direct Route"><div class="title">Safe</div><div class="info"></div></div>
-        <div id="summary1" title="Some bike lanes and bike routes"><div class="title">Safer</div><div class="info"></div></div>
-        <div id="summary2" title="Attempts to find routes with mostly bike lanes and bike routes"><div class="title">Safest</div><div class="info"></div></div>
+        <div class="summary" data-summary="0" title="More Direct Route"><div class="title">Safe</div><div class="info"></div></div>
+        <div class="summary" data-summary="1" title="Some bike lanes and bike routes"><div class="title">Safer</div><div class="info"></div></div>
+        <div class="summary" data-summary="2" title="Attempts to find routes with mostly bike lanes and bike routes"><div class="title">Safest</div><div class="info"></div></div>
       </div>
       <div id="resultsBox">
-        <div id="stats0" class="stats"></div>
-        <div id="stats1" class="stats"></div>
-        <div id="stats2" class="stats"></div>
-        <div id="directions"><ol></ol></div>
+        <div id="stats0" class="stats">
+          <div class="title">Directions to <span></span></div>
+          <div class="totaldistance"><img src="images/map.png"> Distance: <span style="color:#000;"></span></div>
+          <div class="time"><img src="images/time.png"> Time: <span style="color:#000;"></span></div>
+          <div class="elevGain"><img src="images/up.png"> Feet of Climbing: <span style="color:#000;"></span></div>
+          <div class="elevChange"><img src="images/elevation.png"> Total Elevation Change: <span style="color:#000;"></span></div>
+          <ol class="directions"></ol>
+        </div>
+        <div id="stats1" class="stats">
+          <div class="title">Directions to <span></span></div>
+          <div class="totaldistance"><img src="images/map.png"> Distance: <span style="color:#000;"></span></div>
+          <div class="time"><img src="images/time.png"> Time: <span style="color:#000;"></span></div>
+          <div class="elevGain"><img src="images/up.png"> Feet of Climbing: <span style="color:#000;"></span></div>
+          <div class="elevChange"><img src="images/elevation.png"> Total Elevation Change: <span style="color:#000;"></span></div>
+          <ol class="directions"></ol>
+        </div>
+        <div id="stats2" class="stats">
+          <div class="title">Directions to <span></span></div>
+          <div class="totaldistance"><img src="images/map.png"> Distance: <span style="color:#000;"></span></div>
+          <div class="time"><img src="images/time.png"> Time: <span style="color:#000;"></span></div>
+          <div class="elevGain"><img src="images/up.png"> Feet of Climbing: <span style="color:#000;"></span></div>
+          <div class="elevChange"><img src="images/elevation.png"> Total Elevation Change: <span style="color:#000;"></span></div>
+          <ol class="directions"></ol>
+        </div>
         <div id="disclaimer">We offer no guarantee regarding roadway conditions or safety of the proposed routes. Use your best judgment when choosing a route. Obey all vehicle code provisions.</div>
       </div>
       
@@ -104,28 +111,42 @@
     <div id="hideProfile" title="Hide Elevation Profile"><img src="images/close2.png"></div>
     <div id="profile" title="Elevation Profile"><div id="profileIntro">Your Elevation Profile will go here once you select a route</div></div>
   </div>
-  <div id="ie6msg"><h1>Upgrade Needed</h1>Bike Mapper only works in newer browsers.  You should upgrade your browser. Using an outdated and unsecure browser is bad for you, bad for business and bad for the Web! <br><br><a href="http://www.browserupgrade.info/how-to-upgrade/">Upgrade now</a>: its easy and a matter of minutes.</div>
+  <div id="ie6msg"><h1>Upgrade Needed</h1>Bikesy only works in newer browsers.  You should upgrade your browser. Using an outdated and unsecure browser is bad for you, bad for business and bad for the Web! <br><br><a href="http://www.browserupgrade.info/how-to-upgrade/">Upgrade now</a>: its easy and a matter of minutes.</div>
   
 <script type="text/javascript" src="http://www.google.com/jsapi?key=ABQIAAAA7ryB86mtzsqx_XU57t8PNhTMTGztSySO4_rR2h0VlHQYebwNHBQfKBMwuobg9gRDpM6rxsFgfXCnug"></script>
+
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+<script src="js/lib/underscore-min.js"></script>
   
 <script type="text/javascript">
   google.load('visualization', '1', {packages:['corechart']});
   google.load('maps', '3.x',{"other_params":"sensor=false&libraries=geometry"});
-  google.load('jquery','1');
 </script>
   
-<script src="js/jquery.jsonp-2.1.4.min.js" type="text/javascript"></script>
-<script src="js/jquery.tools.min.js" type="text/javascript"></script>
+<script src="http://cdn.jquerytools.org/1.2.7/full/jquery.tools.min.js"></script>
 
-<!--[if lt IE 7]>
+<!--[if lt IE 8]>
 <script type="text/javascript">
   $('#content').hide();
   $('#ie6msg').show();
 </script>
 <![endif]-->
 
-<script src="js/util.js" type="text/javascript"></script>
-<script src="js/main.js" type="text/javascript"></script>
+<script src="js/util.js"></script>
+<script src="js/main.js"></script>
+
+<script type="text/javascript">
+  //Analytics for Bikesy.com
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-306190-15']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
 
 <script type="text/javascript" charset="utf-8">
   var is_ssl = ("https:" == document.location.protocol);

@@ -1,15 +1,17 @@
 //Hard code map bounds
 var bounds = {
-  l_lat: 37.306399999999996,
-  h_lat: 38.316994299999998,
-  l_lng: -123.02877599999999,
-  h_lng: -121.637
-}
+    l_lat: 37.306399999999996,
+    h_lat: 38.316994299999998,
+    l_lng: -123.02877599999999,
+    h_lng: -121.637
+  }
+  , map
+  , start_marker
+  , end_marker
+  , showTips = true
+  , routes = []
+  , errorAlert = false;
 
-var map, start_marker, end_marker;
-var showTips = true; // Show Tooltips by default
-var routes = new Array();
-var errorAlert=0;
 
 google.maps.Polyline.prototype.getBounds = function() {
   //Extends google maps API v3 to allow getting bounds of a polyline
@@ -20,6 +22,7 @@ google.maps.Polyline.prototype.getBounds = function() {
   return bounds;
 };
 
+
 google.maps.LatLng.prototype.miTo = function(a){ 
   //Extends google maps API V3 to allow getting the length of a polyline
   var e = Math, ra = e.PI/180; 
@@ -29,21 +32,23 @@ google.maps.LatLng.prototype.miTo = function(a){
 (c) * e.pow(e.sin(g/2), 2))); 
   return f * 3963.1676; 
 }
+
+
 google.maps.Polyline.prototype.inMiles = function(n){ 
   var a = this.getPath(n), len = a.getLength(), dist = 0; 
-  for(var i=0; i<len-1; i++){ 
+  for(var i=0; i<len-1; i++) { 
     dist += a.getAt(i).miTo(a.getAt(i+1)); 
   } 
   return dist; 
 }
+
 
 $.extend({
   //Extends jQuery to get parameters from URL
   getUrlVars: function(){
     var vars = [], hash;
     var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
-    for(var i = 0; i < hashes.length; i++)
-    {
+    for(var i = 0; i < hashes.length; i++) {
       hash = hashes[i].split('=');
       vars.push(hash[0]);
       vars[hash[0]] = hash[1];
@@ -60,6 +65,7 @@ function formatTime(minutes1, minutes2){
   return (minutes1<60 && minutes2<60) ? Math.round(minutes1) + ' to ' + Math.round(minutes2) + ' min' : Math.round((minutes1/60)*10)/10 + ' to ' + Math.round((minutes2/60)*10)/10 + ' hours';
 }
 
+
 function dist(lat1,lat2,lon1,lon2) {
     var R = 3963.1676; // mi
     var dLat = (lat2-lat1)*3.14/180;
@@ -70,13 +76,16 @@ function dist(lat1,lat2,lon1,lon2) {
     return d;
 }
 
+
 function proper(str){
     return str.replace(/\w\S*/, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
 }
 
+
 function checkBounds(lat1, lng1, lat2, lng2){
   return (lat1>bounds.h_lat || lat2>bounds.h_lat || lat1<bounds.l_lat || lat2<bounds.l_lat || lng1>bounds.h_lng || lng2>bounds.h_lng || lng1<bounds.l_lng || lng2<bounds.l_lng) ? false : true;
 }
+
 
 function launchMap(){
   map = new google.maps.Map(document.getElementById("map_canvas"), {
@@ -89,18 +98,15 @@ function launchMap(){
   bikeLayer.setMap(map);
   
   //Setup route lines
-  for(var i=0;i<3;i++){
-    (function(i){
-      routes[i] = {
-        routeline: new google.maps.Polyline()
-      }
-      // Add listener to route lines for non-mobile
-      if(!mobile){
-        new google.maps.event.addListener(routes[i].routeline, "click", function() { showRoute(i); });
-      }
-    })(i);
-  }
+  _.each([0, 1, 2], function(i){
+    routes[i] = { routeline: new google.maps.Polyline(), id: i }
+    // Add listener to route lines for non-mobile
+    if(!mobile){
+      new google.maps.event.addListener(routes[i].routeline, "click", function() { showRoute(i); });
+    }
+  });
 }
+
 
 function submitForm() {
   // Redraws map based on info in the form
@@ -133,22 +139,22 @@ function submitForm() {
 
   //Search for Richmond, if found add usa to end to avoid confusion with Canada
   if (start.search(/richmond/i) != -1) {
-    start = start + ", usa";
+    start += ", usa";
   }
   if (end.search(/richmond/i) != -1) {
-    end = end + ", usa";
+    end += ", usa";
   }
 
   geocoder = new google.maps.Geocoder();
   geocoder.geocode({address:start}, function(results, status){
     if (status == google.maps.GeocoderStatus.OK) {
-      var lat1 = results[0].geometry.location.lat();
-      var lng1 = results[0].geometry.location.lng();
+      var lat1 = results[0].geometry.location.lat()
+        , lng1 = results[0].geometry.location.lng();
       //Now geocode end address
       geocoder.geocode({address:end}, function(results, status){
         if (status == google.maps.GeocoderStatus.OK) {
-          var lat2 = results[0].geometry.location.lat();
-          var lng2 = results[0].geometry.location.lng();
+          var lat2 = results[0].geometry.location.lat()
+            , lng2 = results[0].geometry.location.lng();
           //Now move along
           if(checkBounds(lat1,lng1,lat2,lng2)){
             // Draw 3 paths, one for each safety level for desktop, for mobile, only draw one
@@ -180,38 +186,26 @@ function submitForm() {
       return false;
     }
   });
-return false;
+  return false;
 }
 
-function drawpath(lat1, lng1, lat2, lng2, hill, safety, redraw){
-  $('#welcome_screen').fadeOut(); // hide welcome screen if its still up
-  $('#loading_image').show(); // show loading image, as request is about to start
+
+function drawpath(lat1, lng1, lat2, lng2, hill, safety, redraw) {
+  $('#welcome_screen').fadeOut(); 
+  $('#loading_image').show();
   
   //Hide lines
-  for(var i in routes){
-    routes[i].routeline.setMap(null);
-  }
-  // Define Route Server
-  var routeserver = "http://api.bikesy.com";
+  _.each(routes, function(route) {route.routeline.setMap(null);});
   
-  $.jsonp({
-    "url": routeserver+"?lat1="+lat1+"&lng1="+lng1+"&lat2="+lat2+"&lng2="+lng2+"&hill="+hill+"&safety="+safety+"&format=json&jsoncallback=?",
-    "success": function(json) {processpath(json, redraw, safety);},
-    "error": function(){
-      //On error, try again
-      $.jsonp({
-        "url": routeserver+"?lat1="+lat1+"&lng1="+lng1+"&lat2="+lat2+"&lng2="+lng2+"&hill="+hill+"&safety="+safety+"&format=json&jsoncallback=?",
-        "success": function(json) {processpath(json, redraw, safety);},
-        "error": function(){
-          $('#loading_image').hide(); // hide loading image
-          if(errorAlert==0){
-            alert("Bikesy is currently undergoing maintenance - please check back later.");
-          }
-          errorAlert = 1;
-        }
-      });
-    }
-  });
+  $.getJSON("http://api.bikesy.com?jsoncallback=?", {lat1: lat1, lng1: lng1, lat2: lat2, lng2: lng2, hill: hill, safety: safety, format: 'json' })
+    .done( function(json) { processpath(json, redraw, safety);} )
+    .error( function(){
+      $('#loading_image').hide();
+      if(!errorAlert){
+        alert("Bikesy is currently undergoing maintenance - please check back later.");
+      }
+      errorAlert = true;
+    });
 }
 
 
@@ -267,6 +261,7 @@ function addMarker(latlng, type){
   }
 }
 
+
 function recalc(marker_name) {
   if(mobile){
     $.mobile.pageLoading();	
@@ -303,15 +298,14 @@ function recalc(marker_name) {
       if (typeof(routeoverlay) != "undefined"){routeoverlay.setMap(null);}
       
       // Draw 3 paths, one for each safety level for Desktop, draw only one for mobile
-      if(!mobile){
+      if(!mobile) {
         drawpath(lat1, lng1, lat2, lng2, hill, "low", true);
         drawpath(lat1, lng1, lat2, lng2, hill, "medium", true);
         drawpath(lat1, lng1, lat2, lng2, hill, "high", true);
       } else {
         drawpath(lat1, lng1, lat2, lng2, hill, safety, true);
       }
-    }
-    else{
+    } else {
       //Outside Bay Area
       if(mobile){
         $.mobile.pageLoading( false );
@@ -321,8 +315,9 @@ function recalc(marker_name) {
   }   
 }
 
-function gviz(profile, width, height){
-  if (typeof(table) == "undefined"){
+
+function gviz(profile, width, height) {
+  if (typeof(table) == "undefined") {
     var table = new google.visualization.DataTable();
     var chart = new google.visualization.ScatterChart(document.getElementById('profile'));
   } else {
@@ -344,7 +339,8 @@ function gviz(profile, width, height){
   table.addRows(profile);
   chart.draw(table, {width: width, height: height, legend: 'none', lineWidth: 2, pointSize: 0, title: 'Elevation Profile', titleTextStyle: {fontSize: '16'}, vAxis:{title:'Elevation (ft)', textStyle:{fontSize: '12'}}, hAxis:{title:'Distance along route (mi)', textStyle:{fontSize: '12'}}, chartArea:area});
 }
-  
+
+
 function getElevGain(profile) {
   var totalElevGain = 0;
   for (i=0;i<(profile.length-1);i++){
@@ -353,15 +349,17 @@ function getElevGain(profile) {
     }
   }
   //Convert to Feet
-  return totalElevGain*3.2808399;
+  return totalElevGain * 3.2808399;
 }
-  
+
+
 function getElevChange(profile) {
   var totalElevChange = profile[profile.length-1][1] - profile[0][1];
   //Convert to Feet
-  return totalElevChange*3.2808399;
+  return totalElevChange * 3.2808399;
 }
-  
+
+
 function getAddress(latlng, marker_name) {
   var geocoder = new google.maps.Geocoder();
   geocoder.geocode({'latLng': latlng}, function(results, status) {
@@ -375,6 +373,7 @@ function getAddress(latlng, marker_name) {
   });
 }
 
+
 function getStartGeoLocator(position) {
   var sCoords = new google.maps.LatLng(position.coords.latitude,position.coords.longitude);
   var geocoder = new google.maps.Geocoder();
@@ -385,7 +384,8 @@ function getStartGeoLocator(position) {
     $('.geolocationwaiting').fadeOut();
   });
 }
-  
+
+
 function getEndGeoLocator(position) {
   var eCoords = new google.maps.LatLng(position.coords.latitude,position.coords.longitude);
   var geocoder = new google.maps.Geocoder();
@@ -396,7 +396,8 @@ function getEndGeoLocator(position) {
     $('.geolocationwaiting').fadeOut();
   });
 }
-  
+
+
 function showGeoLocatorError(error){
   $('#geolocationwaiting').fadeOut();
   if(error.code==1){
@@ -406,13 +407,14 @@ function showGeoLocatorError(error){
   } 
 }
 
+
 function detectRouteFromURL(){
   //Detect saved route from URL
-  if($.getUrlVar('start')!=undefined && $.getUrlVar('end')!=undefined){
+  if($.getUrlVar('start') != undefined && $.getUrlVar('end')!=undefined){
     $('#startbox').val($.getUrlVar('start').replace(/\+/g,' '));
     $('#finishbox').val($.getUrlVar('end').replace(/\+/g,' '));
     // Strip off trailing #
-    if($.getUrlVar('hill')!=undefined) {
+    if($.getUrlVar('hill') != undefined) {
      $('#hills').val($.getUrlVar('hill').replace(/#/g,''));
     }
     submitForm();
