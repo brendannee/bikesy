@@ -10,7 +10,27 @@ var bounds = {
   , end_marker
   , showTips = true
   , routes = []
-  , errorAlert = false;
+  , errorAlert = false
+  , settings = {
+      low: {
+          coloron: "#c2403a"
+        , coloroff: "#ed817e"
+        , routeno: 0
+        , title: 'More Direct Route'
+      },
+      medium: {
+          coloron: "#fff600"
+        , coloroff: "#ecf869"
+        , routeno: 1
+        , title: 'Some Bike Lanes'
+      },
+      high: {
+          coloron: "#10dd00"
+        , coloroff: "#90ff7a"
+        , routeno: 2
+        , title: 'Mostly bike lanes'
+      }
+    };
 
 
 google.maps.Polyline.prototype.getBounds = function() {
@@ -112,7 +132,6 @@ function submitForm() {
   // Redraws map based on info in the form
   if(mobile){
     $('#inputs input').blur();
-    $.mobile.pageLoading();	
     var safety = $('#safety').val();
   }
   var start = $('#startbox').val();
@@ -124,7 +143,6 @@ function submitForm() {
     $('#startbox').addClass('error');
     if(mobile){
       $('#startbox').focus();
-      $.mobile.pageLoading(true);	
     }
     return false;
   } else {$('#startbox').removeClass('error');}
@@ -132,7 +150,6 @@ function submitForm() {
     $('#finishbox').addClass('error');
     if(mobile){
       $('#finishbox').focus();
-      $.mobile.pageLoading(true);	
     }
     return false;
   } else {$('#finishbox').removeClass('error');}
@@ -169,7 +186,6 @@ function submitForm() {
             map.panTo(new google.maps.LatLng((lat1+lat2)/2,(lng1+lng2)/2));
             
             if(mobile){
-              $.mobile.pageLoading( true );
               $.mobile.changePage($('#map'),"slide");
             }
             
@@ -263,9 +279,6 @@ function addMarker(latlng, type){
 
 
 function recalc(marker_name) {
-  if(mobile){
-    $.mobile.pageLoading();	
-  }
   if (typeof(start_marker) != "undefined"){
     var lat1 = start_marker.getPosition().lat();
     var lng1 = start_marker.getPosition().lng();
@@ -307,9 +320,6 @@ function recalc(marker_name) {
       }
     } else {
       //Outside Bay Area
-      if(mobile){
-        $.mobile.pageLoading( false );
-      }
       alert("Bikemapper currently only works in the Bay Area.");
     }
   }   

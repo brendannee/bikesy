@@ -122,56 +122,60 @@ html.landscape .geolocationwaiting{
   display:inline-block;
 }
 
-.map-button a{
+.map-button a {
 	display:block;
 	color:#000;
   text-decoration:none;
   text-shadow:none;
 }
 
-#directionsname{
+h3.title {
   margin:0;
 }
 
-#resultsBox .totaldistance{
-  width:90px;
-  display:inline-block;
-}
-
-#resultsBox .time{
-  width:140px;
-  display:inline-block;
-}
-
-#resultsBox .elevGain{
+#resultsBox .totaldistance {
   width:100px;
   display:inline-block;
 }
 
-.safe{
+#resultsBox .time {
+  width:140px;
+  display:inline-block;
+}
+
+#resultsBox .elevGain {
+  width:100px;
+  display:inline-block;
+}
+
+.safe {
   color: #ED817E !important;
   //coloron="#c2403a";
 }
 
-.safer{
+.safer {
   color: #ecf869 !important;
   //coloron="#fff600";
 }
 
-.safest{
+.safest {
   color: #90ff7a !important;
   //coloron="#10dd00";
 }
 
-.disclaimer{
+.disclaimer {
   font-size:10px;
 }
 
-#directionslist ol{
+ol.directions {
   margin-top:10px;
 }
 
-#directionslist li{
+ol.directions li{
   padding:5px;
   border-bottom:1px solid #eee;
+}
+
+#stats span {
+  font-weight: bold;
 }

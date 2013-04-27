@@ -1,22 +1,4 @@
-var mobile = false
-  , settings = {
-      low: {
-          coloron: "#c2403a"
-        , coloroff: "#ed817e"
-        , routeno: 0
-      },
-      medium: {
-          coloron: "#fff600"
-        , coloroff: "#ecf869"
-        , routeno: 1
-      },
-      high: {
-          coloron: "#10dd00"
-        , coloroff: "#90ff7a"
-        , routeno: 2
-      }
-    }
-
+var mobile = false;
 
 function tooltips(){
   // select all desired input fields and attach tooltips to them 
@@ -100,17 +82,18 @@ function processpath(data, redraw, safety){
   $("#twitter").html("<a href='http://www.addtoany.com/add_to/twitter?linkurl=" + encodeURIComponent("http://bikesy.com"+linkURL) + "&linkname=" + encodeURIComponent("Bike Route from " + startName.replace(/\+/g, "").replace(/&/g, "and") + " to " + finishName.replace(/\+/g, "").replace(/&/g, "and"))+"'><img src='images/twitter.png'> Tweet This</a>");
   
   route.distance = Math.round(route.routeline.inMiles()*10)/10;
-  
   route.elevation = Math.round(getElevGain(data[2]));
+  route.time = formatTime(route.distance/0.166, route.distance/0.125);
+  route.elevChange = Math.round(getElevChange(data[2]));
   
   //Add Trip Stats for Route
   var statsDiv = $("#stats" + settings[safety].routeno)
     , summaryDiv = $("#summary .summary").eq(settings[safety].routeno);
   $('.title span', statsDiv).text(finishName);
   $('.totaldistance span', statsDiv).text(route.distance + ' miles');
-  $('.time span', statsDiv).text(formatTime(route.distance/0.166, route.distance/0.125));
+  $('.time span', statsDiv).text(route.time);
   $('.elevGain span', statsDiv).text(route.elevation + ' ft');
-  $('.elevChange span', statsDiv).text(Math.round(getElevChange(data[2])) + ' ft');
+  $('.elevChange span', statsDiv).text(route.elevChange + ' ft');
   $('.directions', statsDiv)
     .empty()
     .append('<li data-route="0" data-step="0" title="Click to see this turn on map">Head <strong>' + data[0][0][0].replace(/start /g, "") + '</strong> on <strong>' + data[0][0][1] + '</strong></li>');
