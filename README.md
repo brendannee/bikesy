@@ -1,26 +1,26 @@
 Bikesy Frontend
 =========
 
-Bikesy Frontend is HTML, CSS and Javascript used to display bike routes provided by the [Bikesy Backend] http://github.com/brendannee/Bikesy-Backend
+Bikesy Frontend is HTML, CSS and Javascript used to display bike routes provided by the [Bikesy Backend] https://github.com/brendannee/Bikesy-Backend
 
 The Bikesy frontend allows users to specify a start and end point to a route along with a hill tolerance (from avoiding hills to not weighting them much at all).  It uses Google Maps API to display the routes provided by the Bikesy Backend and allows drag and drop start/end points.
 
 ### Bikesy API
 
-You can pull info directly from the bikesy backend using the [Bikesy API]http://blog.bikesy.com/api/: http://blog.bikesy.com/api/
+You can pull info directly from the bikesy backend using the [Bikesy API]https://blog.bikesy.com/api/: https://blog.bikesy.com/api/
 
 
-The assumptions that go into the routes provided by the Bikesy API are documented on the [Bikesy API page]http://blog.bikesy.com/api/ .
+The assumptions that go into the routes provided by the Bikesy API are documented on the [Bikesy API page]https://blog.bikesy.com/api/ .
 
 ### Example
 
-You can see the Bikesy frontend in use at http://bikesy.com
+You can see the Bikesy frontend in use at https://bikesy.com
 
 ### Credits
 
 Brendan Nee brendan@blinktag.com
 
-### License 
+### License
 
 (The MIT License)
 

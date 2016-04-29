@@ -1,8 +1,8 @@
 var mobile = false;
 
 function tooltips(){
-  // select all desired input fields and attach tooltips to them 
-  $("#inputs #startbox,#inputs #finishbox,#inputs #hills").tooltip({ 
+  // select all desired input fields and attach tooltips to them
+  $("#inputs #startbox,#inputs #finishbox,#inputs #hills").tooltip({
     position: "center right",
     offset: [0, 10],
     effect: "fade",
@@ -38,7 +38,7 @@ function showRoute(routeno) {
         .css("border-color", "#333");
     }
   });
-  
+
   //Show Profile
   if (typeof(routes[routeno]) != "undefined" && typeof(routes[routeno].profelev) != "undefined"){
     var windowwidth = window.innerWidth;
@@ -47,7 +47,7 @@ function showRoute(routeno) {
 }
 
 
-function processpath(data, redraw, safety){  
+function processpath(data, redraw, safety){
   var decodedPoints = google.maps.geometry.encoding.decodePath(data[1][0])
     , route = routes[settings[safety].routeno]
     , startName = $('#startbox').val().replace(/, USA/g, "")
@@ -60,32 +60,32 @@ function processpath(data, redraw, safety){
     path: decodedPoints,
     map:map
   });
-  
+
   // Center and Zoom only if its a redraw
   if(redraw == true){
     map.fitBounds(route.routeline.getBounds());
   }
-  
+
   //icons for start and end
   addMarker(new google.maps.LatLng(data[0][0][5][1],data[0][0][5][0]), "start");
   addMarker(route.routeline.getPath().getAt(route.routeline.getPath().getLength()-1), "end");
-  
+
   //Set Page Title
   document.title = startName+" to "+finishName+" | San Francisco Bay Area Bike Mapper";
-  
+
   //Create Link URL
   linkURL = "?start=" + $('#startbox').val().replace(/&/g, "and").replace(/ /g, "+") + "&end=" + $('#finishbox').val().replace(/&/g, "and").replace(/ /g, "+") + "&hill=" + $('#hills').val();
-  
+
   //Add Controls to top of map
   $("#map-buttons").show();
   $("#permalink").html("<a href='" + window.location.href.replace(/#.*/,'') + linkURL + "' title='Direct Link to this route'><img src='images/link.png'> Permalink to Route</a>");
-  $("#twitter").html("<a href='http://www.addtoany.com/add_to/twitter?linkurl=" + encodeURIComponent("http://bikesy.com"+linkURL) + "&linkname=" + encodeURIComponent("Bike Route from " + startName.replace(/\+/g, "").replace(/&/g, "and") + " to " + finishName.replace(/\+/g, "").replace(/&/g, "and"))+"'><img src='images/twitter.png'> Tweet This</a>");
-  
+  $("#twitter").html("<a href='https://www.addtoany.com/add_to/twitter?linkurl=" + encodeURIComponent("https://bikesy.com"+linkURL) + "&linkname=" + encodeURIComponent("Bike Route from " + startName.replace(/\+/g, "").replace(/&/g, "and") + " to " + finishName.replace(/\+/g, "").replace(/&/g, "and"))+"'><img src='images/twitter.png'> Tweet This</a>");
+
   route.distance = Math.round(route.routeline.inMiles()*10)/10;
   route.elevation = Math.round(getElevGain(data[2]));
   route.time = formatTime(route.distance/0.166, route.distance/0.125);
   route.elevChange = Math.round(getElevChange(data[2]));
-  
+
   //Add Trip Stats for Route
   var statsDiv = $("#stats" + settings[safety].routeno)
     , summaryDiv = $("#summary .summary").eq(settings[safety].routeno);
@@ -99,13 +99,13 @@ function processpath(data, redraw, safety){
     .append('<li data-route="0" data-step="0" title="Click to see this turn on map">Head <strong>' + data[0][0][0].replace(/start /g, "") + '</strong> on <strong>' + data[0][0][1] + '</strong></li>');
 
   $('.info', summaryDiv).html(route.distance + ' miles<br>' + route.elevation + ' ft');
-  
+
   // If first point is "nameless" then skip to next point for start
   if (data[0][0][1] == 'nameless') { data[0].shift(); }
-  
+
   //Add End point to data
   data[0].push(["Arrive at", finishName]);
-  
+
   route.stoppoints = [];
 
   _.each(data[0], function(step, idx){
@@ -118,13 +118,13 @@ function processpath(data, redraw, safety){
     if (idx < (data[0].length - 1) && data[0][idx+1][1] == "nameless") {
       data[0][idx+1][2] = 0;
     }
-    
+
     // If street is nameless, remove it
     if (street == 'nameless') { return; }
     var word = (direction == "Continue") ? 'on' : (direction == "Arrive at") ? '' : 'onto';
-    
+
     $('.directions', statsDiv).append("<li data-route='" + settings[safety].routeno.toString() + "' data-step=" + idx.toString() + "' title='Click to see this turn on map'><strong>" + direction + "</strong> " + word + " <strong>" + street + "</strong></li>");
-    
+
     //Create a marker for each turn except the last one
     if(idx < (data[0].length - 1)){
       route.stoppoints[idx] = new google.maps.Marker({
@@ -134,33 +134,33 @@ function processpath(data, redraw, safety){
       });
     }
   });
-  
+
   //Show Directions
   $("#resultsBox, #summary").fadeIn();
-  
+
   //Resize sidebar
   var newWindowHeight = $(window).height();
   var sidebarTopHeight = parseInt($("#sidebar-top").height())+parseInt($("#sidebar-top").css("padding-top"))+parseInt($("#summary").height())+parseInt($("#resultsBox").css("margin-top"))+parseInt($("#resultsBox").css("margin-bottom"));
   $("#resultsBox").css("max-height", (newWindowHeight-sidebarTopHeight));
-  
+
   // Create Elevation Profile
   route.profelev = data[2];
-  
+
   //convert distance along route to miles
-  _.each(route.profelev, function(profelev) { 
+  _.each(route.profelev, function(profelev) {
     profelev[0] = profelev[0] / 1609.344;
     profelev[1] = profelev[1] * 3.2808399;
   });
-              
+
   $('#loading_image').fadeOut(); // hide loading image
-  
+
   if (showTips==true){ // Detect if we should show tips or not
     $("#dragtext").fadeIn(); //Show Drag Tip
   }
-  
+
   $("#inputs #startbox").tooltip().hide(); //Hide entry tip
   $("#endpointtext").hide(); //Hide Initial Endpoint click Tip
-  
+
   showRoute(1);
 }
 
@@ -176,7 +176,7 @@ if(typeof CFInstall != 'undefined'){
 //Show tooltips
 tooltips();
 
-if(navigator.geolocation) {  
+if(navigator.geolocation) {
   // Show GeoLocation Options
   $("#slocation, #elocation").show();
 }

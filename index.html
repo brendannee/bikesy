@@ -4,7 +4,7 @@
   <meta http-equiv="X-UA-Compatible" content="chrome=1">
   <meta charset="utf-8">
   <title>San Francisco Bay Area Bike Mapper - Bikesy</title>
-  <link href='http://fonts.googleapis.com/css?family=Arimo:regular,bold&subset=latin' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Arimo:regular,bold&subset=latin' rel='stylesheet' type='text/css'>
   <link rel="stylesheet" href="css/style.css" media="screen" />
   <link rel="stylesheet" href="css/print.css" media="print" />
   <meta name="description" content="Avoid hills and find bike routes with Bikesy.com, an innovative and open-source bike mapping system specially designed to find flat, safe, and fast bike routes anywhere in the San Francisco Bay Area. San Francisco isn’t New York – they might have taller buildings, but we’ve got bigger hills. Since we couldn’t find another service that lets you choose slightly longer but less steep routes, we made our own. Even better, Bikesy automatically gives you an elevation profile for your ride to help you prepare for the tough parts." />
@@ -14,8 +14,8 @@
    .chromeFrameOverlayContent{top:10px;margin-top:10px;}
   </style>
   <!-- Google Chrome Frame -->
-  <!--[if (IE 8)|(IE 7)|(IE 6)|(IE 5)]><script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/chrome-frame/1/CFInstall.min.js"></script><![endif]--> 
-  
+  <!--[if (IE 8)|(IE 7)|(IE 6)|(IE 5)]><script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/chrome-frame/1/CFInstall.min.js"></script><![endif]-->
+
   <script src="js/lib/redirection_mobile.min.js"></script>
   <script>
        SA.redirection_mobile ({
@@ -38,7 +38,7 @@
             <li id="hillsline"><img src="images/hill.png" alt="Hills" class="icon" style="float:left;" />
               <label>Hill Reluctance:</label>
               <select id="hills" name="hills" title="Choose how much you like to ride up hills">
-                <option value="low">Avoid at all costs</option> 
+                <option value="low">Avoid at all costs</option>
                 <option value="medium" selected="selected">A reasonable route</option>
                 <option value="high">Bring on the Hills!</option>
               </select>
@@ -84,11 +84,11 @@
         </div>
         <div id="disclaimer">We offer no guarantee regarding roadway conditions or safety of the proposed routes. Use your best judgment when choosing a route. Obey all vehicle code provisions.</div>
       </div>
-      
+
     </div>
     <div id="map_wrapper">
       <div id="logo">
-        <h1>Bikesy.com - San Francisco Bay Area Bike Mapper</h1><a href="http://bikesy.com" title="Bikesy.com"><img src="images/bikesy-logo.png"></a>
+        <h1>Bikesy.com - San Francisco Bay Area Bike Mapper</h1><a href="https://bikesy.com" title="Bikesy.com"><img src="images/bikesy-logo.png"></a>
       </div>
       <div id="map_canvas"></div>
       <div id="map-buttons">
@@ -107,23 +107,23 @@
       <div id="endpointtext" class="popup">Now click anywhere to choose your endpoint<a href="#" onclick="$('#endpointtext').fadeOut();showTips=false;"><img src="images/close.png" class="close" alt="close" title="Hide" /></a></div>
       <div id="showProfile"><a href="#" title="Show Elevation Profile"><img src="images/upright.png"></a></div>
     </div>
-    <div id="bottomCredits">Developed by <a href='http://blinktag.com' title='BlinkTag Inc'>BlinkTag Inc</a> &nbsp;|&nbsp; <a href="http://blog.bikesy.com/source" title="Developers">Developers</a>  &nbsp;|&nbsp; <a href="http://blog.bikesy.com/about" title="About">About</a> &nbsp;|&nbsp; <a href="mailto:info@bikesy.com" title="Email Us">Contact Us</a></div>
+    <div id="bottomCredits">Developed by <a href='https://blinktag.com' title='BlinkTag Inc'>BlinkTag Inc</a> &nbsp;|&nbsp; <a href="https://blog.bikesy.com/source" title="Developers">Developers</a>  &nbsp;|&nbsp; <a href="https://blog.bikesy.com/about" title="About">About</a> &nbsp;|&nbsp; <a href="mailto:info@bikesy.com" title="Email Us">Contact Us</a></div>
     <div id="hideProfile" title="Hide Elevation Profile"><img src="images/close2.png"></div>
     <div id="profile" title="Elevation Profile"><div id="profileIntro">Your Elevation Profile will go here once you select a route</div></div>
   </div>
   <div id="ie6msg"><h1>Upgrade Needed</h1>Bikesy only works in newer browsers.  You should upgrade your browser. Using an outdated and unsecure browser is bad for you, bad for business and bad for the Web! <br><br><a href="http://www.browserupgrade.info/how-to-upgrade/">Upgrade now</a>: its easy and a matter of minutes.</div>
-  
-<script type="text/javascript" src="http://www.google.com/jsapi?key=ABQIAAAA7ryB86mtzsqx_XU57t8PNhTMTGztSySO4_rR2h0VlHQYebwNHBQfKBMwuobg9gRDpM6rxsFgfXCnug"></script>
 
-<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+<script type="text/javascript" src="https://www.google.com/jsapi?key=ABQIAAAA7ryB86mtzsqx_XU57t8PNhTMTGztSySO4_rR2h0VlHQYebwNHBQfKBMwuobg9gRDpM6rxsFgfXCnug"></script>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
 <script src="js/lib/underscore-min.js"></script>
-  
+
 <script type="text/javascript">
   google.load('visualization', '1', {packages:['corechart']});
   google.load('maps', '3.x',{"other_params":"sensor=false&libraries=geometry"});
 </script>
-  
-<script src="http://cdn.jquerytools.org/1.2.7/full/jquery.tools.min.js"></script>
+
+<script src="https://cdn.jquerytools.org/1.2.7/full/jquery.tools.min.js"></script>
 
 <!--[if lt IE 8]>
 <script type="text/javascript">
@@ -157,15 +157,15 @@
 <script type="text/javascript">
   var feedback_widget_options = {};
 
-  feedback_widget_options.display = "overlay";  
+  feedback_widget_options.display = "overlay";
   feedback_widget_options.company = "blinktag";
   feedback_widget_options.placement = "right";
   feedback_widget_options.color = "#222";
   feedback_widget_options.style = "idea";
-  
+
 
   var feedback_widget = new GSFN.feedback_widget(feedback_widget_options);
 </script>
- 
+
 </body>
 </html>

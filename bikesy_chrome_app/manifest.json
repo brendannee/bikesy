@@ -7,10 +7,10 @@
 },
 "app": {
 "urls": [
-"http://bikesy.com/"
+"https://bikesy.com/"
 ],
 "launch": {
-"web_url": "http://bikesy.com"
+"web_url": "https://bikesy.com"
 }
 },
 "permissions": [

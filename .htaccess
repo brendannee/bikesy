@@ -1,7 +1,12 @@
 RewriteEngine on
-#Force www
-RewriteCond %{HTTP_HOST} ^www.bikesy.com [NC] 
-RewriteRule ^(.*)$ http://bikesy.com/$1 [L,R=301] 
 
-Redirect 301 /mobile http://bikesy.com/mobile.html
-Redirect 301 /mobile/ http://bikesy.com/mobile.html
+#Force https
+RewriteCond %{SERVER_PORT} 80
+RewriteRule ^(.*)$ https://bikesy.com/$1 [R,L]
+
+#Force non-www
+RewriteCond %{HTTP_HOST} ^www.bikesy.com [NC]
+RewriteRule ^(.*)$ https://bikesy.com/$1 [L,R=301]
+
+Redirect 301 /mobile https://bikesy.com/mobile.html
+Redirect 301 /mobile/ https://bikesy.com/mobile.html

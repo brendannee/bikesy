@@ -43,23 +43,23 @@ google.maps.Polyline.prototype.getBounds = function() {
 };
 
 
-google.maps.LatLng.prototype.miTo = function(a){ 
+google.maps.LatLng.prototype.miTo = function(a){
   //Extends google maps API V3 to allow getting the length of a polyline
-  var e = Math, ra = e.PI/180; 
-  var b = this.lat() * ra, c = a.lat() * ra, d = b - c; 
-  var g = this.lng() * ra - a.lng() * ra; 
-  var f = 2 * e.asin(e.sqrt(e.pow(e.sin(d/2), 2) + e.cos(b) * e.cos 
-(c) * e.pow(e.sin(g/2), 2))); 
-  return f * 3963.1676; 
+  var e = Math, ra = e.PI/180;
+  var b = this.lat() * ra, c = a.lat() * ra, d = b - c;
+  var g = this.lng() * ra - a.lng() * ra;
+  var f = 2 * e.asin(e.sqrt(e.pow(e.sin(d/2), 2) + e.cos(b) * e.cos
+(c) * e.pow(e.sin(g/2), 2)));
+  return f * 3963.1676;
 }
 
 
-google.maps.Polyline.prototype.inMiles = function(n){ 
-  var a = this.getPath(n), len = a.getLength(), dist = 0; 
-  for(var i=0; i<len-1; i++) { 
-    dist += a.getAt(i).miTo(a.getAt(i+1)); 
-  } 
-  return dist; 
+google.maps.Polyline.prototype.inMiles = function(n){
+  var a = this.getPath(n), len = a.getLength(), dist = 0;
+  for(var i=0; i<len-1; i++) {
+    dist += a.getAt(i).miTo(a.getAt(i+1));
+  }
+  return dist;
 }
 
 
@@ -89,9 +89,9 @@ function formatTime(minutes1, minutes2){
 function dist(lat1,lat2,lon1,lon2) {
     var R = 3963.1676; // mi
     var dLat = (lat2-lat1)*3.14/180;
-    var dLon = (lon2-lon1)*3.14/180; 
-    var a = Math.sin(dLat/2) * Math.sin(dLat/2) + Math.cos(lat1*3.14/180) * Math.cos(lat2*3.14/180) * Math.sin(dLon/2) * Math.sin(dLon/2); 
-    var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
+    var dLon = (lon2-lon1)*3.14/180;
+    var a = Math.sin(dLat/2) * Math.sin(dLat/2) + Math.cos(lat1*3.14/180) * Math.cos(lat2*3.14/180) * Math.sin(dLon/2) * Math.sin(dLon/2);
+    var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
     var d = R * c;
     return d;
 }
@@ -113,10 +113,10 @@ function launchMap(){
     center: new google.maps.LatLng(37.880002, -122.189941),
     mapTypeId: google.maps.MapTypeId.ROADMAP
   });
-  
+
   var bikeLayer = new google.maps.BicyclingLayer();
   bikeLayer.setMap(map);
-  
+
   //Setup route lines
   _.each([0, 1, 2], function(i){
     routes[i] = { routeline: new google.maps.Polyline(), id: i }
@@ -182,13 +182,13 @@ function submitForm() {
             } else {
               drawpath(lat1, lng1, lat2, lng2, hill, safety, true);
             }
-            
+
             map.panTo(new google.maps.LatLng((lat1+lat2)/2,(lng1+lng2)/2));
-            
+
             if(mobile){
               $.mobile.changePage($('#map'),"slide");
             }
-            
+
           } else {
             alert("Bikemapper currently only works in the Bay Area.  Try making your addresses more specific by adding city and state names.");
           }
@@ -207,13 +207,13 @@ function submitForm() {
 
 
 function drawpath(lat1, lng1, lat2, lng2, hill, safety, redraw) {
-  $('#welcome_screen').fadeOut(); 
+  $('#welcome_screen').fadeOut();
   $('#loading_image').show();
-  
+
   //Hide lines
   _.each(routes, function(route) {route.routeline.setMap(null);});
-  
-  $.getJSON("http://api.bikesy.com?jsoncallback=?", {lat1: lat1, lng1: lng1, lat2: lat2, lng2: lng2, hill: hill, safety: safety, format: 'json' })
+
+  $.getJSON("https://api.bikesy.com?jsoncallback=?", {lat1: lat1, lng1: lng1, lat2: lat2, lng2: lng2, hill: hill, safety: safety, format: 'json' })
     .done( function(json) { processpath(json, redraw, safety);} )
     .error( function(){
       $('#loading_image').hide();
@@ -248,7 +248,7 @@ function addMarker(latlng, type){
         recalc('start');
       });
     }
-    
+
     start_marker.setOptions({ position: latlng });
   } else if (type=="end"){
     if (typeof(end_marker) == "undefined"){
@@ -272,7 +272,7 @@ function addMarker(latlng, type){
         recalc('end');
       });
     }
-    
+
     end_marker.setOptions({ position: latlng });
   }
 }
@@ -287,12 +287,12 @@ function recalc(marker_name) {
     distance = dist(lat1,lat2,lng1,lng2);
     var hill = $('#hills').val();
     var safety = $('#safety').val();
-    
+
     if(checkBounds(lat1,lng1,lat2,lng2)){
-    
+
       var sCoords = new google.maps.LatLng(lat1,lng1);
       var eCoords = new google.maps.LatLng(lat2,lng2);
-      
+
       //Reverse Geocode
       switch(marker_name){
         case 'start':
@@ -306,10 +306,10 @@ function recalc(marker_name) {
           this.getAddress(eCoords, 'end');
           break;
       }
-      
+
       //Remove old overlay
       if (typeof(routeoverlay) != "undefined"){routeoverlay.setMap(null);}
-      
+
       // Draw 3 paths, one for each safety level for Desktop, draw only one for mobile
       if(!mobile) {
         drawpath(lat1, lng1, lat2, lng2, hill, "low", true);
@@ -322,7 +322,7 @@ function recalc(marker_name) {
       //Outside Bay Area
       alert("Bikemapper currently only works in the Bay Area.");
     }
-  }   
+  }
 }
 
 
@@ -334,7 +334,7 @@ function gviz(profile, width, height) {
     table.removeColumn(0);
     table.removeColumn(0);
   }
-  
+
   table.addColumn('number', 'Distance');
   table.addColumn('number', 'Elevation');
   // Round profile values
@@ -342,10 +342,10 @@ function gviz(profile, width, height) {
     profile[i][0] = Math.round(profile[i][0]*100)/100;
     profile[i][1] = Math.round(profile[i][1]);
   }
-  
+
   //Determine appropriate chart padding
   var area = (width>400) ? {left: 80, width:(width-90)} : {left: 40, width:(width-50)};
-  
+
   table.addRows(profile);
   chart.draw(table, {width: width, height: height, legend: 'none', lineWidth: 2, pointSize: 0, title: 'Elevation Profile', titleTextStyle: {fontSize: '16'}, vAxis:{title:'Elevation (ft)', textStyle:{fontSize: '12'}}, hAxis:{title:'Distance along route (mi)', textStyle:{fontSize: '12'}}, chartArea:area});
 }
@@ -414,7 +414,7 @@ function showGeoLocatorError(error){
     alert("To determine your current location you must click \"Share Location\" in the top bar in your browser.");
   } else if (error.code==2 || error.code==3 || error.code==0){
     alert("Your current location couldn't be determined.  Please enter the start and end locations manually.");
-  } 
+  }
 }
 
 
