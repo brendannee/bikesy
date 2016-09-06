@@ -1,0 +1,24 @@
+@media print {
+  .titlebar {
+    position: relative;
+    height: 45px;
+  }
+
+  .directions {
+    height: auto !important;
+  }
+
+  .map {
+    height: 600px !important;
+    page-break-before: always;
+
+    .leaflet-control-attribution {
+      background: #fff !important;
+    }
+  }
+
+  .elevation {
+    border: 0;
+    margin-top: 20px;
+  }
+}

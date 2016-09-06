@@ -1,0 +1,19 @@
+{
+  "startAddressPlaceholder": "Haight & Ashbury",
+  "endAddressPlaceholder": "Ferry Building",
+  "googleMapsApiKey": "",
+  "mapboxAccessToken": "",
+  "bikeMapperApiUrl": "",
+  "initialCenterLat": 37.7749,
+  "initialCenterLng": -122.4194,
+  "initialZoom": 11,
+  "minZoom": 9,
+  "boundsTop": 38.0534,
+  "boundsRight": -121.637,
+  "boundsBottom": 37.3064,
+  "boundsLeft": -122.8,
+  "lowBikeSpeedMph": 7.5,
+  "highBikeSpeedMph": 10,
+  "keenProjectId": "",
+  "keenWriteKey": ""
+}

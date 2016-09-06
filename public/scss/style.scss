@@ -1,0 +1,16 @@
+// Set fontawesome font path
+$fa-font-path: '../dest/fonts';
+@import '../../node_modules/font-awesome/scss/font-awesome';
+
+// Set bootstrap font defaults
+$icon-font-path: '../dest/fonts/';
+@import '../../node_modules/bootstrap-sass/assets/stylesheets/bootstrap';
+
+@import 'variables';
+@import 'base';
+@import 'titlebar';
+@import 'controls';
+@import 'directions';
+@import 'elevation';
+@import 'map';
+@import 'print';

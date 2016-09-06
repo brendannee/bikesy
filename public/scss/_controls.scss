@@ -1,0 +1,133 @@
+.controls {
+  padding: 62px 15px 25px;
+  max-width: 320px;
+  margin: 0 auto;
+
+  .form-group {
+    overflow: hidden;
+  }
+
+  .start-address {
+    height: 43px;
+    overflow: hidden;
+    margin-bottom: 0;
+  }
+
+  .start-address .control-label {
+    display: none;
+  }
+
+  .start-address .control-icon {
+    margin-right: 10px;
+    width: 25px;
+  }
+
+  .start-address .form-control {
+    vertical-align: 18px;
+    width: 224px;
+    display: inline-block;
+    float: right;
+  }
+
+  .end-address {
+    height: 43px;
+    overflow: hidden;
+    margin-bottom: 0;
+  }
+
+  .end-address .control-label {
+    display: none;
+  }
+
+  .end-address .control-icon {
+    margin-right: 10px;
+    width: 25px;
+  }
+
+  .end-address .form-control {
+    vertical-align: 18px;
+    width: 224px;
+    display: inline-block;
+    float: right;
+  }
+
+  input:focus::-webkit-input-placeholder { color:transparent; }
+  input:focus:-moz-placeholder { color:transparent; } /* FF 4-18 */
+  input:focus::-moz-placeholder { color:transparent; } /* FF 19+ */
+  input:focus:-ms-input-placeholder { color:transparent; } /* IE 10+ */
+
+  .route-type .control-label {
+    line-height: 30px;
+  }
+
+  .route-type .form-control {
+    float: right;
+    width: 180px;
+  }
+
+  .hill-reluctance .control-label {
+    line-height: 30px;
+  }
+
+  .hill-reluctance .form-control {
+    float: right;
+    width: 180px;
+  }
+
+  .clear-link {
+    color: #333;
+    line-height: 31px;
+  }
+
+  .btn-update-route {
+    float: right;
+    width: 135px;
+  }
+
+  .disclaimer {
+    clear: both;
+    font-size: 10px;
+    margin-top: 30px;
+  }
+}
+
+@media only screen and (min-width: 667px) {
+  .controls {
+    width: 300px;
+    float: left;
+    padding: 10px 15px;
+    max-width: none;
+
+    .route-type .form-control {
+      width: auto;
+    }
+
+    .hill-reluctance .form-control {
+      width: auto;
+    }
+
+    .start-address .form-control {
+      float: none;
+    }
+
+    .end-address .form-control {
+      float: none;
+    }
+
+    .start-address .control-icon {
+      width: auto;
+    }
+
+    .end-address .control-icon {
+      width: auto;
+    }
+
+    .start-address {
+      height: 55px;
+    }
+
+    .end-address {
+      height: 55px;
+    }
+  }
+}

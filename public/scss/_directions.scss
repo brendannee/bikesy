@@ -1,0 +1,29 @@
+.directions {
+  padding: 10px 15px;
+
+  h3 {
+    font-size: 14px;
+    margin-top: 0;
+  }
+
+  .directions-list {
+    list-style-type: none;
+    padding: 10px 0 0;
+  }
+
+  .directions-list li {
+    border-bottom: $light-grey 1px solid;
+    padding: 3px 0;
+    font-size: 11px;
+    text-transform: capitalize;
+  }
+}
+
+@media only screen and (min-width: 667px) {
+  .directions {
+    width: 300px;
+    clear: left;
+    float: left;
+    overflow-y: scroll;
+  }
+}
