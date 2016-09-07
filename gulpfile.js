@@ -24,6 +24,10 @@ function bundle() {
     .pipe(plugins.livereload());
 }
 
+gulp.task('set-prod-node-env', function() {
+  process.env.NODE_ENV = 'production';
+});
+
 
 gulp.task('scss:lint', function() {
   gulp.src('./public/scss/**/*.scss')
@@ -131,6 +135,7 @@ gulp.task('build', [
 ]);
 
 gulp.task('static', [
+  'set-prod-node-env',
   'fonts:copy',
   'css:copy',
   'css:minify',
