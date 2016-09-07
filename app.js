@@ -20,7 +20,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.get('/', routes.index);
 
-app.get('/terms', routes.terms);
+app.get('/terms.html', routes.terms);
 
 // error handlers
 require('./libs/errors')(app);
