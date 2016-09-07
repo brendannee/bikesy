@@ -39,7 +39,7 @@ gulp.task('scss:compileDev', function() {
     .pipe(plugins.sourcemaps.init())
     .pipe(plugins.sass({errLogToConsole: true}))
     .pipe(plugins.sourcemaps.write())
-    .pipe(gulp.dest('./public/css'))
+    .pipe(gulp.dest('./public/dest/css'))
     .pipe(plugins.livereload());
 });
 
@@ -47,14 +47,14 @@ gulp.task('scss:compileDev', function() {
 gulp.task('scss:compile', ['fonts:copy'], function() {
   gulp.src('./public/scss/**/*.scss')
     .pipe(plugins.sass({errLogToConsole: true}))
-    .pipe(gulp.dest('./public/css'));
+    .pipe(gulp.dest('./public/dest/css'));
 });
 
 
 gulp.task('css:minify', ['scss:compile'], function() {
-  gulp.src('./public/css/*.css')
+  gulp.src('./public/dest/css/*.css')
     .pipe(plugins.cleanCss())
-    .pipe(gulp.dest('./public/css'));
+    .pipe(gulp.dest('./public/dest/css'));
 });
 
 
@@ -89,7 +89,16 @@ gulp.task('fonts:copy', function() {
 
 gulp.task('css:copy', function() {
   gulp.src('./node_modules/mapbox.js/theme/**/*')
-    .pipe(gulp.dest('./public/css/mapbox'));
+    .pipe(gulp.dest('./public/dest/css/mapbox'));
+});
+
+
+gulp.task('views', function() {
+  return gulp.src(['views/index.pug', 'views/terms.pug'])
+    .pipe(plugins.pug({
+      // Your options in here.
+    }))
+    .pipe(gulp.dest('./public'));
 });
 
 
@@ -119,4 +128,12 @@ gulp.task('build', [
   'css:copy',
   'css:minify',
   'js:compress'
+]);
+
+gulp.task('static', [
+  'fonts:copy',
+  'css:copy',
+  'css:minify',
+  'js:compress',
+  'views'
 ]);

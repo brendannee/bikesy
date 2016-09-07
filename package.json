@@ -26,6 +26,7 @@
     "gulp": "3.9.1",
     "gulp-clean-css": "2.0.12",
     "gulp-load-plugins": "1.2.4",
+    "gulp-pug": "3.0.4",
     "gulp-sass": "2.3.2",
     "gulp-sourcemaps": "1.6.0",
     "gulp-streamify": "1.0.2",

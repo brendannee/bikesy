@@ -2,3 +2,4 @@ node_modules
 config.json
 public/dest
 public/css
+public/*.html
