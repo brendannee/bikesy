@@ -9,6 +9,7 @@ const Disclaimer = require('./disclaimer.jsx');
 const Elevation = require('./elevation.jsx');
 const Map = require('./map.jsx');
 const TitleBar = require('./titlebar.jsx');
+const WelcomeModal = require('./welcome_modal.jsx');
 const api = require('../js/api');
 const analytics = require('../js/analytics');
 const error = require('../js/error');
@@ -298,6 +299,7 @@ class App extends React.Component {
           mobileView={this.state.mobileView}
         />
         <Disclaimer classes={{ 'visible-print-block': true }} />
+        <WelcomeModal />
       </div>
     );
   }
