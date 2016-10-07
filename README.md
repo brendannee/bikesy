@@ -28,4 +28,4 @@ The open http://localhost:3000 in your browser.
 
     gulp static
 
-Files will be in the `public/dist` folder
+Files will be in the `public/dest` folder
