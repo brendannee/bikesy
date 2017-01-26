@@ -20,9 +20,10 @@ exports.logQuery = (startAddress, endAddress, startLocation, endLocation) => {
     }
   };
 
-  client.addEvent("queries", queryEvent, (err, res) => {
+  client.addEvent("queries", queryEvent, (err) => {
     if (err) {
-      error.handleError(err);
+      // Fail silently
+      console.log(err);
     }
   });
 };
