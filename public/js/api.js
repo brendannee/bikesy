@@ -1,3 +1,5 @@
+import 'whatwg-fetch';
+
 const error = require('./error');
 
 const config = require('../../frontendconfig.json');

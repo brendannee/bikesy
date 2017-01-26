@@ -1,6 +1,6 @@
 const React = require('react');
 const ReactDOM = require('react-dom');
-const polyline = require('polyline');
+const polyline = require('@mapbox/polyline');
 import 'whatwg-fetch';
 
 const Controls = require('./controls.jsx');

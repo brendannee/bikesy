@@ -1,8 +1,6 @@
 const config = require('../../frontendconfig.json');
 const error = require('./error');
 
-import 'whatwg-fetch';
-
 let map;
 let startMarker;
 let endMarker;

@@ -23,6 +23,7 @@ class WelcomeModal extends React.Component {
       <Modal
         isOpen={this.state.modalOpen}
         onRequestClose={this.hideWelcomeModal}
+        contentLabel='Welcome'
       >
         <h1>Welcome to Bikesy</h1>
         <ul>
