@@ -141,7 +141,7 @@ class Controls extends React.Component {
               placeholder={config.endAddressPlaceholder}
             />
           </div>
-          <div className="form-group form-inline route-type">
+          {/* }<div className="form-group form-inline route-type">
             <label className="control-label">Route Type</label>
             <select
               className="form-control"
@@ -152,7 +152,8 @@ class Controls extends React.Component {
               <option value="2" disabled>A reasonable route</option>
               <option value="3">A more direct route</option>
             </select>
-          </div>
+          </div> */}
+          <input type="hidden" value="3" />
           <div className="form-group form-inline hill-reluctance">
             <label className="control-label">Hill Reluctance</label>
             <select
