@@ -1,5 +1,5 @@
 const React = require('react');
-const _ = require('underscore');
+const _ = require('lodash');
 const classNames = require('classnames');
 
 const config = require('../../frontendconfig.json');
@@ -102,7 +102,7 @@ class Controls extends React.Component {
     return (
       <div className={classNames('controls', 'hidden-print', { hide: this.props.mobileView !== 'directions' && this.props.isMobile })}>
         <form onSubmit={this.processForm}>
-          <div className={classNames('form-group', 'form-inline', 'start-address', { 'has-error': _.contains(this.state.errorFields, 'startAddress') })}>
+          <div className={classNames('form-group', 'form-inline', 'start-address', { 'has-error': _.includes(this.state.errorFields, 'startAddress') })}>
             <label className="control-label">Start Location</label>
             <img
               src="img/start_marker.png"
@@ -123,7 +123,7 @@ class Controls extends React.Component {
               'form-group',
               'form-inline',
               'end-address',
-              { 'has-error': _.contains(this.state.errorFields, 'endAddress') }
+              { 'has-error': _.includes(this.state.errorFields, 'endAddress') }
             )}
           >
             <label className="control-label">End Location</label>
