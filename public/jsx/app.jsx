@@ -104,7 +104,8 @@ class App extends React.Component {
         });
         url.updateUrlParams([this.state.startAddress, this.state.endAddress, this.state.scenario]);
         analytics.logQuery(this.state.startAddress, this.state.endAddress, this.state.startLocation, this.state.endLocation);
-      });
+      })
+      .catch(error.handleError);
     };
 
     this.setStartLocation = (latlng) => {
