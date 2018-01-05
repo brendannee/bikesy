@@ -1,4 +1,5 @@
 const React = require('react');
+import PropTypes from 'prop-types';
 const classNames = require('classnames');
 const LineChart = require('react-d3-basic').LineChart;
 
@@ -82,13 +83,13 @@ class Elevation extends React.Component {
 }
 
 Elevation.propTypes = {
-  elevationProfile: React.PropTypes.array,
-  width: React.PropTypes.number,
-  height: React.PropTypes.number.isRequired,
-  elevationVisible: React.PropTypes.bool,
-  toggleElevationVisibility: React.PropTypes.func.isRequired,
-  isMobile: React.PropTypes.bool.isRequired,
-  mobileView: React.PropTypes.string,
+  elevationProfile: PropTypes.array,
+  width: PropTypes.number,
+  height: PropTypes.number.isRequired,
+  elevationVisible: PropTypes.bool,
+  toggleElevationVisibility: PropTypes.func.isRequired,
+  isMobile: PropTypes.bool.isRequired,
+  mobileView: PropTypes.string,
 };
 
 module.exports = Elevation;

@@ -37,6 +37,7 @@
     "lodash": "^4.17.4",
     "mapbox.js": "^3.1.1",
     "morgan": "^1.8.2",
+    "prop-types": "^15.6.0",
     "pug": "^2.0.0-rc.2",
     "react": "^15.6.1",
     "react-d3-basic": "^1.6.11",

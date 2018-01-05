@@ -1,4 +1,5 @@
 const React = require('react');
+import PropTypes from 'prop-types';
 const classNames = require('classnames');
 
 const helper = require('../js/helper');
@@ -66,13 +67,13 @@ class Directions extends React.Component {
 }
 
 Directions.propTypes = {
-  directions: React.PropTypes.array,
-  endAddress: React.PropTypes.string,
-  decodedPath: React.PropTypes.array,
-  elevationProfile: React.PropTypes.array,
-  height: React.PropTypes.number,
-  isMobile: React.PropTypes.bool.isRequired,
-  mobileView: React.PropTypes.string,
+  directions: PropTypes.array,
+  endAddress: PropTypes.string,
+  decodedPath: PropTypes.array,
+  elevationProfile: PropTypes.array,
+  height: PropTypes.number,
+  isMobile: PropTypes.bool.isRequired,
+  mobileView: PropTypes.string,
 };
 
 module.exports = Directions;

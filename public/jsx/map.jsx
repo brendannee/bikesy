@@ -1,4 +1,5 @@
 const React = require('react');
+import PropTypes from 'prop-types';
 const classNames = require('classnames');
 
 const map = require('../js/map');
@@ -64,13 +65,13 @@ class Map extends React.Component {
 }
 
 Map.propTypes = {
-  startLocation: React.PropTypes.object,
-  endLocation: React.PropTypes.object,
-  setStartLocation: React.PropTypes.func.isRequired,
-  setEndLocation: React.PropTypes.func.isRequired,
-  height: React.PropTypes.number,
-  isMobile: React.PropTypes.bool.isRequired,
-  mobileView: React.PropTypes.string,
+  startLocation: PropTypes.object,
+  endLocation: PropTypes.object,
+  setStartLocation: PropTypes.func.isRequired,
+  setEndLocation: PropTypes.func.isRequired,
+  height: PropTypes.number,
+  isMobile: PropTypes.bool.isRequired,
+  mobileView: PropTypes.string,
 };
 
 module.exports = Map;

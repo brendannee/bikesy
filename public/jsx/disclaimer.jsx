@@ -1,4 +1,5 @@
 const React = require('react');
+import PropTypes from 'prop-types';
 const classNames = require('classnames');
 
 class Disclaimer extends React.Component {
@@ -13,7 +14,7 @@ class Disclaimer extends React.Component {
 }
 
 Disclaimer.propTypes = {
-  classes: React.PropTypes.object,
+  classes: PropTypes.object,
 };
 
 module.exports = Disclaimer;

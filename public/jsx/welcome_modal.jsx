@@ -35,6 +35,10 @@ class WelcomeModal extends React.Component {
       </Modal>
     );
   }
+
+  componentWillMount() {
+    Modal.setAppElement('body');
+  }
 }
 
 module.exports = WelcomeModal;

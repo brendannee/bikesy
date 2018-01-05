@@ -1,4 +1,5 @@
 const React = require('react');
+import PropTypes from 'prop-types';
 const _ = require('lodash');
 const classNames = require('classnames');
 
@@ -189,14 +190,14 @@ class Controls extends React.Component {
 }
 
 Controls.propTypes = {
-  updateRoute: React.PropTypes.func.isRequired,
-  clearRoute: React.PropTypes.func.isRequired,
-  startAddress: React.PropTypes.string,
-  endAddress: React.PropTypes.string,
-  loading: React.PropTypes.bool,
-  isMobile: React.PropTypes.bool.isRequired,
-  mobileView: React.PropTypes.string.isRequired,
-  showDisclaimer: React.PropTypes.bool.isRequired,
+  updateRoute: PropTypes.func.isRequired,
+  clearRoute: PropTypes.func.isRequired,
+  startAddress: PropTypes.string,
+  endAddress: PropTypes.string,
+  loading: PropTypes.bool,
+  isMobile: PropTypes.bool.isRequired,
+  mobileView: PropTypes.string.isRequired,
+  showDisclaimer: PropTypes.bool.isRequired,
 };
 
 module.exports = Controls;
