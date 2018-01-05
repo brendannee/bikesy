@@ -2,7 +2,7 @@
 
   header('Content-Type: application/json');
 
-  $endpoint = "http://ec2-54-144-153-65.compute-1.amazonaws.com?" . $_SERVER['QUERY_STRING'];
+  $endpoint = "http://ec2-52-3-253-79.compute-1.amazonaws.com/?" . $_SERVER['QUERY_STRING'];
 
   //  Initiate curl
   $ch = curl_init();
