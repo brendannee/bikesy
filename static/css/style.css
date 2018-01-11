@@ -202,6 +202,7 @@
   cursor: pointer;
   transform: rotate(90deg);
   transform-origin: left top 0;
+  z-index: 1;
 }
 
 .map-container {

@@ -1,6 +1,6 @@
 const React = require('react');
 import PropTypes from 'prop-types';
-import { LineChart, Line, XAxis, YAxis, Tooltip } from 'recharts';
+import { CartesianGrid, LineChart, Line, XAxis, YAxis, Tooltip } from 'recharts';
 const classNames = require('classnames');
 
 const helper = require('../lib/helper');
@@ -78,15 +78,16 @@ class Elevation extends React.Component {
           height={this.props.height - 5}
           data={elevationProfile}
           margin={{
-            left: 5,
+            left: 15,
             right: 5,
-            top: 5,
+            top: 15,
             bottom: 5
           }}
         >
+          <CartesianGrid strokeDasharray="3 3" />
           <Line type="monotone" dataKey="elevation" stroke="#0e51ff" dot={false} />
-          <XAxis dataKey="distance" type="number" ticks={[0, 5, 10]} label={{value: 'Distance (miles)', offset: 0, position: 'insideBottom'}} />
-          <YAxis type="number" label={{ value: 'Elevation (feet)', angle: -90, position: 'insideBottomLeft', offset: 10}} />
+          <XAxis dataKey="distance" type="number" label={{value: 'Distance (miles)', offset: 0, position: 'insideBottom', scale: 'linear'}} />
+          <YAxis type="number" label={{ value: 'Elevation (feet)', angle: -90, position: 'insideBottomLeft', offset: 10, scale: 'linear'}} />
           <Tooltip content={<CustomTooltip />}/>
         </LineChart>
       </div>
