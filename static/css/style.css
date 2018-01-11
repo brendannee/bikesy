@@ -1,0 +1,313 @@
+.titlebar {
+  height: 37px;
+  background-color: #f1f0f0;
+  border-bottom: 1px solid #ccc;
+  position: fixed;
+  width: 100%;
+  z-index: 10;
+}
+
+.titlebar .site-title {
+  font-size: 14px;
+  margin: 0;
+  line-height: 35px;
+  padding-left: 10px;
+}
+
+.titlebar .site-title .logo {
+  height: 30px;
+}
+
+.titlebar .site-title .titlebar-text {
+  padding-left: 6px;
+}
+
+.titlebar .btn-left {
+  position: absolute;
+  left: 0;
+  top: 0;
+  margin: 3px 5px;
+}
+
+.titlebar .btn-right {
+  position: absolute;
+  right: 0;
+  top: 0;
+  margin: 4px 5px;
+}
+
+.controls {
+  padding: 62px 15px 25px;
+  max-width: 320px;
+  margin: 0 auto;
+}
+
+.controls .form-group {
+  overflow: hidden;
+  justify-content: space-between;
+}
+
+.controls .start-address {
+  height: 43px;
+  overflow: hidden;
+  margin-bottom: 0;
+}
+
+.controls .start-address .control-label {
+  display: none;
+}
+
+.controls .start-address .control-icon {
+  margin: 25px 10px 0 0;
+  width: 25px;
+}
+
+.controls .start-address .form-control {
+  vertical-align: 18px;
+  width: 224px;
+  display: inline-block;
+  float: right;
+}
+
+.controls .end-address {
+  height: 43px;
+  overflow: hidden;
+  margin-bottom: 0;
+}
+
+.controls .end-address .control-label {
+  display: none;
+}
+
+.controls .end-address .control-icon {
+  margin: 25px 10px 0 0;
+  width: 25px;
+}
+
+.controls .end-address .form-control {
+  vertical-align: 18px;
+  width: 224px;
+  display: inline-block;
+  float: right;
+}
+
+.controls input:focus::-webkit-input-placeholder {
+  color: transparent;
+}
+
+.controls input:focus:-moz-placeholder {
+  color: transparent;
+}
+
+.controls input:focus::-moz-placeholder {
+  color: transparent;
+}
+
+.controls input:focus:-ms-input-placeholder {
+  color: transparent;
+}
+
+.controls .route-type .control-label {
+  line-height: 30px;
+}
+
+.controls .route-type .form-control {
+  width: 165px;
+}
+
+.controls .hill-reluctance .control-label {
+  line-height: 30px;
+}
+
+.controls .hill-reluctance .form-control {
+  width: 145px;
+}
+
+.controls .clear-link {
+  color: #333;
+  line-height: 31px;
+}
+
+.controls .btn-update-route {
+  float: right;
+}
+
+.disclaimer {
+  clear: both;
+  font-size: 10px;
+  margin-top: 30px;
+}
+
+.directions {
+  padding: 10px 15px;
+}
+
+.directions h3 {
+  font-size: 14px;
+  margin-top: 0;
+}
+
+.directions .directions-list {
+  list-style-type: none;
+  padding: 10px 0 0;
+}
+
+.directions .directions-list li {
+  border-bottom: #ccc 1px solid;
+  padding: 3px 0;
+  font-size: 11px;
+  text-transform: capitalize;
+}
+
+.elevation {
+  background: #fff;
+  position: relative;
+  border-left: 1px solid #ccc;
+  border-top: 1px solid #ccc;
+  box-sizing: border-box;
+  height: 175px;
+}
+
+.elevation .close-box {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  color: #333;
+  cursor: pointer;
+  width: 20px;
+  height: 20px;
+  text-align: center;
+  line-height: 20px;
+  font-size: 20px;
+}
+
+.elevation .legend {
+  display: none;
+}
+
+.elevation .grid-axis .tick {
+  display: none;
+}
+
+.elevation-open-box {
+  position: absolute;
+  bottom: 112px;
+  left: 30px;
+  background: #fff;
+  border: 1px solid #999;
+  border-bottom: 0;
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+  padding: 5px 10px;
+  cursor: pointer;
+  transform: rotate(90deg);
+  transform-origin: left top 0;
+}
+
+.map-container {
+  position: relative;
+  padding-top: 37px;
+}
+
+.map-container .logo {
+  display: none;
+}
+
+.icon-not-loading {
+  display: none;
+}
+
+.ReactModal__Overlay {
+  z-index: 1001;
+}
+
+.ReactModal__Overlay .ReactModal__Content {
+  left: 0;
+  right: 0;
+  margin: 0 auto;
+}
+
+.ReactModal__Overlay h1 {
+  margin-top: 0;
+  font-size: 24px;
+}
+
+.ReactModal__Overlay .btn-primary {
+  width: 100%;
+}
+
+@media only screen and (min-width: 667px) {
+  .controls {
+    width: 300px;
+    float: left;
+    padding: 10px 15px;
+    max-width: none;
+  }
+  .controls .start-address .form-control {
+    float: none;
+  }
+  .controls .end-address .form-control {
+    float: none;
+  }
+  .directions {
+    width: 300px;
+    clear: left;
+    float: left;
+    overflow-y: scroll;
+  }
+  .elevation {
+    margin-left: 300px;
+  }
+  .elevation-open-box {
+    bottom: 0;
+    left: auto;
+    right: 275px;
+    transform: none;
+  }
+  .map-container {
+    margin-left: 300px;
+    padding-top: 0;
+  }
+  .map-container .map {
+    min-height: 400px;
+  }
+  .map-container .logo {
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 52px;
+    width: 125px;
+    height: 50px;
+    z-index: 10;
+    background: #fff;
+  }
+  .titlebar {
+    display: none;
+  }
+
+  .ReactModal__Overlay .ReactModal__Content {
+    max-width: 400px;
+    height: 350px;
+  }
+}
+
+@media print {
+  .titlebar {
+    position: relative;
+    height: 45px;
+  }
+  .directions {
+    height: auto !important;
+  }
+  .map {
+    height: 600px !important;
+    page-break-before: always;
+  }
+  .map .leaflet-control-attribution {
+    background: #fff !important;
+  }
+  .elevation {
+    border: 0;
+    margin-top: 20px;
+  }
+}

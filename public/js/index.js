@@ -1,1 +1,0 @@
-require('../jsx/app.jsx');

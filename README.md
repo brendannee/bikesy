@@ -20,12 +20,13 @@ The assumptions that go into the routes provided by the Bikesy API are documente
 
 To run locally:
 
-    npm start
+    npm run dev
 
 The open http://localhost:3000 in your browser.
 
 # Compiling to static files
 
-    gulp static
+    npm run build
+    next static
 
-Files will be in the `public/dest` folder
+Files will be in the `out` folder
