@@ -1,10 +1,10 @@
 {
   "assetPrefix": "https://511contracosta.org/bike",
-  "startAddressPlaceholder": "Haight & Ashbury",
-  "endAddressPlaceholder": "Ferry Building",
+  "startAddressPlaceholder": "Concord, CA",
+  "endAddressPlaceholder": "Danville, CA",
   "googleMapsApiKey": "AIzaSyCdlv6F8kjbh2R6Rd-ULbhmfgUlFHzfDPk",
   "mapboxAccessToken": "pk.eyJ1IjoiYmlrZXN5IiwiYSI6ImNpb2Q5bGxidDAwMDF1bmt4ajcwNWNvMDkifQ.tjhechlMQUuWTlK5KgbafA",
-  "bikeMapperApiUrl": "https://511contracosta.org/api.php",
+  "bikeMapperApiUrl": "https://511contracosta.org/bike/api.php",
   "initialCenterLat": 37.7749,
   "initialCenterLng": -122.4194,
   "initialZoom": 11,
