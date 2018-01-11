@@ -47,7 +47,7 @@ class TitleBar extends React.Component {
       <div className="titlebar">
         <h1 className="site-title">
           <img
-            src="/static/images/511cc-bike-mapper-logo.png"
+            src="static/images/511cc-bike-mapper-logo.png"
             alt="logo"
             className="logo"
           />
