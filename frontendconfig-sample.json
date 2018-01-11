@@ -16,5 +16,6 @@
   "lowBikeSpeedMph": 7.5,
   "highBikeSpeedMph": 10,
   "keenProjectId": "",
-  "keenWriteKey": ""
+  "keenWriteKey": "",
+  "googleAnalyticsId": ""
 }
