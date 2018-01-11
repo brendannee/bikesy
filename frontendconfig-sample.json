@@ -1,4 +1,5 @@
 {
+  "assetPrefix": "https://bikesy.com",
   "startAddressPlaceholder": "Haight & Ashbury",
   "endAddressPlaceholder": "Ferry Building",
   "googleMapsApiKey": "",
@@ -15,5 +16,6 @@
   "lowBikeSpeedMph": 7.5,
   "highBikeSpeedMph": 10,
   "keenProjectId": "",
-  "keenWriteKey": ""
+  "keenWriteKey": "",
+  "googleAnalyticsId": ""
 }
