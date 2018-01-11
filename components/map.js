@@ -54,7 +54,7 @@ class Map extends React.Component {
         hidden={this.props.isMobile && this.props.mobileView !== 'map'}
       >
         <div className="logo">
-          <img src="/static/images/bikesy-logo.png" srcSet="/static/images/bikesy-logo@2x.png 2x" alt="logo" />
+          <img src="/static/images/511cc-bike-mapper-logo.png" alt="logo" />
         </div>
         <div className="map" id="map" style={{ height: `${this.props.height}px` }}></div>
       </div>
