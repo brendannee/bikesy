@@ -1,5 +1,4 @@
 import Head from 'next/head'
-import NoSSR from 'react-no-ssr'
 
 import App from '../components/app'
 
@@ -23,8 +22,6 @@ export default () => (
       <script src="https://maps.google.com/maps/api/js?libraries=places"></script>
     </Head>
 
-    <NoSSR>
-      <App />
-    </NoSSR>
+    <App />
   </div>
 )

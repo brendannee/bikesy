@@ -27,6 +27,6 @@ The open http://localhost:3000 in your browser.
 # Compiling to static files
 
     npm run build
-    next static
+    npm run export
 
-Files will be in the `out` folder
+Files will be in the `/out` folder

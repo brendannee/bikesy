@@ -2,7 +2,7 @@ const React = require('react');
 import PropTypes from 'prop-types';
 const classNames = require('classnames');
 
-const map = require('../lib/map');
+import {latlngIsWithinBounds, drawMap, updateStartMarker, updateEndMarker, updatePath, updateMapSize} from '../lib/map';
 const config = require('../frontendconfig.json');
 
 class Map extends React.Component {
@@ -13,18 +13,18 @@ class Map extends React.Component {
 
     this.handleMapClick = (latlng) => {
       if (!this.props.startLocation) {
-        if (map.latlngIsWithinBounds(latlng)) {
+        if (latlngIsWithinBounds(latlng)) {
           this.props.setStartLocation(latlng);
         }
       } else if (!this.props.endLocation) {
-        if (map.latlngIsWithinBounds(latlng)) {
+        if (latlngIsWithinBounds(latlng)) {
           this.props.setEndLocation(latlng);
         }
       }
     };
 
     this.handleMarkerDrag = (latlng, type) => {
-      if (map.latlngIsWithinBounds(latlng)) {
+      if (latlngIsWithinBounds(latlng)) {
         if (type === 'start') {
           this.props.setStartLocation(latlng);
         } else if (type === 'end') {
@@ -37,14 +37,14 @@ class Map extends React.Component {
   componentDidMount() {
     const point = [config.initialCenterLat, config.initialCenterLng];
     const draggable = !this.props.isMobile;
-    map.drawMap(point, config.initialZoom, config.minZoom, draggable, this.handleMapClick, this.handleMarkerDrag);
+    drawMap(point, config.initialZoom, config.minZoom, draggable, this.handleMapClick, this.handleMarkerDrag);
   }
 
   componentWillReceiveProps(nextProps) {
-    map.updateStartMarker(nextProps.startLocation);
-    map.updateEndMarker(nextProps.endLocation);
-    map.updatePath(nextProps.decodedPath);
-    map.updateMapSize();
+    updateStartMarker(nextProps.startLocation);
+    updateEndMarker(nextProps.endLocation);
+    updatePath(nextProps.decodedPath);
+    updateMapSize();
   }
 
   render() {

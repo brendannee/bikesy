@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { CartesianGrid, LineChart, Line, XAxis, YAxis, Tooltip } from 'recharts';
 const classNames = require('classnames');
 
-const helper = require('../lib/helper');
+import {formatElevation, metersToFeet, metersToMiles} from '../lib/helper';
 
 class CustomTooltip extends React.Component {
   render() {
@@ -13,7 +13,7 @@ class CustomTooltip extends React.Component {
       const { payload, label } = this.props;
       return (
         <div className="custom-tooltip">
-          <p className="label">{helper.formatElevation(payload[0].value)}</p>
+          <p className="label">{formatElevation(payload[0].value)}</p>
         </div>
       );
     }
@@ -36,8 +36,8 @@ class Elevation extends React.Component {
   formatElevationProfile() {
     return this.props.elevationProfile.map((item) => {
       return {
-        elevation: helper.metersToFeet(item[1]),
-        distance: helper.metersToMiles(item[0]),
+        elevation: metersToFeet(item[1]),
+        distance: metersToMiles(item[0]),
       };
     });
   }

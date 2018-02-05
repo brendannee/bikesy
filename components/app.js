@@ -1,4 +1,5 @@
 const React = require('react');
+import NoSSR from 'react-no-ssr'
 const polyline = require('@mapbox/polyline');
 import 'whatwg-fetch';
 
@@ -9,12 +10,12 @@ import Map from './map'
 import TitleBar from './titlebar'
 import WelcomeModal from './welcome_modal'
 
-const api = require('../lib/api');
-const analytics = require('../lib/analytics');
-const error = require('../lib/error');
-const geocode = require('../lib/geocode');
-const map = require('../lib/map');
-const url = require('../lib/url');
+import {getRoute} from '../lib/api';
+import {logQuery} from '../lib/analytics';
+import {handleError} from '../lib/error';
+import {geocode, reverseGeocode} from '../lib/geocode';
+import {latlngIsWithinBounds, updateMapSize} from '../lib/map';
+import {updateUrlParams, readUrlParams, validateUrlParams} from '../lib/url';
 
 class App extends React.Component {
   constructor(props) {
@@ -41,11 +42,11 @@ class App extends React.Component {
         loading: true,
       });
       const promises = [
-        geocode.geocode(startAddress).catch(() => {
+        geocode(startAddress).catch(() => {
           this.setState({ loading: false });
           alert('Invalid start address. Please try a different address.');
         }),
-        geocode.geocode(endAddress).catch(() => {
+        geocode(endAddress).catch(() => {
           this.setState({ loading: false });
           alert('Invalid end address. Please try a different address.');
         }),
@@ -57,12 +58,12 @@ class App extends React.Component {
           return;
         }
 
-        if (!map.latlngIsWithinBounds(results[0], 'start')) {
+        if (!latlngIsWithinBounds(results[0], 'start')) {
           this.setState({ loading: false });
           return;
         }
 
-        if (!map.latlngIsWithinBounds(results[1], 'end')) {
+        if (!latlngIsWithinBounds(results[1], 'end')) {
           this.setState({ loading: false });
           return;
         }
@@ -79,11 +80,11 @@ class App extends React.Component {
 
     this.fetchRoute = () => {
       this.setState({ loading: true });
-      api.getRoute(this.state.startLocation, this.state.endLocation, this.state.scenario)
+      getRoute(this.state.startLocation, this.state.endLocation, this.state.scenario)
       .then((results) => {
         this.setState({ loading: false });
         if (!results.path || !results.path.length) {
-          error.handleError(new Error('No path recieved'));
+          handleError(new Error('No path recieved'));
           return;
         }
 
@@ -92,10 +93,10 @@ class App extends React.Component {
           directions: results.directions,
           elevationProfile: results.elevation_profile
         });
-        url.updateUrlParams([this.state.startAddress, this.state.endAddress, this.state.scenario]);
-        analytics.logQuery(this.state.startAddress, this.state.endAddress, this.state.startLocation, this.state.endLocation);
+        updateUrlParams([this.state.startAddress, this.state.endAddress, this.state.scenario]);
+        logQuery(this.state.startAddress, this.state.endAddress, this.state.startLocation, this.state.endLocation);
       })
-      .catch(error.handleError);
+      .catch(handleError);
     };
 
     this.setStartLocation = (latlng) => {
@@ -109,9 +110,9 @@ class App extends React.Component {
         this.fetchRoute();
       }
 
-      geocode.reverseGeocode(latlng).then((address) => {
+      reverseGeocode(latlng).then((address) => {
         if (!address) {
-          error.handleError(new Error('Unable to get reverse geocoding result.'));
+          handleError(new Error('Unable to get reverse geocoding result.'));
           return;
         }
 
@@ -132,9 +133,9 @@ class App extends React.Component {
         this.fetchRoute();
       }
 
-      geocode.reverseGeocode(latlng).then((address) => {
+      reverseGeocode(latlng).then((address) => {
         if (!address) {
-          return this.handleError('Unable to get reverse geocoding result.');
+          return handleError('Unable to get reverse geocoding result.');
         }
 
         return this.setState({
@@ -158,7 +159,7 @@ class App extends React.Component {
       this.setState({
         elevationVisible: !this.state.elevationVisible,
       }, () => {
-        map.updateMapSize();
+        updateMapSize();
       });
     };
 
@@ -167,7 +168,7 @@ class App extends React.Component {
         mobileView,
       }, () => {
         if (this.state.mobileView === 'map') {
-          map.updateMapSize();
+          updateMapSize();
         }
       });
     };
@@ -184,9 +185,9 @@ class App extends React.Component {
     });
 
     window.addEventListener('resize', this.handleResize);
-    const urlParams = url.readUrlParams();
+    const urlParams = readUrlParams();
 
-    if (url.validateUrlParams(urlParams)) {
+    if (validateUrlParams(urlParams)) {
       this.updateRoute(urlParams[0], urlParams[1], urlParams[2]);
     }
   }
@@ -300,7 +301,9 @@ class App extends React.Component {
           isMobile={this.state.isMobile}
           mobileView={this.state.mobileView}
         />
-        <WelcomeModal />
+        <NoSSR>
+          <WelcomeModal />
+        </NoSSR>
       </div>
     );
   }

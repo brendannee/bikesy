@@ -2,8 +2,8 @@ const React = require('react');
 import PropTypes from 'prop-types';
 const classNames = require('classnames');
 
-const helper = require('../lib/helper');
-const map = require('../lib/map');
+import {formatDistance, formatTime, formatElevation, getElevationGain} from '../lib/helper';
+import {getPathDistance} from '../lib/map';
 
 class Directions extends React.Component {
   constructor(props) {
@@ -13,7 +13,7 @@ class Directions extends React.Component {
   }
 
   getDistance() {
-    return map.getPathDistance(this.props.decodedPath);
+    return getPathDistance(this.props.decodedPath);
   }
 
   getDirections() {
@@ -39,13 +39,13 @@ class Directions extends React.Component {
         <h3>Directions to {this.props.endAddress}</h3>
         <div className="stats">
           <div className="stat">
-            Distance: {helper.formatDistance(totalDistance)}
+            Distance: {formatDistance(totalDistance)}
           </div>
           <div className="stat">
-            Time: {helper.formatTime(totalDistance)}
+            Time: {formatTime(totalDistance)}
           </div>
           <div className="stat">
-            Total Feet of Climbing: {helper.formatElevation(helper.getElevationGain(this.props.elevationProfile))}
+            Total Feet of Climbing: {formatElevation(getElevationGain(this.props.elevationProfile))}
           </div>
         </div>
         <ul className="directions-list">
