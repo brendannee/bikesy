@@ -399,16 +399,7 @@
 
   .directions h3 {
     font-size: 30px;
-  }
-
-  .stats-section {
-    width: 300px;
-    float: left;
-  }
-
-  .directions .directions-list {
-    padding-top: 0;
-    float: left;
+    margin-top: 20px;
   }
 
   .directions .directions-list li {
@@ -417,7 +408,7 @@
   }
 
   .map {
-    height: 600px !important;
+    height: 1700px !important;
     page-break-before: always;
   }
   .map .leaflet-control-attribution {

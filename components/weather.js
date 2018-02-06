@@ -55,10 +55,14 @@ class Weather extends React.Component {
 
     return (
       <div className="weather">
+        <h3 className="d-none d-print-block">Current Weather</h3>
         <div className="temperature">{this.state.temperature}&deg;F</div>
         <div className="weather-description">{this.state.description}</div>
         <div className="humidity">Humidity: {this.state.humidity}%</div>
-        <div className="air-quality">Air Quality:
+        <div
+          className="air-quality"
+          hidden={this.state.aqi === undefined}
+        >Air Quality:
           <div className={classNames('air-quality-box', `air-quality-box-${this.state.categoryNumber}`)}>{this.state.aqi} {this.state.categoryName}</div>
         </div>
       </div>
