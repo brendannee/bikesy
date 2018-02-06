@@ -17,5 +17,6 @@
   "highBikeSpeedMph": 10,
   "keenProjectId": "",
   "keenWriteKey": "",
-  "googleAnalyticsId": ""
+  "googleAnalyticsId": "",
+  "openWeatherMapApiKey": ""
 }

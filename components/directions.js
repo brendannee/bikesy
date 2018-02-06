@@ -2,8 +2,10 @@ const React = require('react');
 import PropTypes from 'prop-types';
 const classNames = require('classnames');
 
+import Weather from './weather'
+
 import {formatDistance, formatTime, formatElevation, getElevationGain} from '../lib/helper';
-import {getPathDistance} from '../lib/map';
+import {getPathDistance, getCenter} from '../lib/map';
 
 class Directions extends React.Component {
   constructor(props) {
@@ -34,6 +36,8 @@ class Directions extends React.Component {
 
     const totalDistance = this.getDistance();
 
+    const location = getCenter(this.props.startLocation, this.props.endLocation);
+
     return (
       <div>
         <h3>Directions to {this.props.endAddress}</h3>
@@ -48,6 +52,9 @@ class Directions extends React.Component {
             Total Feet of Climbing: {formatElevation(getElevationGain(this.props.elevationProfile))}
           </div>
         </div>
+
+        <Weather location={location} />
+
         <ul className="directions-list">
           {directionsList}
         </ul>
@@ -82,6 +89,8 @@ class Directions extends React.Component {
 
 Directions.propTypes = {
   directions: PropTypes.array,
+  startLocation: PropTypes.object,
+  endLocation: PropTypes.object,
   endAddress: PropTypes.string,
   decodedPath: PropTypes.array,
   elevationProfile: PropTypes.array,

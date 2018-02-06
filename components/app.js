@@ -265,6 +265,8 @@ class App extends React.Component {
         <Directions
           directions={this.state.directions}
           decodedPath={this.state.decodedPath}
+          startLocation={this.state.startLocation}
+          endLocation={this.state.endLocation}
           endAddress={this.state.endAddress}
           elevationProfile={this.state.elevationProfile}
           height={directionsHeight}

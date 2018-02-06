@@ -159,6 +159,17 @@
   text-transform: capitalize;
 }
 
+.weather {
+  padding: 3px 0;
+}
+
+.weather .temperature,
+.weather .humidity,
+.weather .weather-description {
+  display: inline-block;
+  padding-right: 10px;
+}
+
 .elevation {
   background: #fff;
   position: relative;
@@ -170,6 +181,7 @@
 
 .elevation .close-box {
   position: absolute;
+  z-index: 1;
   top: 2px;
   right: 2px;
   color: #333;
