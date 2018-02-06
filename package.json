@@ -25,7 +25,7 @@
   "scripts": {
     "dev": "next",
     "build": "next build",
-    "export": "next export",
+    "export": "next build; next export",
     "start": "next start"
   },
   "author": {
