@@ -17,5 +17,6 @@
   "keenProjectId": "",
   "keenWriteKey": "",
   "googleAnalyticsId": "",
-  "openWeatherMapApiKey": ""
+  "openWeatherMapApiKey": "",
+  "airNowApiKey": ""
 }

@@ -170,6 +170,42 @@
   padding-right: 10px;
 }
 
+.weather .air-quality-box {
+  display: inline-block;
+  padding: 2px 3px;
+  margin-left: 6px;
+  border: 1px solid #c1c1c1;
+}
+
+.weather .air-quality-box-1 {
+  background-color: #00e400;
+}
+
+.weather .air-quality-box-2 {
+  background-color: #ffff00;
+}
+
+.weather .air-quality-box-3 {
+  background-color: #ff7e00;
+  color: #ffffff;
+}
+
+.weather .air-quality-box-4 {
+  background-color: #ff0000;
+  color: #ffffff;
+}
+
+.weather .air-quality-box-5 {
+  background-color: #99004c;
+  color: #ffffff;
+}
+
+.weather .air-quality-box-6 {
+  background-color: #7e0023;
+  color: #ffffff;
+}
+
+
 .elevation {
   background: #fff;
   position: relative;
