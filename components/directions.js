@@ -40,22 +40,22 @@ class Directions extends React.Component {
     return (
       <div>
         <h3>Directions to {this.props.endAddress}<span className="d-none d-print-inline"> from {this.props.startAddress}</span></h3>
-        <div className="stats-section">
-          <div className="stats">
-            <div className="stat">
-              Distance: {formatDistance(totalDistance)}
-            </div>
-            <div className="stat">
-              Time: {formatTime(totalDistance)}
-            </div>
-            <div className="stat">
-              Total Feet of Climbing: {formatElevation(getElevationGain(this.props.elevationProfile))}
-            </div>
+        <div className="stats">
+          <h3 className="d-none d-print-block">Ride Summary</h3>
+          <div className="stat">
+            Distance: {formatDistance(totalDistance)}
+          </div>
+          <div className="stat">
+            Time: {formatTime(totalDistance)}
+          </div>
+          <div className="stat">
+            Total Feet of Climbing: {formatElevation(getElevationGain(this.props.elevationProfile))}
           </div>
 
           <Weather location={location} />
         </div>
 
+        <h3 className="d-none d-print-block">Turn by Turn Directions</h3>
         <ul className="directions-list">
           {directionsList}
         </ul>

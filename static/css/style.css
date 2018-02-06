@@ -96,6 +96,32 @@
   font-size: 22px;
 }
 
+.controls .start-address .loading-animation {
+  position: absolute;
+  left: 60px;
+  color: #555;
+  display: none;
+}
+
+.controls .start-address.geolocation-pending .loading-animation {
+  display: block;
+}
+
+.controls .start-address.geolocation-pending .form-control {
+  color: transparent;
+}
+
+.controls .start-address .btn-geolocation {
+  width: 34px;
+  display: inline-block;
+  float: right;
+  cursor: pointer;
+  padding-left: 4px;
+  padding-right: 4px;
+  margin-left: 6px;
+  font-size: 22px;
+}
+
 .controls .end-address {
   height: 43px;
   overflow: hidden;
@@ -404,16 +430,7 @@
 
   .directions h3 {
     font-size: 30px;
-  }
-
-  .stats-section {
-    width: 300px;
-    float: left;
-  }
-
-  .directions .directions-list {
-    padding-top: 0;
-    float: left;
+    margin-top: 20px;
   }
 
   .directions .directions-list li {
@@ -422,7 +439,7 @@
   }
 
   .map {
-    height: 600px !important;
+    height: 1700px !important;
     page-break-before: always;
   }
   .map .leaflet-control-attribution {
