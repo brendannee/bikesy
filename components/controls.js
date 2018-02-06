@@ -74,13 +74,21 @@ class Controls extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if (nextProps.startAddress && nextProps.startAddress !== this.state.startAddress) {
+    if (nextProps.startAddress === undefined) {
+      this.setState({
+        startAddress: '',
+      });
+    } else if (nextProps.startAddress && nextProps.startAddress !== this.state.startAddress) {
       this.setState({
         startAddress: nextProps.startAddress,
       });
     }
 
-    if (nextProps.endAddress && nextProps.endAddress !== this.state.endAddress) {
+    if (nextProps.endAddress === undefined) {
+      this.setState({
+        endAddress: '',
+      });
+    } else if (nextProps.endAddress && nextProps.endAddress !== this.state.endAddress) {
       this.setState({
         endAddress: nextProps.endAddress,
       });
@@ -135,7 +143,7 @@ class Controls extends React.Component {
   render() {
     return (
       <div
-        className="controls hidden-print"
+        className="controls d-print-none"
         hidden={this.props.mobileView !== 'directions' && this.props.isMobile}
       >
         <form onSubmit={this.processForm}>

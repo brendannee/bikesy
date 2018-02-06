@@ -1,6 +1,5 @@
 const React = require('react');
 const Modal = require('react-modal');
-const classNames = require('classnames');
 
 class WelcomeModal extends React.Component {
   constructor(props) {

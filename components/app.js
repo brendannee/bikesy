@@ -23,7 +23,7 @@ class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      scenario: '1',
+      scenario: '5',
       mobileView: 'map',
       elevationHeight: 175
     };
@@ -279,6 +279,7 @@ class App extends React.Component {
           decodedPath={this.state.decodedPath}
           startLocation={this.state.startLocation}
           endLocation={this.state.endLocation}
+          startAddress={this.state.startAddress}
           endAddress={this.state.endAddress}
           elevationProfile={this.state.elevationProfile}
           height={directionsHeight}

@@ -391,12 +391,31 @@
 
 @media print {
   .titlebar {
-    position: relative;
-    height: 45px;
+    display: none;
   }
   .directions {
     height: auto !important;
   }
+
+  .directions h3 {
+    font-size: 30px;
+  }
+
+  .stats-section {
+    width: 300px;
+    float: left;
+  }
+
+  .directions .directions-list {
+    padding-top: 0;
+    float: left;
+  }
+
+  .directions .directions-list li {
+    font-size: 14px;
+    border-bottom: 0;
+  }
+
   .map {
     height: 600px !important;
     page-break-before: always;

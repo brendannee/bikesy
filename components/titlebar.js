@@ -23,7 +23,7 @@ class TitleBar extends React.Component {
     if (this.props.mobileView === 'map') {
       button = (
         <button
-          className="btn btn-white btn-sm btn-right hidden-print pt-0"
+          className="btn btn-white btn-sm btn-right d-print-none pt-0"
           onClick={this.showDirections}
         >
           <FontAwesomeIcon icon={faListAlt} /> Directions
@@ -32,7 +32,7 @@ class TitleBar extends React.Component {
     } else if (this.props.mobileView === 'directions') {
       button = (
         <button
-          className="btn btn-white btn-sm btn-right hidden-print pt-0"
+          className="btn btn-white btn-sm btn-right d-print-none pt-0"
           onClick={this.showMap}
         >
           <FontAwesomeIcon icon={faMap} /> Map

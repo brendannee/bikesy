@@ -1,6 +1,5 @@
 const React = require('react');
 import PropTypes from 'prop-types';
-const classNames = require('classnames');
 
 import Weather from './weather'
 
@@ -40,25 +39,27 @@ class Directions extends React.Component {
 
     return (
       <div>
-        <h3>Directions to {this.props.endAddress}</h3>
-        <div className="stats">
-          <div className="stat">
-            Distance: {formatDistance(totalDistance)}
+        <h3>Directions to {this.props.endAddress}<span className="d-none d-print-inline"> from {this.props.startAddress}</span></h3>
+        <div className="stats-section">
+          <div className="stats">
+            <div className="stat">
+              Distance: {formatDistance(totalDistance)}
+            </div>
+            <div className="stat">
+              Time: {formatTime(totalDistance)}
+            </div>
+            <div className="stat">
+              Total Feet of Climbing: {formatElevation(getElevationGain(this.props.elevationProfile))}
+            </div>
           </div>
-          <div className="stat">
-            Time: {formatTime(totalDistance)}
-          </div>
-          <div className="stat">
-            Total Feet of Climbing: {formatElevation(getElevationGain(this.props.elevationProfile))}
-          </div>
-        </div>
 
-        <Weather location={location} />
+          <Weather location={location} />
+        </div>
 
         <ul className="directions-list">
           {directionsList}
         </ul>
-        <a href="#" className="hidden-print" onClick={window.print}><small>Print this map to view your route offline.</small></a>
+        <a href="#" className="d-print-none" onClick={window.print}><small>Print this map to view your route offline.</small></a>
       </div>
     )
   }
@@ -91,6 +92,7 @@ Directions.propTypes = {
   directions: PropTypes.array,
   startLocation: PropTypes.object,
   endLocation: PropTypes.object,
+  startAddress: PropTypes.string,
   endAddress: PropTypes.string,
   decodedPath: PropTypes.array,
   elevationProfile: PropTypes.array,
