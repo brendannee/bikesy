@@ -1,7 +1,7 @@
 const React = require('react');
 import PropTypes from 'prop-types';
 import FontAwesomeIcon from '@fortawesome/react-fontawesome'
-import faCircleNotch from '@fortawesome/fontawesome-free-solid/faCircleNotch'
+import {faCircleNotch, faCrosshairs} from '@fortawesome/fontawesome-free-solid'
 
 const _ = require('lodash');
 const classNames = require('classnames');
@@ -20,6 +20,7 @@ class Controls extends React.Component {
       routeType: '3',
       hillReluctance: '1',
       errorFields: [],
+      geolocationPending: false
     };
 
     this.processForm = (event) => {
@@ -29,11 +30,15 @@ class Controls extends React.Component {
     };
 
     this.handleStartAddressChange = (event) => {
-      this.setState({ startAddress: event.target.value });
+      this.setState({
+        startAddress: event.target.value
+      });
     };
 
     this.handleEndAddressChange = (event) => {
-      this.setState({ endAddress: event.target.value });
+      this.setState({
+        endAddress: event.target.value
+      });
     };
 
     this.handleRouteTypeChange = (event) => {
@@ -47,16 +52,43 @@ class Controls extends React.Component {
         hillReluctance: event.target.value,
       }, this.updateRoute);
     };
+
+    this.getGeolocation = () => {
+      if ('geolocation' in navigator) {
+        this.setState({
+          geolocationPending: true
+        });
+        navigator.geolocation.getCurrentPosition(position => {
+          this.props.setStartLocation({
+            lat: position.coords.latitude,
+            lng: position.coords.longitude
+          });
+          this.setState({
+            geolocationPending: false
+          });
+        });
+      } else {
+        alert('Geolocation is now available in your browser');
+      }
+    };
   }
 
   componentWillReceiveProps(nextProps) {
-    if (nextProps.startAddress && nextProps.startAddress !== this.state.startAddress) {
+    if (nextProps.startAddress === undefined) {
+      this.setState({
+        startAddress: '',
+      });
+    } else if (nextProps.startAddress && nextProps.startAddress !== this.state.startAddress) {
       this.setState({
         startAddress: nextProps.startAddress,
       });
     }
 
-    if (nextProps.endAddress && nextProps.endAddress !== this.state.endAddress) {
+    if (nextProps.endAddress === undefined) {
+      this.setState({
+        endAddress: '',
+      });
+    } else if (nextProps.endAddress && nextProps.endAddress !== this.state.endAddress) {
       this.setState({
         endAddress: nextProps.endAddress,
       });
@@ -100,11 +132,24 @@ class Controls extends React.Component {
     return errorFields;
   }
 
+  getStartAddressPlaceholder() {
+    if (this.state.geolocationPending) {
+      return '';
+    }
+
+    return config.startAddressPlaceholder;
+  }
+
   render() {
     return (
-      <div className="controls hidden-print" hidden={this.props.mobileView !== 'directions' && this.props.isMobile}>
+      <div
+        className="controls d-print-none"
+        hidden={this.props.mobileView !== 'directions' && this.props.isMobile}
+      >
         <form onSubmit={this.processForm}>
-          <div className={classNames('form-group', 'form-inline', 'start-address', { 'has-error': _.includes(this.state.errorFields, 'startAddress') })}>
+          <div
+            className={classNames('form-group', 'form-inline', 'start-address', { 'has-error': _.includes(this.state.errorFields, 'startAddress') }, {'geolocation-pending': this.state.geolocationPending})}
+          >
             <label className="control-label">Start Location</label>
             <img
               src="static/images/start_marker.png"
@@ -117,8 +162,16 @@ class Controls extends React.Component {
               value={this.state.startAddress}
               onChange={this.handleStartAddressChange}
               className="form-control"
-              placeholder={config.startAddressPlaceholder}
+              placeholder={this.getStartAddressPlaceholder()}
             />
+            <FontAwesomeIcon icon={faCircleNotch} spin className="loading-animation" />
+            <button
+              className="btn btn-light btn-geolocation"
+              title="Use my location"
+              onClick={this.getGeolocation}
+            >
+              <FontAwesomeIcon icon={faCrosshairs} />
+            </button>
           </div>
           <div
             className={classNames(
@@ -187,7 +240,8 @@ Controls.propTypes = {
   endAddress: PropTypes.string,
   loading: PropTypes.bool,
   isMobile: PropTypes.bool,
-  mobileView: PropTypes.string.isRequired
+  mobileView: PropTypes.string.isRequired,
+  setStartLocation: PropTypes.func.isRequired
 };
 
 export default Controls;

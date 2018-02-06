@@ -1,10 +1,10 @@
 {
   "assetPrefix": "https://511contracosta.org/bike",
+  "forceSSL": true,
   "startAddressPlaceholder": "Concord, CA",
   "endAddressPlaceholder": "Danville, CA",
   "googleMapsApiKey": "AIzaSyCdlv6F8kjbh2R6Rd-ULbhmfgUlFHzfDPk",
   "mapboxAccessToken": "pk.eyJ1IjoiYmlrZXN5IiwiYSI6ImNpb2Q5bGxidDAwMDF1bmt4ajcwNWNvMDkifQ.tjhechlMQUuWTlK5KgbafA",
-  "bikeMapperApiUrl": "https://bikesy.com/api.php",
   "initialCenterLat": 37.7749,
   "initialCenterLng": -122.4194,
   "initialZoom": 11,
@@ -17,5 +17,7 @@
   "highBikeSpeedMph": 10,
   "keenProjectId": "57ce9ed48db53dfda8a6ed6d",
   "keenWriteKey": "4E631CCA41D47F4B24A5F670819DD940D18647BACF25DC208BD7A5F36B1D9BF80BB363F992BEBA3F06ADAD14DE3BC61EA7A23DAAB75F396DD14CF9AC11EB13D03B0115D5AF3717AA8900D7811441CC8FF34F4C50CD19F8DFA00410A2C30FBFE0",
-  "googleAnalyticsId": "UA-5291794-1"
+  "googleAnalyticsId": "UA-5291794-1",
+  "openWeatherMapApiKey": "802aab6e4bc8a5ae4856eb7663a4adf9",
+  "airNowApiKey": "596AC6D9-CC3C-47E5-9D10-17990CC7ADEA"
 }

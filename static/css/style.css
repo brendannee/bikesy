@@ -51,6 +51,7 @@
   height: 43px;
   overflow: hidden;
   margin-bottom: 0;
+  position: relative;
 }
 
 .controls .start-address .control-label {
@@ -64,9 +65,35 @@
 
 .controls .start-address .form-control {
   vertical-align: 18px;
-  width: 224px;
+  width: 194px;
   display: inline-block;
   float: right;
+}
+
+.controls .start-address .loading-animation {
+  position: absolute;
+  left: 60px;
+  color: #555;
+  display: none;
+}
+
+.controls .start-address.geolocation-pending .loading-animation {
+  display: block;
+}
+
+.controls .start-address.geolocation-pending .form-control {
+  color: transparent;
+}
+
+.controls .start-address .btn-geolocation {
+  width: 34px;
+  display: inline-block;
+  float: right;
+  cursor: pointer;
+  padding-left: 4px;
+  padding-right: 4px;
+  margin-left: 6px;
+  font-size: 22px;
 }
 
 .controls .end-address {
@@ -86,7 +113,7 @@
 
 .controls .end-address .form-control {
   vertical-align: 18px;
-  width: 224px;
+  width: 245px;
   display: inline-block;
   float: right;
 }
@@ -107,12 +134,21 @@
   color: transparent;
 }
 
+.controls .route-type {
+  margin-top: 8px;
+  margin-bottom: 8px;
+}
+
 .controls .route-type .control-label {
   line-height: 30px;
 }
 
 .controls .route-type .form-control {
   width: 165px;
+}
+
+.controls .hill-reluctance {
+  margin-bottom: 8px;
 }
 
 .controls .hill-reluctance .control-label {
@@ -159,6 +195,53 @@
   text-transform: capitalize;
 }
 
+.weather {
+  padding: 3px 0;
+}
+
+.weather .temperature,
+.weather .humidity,
+.weather .weather-description {
+  display: inline-block;
+  padding-right: 10px;
+}
+
+.weather .air-quality-box {
+  display: inline-block;
+  padding: 2px 3px;
+  margin-left: 6px;
+  border: 1px solid #c1c1c1;
+}
+
+.weather .air-quality-box-1 {
+  background-color: #00e400;
+}
+
+.weather .air-quality-box-2 {
+  background-color: #ffff00;
+}
+
+.weather .air-quality-box-3 {
+  background-color: #ff7e00;
+  color: #ffffff;
+}
+
+.weather .air-quality-box-4 {
+  background-color: #ff0000;
+  color: #ffffff;
+}
+
+.weather .air-quality-box-5 {
+  background-color: #99004c;
+  color: #ffffff;
+}
+
+.weather .air-quality-box-6 {
+  background-color: #7e0023;
+  color: #ffffff;
+}
+
+
 .elevation {
   background: #fff;
   position: relative;
@@ -170,6 +253,7 @@
 
 .elevation .close-box {
   position: absolute;
+  z-index: 1;
   top: 2px;
   right: 2px;
   color: #333;
@@ -247,9 +331,22 @@
   .controls .start-address .form-control {
     float: none;
   }
+  .controls .start-address .loading-animation {
+    left: 50px;
+  }
   .controls .end-address .form-control {
     float: none;
+    width: 234px;
   }
+  .controls .route-type {
+    margin-top: 6px;
+    margin-bottom: 6px;
+  }
+
+  .controls .hill-reluctance {
+    margin-bottom: 6px;
+  }
+
   .directions {
     width: 300px;
     clear: left;
@@ -293,18 +390,37 @@
 
   .ReactModal__Overlay .ReactModal__Content {
     max-width: 400px;
-    height: 350px;
+    height: 290px;
   }
 }
 
 @media print {
   .titlebar {
-    position: relative;
-    height: 45px;
+    display: none;
   }
   .directions {
     height: auto !important;
   }
+
+  .directions h3 {
+    font-size: 30px;
+  }
+
+  .stats-section {
+    width: 300px;
+    float: left;
+  }
+
+  .directions .directions-list {
+    padding-top: 0;
+    float: left;
+  }
+
+  .directions .directions-list li {
+    font-size: 14px;
+    border-bottom: 0;
+  }
+
   .map {
     height: 600px !important;
     page-break-before: always;

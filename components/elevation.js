@@ -1,7 +1,6 @@
 const React = require('react');
 import PropTypes from 'prop-types';
 import { CartesianGrid, LineChart, Line, XAxis, YAxis, Tooltip } from 'recharts';
-const classNames = require('classnames');
 
 import {formatElevation, metersToFeet, metersToMiles} from '../lib/helper';
 
@@ -50,10 +49,8 @@ class Elevation extends React.Component {
     if (!this.props.elevationVisible) {
       return (
         <div
-          className={classNames(
-            'elevation-open-box',
-            { hide: this.props.isMobile && this.props.mobileView !== 'map' }
-          )}
+          className="elevation-open-box"
+          hidden={this.props.isMobile && this.props.mobileView !== 'map'}
           onClick={this.props.toggleElevationVisibility}
         >Elevation Profile</div>
       );
@@ -63,13 +60,11 @@ class Elevation extends React.Component {
 
     return (
       <div
-        className={classNames(
-          'elevation',
-          { hide: this.props.isMobile && this.props.mobileView !== 'map' }
-        )}
+        className="elevation"
+        hidden={this.props.isMobile && this.props.mobileView !== 'map'}
       >
         <div
-          className="close-box"
+          className="close-box d-print-none"
           onClick={this.props.toggleElevationVisibility}
         >&minus;</div>
 

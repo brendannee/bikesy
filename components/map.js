@@ -1,6 +1,5 @@
 const React = require('react');
 import PropTypes from 'prop-types';
-const classNames = require('classnames');
 
 import {latlngIsWithinBounds, drawMap, updateStartMarker, updateEndMarker, updatePath, updateMapSize} from '../lib/map';
 const config = require('../frontendconfig.json');
@@ -44,6 +43,9 @@ class Map extends React.Component {
     updateStartMarker(nextProps.startLocation);
     updateEndMarker(nextProps.endLocation);
     updatePath(nextProps.decodedPath);
+  }
+
+  componentDidUpdate() {
     updateMapSize();
   }
 

@@ -3,6 +3,8 @@ import NoSSR from 'react-no-ssr'
 const polyline = require('@mapbox/polyline');
 import 'whatwg-fetch';
 
+const config = require('../frontendconfig.json');
+
 import Controls from './controls'
 import Directions from './directions'
 import Elevation from './elevation'
@@ -21,8 +23,9 @@ class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      scenario: '1',
-      mobileView: 'map'
+      scenario: '5',
+      mobileView: 'map',
+      elevationHeight: 175
     };
 
     this.handleResize = () => {
@@ -174,7 +177,16 @@ class App extends React.Component {
     };
   }
 
+  forceSSL() {
+    if (location.protocol !== 'https:') {
+      location.protocol = 'https:';
+    }
+  }
+
   componentDidMount() {
+    if (config.forceSSL) {
+      this.forceSSL();
+    }
     const isMobile = this.isMobile(window.innerWidth);
 
     this.setState({
@@ -213,28 +225,6 @@ class App extends React.Component {
     });
   }
 
-  getElevationHeight() {
-    const elevationHeight = 175;
-    return elevationHeight;
-  }
-
-  getMapHeight() {
-    let elevationHeight = this.getElevationHeight();
-    let titlebarHeight;
-
-    if (this.state.isMobile) {
-      titlebarHeight = 38;
-    } else {
-      titlebarHeight = 0;
-    }
-
-    if (!this.state.elevationVisible || !this.state.elevationProfile) {
-      elevationHeight = 0;
-    }
-
-    return this.state.windowHeight - elevationHeight - titlebarHeight;
-  }
-
   isMobile(width) {
     if (width === undefined) {
       return false;
@@ -246,14 +236,24 @@ class App extends React.Component {
   render() {
     const controlsHeight = 252;
     const sidebarWidth = 300;
+    const titlebarHeight = 38;
     let elevationWidth;
     let directionsHeight;
+    let mapHeight = this.state.windowHeight;
 
     if (this.state.isMobile) {
       elevationWidth = this.state.windowWidth;
     } else {
       elevationWidth = this.state.windowWidth - sidebarWidth;
       directionsHeight = this.state.windowHeight - controlsHeight;
+    }
+
+    if (this.state.elevationVisible && this.state.elevationProfile) {
+      mapHeight = mapHeight - this.state.elevationHeight;
+    }
+
+    if (this.state.isMobile) {
+      mapHeight = mapHeight - titlebarHeight;
     }
 
     return (
@@ -272,10 +272,14 @@ class App extends React.Component {
           loading={this.state.loading}
           isMobile={this.state.isMobile}
           mobileView={this.state.mobileView}
+          setStartLocation={this.setStartLocation}
         />
         <Directions
           directions={this.state.directions}
           decodedPath={this.state.decodedPath}
+          startLocation={this.state.startLocation}
+          endLocation={this.state.endLocation}
+          startAddress={this.state.startAddress}
           endAddress={this.state.endAddress}
           elevationProfile={this.state.elevationProfile}
           height={directionsHeight}
@@ -288,14 +292,14 @@ class App extends React.Component {
           decodedPath={this.state.decodedPath}
           setStartLocation={this.setStartLocation}
           setEndLocation={this.setEndLocation}
-          height={this.getMapHeight()}
+          height={mapHeight}
           isMobile={this.state.isMobile}
           mobileView={this.state.mobileView}
         />
         <Elevation
           elevationProfile={this.state.elevationProfile}
           width={elevationWidth}
-          height={this.getElevationHeight()}
+          height={this.state.elevationHeight}
           toggleElevationVisibility={this.toggleElevationVisibility}
           elevationVisible={this.state.elevationVisible && !!this.state.elevationProfile}
           isMobile={this.state.isMobile}
