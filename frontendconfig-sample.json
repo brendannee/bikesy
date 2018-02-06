@@ -4,7 +4,6 @@
   "endAddressPlaceholder": "Ferry Building",
   "googleMapsApiKey": "",
   "mapboxAccessToken": "",
-  "bikeMapperApiUrl": "",
   "initialCenterLat": 37.7749,
   "initialCenterLng": -122.4194,
   "initialZoom": 11,
