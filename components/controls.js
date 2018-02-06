@@ -8,7 +8,7 @@ const classNames = require('classnames');
 
 const config = require('../frontendconfig.json');
 
-const scenarios = require('../lib/scenarios');
+import {scenarioToComponents, componentsToScenario} from '../lib/scenarios';
 
 class Controls extends React.Component {
   constructor(props) {
@@ -63,7 +63,7 @@ class Controls extends React.Component {
     }
 
     if (nextProps.scenario) {
-      const components = scenarios.scenarioToComponents(nextProps.scenario);
+      const components = scenarioToComponents(nextProps.scenario);
       this.setState({
         hillReluctance: components.hillReluctance,
         routeType: components.routeType,
@@ -79,7 +79,7 @@ class Controls extends React.Component {
       return false;
     }
 
-    const scenario = scenarios.componentsToScenario({
+    const scenario = componentsToScenario({
       routeType: this.state.routeType,
       hillReluctance: this.state.hillReluctance,
     });
