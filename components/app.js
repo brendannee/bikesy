@@ -272,6 +272,7 @@ class App extends React.Component {
           loading={this.state.loading}
           isMobile={this.state.isMobile}
           mobileView={this.state.mobileView}
+          setStartLocation={this.setStartLocation}
         />
         <Directions
           directions={this.state.directions}
