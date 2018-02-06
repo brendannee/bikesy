@@ -44,6 +44,9 @@ class Map extends React.Component {
     updateStartMarker(nextProps.startLocation);
     updateEndMarker(nextProps.endLocation);
     updatePath(nextProps.decodedPath);
+  }
+
+  componentDidUpdate() {
     updateMapSize();
   }
 
