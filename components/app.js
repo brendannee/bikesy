@@ -3,6 +3,8 @@ import NoSSR from 'react-no-ssr'
 const polyline = require('@mapbox/polyline');
 import 'whatwg-fetch';
 
+const config = require('../frontendconfig.json');
+
 import Controls from './controls'
 import Directions from './directions'
 import Elevation from './elevation'
@@ -175,7 +177,16 @@ class App extends React.Component {
     };
   }
 
+  forceSSL() {
+    if (location.protocol !== 'https:') {
+      location.protocol = 'https:';
+    }
+  }
+
   componentDidMount() {
+    if (config.forceSSL) {
+      this.forceSSL();
+    }
     const isMobile = this.isMobile(window.innerWidth);
 
     this.setState({
