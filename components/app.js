@@ -184,7 +184,7 @@ class App extends React.Component {
   }
 
   componentDidMount() {
-    if (config.forceSSL) {
+    if (process && process.env.NODE_ENV !== 'development' && config.forceSSL) {
       this.forceSSL();
     }
     const isMobile = this.isMobile(window.innerWidth);

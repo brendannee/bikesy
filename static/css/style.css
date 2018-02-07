@@ -267,7 +267,6 @@
   color: #ffffff;
 }
 
-
 .elevation {
   background: #fff;
   position: relative;
@@ -308,7 +307,7 @@
   border-bottom: 0;
   border-top-left-radius: 5px;
   border-top-right-radius: 5px;
-  padding: 5px 10px;
+  padding: 3px 10px;
   cursor: pointer;
   transform: rotate(90deg);
   transform-origin: left top 0;
@@ -322,6 +321,72 @@
 
 .map-container .logo {
   display: none;
+}
+
+.map-container .map-layers {
+  position: absolute;
+  bottom: 24px;
+  right: 0;
+  background: #fff;
+  border: 1px solid #999;
+  border-right: 0;
+  border-top-left-radius: 5px;
+  border-bottom-left-radius: 5px;
+  padding: 10px;
+  font-size: 11px;
+  font-weight: bold;
+}
+
+.map-container .map-layers .close-box {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  color: #333;
+  cursor: pointer;
+  width: 20px;
+  height: 20px;
+  text-align: center;
+  line-height: 20px;
+  font-size: 20px;
+}
+
+.map-container .map-layers .map-layer-legend {
+  width: 15px;
+  height: 15px;
+  display: inline-block;
+  vertical-align: -6px;
+  margin: 4px;
+}
+
+.map-container .map-layers .map-layer-legend.class1 {
+  background: #330066;
+}
+
+.map-container .map-layers .map-layer-legend.class2 {
+  background: #660099;
+}
+
+.map-container .map-layers .map-layer-legend.class3 {
+  background: #9933CC;
+}
+
+.map-container .map-layers span {
+  padding-right: 10px;
+}
+
+.map-layers-open-box {
+  position: absolute;
+  bottom: 20px;
+  right: 30px;
+  background: #ffffff;
+  border: 1px solid #999;
+  border-top: 0;
+  border-bottom-left-radius: 5px;
+  border-bottom-right-radius: 5px;
+  padding: 3px 10px;
+  cursor: pointer;
+  transform: rotate(90deg);
+  transform-origin: right bottom 0;
 }
 
 .icon-not-loading {
@@ -388,13 +453,20 @@
     right: 275px;
     transform: none;
   }
+
   .map-container {
     margin-left: 300px;
     padding-top: 0;
   }
+
   .map-container .map {
     min-height: 400px;
   }
+
+  .map-container .map-layers .close-box {
+    display: none;
+  }
+
   .map-container .logo {
     display: block;
     position: absolute;
@@ -410,6 +482,7 @@
     border-top: none;
     background: #f1f0f0;
   }
+
   .titlebar {
     display: none;
   }
@@ -442,6 +515,7 @@
     height: 1700px !important;
     page-break-before: always;
   }
+
   .map .leaflet-control-attribution {
     background: #fff !important;
   }

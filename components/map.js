@@ -8,7 +8,9 @@ class Map extends React.Component {
   constructor(props) {
     super(props);
 
-    this.state = {};
+    this.state = {
+      legendVisible: !this.props.isMobile,
+    };
 
     this.handleMapClick = (latlng) => {
       if (!this.props.startLocation) {
@@ -30,6 +32,12 @@ class Map extends React.Component {
           this.props.setEndLocation(latlng);
         }
       }
+    };
+
+    this.toggleLegendVisibility = () => {
+      this.setState({
+        legendVisible: !this.state.legendVisible,
+      });
     };
   }
 
@@ -59,6 +67,33 @@ class Map extends React.Component {
           <img src="static/images/511cc-bike-mapper-logo.png" alt="logo" />
         </div>
         <div className="map" id="map" style={{ height: `${this.props.height}px` }}></div>
+        { this.state.legendVisible ? (
+          <div className="map-layers d-print-none">
+            <div
+              className="close-box"
+              onClick={this.toggleLegendVisibility}
+            >&minus;</div>
+            <div>
+              <div title="paved, separated (off the street) bikeways">
+                <div className="map-layer-legend class1"></div>
+                <span>Multi-use Path</span>
+              </div>
+              <div title="dedicated on-street bikeways, marked by striping on pavement">
+                <div className="map-layer-legend class2"></div>
+                <span>Bike Lane</span>
+              </div>
+              <div title="on-street routes signed for bicyclists">
+                <div className="map-layer-legend class3"></div>
+                <span>Bike Route</span>
+              </div>
+            </div>
+          </div>
+        ) : (
+          <div
+            className="map-layers-open-box"
+            onClick={this.toggleLegendVisibility}
+          >Toggle Map Legend</div>
+        )}
       </div>
     );
   }
