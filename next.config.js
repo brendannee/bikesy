@@ -7,5 +7,5 @@ module.exports = {
       '/terms': { page: '/terms' }
     }
   },
-  assetPrefix: config.assetPrefix
+  assetPrefix: process && process.env.NODE_ENV !== 'development' ? config.assetPrefix : undefined
 }
