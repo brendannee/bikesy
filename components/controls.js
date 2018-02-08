@@ -165,13 +165,13 @@ class Controls extends React.Component {
               placeholder={this.getStartAddressPlaceholder()}
             />
             <FontAwesomeIcon icon={faCircleNotch} spin className="loading-animation" />
-            <button
+            <a
               className="btn btn-light btn-geolocation"
               title="Use my location"
               onClick={this.getGeolocation}
             >
               <FontAwesomeIcon icon={faCrosshairs} />
-            </button>
+            </a>
           </div>
           <div
             className={classNames(

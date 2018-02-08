@@ -7,6 +7,7 @@
     "@fortawesome/fontawesome-free-solid": "^5.0.6",
     "@fortawesome/react-fontawesome": "0.0.17",
     "@mapbox/polyline": "^0.2.0",
+    "auto-link": "^1.0.0",
     "babel-runtime": "^6.26.0",
     "classnames": "^2.2.5",
     "keen-js": "^4.3.0",
