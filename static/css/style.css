@@ -332,6 +332,14 @@
   margin: 4px;
 }
 
+.map-container .map-layers .map-layer-legend.bike-lockers {
+  background: url(../images/bike-lockers.png) 0 0 no-repeat;
+  background-size: 15px auto;
+  margin-top: 2px;
+  margin-bottom: 2px;
+  height: 19px;
+}
+
 .map-container .map-layers .map-layer-legend.class1 {
   background: #330066;
 }
@@ -346,6 +354,10 @@
 
 .map-container .map-layers span {
   padding-right: 10px;
+}
+
+.map-container .map-layers label {
+  margin-bottom: 0;
 }
 
 .map-layers-open-box {

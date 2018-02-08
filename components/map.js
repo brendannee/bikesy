@@ -1,7 +1,7 @@
 const React = require('react');
 import PropTypes from 'prop-types';
 
-import {latlngIsWithinBounds, drawMap, updateStartMarker, updateEndMarker, updatePath, updateMapSize} from '../lib/map';
+import {latlngIsWithinBounds, drawMap, updateStartMarker, updateEndMarker, updatePath, updateMapSize, toggleBikeLockerLayer} from '../lib/map';
 const config = require('../frontendconfig.json');
 
 class Map extends React.Component {
@@ -10,6 +10,7 @@ class Map extends React.Component {
 
     this.state = {
       legendVisible: !this.props.isMobile,
+      bikeLockersVisible: false
     };
 
     this.handleMapClick = (latlng) => {
@@ -39,6 +40,14 @@ class Map extends React.Component {
         legendVisible: !this.state.legendVisible,
       });
     };
+
+    this.toggleBikeLockerVisibility = ()=> {
+      this.setState({
+        bikeLockersVisible: !this.state.bikeLockersVisible,
+      }, () => {
+        toggleBikeLockerLayer(this.state.bikeLockersVisible);
+      });
+    }
   }
 
   componentDidMount() {
@@ -74,6 +83,10 @@ class Map extends React.Component {
               onClick={this.toggleLegendVisibility}
             >&minus;</div>
             <div>
+              <div title="bike lockers">
+                <div className="map-layer-legend bike-lockers"></div>
+                <label><input type="checkbox" value={this.state.bikeLockersVisible} onChange={this.toggleBikeLockerVisibility} /> Bike Lockers</label>
+              </div>
               <div title="paved, separated (off the street) bikeways">
                 <div className="map-layer-legend class1"></div>
                 <span>Multi-use Path</span>
