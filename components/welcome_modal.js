@@ -1,27 +1,17 @@
 const React = require('react');
+import PropTypes from 'prop-types';
 const Modal = require('react-modal');
 
 class WelcomeModal extends React.Component {
   constructor(props) {
     super(props);
-
-    this.state = {
-      modalOpen: true
-    };
-
-    this.hideWelcomeModal = (e) => {
-      e.preventDefault();
-      this.setState({
-        modalOpen: false,
-      });
-    };
   }
 
   render() {
     return (
       <Modal
-        isOpen={this.state.modalOpen}
-        onRequestClose={this.hideWelcomeModal}
+        isOpen={this.props.showWelcomeModal}
+        onRequestClose={this.props.hideWelcomeModal}
         contentLabel='Welcome'
       >
         <h1>Welcome to Bike Mapper</h1>
@@ -30,7 +20,7 @@ class WelcomeModal extends React.Component {
           <li>Drag-and-drop markers to recalculate the route</li>
           <li>Use the address boxes on the left to enter a specific address or landmark</li>
         </ul>
-        <button onClick={this.hideWelcomeModal} className="btn btn-primary">OK</button>
+        <button onClick={this.props.hideWelcomeModal} className="btn btn-primary">OK</button>
       </Modal>
     );
   }
@@ -39,5 +29,10 @@ class WelcomeModal extends React.Component {
     Modal.setAppElement('body');
   }
 }
+
+WelcomeModal.propTypes = {
+  showWelcomeModal: PropTypes.bool.isRequired,
+  hideWelcomeModal: PropTypes.func.isRequired
+};
 
 export default WelcomeModal;
