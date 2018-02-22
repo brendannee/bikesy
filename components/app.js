@@ -25,7 +25,8 @@ class App extends React.Component {
     this.state = {
       scenario: '5',
       mobileView: 'map',
-      elevationHeight: 175
+      elevationHeight: 175,
+      showWelcomeModal: true
     };
 
     this.handleResize = () => {
@@ -43,6 +44,7 @@ class App extends React.Component {
         endAddress,
         scenario,
         loading: true,
+        showWelcomeModal: false
       });
       const promises = [
         geocode(startAddress).catch(() => {
@@ -173,6 +175,13 @@ class App extends React.Component {
         if (this.state.mobileView === 'map') {
           updateMapSize();
         }
+      });
+    };
+
+    this.hideWelcomeModal = (e) => {
+      e.preventDefault();
+      this.setState({
+        showWelcomeModal: false
       });
     };
   }
@@ -306,7 +315,10 @@ class App extends React.Component {
           mobileView={this.state.mobileView}
         />
         <NoSSR>
-          <WelcomeModal />
+          <WelcomeModal
+            showWelcomeModal={this.state.showWelcomeModal}
+            hideWelcomeModal={this.hideWelcomeModal}
+          />
         </NoSSR>
       </div>
     );
