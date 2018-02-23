@@ -18,8 +18,6 @@ export default () => (
       <link rel="icon" type="image/png" href="static/favicon/favicon-16x16.png" sizes="16x16" />
       <link rel="mask-icon" href="static/favicon/safari-pinned-tab.svg" color="#5bbad5" />
       <meta name="theme-color" content="#ffffff" />
-
-      <script src="https://maps.google.com/maps/api/js?libraries=places"></script>
     </Head>
 
     <App />
