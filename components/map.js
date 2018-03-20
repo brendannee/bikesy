@@ -51,7 +51,7 @@ class Map extends React.Component {
   }
 
   componentDidMount() {
-    const point = [config.initialCenterLat, config.initialCenterLng];
+    const point = [config.initialCenterLng, config.initialCenterLat];
     const draggable = !this.props.isMobile;
     drawMap(point, config.initialZoom, config.minZoom, draggable, this.handleMapClick, this.handleMarkerDrag);
   }
@@ -59,7 +59,7 @@ class Map extends React.Component {
   componentWillReceiveProps(nextProps) {
     updateStartMarker(nextProps.startLocation);
     updateEndMarker(nextProps.endLocation);
-    updatePath(nextProps.decodedPath);
+    updatePath(nextProps.path);
   }
 
   componentDidUpdate() {
@@ -113,6 +113,7 @@ class Map extends React.Component {
 }
 
 Map.propTypes = {
+  path: PropTypes.object,
   startLocation: PropTypes.object,
   endLocation: PropTypes.object,
   setStartLocation: PropTypes.func.isRequired,

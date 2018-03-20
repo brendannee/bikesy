@@ -4,17 +4,13 @@ import PropTypes from 'prop-types';
 import Weather from './weather'
 
 import {formatDistance, formatTime, formatElevation, getElevationGain} from '../lib/helper';
-import {getPathDistance, getCenter} from '../lib/map';
+import {getCenter} from '../lib/map';
 
 class Directions extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {};
-  }
-
-  getDistance() {
-    return getPathDistance(this.props.decodedPath);
   }
 
   getDirections() {
@@ -33,25 +29,15 @@ class Directions extends React.Component {
       <li key="final"><b>arrive</b> at <b>{this.props.endAddress}</b></li>
     ));
 
-    const totalDistance = this.getDistance();
-
     const location = getCenter(this.props.startLocation, this.props.endLocation);
 
     return (
       <div>
-        <h3>Directions to {this.props.endAddress}<span className="d-none d-print-inline"> from {this.props.startAddress}</span></h3>
+        <h3>Directions to <b>{this.props.endAddress}<span className="d-none d-print-inline"> from {this.props.startAddress}</span></b></h3>
         <div className="stats">
           <h3 className="d-none d-print-block">Ride Summary</h3>
-          <div className="stat">
-            Distance: {formatDistance(totalDistance)}
-          </div>
-          <div className="stat">
-            Time: {formatTime(totalDistance)}
-          </div>
-          <div className="stat">
-            Total Feet of Climbing: {formatElevation(getElevationGain(this.props.elevationProfile))}
-          </div>
-
+          <b>{formatDistance(this.props.distance)}, {formatTime(this.props.distance)}</b><br />
+          {formatElevation(getElevationGain(this.props.elevationProfile))} feet of total climbing
           <Weather location={location} />
         </div>
 
@@ -94,7 +80,7 @@ Directions.propTypes = {
   endLocation: PropTypes.object,
   startAddress: PropTypes.string,
   endAddress: PropTypes.string,
-  decodedPath: PropTypes.array,
+  distance: PropTypes.number,
   elevationProfile: PropTypes.array,
   height: PropTypes.number,
   isMobile: PropTypes.bool,

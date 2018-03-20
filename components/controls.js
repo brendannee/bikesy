@@ -137,7 +137,7 @@ class Controls extends React.Component {
       return '';
     }
 
-    return config.startAddressPlaceholder;
+    return 'Start Address';
   }
 
   render() {
@@ -151,12 +151,7 @@ class Controls extends React.Component {
             className={classNames('form-group', 'form-inline', 'start-address', { 'has-error': _.includes(this.state.errorFields, 'startAddress') }, {'geolocation-pending': this.state.geolocationPending})}
           >
             <label className="control-label">Start Location</label>
-            <img
-              src="static/images/start_marker.png"
-              srcSet="static/images/start_marker@2x.png 2x"
-              className="control-icon"
-              alt="Start Marker"
-            />
+            <div className="start-icon" title="Start Location">S</div>
             <input
               type="text"
               value={this.state.startAddress}
@@ -182,18 +177,13 @@ class Controls extends React.Component {
             )}
           >
             <label className="control-label">End Location</label>
-            <img
-              src="static/images/end_marker.png"
-              srcSet="static/images/end_marker@2x.png 2x"
-              className="control-icon"
-              alt="End Marker"
-            />
+            <div className="end-icon" title="End Location">E</div>
             <input
               type="text"
               value={this.state.endAddress}
               onChange={this.handleEndAddressChange}
               className="form-control"
-              placeholder={config.endAddressPlaceholder}
+              placeholder="End Address"
             />
           </div>
           <div className="form-group form-inline route-type">
