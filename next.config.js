@@ -3,8 +3,7 @@ const config = require('./frontendconfig.json');
 module.exports = {
   exportPathMap: function() {
     return {
-      '/': { page: '/' },
-      '/terms': { page: '/terms' }
+      '/': { page: '/' }
     }
   },
   assetPrefix: process && process.env.NODE_ENV !== 'development' ? config.assetPrefix : undefined
