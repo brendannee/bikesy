@@ -1,8 +1,6 @@
 {
   "assetPrefix": "https://bikesy.com",
   "forceSSL": true,
-  "startAddressPlaceholder": "Haight & Ashbury",
-  "endAddressPlaceholder": "Ferry Building",
   "googleMapsApiKey": "AIzaSyCdlv6F8kjbh2R6Rd-ULbhmfgUlFHzfDPk",
   "mapboxAccessToken": "pk.eyJ1IjoiYmlrZXN5IiwiYSI6ImNpb2Q5bGxidDAwMDF1bmt4ajcwNWNvMDkifQ.tjhechlMQUuWTlK5KgbafA",
   "initialCenterLat": 37.7749,

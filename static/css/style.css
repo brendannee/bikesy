@@ -58,9 +58,18 @@
   display: none;
 }
 
-.controls .start-address .control-icon {
-  margin: 25px 10px 0 0;
-  width: 25px;
+.controls .start-address .start-icon {
+  margin-right: 10px;
+  width: 24px;
+  height: 24px;
+  background: #19b566;
+  border-radius: 50%;
+  border: 1px solid #0d5731;
+  text-align: center;
+  color: #FFF;
+  font-size: 16px;
+  font-weight: bold;
+  line-height: 22px;
 }
 
 .controls .start-address .form-control {
@@ -106,9 +115,18 @@
   display: none;
 }
 
-.controls .end-address .control-icon {
-  margin: 25px 10px 0 0;
-  width: 25px;
+.controls .end-address .end-icon {
+  margin-right: 10px;
+  width: 24px;
+  height: 24px;
+  background: #cf3043;
+  border-radius: 50%;
+  border: 1px solid #58131c;
+  text-align: center;
+  color: #FFF;
+  font-size: 16px;
+  font-weight: bold;
+  line-height: 22px;
 }
 
 .controls .end-address .form-control {
@@ -274,7 +292,7 @@
 
 .elevation-open-box {
   position: absolute;
-  bottom: 112px;
+  bottom: 142px;
   left: 30px;
   background: #fff;
   border: 1px solid #999;
@@ -299,7 +317,7 @@
 
 .map-container .map-layers {
   position: absolute;
-  bottom: 24px;
+  bottom: 37px;
   right: 0;
   background: #fff;
   border: 1px solid #999;
@@ -333,11 +351,13 @@
 }
 
 .map-container .map-layers .map-layer-legend.bike-lockers {
-  background: url(../images/bike-lockers.png) 0 0 no-repeat;
-  background-size: 15px auto;
+  background: #f41cf1;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
   margin-top: 2px;
   margin-bottom: 2px;
-  height: 19px;
+  border: 1px solid #530a52;
 }
 
 .map-container .map-layers .map-layer-legend.class1 {
@@ -362,7 +382,7 @@
 
 .map-layers-open-box {
   position: absolute;
-  bottom: 20px;
+  bottom: 37px;
   right: 30px;
   background: #ffffff;
   border: 1px solid #999;
@@ -405,16 +425,20 @@
     padding: 10px 15px;
     max-width: none;
   }
+
   .controls .start-address .form-control {
     float: none;
   }
+
   .controls .start-address .loading-animation {
     left: 50px;
   }
+
   .controls .end-address .form-control {
     float: none;
     width: 234px;
   }
+
   .controls .route-type {
     margin-top: 6px;
     margin-bottom: 6px;
@@ -447,6 +471,10 @@
 
   .map-container .map {
     min-height: 400px;
+  }
+
+  .map-container .map-layers {
+    bottom: 24px;
   }
 
   .map-container .map-layers .close-box {

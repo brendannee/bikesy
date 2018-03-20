@@ -16,7 +16,7 @@ import {getRoute} from '../lib/api';
 import {logQuery} from '../lib/analytics';
 import {handleError} from '../lib/error';
 import {geocode, reverseGeocode} from '../lib/geocode';
-import {latlngIsWithinBounds, updateMapSize} from '../lib/map';
+import {latlngIsWithinBounds, updateMapSize, getPathDistance} from '../lib/map';
 import {updateUrlParams, readUrlParams, validateUrlParams} from '../lib/url';
 
 class App extends React.Component {
@@ -93,8 +93,10 @@ class App extends React.Component {
           return;
         }
 
+        const path = polyline.toGeoJSON(results.path[0]);
         this.setState({
-          decodedPath: polyline.decode(results.path[0]),
+          path,
+          distance: getPathDistance(path),
           directions: results.directions,
           elevationProfile: results.elevation_profile
         });
@@ -104,7 +106,7 @@ class App extends React.Component {
       .catch(handleError);
     };
 
-    this.setStartLocation = (latlng) => {
+    this.setStartLocation = latlng => {
       this.clearPath();
       this.setState({
         startLocation: latlng,
@@ -115,19 +117,20 @@ class App extends React.Component {
         this.fetchRoute();
       }
 
-      reverseGeocode(latlng).then((address) => {
+      reverseGeocode(latlng).then(address => {
         if (!address) {
-          handleError(new Error('Unable to get reverse geocoding result.'));
-          return;
+          return handleError(new Error('Unable to get reverse geocoding result.'));
         }
 
-        return this.setState({
+        this.setState({
           startAddress: address,
         });
+
+        updateUrlParams([this.state.startAddress, this.state.endAddress, this.state.scenario]);
       });
     };
 
-    this.setEndLocation = (latlng) => {
+    this.setEndLocation = latlng => {
       this.clearPath();
       this.setState({
         endLocation: latlng,
@@ -138,20 +141,16 @@ class App extends React.Component {
         this.fetchRoute();
       }
 
-      reverseGeocode(latlng).then((address) => {
+      reverseGeocode(latlng).then(address => {
         if (!address) {
           return handleError('Unable to get reverse geocoding result.');
         }
 
-        return this.setState({
+        this.setState({
           endAddress: address,
         });
-      });
-    };
 
-    this.updateDistance = (totalDistance) => {
-      this.setState({
-        totalDistance,
+        updateUrlParams([this.state.startAddress, this.state.endAddress, this.state.scenario]);
       });
     };
 
@@ -168,7 +167,7 @@ class App extends React.Component {
       });
     };
 
-    this.changeMobileView = (mobileView) => {
+    this.changeMobileView = mobileView => {
       this.setState({
         mobileView,
       }, () => {
@@ -219,7 +218,7 @@ class App extends React.Component {
 
   clearPath() {
     this.setState({
-      decodedPath: undefined,
+      path: undefined,
       directions: undefined,
       elevationProfile: undefined,
     });
@@ -285,7 +284,7 @@ class App extends React.Component {
         />
         <Directions
           directions={this.state.directions}
-          decodedPath={this.state.decodedPath}
+          distance={this.state.distance}
           startLocation={this.state.startLocation}
           endLocation={this.state.endLocation}
           startAddress={this.state.startAddress}
@@ -295,16 +294,18 @@ class App extends React.Component {
           isMobile={this.state.isMobile}
           mobileView={this.state.mobileView}
         />
-        <Map
-          startLocation={this.state.startLocation}
-          endLocation={this.state.endLocation}
-          decodedPath={this.state.decodedPath}
-          setStartLocation={this.setStartLocation}
-          setEndLocation={this.setEndLocation}
-          height={mapHeight}
-          isMobile={this.state.isMobile}
-          mobileView={this.state.mobileView}
-        />
+        <NoSSR>
+          <Map
+            startLocation={this.state.startLocation}
+            endLocation={this.state.endLocation}
+            path={this.state.path}
+            setStartLocation={this.setStartLocation}
+            setEndLocation={this.setEndLocation}
+            height={mapHeight}
+            isMobile={this.state.isMobile}
+            mobileView={this.state.mobileView}
+          />
+        </NoSSR>
         <Elevation
           elevationProfile={this.state.elevationProfile}
           width={elevationWidth}
