@@ -159,10 +159,7 @@
 
 .controls .route-type .control-label {
   line-height: 30px;
-}
-
-.controls .route-type .form-control {
-  width: 165px;
+  margin-bottom: 1px;
 }
 
 .controls .hill-reluctance {
@@ -171,10 +168,7 @@
 
 .controls .hill-reluctance .control-label {
   line-height: 30px;
-}
-
-.controls .hill-reluctance .form-control {
-  width: 145px;
+  margin-bottom: 1px;
 }
 
 .controls .clear-link {
@@ -199,6 +193,7 @@
 .directions h3 {
   font-size: 14px;
   margin-top: 0;
+  font-weight: normal;
 }
 
 .directions .directions-list {
@@ -444,8 +439,16 @@
     margin-bottom: 6px;
   }
 
+  .controls .route-type .form-control {
+    width: 175px;
+  }
+
   .controls .hill-reluctance {
     margin-bottom: 6px;
+  }
+
+  .controls .hill-reluctance .form-control {
+    width: 155px;
   }
 
   .directions {
