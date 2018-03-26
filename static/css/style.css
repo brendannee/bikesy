@@ -360,11 +360,11 @@
 }
 
 .map-container .map-layers .map-layer-legend.class2 {
-  background: #660099;
+  background: hsl(280, 97%, 48%);
 }
 
 .map-container .map-layers .map-layer-legend.class3 {
-  background: #9933CC;
+  background: hsl(280, 59%, 71%);
 }
 
 .map-container .map-layers span {
