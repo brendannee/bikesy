@@ -37,7 +37,7 @@ class Directions extends React.Component {
         <div className="stats">
           <h3 className="d-none d-print-block">Ride Summary</h3>
           <b>{formatDistance(this.props.distance)}, {formatTime(this.props.distance)}</b><br />
-          {formatElevation(getElevationGain(this.props.elevationProfile))} feet of total climbing
+          {formatElevation(getElevationGain(this.props.elevationProfile))} of total climbing
           <Weather location={location} />
         </div>
 
