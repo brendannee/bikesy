@@ -68,6 +68,7 @@ class Directions extends React.Component {
         style={{ height }}
       >
         {this.getDirections()}
+        <a href="https://511contracosta.org/biking/bike-mapper-faq/" className="faq">What is Bike Mapper?</a>
         {this.getDisclaimer()}
       </div>
     );
