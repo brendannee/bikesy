@@ -9,11 +9,13 @@ class Weather extends React.Component {
   constructor(props) {
     super(props);
 
-    this.state = {};
+    this.state = {
+      location: {}
+    };
   }
 
   updateWeather() {
-    getWeather(this.props.location.lat, this.props.location.lng)
+    getWeather(this.state.location.lat, this.state.location.lng)
     .then(results => {
       if (results) {
         this.setState({
@@ -24,7 +26,7 @@ class Weather extends React.Component {
       }
     });
 
-    getAirQuality(this.props.location.lat, this.props.location.lng)
+    getAirQuality(this.state.location.lat, this.state.location.lng)
     .then(results => {
       if (results && results.length) {
         try {
@@ -40,16 +42,39 @@ class Weather extends React.Component {
     });
   }
 
-  componentWillMount() {
-    this.updateWeather();
+  componentDidMount() {
+    if (this.state.location && this.state.location.lat) {
+      this.updateWeather();
+    }
   }
 
-  componentWillReceiveProps() {
-    this.updateWeather();
+  componentDidUpdate() {
+    if (this.state.shouldUpdate === true) {
+      this.updateWeather();
+      this.setState({
+        shouldUpdate: false
+      })
+    }
+  }
+
+  static getDerivedStateFromProps(nextProps, prevState) {
+
+    if (!nextProps.location || !nextProps.location.lat) {
+      return null;
+    }
+
+    if (nextProps.location.lat === prevState.location.lat && nextProps.location.lng === prevState.location.lng) {
+      return null;
+    }
+
+    return {
+      location: nextProps.location,
+      shouldUpdate: true
+    };
   }
 
   render() {
-    if (!this.props.location) {
+    if (!this.state.location.lat) {
       return <div />;
     }
 

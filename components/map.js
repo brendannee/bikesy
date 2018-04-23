@@ -54,10 +54,12 @@ class Map extends React.Component {
     drawMap(this.handleMapClick, this.handleMarkerDrag);
   }
 
-  componentWillReceiveProps(nextProps) {
+  static getDerivedStateFromProps(nextProps) {
     updateStartMarker(nextProps.startLocation);
     updateEndMarker(nextProps.endLocation);
     updatePath(nextProps.path);
+
+    return null;
   }
 
   componentDidUpdate() {

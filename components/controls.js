@@ -73,36 +73,6 @@ class Controls extends React.Component {
     };
   }
 
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.startAddress === undefined) {
-      this.setState({
-        startAddress: '',
-      });
-    } else if (nextProps.startAddress && nextProps.startAddress !== this.state.startAddress) {
-      this.setState({
-        startAddress: nextProps.startAddress,
-      });
-    }
-
-    if (nextProps.endAddress === undefined) {
-      this.setState({
-        endAddress: '',
-      });
-    } else if (nextProps.endAddress && nextProps.endAddress !== this.state.endAddress) {
-      this.setState({
-        endAddress: nextProps.endAddress,
-      });
-    }
-
-    if (nextProps.scenario) {
-      const components = scenarioToComponents(nextProps.scenario);
-      this.setState({
-        hillReluctance: components.hillReluctance,
-        routeType: components.routeType,
-      });
-    }
-  }
-
   updateRoute() {
     const errorFields = this.validateForm();
 
@@ -138,6 +108,21 @@ class Controls extends React.Component {
     }
 
     return 'Start Address';
+  }
+
+  static getDerivedStateFromProps(nextProps, prevState) {
+    const newState = {
+      startAddress: (nextProps.startAddress === undefined) ? '' : nextProps.startAddress,
+      endAddress: (nextProps.endAddress === undefined) ? '' : nextProps.endAddress
+    };
+
+    if (nextProps.scenario) {
+      const components = scenarioToComponents(nextProps.scenario);
+      newState.hillReluctance = components.hillReluctance;
+      newState.routeType = components.routeType;
+    }
+
+    return newState;
   }
 
   render() {
