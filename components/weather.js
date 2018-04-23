@@ -19,7 +19,7 @@ class Weather extends React.Component {
     .then(results => {
       if (results) {
         this.setState({
-          temperature: results.main.temp,
+          temperature: Math.round(results.main.temp * 10) / 10,
           humidity: results.main.humidity,
           description: results.weather && results.weather.length ? results.weather[0].main : ''
         });
