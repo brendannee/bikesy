@@ -343,6 +343,7 @@
   display: inline-block;
   vertical-align: -6px;
   margin: 4px;
+  vertical-align: top;
 }
 
 .map-container .map-layers .map-layer-legend.bike-lockers {
@@ -367,12 +368,13 @@
   background: hsl(280, 59%, 71%);
 }
 
-.map-container .map-layers span {
-  padding-right: 10px;
-}
-
 .map-container .map-layers label {
   margin-bottom: 0;
+  padding: 2px 0;
+}
+
+.map-container .map-layers label input[type="checkbox"] {
+  padding-top: 3px;
 }
 
 .map-layers-open-box {
