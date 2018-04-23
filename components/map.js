@@ -89,15 +89,15 @@ class Map extends React.Component {
               </div>
               <div title="paved, separated (off the street) bikeways">
                 <div className="map-layer-legend class1"></div>
-                <span>Multi-use Path</span>
+                <label>Multi-use Path</label>
               </div>
               <div title="dedicated on-street bikeways, marked by striping on pavement">
                 <div className="map-layer-legend class2"></div>
-                <span>Bike Lane</span>
+                <label>Bike Lane</label>
               </div>
               <div title="on-street routes signed for bicyclists">
                 <div className="map-layer-legend class3"></div>
-                <span>Bike Route</span>
+                <label>Bike Route</label>
               </div>
             </div>
           </div>
