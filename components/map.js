@@ -11,7 +11,7 @@ class Map extends React.Component {
     this.state = {
       legendVisible: !this.props.isMobile,
       bikeLockersVisible: false,
-      btwdStationsVisible: false
+      btwdStationsVisible: true
     };
 
     this.handleMapClick = (latlng) => {
@@ -100,7 +100,7 @@ class Map extends React.Component {
             <div>
             <div title="bike to work day 2018 energizer stations">
               <div className="map-layer-legend btwd-stations"></div>
-              <label><input type="checkbox" value={this.state.btwdStationsVisible} onChange={this.toggleBtwdStationsVisibility} /> Bike to Work Day<br /> Energizer Stations</label>
+              <label><input type="checkbox" value={this.state.btwdStationsVisible} onChange={this.toggleBtwdStationsVisibility} checked={this.state.btwdStationsVisible} /> Bike to Work Day<br /> Energizer Stations</label>
             </div>
               <div title="bike lockers">
                 <div className="map-layer-legend bike-lockers"></div>
