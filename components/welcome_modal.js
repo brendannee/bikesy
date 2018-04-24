@@ -15,8 +15,14 @@ class WelcomeModal extends React.Component {
         contentLabel='Welcome'
       >
         <div className="welcome-modal">
+          <img
+            src="static/images/bikemapper-logo.png"
+            srcset="static/images/bikemapper-logo@2x.png 2x"
+            alt="Bike Mapper Logo"
+            className="welcome-logo"
+          />
           <h1>Welcome to Bike Mapper</h1>
-          <ul>
+          <ul className="welcome-steps">
             <li>Click anywhere to set the start and end points for your trip</li>
             <li>Drag-and-drop markers to recalculate the route</li>
             <li>Use the address boxes on the left to enter a specific address or landmark</li>

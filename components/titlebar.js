@@ -45,13 +45,13 @@ class TitleBar extends React.Component {
   render() {
     return (
       <div className="titlebar">
-        <h1 className="site-title">
-          <img
-            src="static/images/511cc-bike-mapper-logo.png"
-            alt="logo"
-            className="logo"
-          />
-        </h1>
+        <img
+          src="static/images/bikemapper-logo.png"
+          srcset="static/images/bikemapper-logo@2x.png 2x"
+          alt="Bike Mapper Logo"
+          className="titlebar-logo"
+        />
+        <h1>Bike Mapper</h1>
         {this.getRightButton()}
       </div>
     );

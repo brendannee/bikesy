@@ -81,8 +81,14 @@ class Map extends React.Component {
         className="map-container"
         hidden={this.props.isMobile && this.props.mobileView !== 'map'}
       >
-        <div className="logo">
-          <img src="static/images/511cc-bike-mapper-logo.png" alt="logo" />
+        <div className="map-logo">
+          <img
+            src="static/images/bikemapper-logo.png"
+            srcset="static/images/bikemapper-logo@2x.png 2x"
+            alt="Bike Mapper Logo"
+            className="map-logo-image"
+          />
+          <h1>Bike Mapper</h1>
         </div>
         <div className="map" id="map" style={{ height: `${this.props.height}px` }}></div>
         { this.state.legendVisible ? (
