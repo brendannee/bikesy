@@ -542,7 +542,7 @@
     top: 0;
     left: 52px;
     width: 150px;
-    height: 88px;
+    height: 92px;
     z-index: 10;
     padding: 0 5px 5px;
     border-bottom-right-radius: 3px;
@@ -552,9 +552,13 @@
     background: #f1f0f0;
   }
 
+  .map-container .map-logo h1 {
+    display: none;
+  }
+
   .map-container .map-logo .map-logo-image {
     float: left;
-    padding-top: 4px;
+    padding-bottom: 4px;
   }
 
   .map-container .map-logo h1 {
