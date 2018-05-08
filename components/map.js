@@ -84,7 +84,7 @@ class Map extends React.Component {
         <div className="map-logo">
           <img
             src="static/images/bikemapper-logo.png"
-            srcSet="static/images/bikemapper-logo@2x.png 2x"
+            srcset="static/images/bikemapper-logo@2x.png 2x"
             alt="Bike Mapper Logo"
             className="map-logo-image"
           />
