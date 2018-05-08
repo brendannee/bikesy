@@ -541,7 +541,7 @@
     position: absolute;
     top: 0;
     left: 52px;
-    width: 150px;
+    width: 71px;
     height: 88px;
     z-index: 10;
     padding: 0 5px 5px;
@@ -558,11 +558,7 @@
   }
 
   .map-container .map-logo h1 {
-    font-size: 20px;
-    color: #1568ab;
-    font-weight: bold;
-    margin-bottom: 0;
-    margin-top: 15px;
+    display: none;
   }
 
   .titlebar {
