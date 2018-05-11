@@ -1,7 +1,7 @@
 const React = require('react');
 import PropTypes from 'prop-types';
 
-import {latlngIsWithinBounds, drawMap, updateStartMarker, updateEndMarker, updatePath, updateMapSize, toggleBikeLockerLayer, toggleBtwdStationsLayer} from '../lib/map';
+import {latlngIsWithinBounds, drawMap, updateStartMarker, updateEndMarker, updatePath, updateMapSize, toggleBikeLockerLayer} from '../lib/map';
 const config = require('../frontendconfig.json');
 
 class Map extends React.Component {
@@ -10,8 +10,7 @@ class Map extends React.Component {
 
     this.state = {
       legendVisible: !this.props.isMobile,
-      bikeLockersVisible: false,
-      btwdStationsVisible: true
+      bikeLockersVisible: false
     };
 
     this.handleMapClick = (latlng) => {
@@ -47,14 +46,6 @@ class Map extends React.Component {
         bikeLockersVisible: !this.state.bikeLockersVisible,
       }, () => {
         toggleBikeLockerLayer(this.state.bikeLockersVisible);
-      });
-    }
-
-    this.toggleBtwdStationsVisibility = ()=> {
-      this.setState({
-        btwdStationsVisible: !this.state.btwdStationsVisible,
-      }, () => {
-        toggleBtwdStationsLayer(this.state.btwdStationsVisible);
       });
     }
   }
@@ -98,10 +89,6 @@ class Map extends React.Component {
               onClick={this.toggleLegendVisibility}
             >&minus;</div>
             <div>
-            <div title="bike to work day 2018 energizer stations">
-              <div className="map-layer-legend btwd-stations"></div>
-              <label><input type="checkbox" value={this.state.btwdStationsVisible} onChange={this.toggleBtwdStationsVisibility} checked={this.state.btwdStationsVisible} /> Bike to Work Day<br /> Energizer Stations</label>
-            </div>
               <div title="bike lockers">
                 <div className="map-layer-legend bike-lockers"></div>
                 <label><input type="checkbox" value={this.state.bikeLockersVisible} onChange={this.toggleBikeLockerVisibility} /> Bike Lockers</label>

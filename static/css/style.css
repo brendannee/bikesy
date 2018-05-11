@@ -375,16 +375,6 @@
   vertical-align: top;
 }
 
-.map-container .map-layers .map-layer-legend.btwd-stations {
-  background: #1c2bf4;
-  width: 16px;
-  height: 16px;
-  border-radius: 50%;
-  margin-top: 2px;
-  margin-bottom: 2px;
-  border: 1px solid #0f1777;
-}
-
 .map-container .map-layers .map-layer-legend.bike-lockers {
   background: #f41cf1;
   width: 16px;
