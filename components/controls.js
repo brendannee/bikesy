@@ -66,9 +66,16 @@ class Controls extends React.Component {
           this.setState({
             geolocationPending: false
           });
+        }, error =>  {
+          alert('Unable to use geolocation in your browser.');
+          this.setState({
+            geolocationPending: false
+          });
+        }, {
+          timeout: 15000
         });
       } else {
-        alert('Geolocation is now available in your browser');
+        alert('Geolocation is not available in your browser.');
       }
     };
   }
