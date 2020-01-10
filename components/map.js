@@ -89,10 +89,6 @@ class Map extends React.Component {
               onClick={this.toggleLegendVisibility}
             >&minus;</div>
             <div>
-              <div title="bike lockers">
-                <div className="map-layer-legend bike-lockers"></div>
-                <label><input type="checkbox" value={this.state.bikeLockersVisible} onChange={this.toggleBikeLockerVisibility} /> Bike Lockers</label>
-              </div>
               <div title="paved, separated (off the street) bikeways">
                 <div className="map-layer-legend class1"></div>
                 <label>Multi-use Path</label>
@@ -104,6 +100,10 @@ class Map extends React.Component {
               <div title="on-street routes signed for bicyclists">
                 <div className="map-layer-legend class3"></div>
                 <label>Bike Route</label>
+              </div>
+              <div title="bike lockers">
+                <div className="map-layer-legend bike-lockers"></div>
+                <label><input type="checkbox" value={this.state.bikeLockersVisible} onChange={this.toggleBikeLockerVisibility} /> Bike Lockers</label>
               </div>
             </div>
           </div>
