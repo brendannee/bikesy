@@ -7,5 +7,5 @@ module.exports = {
       '/privacy-policy': { page: '/privacy-policy' }
     }
   },
-  assetPrefix: process && process.env.NODE_ENV !== 'development' ? config.assetPrefix : undefined
+  assetPrefix: process && process.env.NODE_ENV !== 'development' ? config.assetPrefix : '/'
 }
