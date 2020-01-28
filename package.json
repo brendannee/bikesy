@@ -22,7 +22,9 @@
     "react-no-ssr": "^1.1.0",
     "recharts": "^2.0.0-beta.1"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "@zeit/next-css": "^1.0.1"
+  },
   "scripts": {
     "dev": "next",
     "build": "next build",

@@ -6,8 +6,6 @@ import {faCircleNotch, faCrosshairs} from '@fortawesome/free-solid-svg-icons'
 const _ = require('lodash');
 const classNames = require('classnames');
 
-const config = require('../frontendconfig.json');
-
 import {scenarioToComponents, componentsToScenario} from '../lib/scenarios';
 
 class Controls extends React.Component {
@@ -207,7 +205,7 @@ class Controls extends React.Component {
             type="submit"
             className="btn btn-success btn-update-route"
           >
-            <FontAwesomeIcon icon={faCircleNotch} spin className={classNames({ 'icon-not-loading': !this.props.loading })}/> Get Directions
+            {this.props.loading && <FontAwesomeIcon icon={faCircleNotch} spin />} Get Directions
           </button>
         </form>
       </div>
