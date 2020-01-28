@@ -13,8 +13,6 @@
   "boundsLeft": -122.8,
   "lowBikeSpeedMph": 7.5,
   "highBikeSpeedMph": 10,
-  "keenProjectId": "",
-  "keenWriteKey": "",
   "googleAnalyticsId": "",
   "openWeatherMapApiKey": "",
   "airNowApiKey": ""
