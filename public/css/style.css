@@ -337,16 +337,20 @@
   font-size: 20px;
 }
 
-.map-container .map-layers .map-layer-legend {
-  width: 15px;
-  height: 15px;
-  display: inline-block;
-  vertical-align: -6px;
-  margin: 4px;
-  vertical-align: top;
+.map-container .map-layers .map-legend-item {
+  margin: 4px 0;
+  display: flex;
+  align-items: center;
 }
 
-.map-container .map-layers .map-layer-legend.bike-lockers {
+.map-container .map-layers .map-legend-icon {
+  width: 15px;
+  height: 3px;
+  margin-right: 6px;
+  opacity: 0.6;
+}
+
+.map-container .map-layers .map-legend-icon.bike-lockers {
   background: #f41cf1;
   width: 16px;
   height: 16px;
@@ -356,15 +360,15 @@
   border: 1px solid #530a52;
 }
 
-.map-container .map-layers .map-layer-legend.class1 {
+.map-container .map-layers .map-legend-icon.class1 {
   background: #330066;
 }
 
-.map-container .map-layers .map-layer-legend.class2 {
+.map-container .map-layers .map-legend-icon.class2 {
   background: hsl(280, 97%, 48%);
 }
 
-.map-container .map-layers .map-layer-legend.class3 {
+.map-container .map-layers .map-legend-icon.class3 {
   background: hsl(280, 59%, 71%);
 }
 
