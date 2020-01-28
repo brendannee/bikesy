@@ -73,7 +73,7 @@ class Map extends React.Component {
         hidden={this.props.isMobile && this.props.mobileView !== 'map'}
       >
         <div className="logo">
-          <img src="/static/images/bikesy-logo.png" srcSet="/static/images/bikesy-logo@2x.png 2x" alt="logo" />
+          <img src="/images/bikesy-logo.png" srcSet="/images/bikesy-logo@2x.png 2x" alt="logo" />
         </div>
         <div className="map" id="map" style={{ height: `${this.props.height}px` }}></div>
         { this.state.legendVisible ? (
