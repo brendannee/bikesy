@@ -1,7 +1,7 @@
 const React = require('react');
 import PropTypes from 'prop-types'
-import FontAwesomeIcon from '@fortawesome/react-fontawesome'
-import {faMap, faListAlt} from '@fortawesome/fontawesome-free-solid'
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
+import {faMap, faListAlt} from '@fortawesome/free-solid-svg-icons'
 
 class TitleBar extends React.Component {
   constructor(props) {
