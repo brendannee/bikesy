@@ -1,7 +1,6 @@
 const React = require('react');
 import NoSSR from 'react-no-ssr'
 const polyline = require('@mapbox/polyline');
-import 'whatwg-fetch';
 
 const config = require('../frontendconfig.json');
 

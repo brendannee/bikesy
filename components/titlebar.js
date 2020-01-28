@@ -1,7 +1,7 @@
 const React = require('react');
 import PropTypes from 'prop-types'
-import FontAwesomeIcon from '@fortawesome/react-fontawesome'
-import {faMap, faListAlt} from '@fortawesome/fontawesome-free-solid'
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
+import {faMap, faListAlt} from '@fortawesome/free-solid-svg-icons'
 
 class TitleBar extends React.Component {
   constructor(props) {
@@ -46,8 +46,8 @@ class TitleBar extends React.Component {
     return (
       <div className="titlebar">
         <img
-          src="static/images/bikemapper-logo.png"
-          srcset="static/images/bikemapper-logo@2x.png 2x"
+          src="images/bikemapper-logo.png"
+          srcset="images/bikemapper-logo@2x.png 2x"
           alt="Bike Mapper Logo"
           className="titlebar-logo"
         />

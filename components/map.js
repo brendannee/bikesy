@@ -74,8 +74,8 @@ class Map extends React.Component {
       >
         <div className="map-logo">
           <img
-            src="static/images/bikemapper-logo.png"
-            srcset="static/images/bikemapper-logo@2x.png 2x"
+            src="images/bikemapper-logo.png"
+            srcset="images/bikemapper-logo@2x.png 2x"
             alt="Bike Mapper Logo"
             className="map-logo-image"
           />
@@ -89,21 +89,23 @@ class Map extends React.Component {
               onClick={this.toggleLegendVisibility}
             >&minus;</div>
             <div>
-              <div title="paved, separated (off the street) bikeways">
-                <div className="map-layer-legend class1"></div>
+              <div className="map-legend-item" title="paved, separated (off the street) bikeways">
+                <div className="map-legend-icon class1"></div>
                 <label>Multi-use Path</label>
               </div>
-              <div title="dedicated on-street bikeways, marked by striping on pavement">
-                <div className="map-layer-legend class2"></div>
+              <div className="map-legend-item" title="dedicated on-street bikeways, marked by striping on pavement">
+                <div className="map-legend-icon class2"></div>
                 <label>Bike Lane</label>
               </div>
-              <div title="on-street routes signed for bicyclists">
-                <div className="map-layer-legend class3"></div>
+              <div className="map-legend-item" title="on-street routes signed for bicyclists">
+                <div className="map-legend-icon class3"></div>
                 <label>Bike Route</label>
               </div>
-              <div title="bike lockers">
-                <div className="map-layer-legend bike-lockers"></div>
-                <label><input type="checkbox" value={this.state.bikeLockersVisible} onChange={this.toggleBikeLockerVisibility} /> Bike Lockers</label>
+              <div className="map-legend-item" title="bike lockers">
+                <div className="map-legend-icon bike-lockers"></div>
+                <label>
+                  <input type="checkbox" value={this.state.bikeLockersVisible} onChange={this.toggleBikeLockerVisibility} /> Bike Lockers
+                </label>
               </div>
             </div>
           </div>
