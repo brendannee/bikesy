@@ -138,7 +138,7 @@ class Controls extends React.Component {
       >
         <form onSubmit={this.processForm}>
           <div
-            className={classNames('form-group', 'form-inline', 'start-address', { 'has-error': _.includes(this.state.errorFields, 'startAddress') }, {'geolocation-pending': this.state.geolocationPending})}
+            className={classNames('form-group', 'form-inline', 'start-address', {'geolocation-pending': this.state.geolocationPending})}
           >
             <label className="control-label">Start Location</label>
             <div className="start-icon" title="Start Location">S</div>
@@ -146,7 +146,7 @@ class Controls extends React.Component {
               type="text"
               value={this.state.startAddress}
               onChange={this.handleStartAddressChange}
-              className="form-control"
+              className={classNames('form-control', { 'is-invalid': _.includes(this.state.errorFields, 'startAddress') })}
               placeholder={this.getStartAddressPlaceholder()}
             />
             <FontAwesomeIcon icon={faCircleNotch} spin className="loading-animation" />
@@ -158,21 +158,14 @@ class Controls extends React.Component {
               <FontAwesomeIcon icon={faCrosshairs} />
             </a>
           </div>
-          <div
-            className={classNames(
-              'form-group',
-              'form-inline',
-              'end-address',
-              { 'has-error': _.includes(this.state.errorFields, 'endAddress') }
-            )}
-          >
+          <div className="form-group form-inline end-address">
             <label className="control-label">End Location</label>
             <div className="end-icon" title="End Location">E</div>
             <input
               type="text"
               value={this.state.endAddress}
               onChange={this.handleEndAddressChange}
-              className="form-control"
+              className={classNames('form-control', { 'is-invalid': _.includes(this.state.errorFields, 'endAddress') })}
               placeholder="End Address"
             />
           </div>
