@@ -17,7 +17,7 @@ class WelcomeModal extends React.Component {
         <div className="welcome-modal">
           <img
             src="images/bikemapper-logo.png"
-            srcset="images/bikemapper-logo@2x.png 2x"
+            srcSet="images/bikemapper-logo@2x.png 2x"
             alt="Bike Mapper Logo"
             className="welcome-logo"
           />
