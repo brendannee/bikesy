@@ -13,8 +13,6 @@ class Controls extends React.Component {
     super(props);
 
     this.state = {
-      startAddress: '',
-      endAddress: '',
       routeType: '3',
       hillReluctance: '1',
       errorFields: [],
@@ -28,27 +26,31 @@ class Controls extends React.Component {
     };
 
     this.handleStartAddressChange = (event) => {
-      this.setState({
-        startAddress: event.target.value
-      });
+      this.props.updateControls({ startAddress: event.target.value });
     };
 
     this.handleEndAddressChange = (event) => {
-      this.setState({
-        endAddress: event.target.value
-      });
+      this.props.updateControls({ endAddress: event.target.value });
     };
 
     this.handleRouteTypeChange = (event) => {
-      this.setState({
+      const scenario = componentsToScenario({
         routeType: event.target.value,
-      }, this.updateRoute);
+        hillReluctance: this.state.hillReluctance,
+      });
+
+      this.props.updateControls({ scenario });
+      this.updateRoute();
     };
 
     this.handleHillReluctanceChange = (event) => {
-      this.setState({
+      const scenario = componentsToScenario({
+        routeType: this.state.hillReluctance,
         hillReluctance: event.target.value,
-      }, this.updateRoute);
+      });
+
+      this.props.updateControls({ scenario });
+      this.updateRoute();
     };
 
     this.getGeolocation = () => {
@@ -57,9 +59,11 @@ class Controls extends React.Component {
           geolocationPending: true
         });
         navigator.geolocation.getCurrentPosition(position => {
-          this.props.setStartLocation({
-            lat: position.coords.latitude,
-            lng: position.coords.longitude
+          this.props.updateControls({
+            startLocation: {
+              lat: position.coords.latitude,
+              lng: position.coords.longitude
+            }
           });
           this.setState({
             geolocationPending: false
@@ -84,23 +88,20 @@ class Controls extends React.Component {
     if (errorFields.length) {
       this.setState({ errorFields });
       return false;
+    } else {
+      this.setState({ errorFields: [] });
     }
 
-    const scenario = componentsToScenario({
-      routeType: this.state.routeType,
-      hillReluctance: this.state.hillReluctance,
-    });
-
-    return this.props.updateRoute(this.state.startAddress, this.state.endAddress, scenario);
+    return this.props.updateRoute();
   }
 
   validateForm() {
     const errorFields = [];
-    if (!this.state.startAddress) {
+    if (!this.props.startAddress) {
       errorFields.push('startAddress');
     }
 
-    if (!this.state.endAddress) {
+    if (!this.props.endAddress) {
       errorFields.push('endAddress');
     }
 
@@ -116,10 +117,7 @@ class Controls extends React.Component {
   }
 
   static getDerivedStateFromProps(nextProps, prevState) {
-    const newState = {
-      startAddress: (nextProps.startAddress === undefined) ? '' : nextProps.startAddress,
-      endAddress: (nextProps.endAddress === undefined) ? '' : nextProps.endAddress
-    };
+    const newState = {};
 
     if (nextProps.scenario) {
       const components = scenarioToComponents(nextProps.scenario);
@@ -144,7 +142,7 @@ class Controls extends React.Component {
             <div className="start-icon" title="Start Location">S</div>
             <input
               type="text"
-              value={this.state.startAddress}
+              value={this.props.startAddress}
               onChange={this.handleStartAddressChange}
               className={classNames('form-control', { 'is-invalid': _.includes(this.state.errorFields, 'startAddress') })}
               placeholder={this.getStartAddressPlaceholder()}
@@ -163,7 +161,7 @@ class Controls extends React.Component {
             <div className="end-icon" title="End Location">E</div>
             <input
               type="text"
-              value={this.state.endAddress}
+              value={this.props.endAddress}
               onChange={this.handleEndAddressChange}
               className={classNames('form-control', { 'is-invalid': _.includes(this.state.errorFields, 'endAddress') })}
               placeholder="End Address"
@@ -214,7 +212,7 @@ Controls.propTypes = {
   loading: PropTypes.bool,
   isMobile: PropTypes.bool,
   mobileView: PropTypes.string.isRequired,
-  setStartLocation: PropTypes.func.isRequired
+  updateControls: PropTypes.func.isRequired
 };
 
 export default Controls;

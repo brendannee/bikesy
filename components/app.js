@@ -25,7 +25,9 @@ class App extends React.Component {
       scenario: '5',
       mobileView: 'map',
       elevationHeight: 175,
-      showWelcomeModal: true
+      showWelcomeModal: true,
+      startAddress: '',
+      endAddress: ''
     };
 
     this.handleResize = () => {
@@ -36,21 +38,18 @@ class App extends React.Component {
       });
     };
 
-    this.updateRoute = (startAddress, endAddress, scenario) => {
+    this.updateRoute = () => {
       this.clearPath();
       this.setState({
-        startAddress,
-        endAddress,
-        scenario,
         loading: true,
         showWelcomeModal: false
       });
       const promises = [
-        geocode(startAddress).catch(() => {
+        geocode(this.state.startAddress).catch(() => {
           this.setState({ loading: false });
           alert('Invalid start address. Please try a different address.');
         }),
-        geocode(endAddress).catch(() => {
+        geocode(this.state.endAddress).catch(() => {
           this.setState({ loading: false });
           alert('Invalid end address. Please try a different address.');
         }),
@@ -109,7 +108,7 @@ class App extends React.Component {
       this.clearPath();
       this.setState({
         startLocation: latlng,
-        startAddress: undefined,
+        startAddress: '',
       });
 
       if (this.state.endLocation) {
@@ -133,7 +132,7 @@ class App extends React.Component {
       this.clearPath();
       this.setState({
         endLocation: latlng,
-        endAddress: undefined,
+        endAddress: '',
       });
 
       if (this.state.startLocation) {
@@ -152,6 +151,18 @@ class App extends React.Component {
         updateUrlParams([this.state.startAddress, this.state.endAddress, this.state.scenario]);
       });
     };
+
+    this.updateControls = items => {
+      if (items.startLocation) {
+        this.setStartLocation(items.startLocation);
+      } else if (items.scenario) {
+        this.setState({ scenario: items.scenario });
+      } else if (items.startAddress !== undefined) {
+        this.setState({ startAddress: items.startAddress });
+      } else if (items.endAddress !== undefined) {
+        this.setState({ endAddress: items.endAddress });
+      }
+    }
 
     this.clearRoute = () => {
       this.clearPath();
@@ -207,7 +218,11 @@ class App extends React.Component {
     const urlParams = readUrlParams();
 
     if (validateUrlParams(urlParams)) {
-      this.updateRoute(urlParams[0], urlParams[1], urlParams[2]);
+      this.setState({
+        startAddress: urlParams[0],
+        endAddress: urlParams[1],
+        scenario: urlParams[2],
+      }, this.updateRoute);
     }
   }
 
@@ -227,8 +242,8 @@ class App extends React.Component {
     this.setState({
       startLocation: undefined,
       endLocation: undefined,
-      startAddress: undefined,
-      endAddress: undefined,
+      startAddress: '',
+      endAddress: '',
     });
   }
 
@@ -279,7 +294,7 @@ class App extends React.Component {
           loading={this.state.loading}
           isMobile={this.state.isMobile}
           mobileView={this.state.mobileView}
-          setStartLocation={this.setStartLocation}
+          updateControls={this.updateControls}
         />
         <Directions
           directions={this.state.directions}
