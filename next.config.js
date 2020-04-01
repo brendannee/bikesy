@@ -1,7 +1,6 @@
 const config = require('./frontendconfig.json');
-const withCSS = require('@zeit/next-css')
 
-module.exports = withCSS({
+module.exports = {
   exportPathMap: function() {
     return {
       '/': { page: '/' },
@@ -9,4 +8,4 @@ module.exports = withCSS({
     }
   },
   assetPrefix: process && process.env.NODE_ENV !== 'development' ? config.assetPrefix : '/'
-})
+}
