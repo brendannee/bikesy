@@ -1,131 +1,133 @@
-const React = require('react');
-import PropTypes from 'prop-types';
-import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
-import {faCircleNotch, faCrosshairs} from '@fortawesome/free-solid-svg-icons'
+/* global navigator, alert */
 
-const _ = require('lodash');
-const classNames = require('classnames');
+const React = require('react')
+import PropTypes from 'prop-types'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faCircleNotch, faCrosshairs } from '@fortawesome/free-solid-svg-icons'
 
-import {scenarioToComponents, componentsToScenario} from '../lib/scenarios';
+const _ = require('lodash')
+const classNames = require('classnames')
+
+import { scenarioToComponents, componentsToScenario } from '../lib/scenarios'
 
 class Controls extends React.Component {
   constructor(props) {
-    super(props);
+    super(props)
 
     this.state = {
       routeType: '3',
       hillReluctance: '1',
       errorFields: [],
       geolocationPending: false
-    };
+    }
 
-    this.processForm = (event) => {
-      event.preventDefault();
+    this.processForm = event => {
+      event.preventDefault()
 
-      this.updateRoute();
-    };
+      this.updateRoute()
+    }
 
-    this.handleStartAddressChange = (event) => {
-      this.props.updateControls({ startAddress: event.target.value });
-    };
+    this.handleStartAddressChange = event => {
+      this.props.updateControls({ startAddress: event.target.value })
+    }
 
-    this.handleEndAddressChange = (event) => {
-      this.props.updateControls({ endAddress: event.target.value });
-    };
+    this.handleEndAddressChange = event => {
+      this.props.updateControls({ endAddress: event.target.value })
+    }
 
-    this.handleRouteTypeChange = (event) => {
+    this.handleRouteTypeChange = event => {
       const scenario = componentsToScenario({
         routeType: event.target.value,
-        hillReluctance: this.state.hillReluctance,
-      });
+        hillReluctance: this.state.hillReluctance
+      })
 
-      this.props.updateControls({ scenario });
-      this.updateRoute();
-    };
+      this.props.updateControls({ scenario })
+      this.updateRoute()
+    }
 
-    this.handleHillReluctanceChange = (event) => {
+    this.handleHillReluctanceChange = event => {
       const scenario = componentsToScenario({
         routeType: this.state.hillReluctance,
-        hillReluctance: event.target.value,
-      });
+        hillReluctance: event.target.value
+      })
 
-      this.props.updateControls({ scenario });
-      this.updateRoute();
-    };
+      this.props.updateControls({ scenario })
+      this.updateRoute()
+    }
 
     this.getGeolocation = () => {
       if ('geolocation' in navigator) {
         this.setState({
           geolocationPending: true
-        });
+        })
         navigator.geolocation.getCurrentPosition(position => {
           this.props.updateControls({
             startLocation: {
               lat: position.coords.latitude,
               lng: position.coords.longitude
             }
-          });
+          })
           this.setState({
             geolocationPending: false
-          });
-        }, error =>  {
-          alert('Unable to use geolocation in your browser.');
+          })
+        }, () => {
+          alert('Unable to use geolocation in your browser.')
           this.setState({
             geolocationPending: false
-          });
+          })
         }, {
           timeout: 15000
-        });
+        })
       } else {
-        alert('Geolocation is not available in your browser.');
+        alert('Geolocation is not available in your browser.')
       }
-    };
+    }
   }
 
   updateRoute() {
-    const errorFields = this.validateForm();
+    const errorFields = this.validateForm()
 
     if (errorFields.length) {
-      this.setState({ errorFields });
-      return false;
-    } else {
-      this.setState({ errorFields: [] });
+      this.setState({ errorFields })
+      return false
     }
 
-    return this.props.updateRoute();
+    this.setState({ errorFields: [] })
+
+    return this.props.updateRoute()
   }
 
   validateForm() {
-    const errorFields = [];
+    const errorFields = []
     if (!this.props.startAddress) {
-      errorFields.push('startAddress');
+      errorFields.push('startAddress')
     }
 
     if (!this.props.endAddress) {
-      errorFields.push('endAddress');
+      errorFields.push('endAddress')
     }
 
-    return errorFields;
+    return errorFields
   }
 
   getStartAddressPlaceholder() {
     if (this.state.geolocationPending) {
-      return '';
+      return ''
     }
 
-    return 'Start Address';
+    return 'Start Address'
   }
 
-  static getDerivedStateFromProps(nextProps, prevState) {
-    const newState = {};
+  static getDerivedStateFromProps(nextProps, previousState) {
+    const newState = {}
 
     if (nextProps.scenario) {
-      const components = scenarioToComponents(nextProps.scenario);
-      newState.hillReluctance = components.hillReluctance;
-      newState.routeType = components.routeType;
+      const components = scenarioToComponents(nextProps.scenario)
+      newState.hillReluctance = components.hillReluctance
+      newState.routeType = components.routeType
     }
 
-    return newState;
+    return newState
   }
 
   render() {
@@ -136,7 +138,7 @@ class Controls extends React.Component {
       >
         <form onSubmit={this.processForm}>
           <div
-            className={classNames('form-group', 'form-inline', 'start-address', {'geolocation-pending': this.state.geolocationPending})}
+            className={classNames('form-group', 'form-inline', 'start-address', { 'geolocation-pending': this.state.geolocationPending })}
           >
             <label className="control-label">Start Location</label>
             <div className="start-icon" title="Start Location">S</div>
@@ -200,7 +202,7 @@ class Controls extends React.Component {
           </button>
         </form>
       </div>
-    );
+    )
   }
 }
 
@@ -213,6 +215,6 @@ Controls.propTypes = {
   isMobile: PropTypes.bool,
   mobileView: PropTypes.string.isRequired,
   updateControls: PropTypes.func.isRequired
-};
+}
 
-export default Controls;
+export default Controls

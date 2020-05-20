@@ -1,25 +1,25 @@
-const React = require('react');
+const React = require('react')
 import PropTypes from 'prop-types'
-import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
-import {faMap, faListAlt} from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faMap, faListAlt } from '@fortawesome/free-solid-svg-icons'
 
 class TitleBar extends React.Component {
   constructor(props) {
-    super(props);
+    super(props)
 
-    this.state = {};
+    this.state = {}
 
     this.showDirections = () => {
-      this.props.changeMobileView('directions');
-    };
+      this.props.changeMobileView('directions')
+    }
 
     this.showMap = () => {
-      this.props.changeMobileView('map');
-    };
+      this.props.changeMobileView('map')
+    }
   }
 
   getRightButton() {
-    let button = '';
+    let button = ''
     if (this.props.mobileView === 'map') {
       button = (
         <button
@@ -28,7 +28,7 @@ class TitleBar extends React.Component {
         >
           <FontAwesomeIcon icon={faListAlt} /> Directions
         </button>
-      );
+      )
     } else if (this.props.mobileView === 'directions') {
       button = (
         <button
@@ -37,9 +37,10 @@ class TitleBar extends React.Component {
         >
           <FontAwesomeIcon icon={faMap} /> Map
         </button>
-      );
+      )
     }
-    return button;
+
+    return button
   }
 
   render() {
@@ -55,14 +56,14 @@ class TitleBar extends React.Component {
         </h1>
         {this.getRightButton()}
       </div>
-    );
+    )
   }
 }
 
 TitleBar.propTypes = {
   changeMobileView: PropTypes.func.isRequired,
   isMobile: PropTypes.bool,
-  mobileView: PropTypes.string.isRequired,
-};
+  mobileView: PropTypes.string.isRequired
+}
 
-export default TitleBar;
+export default TitleBar

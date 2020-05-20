@@ -1,7 +1,7 @@
-const config = require('./frontendconfig.json');
+const config = require('./frontendconfig.json')
 
 module.exports = {
-  exportPathMap: function() {
+  exportPathMap() {
     return {
       '/': { page: '/' },
       '/privacy-policy': { page: '/privacy-policy' }

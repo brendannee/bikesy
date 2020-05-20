@@ -1,81 +1,80 @@
-const React = require('react');
-import PropTypes from 'prop-types';
-const classNames = require('classnames');
+const React = require('react')
+import PropTypes from 'prop-types'
+const classNames = require('classnames')
 
-import {getWeather} from '../lib/weather';
-import {getAirQuality} from '../lib/airquality';
+import { getWeather } from '../lib/weather'
+import { getAirQuality } from '../lib/airquality'
 
 class Weather extends React.Component {
   constructor(props) {
-    super(props);
+    super(props)
 
     this.state = {
       location: {}
-    };
+    }
   }
 
   updateWeather() {
     getWeather(this.state.location.lat, this.state.location.lng)
-    .then(results => {
-      if (results) {
-        this.setState({
-          temperature: Math.round(results.main.temp * 10) / 10,
-          humidity: results.main.humidity,
-          description: results.weather && results.weather.length ? results.weather[0].main : ''
-        });
-      }
-    });
+      .then(results => {
+        if (results) {
+          this.setState({
+            temperature: Math.round(results.main.temp * 10) / 10,
+            humidity: results.main.humidity,
+            description: results.weather && results.weather.length ? results.weather[0].main : ''
+          })
+        }
+      })
 
     getAirQuality(this.state.location.lat, this.state.location.lng)
-    .then(results => {
-      if (results && results.length) {
-        try {
-          this.setState({
-            aqi: results[0].AQI,
-            categoryNumber: results[0].Category.Number,
-            categoryName: results[0].Category.Name
-          });
-        } catch (err) {
-          console.error(err);
+      .then(results => {
+        if (results && results.length) {
+          try {
+            this.setState({
+              aqi: results[0].AQI,
+              categoryNumber: results[0].Category.Number,
+              categoryName: results[0].Category.Name
+            })
+          } catch (error) {
+            console.error(error)
+          }
         }
-      }
-    });
+      })
   }
 
   componentDidMount() {
     if (this.state.location && this.state.location.lat) {
-      this.updateWeather();
+      this.updateWeather()
     }
   }
 
   componentDidUpdate() {
     if (this.state.shouldUpdate === true) {
-      this.updateWeather();
+      this.updateWeather()
       this.setState({
         shouldUpdate: false
       })
     }
   }
 
-  static getDerivedStateFromProps(nextProps, prevState) {
-
+  static getDerivedStateFromProps(nextProps, previousState) {
     if (!nextProps.location || !nextProps.location.lat) {
-      return null;
+      return null
     }
 
-    if (nextProps.location.lat === prevState.location.lat && nextProps.location.lng === prevState.location.lng) {
-      return null;
+    if (nextProps.location.lat === previousState.location.lat && nextProps.location.lng === previousState.location.lng) {
+      return null
     }
 
     return {
       location: nextProps.location,
       shouldUpdate: true
-    };
+    }
   }
 
   render() {
     if (!this.state.location.lat) {
-      return <div />;
+      return <div />
     }
 
     return (
@@ -91,12 +90,12 @@ class Weather extends React.Component {
           <div className={classNames('air-quality-box', `air-quality-box-${this.state.categoryNumber}`)}>{this.state.aqi} {this.state.categoryName}</div>
         </div>
       </div>
-    );
+    )
   }
 }
 
 Weather.propTypes = {
   location: PropTypes.object
-};
+}
 
-export default Weather;
+export default Weather

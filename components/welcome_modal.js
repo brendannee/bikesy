@@ -1,10 +1,10 @@
-const React = require('react');
-import PropTypes from 'prop-types';
-const Modal = require('react-modal');
+const React = require('react')
+import PropTypes from 'prop-types'
+const Modal = require('react-modal')
 
 class WelcomeModal extends React.Component {
   constructor(props) {
-    super(props);
+    super(props)
   }
 
   render() {
@@ -12,7 +12,7 @@ class WelcomeModal extends React.Component {
       <Modal
         isOpen={this.props.showWelcomeModal}
         onRequestClose={this.props.hideWelcomeModal}
-        contentLabel='Welcome'
+        contentLabel="Welcome"
       >
         <div className="welcome-modal">
           <h1>Welcome to Bikesy</h1>
@@ -24,17 +24,17 @@ class WelcomeModal extends React.Component {
           <button onClick={this.props.hideWelcomeModal} className="btn btn-primary">OK</button>
         </div>
       </Modal>
-    );
+    )
   }
 
   componentWillMount() {
-    Modal.setAppElement('body');
+    Modal.setAppElement('body')
   }
 }
 
 WelcomeModal.propTypes = {
   showWelcomeModal: PropTypes.bool.isRequired,
   hideWelcomeModal: PropTypes.func.isRequired
-};
+}
 
-export default WelcomeModal;
+export default WelcomeModal
