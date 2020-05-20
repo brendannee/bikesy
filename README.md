@@ -16,16 +16,20 @@ You can pull info directly from the bikesy backend using the [Bikesy API](https:
 The assumptions that go into the routes provided by the Bikesy API are documented on the [Bikesy API page](https://blog.bikesy.com/api/) .
 
 
-# Running Locally
+## Running Locally
 
 To run locally:
 
-    npm run dev
+   yarn dev
 
 The open http://localhost:3000 in your browser.
 
-# Compiling to static files
+## Compiling to static files
 
-    npm run export
+    yarn export
 
 Files will be in the `/out` folder
+
+## Tests
+
+    yarn test
