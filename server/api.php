@@ -8,7 +8,7 @@
   elseif ($_GET['scenario'] === '4' || $_GET['scenario'] === '5' || $_GET['scenario'] === '6'):
     $server = 'ec2-54-84-66-250.compute-1.amazonaws.com';
   elseif ($_GET['scenario'] === '7' || $_GET['scenario'] === '8' || $_GET['scenario'] === '9'):
-    $server = 'ec2-52-91-149-237.compute-1.amazonaws.com';
+    $server = 'ec2-34-224-83-87.compute-1.amazonaws.com';
   else:
     http_response_code(500);
   endif;
