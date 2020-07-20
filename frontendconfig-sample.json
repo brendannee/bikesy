@@ -1,5 +1,6 @@
 {
   "assetPrefix": "https://bikesy.com",
+  "apiUrl": "https://bikesy.com/api/route",
   "forceSSL": true,
   "googleMapsApiKey": "",
   "mapboxAccessToken": "",

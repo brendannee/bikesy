@@ -1,0 +1,7 @@
+{
+  "version": 2,
+  "trailingSlash": false,
+  "rewrites": [
+    { "source": "/api.php\\?(.*)", "destination": "/api/route?$1" }
+  ]
+}
