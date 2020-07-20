@@ -2,6 +2,6 @@
   "version": 2,
   "trailingSlash": false,
   "rewrites": [
-    { "source": "/api.php\\?(.*)", "destination": "/api/route?$1" }
+    { "source": "/api.php\\?lat1=(.*)&lng1=(.*)&lat2=(.*)&lng2=(.*)&scenario=(.*)", "destination": "/api/route?lat1=$1&lng1=$2&lat2=$3&lng2=$4&scenario=$5" }
   ]
 }
