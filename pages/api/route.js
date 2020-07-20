@@ -14,7 +14,7 @@ export default async (request, response) => {
   const server = getServerUrl(scenario)
 
   if (!server) {
-    res.status(400).json({ error: 'invalid scenario' })
+    response.status(400).json({ error: 'invalid scenario' })
   }
 
   const url = `${server}?lat1=${lat1}&lng1=${lng1}&lat2=${lat2}&lng2=${lng2}&scenario=${scenario}`
