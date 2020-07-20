@@ -15,6 +15,5 @@
   "lowBikeSpeedMph": 7.5,
   "highBikeSpeedMph": 10,
   "googleAnalyticsId": "UA-306190-15",
-  "openWeatherMapApiKey": "802aab6e4bc8a5ae4856eb7663a4adf9",
-  "airNowApiKey": "596AC6D9-CC3C-47E5-9D10-17990CC7ADEA"
+  "openWeatherMapApiKey": "802aab6e4bc8a5ae4856eb7663a4adf9"
 }
