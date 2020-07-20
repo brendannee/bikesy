@@ -1,35 +1,38 @@
-const React = require('react');
-import PropTypes from 'prop-types';
+/* global window */
+
+const React = require('react')
+import PropTypes from 'prop-types'
 
 import Weather from './weather'
 
-import {formatDistance, formatTime, formatElevation, getElevationGain, metersToFeet} from '../lib/helper';
-import {getCenter} from '../lib/map';
+import { formatDistance, formatTime, formatElevation, getElevationGain, metersToFeet } from '../lib/helper'
+import { getCenter } from '../lib/map'
 
 class Directions extends React.Component {
   constructor(props) {
-    super(props);
+    super(props)
 
-    this.state = {};
+    this.state = {}
   }
 
   getDirections() {
     if (!this.props.directions) {
-      return '';
+      return ''
     }
 
     const directionsList = this.props.directions.reduce((memo, direction, idx) => {
       if (direction[1] !== 'nameless') {
-        memo.push(<li key={idx}><b>{direction[0]}</b> on <b>{direction[1]}</b></li>);
+        memo.push(<li key={idx}><b>{direction[0]}</b> on <b>{direction[1]}</b></li>)
       }
-      return memo;
-    }, []);
+
+      return memo
+    }, [])
 
     directionsList.push((
       <li key="final"><b>arrive</b> at <b>{this.props.endAddress}</b></li>
-    ));
+    ))
 
-    const location = getCenter(this.props.startLocation, this.props.endLocation);
+    const location = getCenter(this.props.startLocation, this.props.endLocation)
 
     return (
       <div>
@@ -50,16 +53,8 @@ class Directions extends React.Component {
     )
   }
 
-  getDisclaimer() {
-    return (
-      <div className="disclaimer">
-        We offer no guarantee regarding roadway conditions or safety of the proposed routes. Use your best judgment when choosing a route. Obey all vehicle code provisions.
-      </div>
-    )
-  }
-
   render() {
-    const height = this.props.height ? `${this.props.height}px` : 'auto';
+    const height = this.props.height ? `${this.props.height}px` : 'auto'
 
     return (
       <div
@@ -69,9 +64,11 @@ class Directions extends React.Component {
       >
         {this.getDirections()}
         <a href="https://511contracosta.org/biking/bike-mapper-faq/" className="faq">What is Bike Mapper?</a>
-        {this.getDisclaimer()}
+        <div className="disclaimer">
+          We offer no guarantee regarding roadway conditions or safety of the proposed routes. Use your best judgment when choosing a route. Obey all vehicle code provisions.
+        </div>
       </div>
-    );
+    )
   }
 }
 
@@ -85,7 +82,7 @@ Directions.propTypes = {
   elevationProfile: PropTypes.array,
   height: PropTypes.number,
   isMobile: PropTypes.bool,
-  mobileView: PropTypes.string,
-};
+  mobileView: PropTypes.string
+}
 
-export default Directions;
+export default Directions

@@ -1,69 +1,69 @@
-const React = require('react');
-import PropTypes from 'prop-types';
+const React = require('react')
+import PropTypes from 'prop-types'
 
-import {latlngIsWithinBounds, drawMap, updateStartMarker, updateEndMarker, updatePath, updateMapSize, toggleBikeLockerLayer} from '../lib/map';
-const config = require('../frontendconfig.json');
+import { latlngIsWithinBounds, drawMap, updateStartMarker, updateEndMarker, updatePath, updateMapSize, toggleBikeLockerLayer } from '../lib/map'
+const config = require('../frontendconfig.json')
 
 class Map extends React.Component {
   constructor(props) {
-    super(props);
+    super(props)
 
     this.state = {
       legendVisible: !this.props.isMobile,
       bikeLockersVisible: false
-    };
+    }
 
-    this.handleMapClick = (latlng) => {
+    this.handleMapClick = latlng => {
       if (!this.props.startLocation) {
         if (latlngIsWithinBounds(latlng)) {
-          this.props.setStartLocation(latlng);
+          this.props.setStartLocation(latlng)
         }
       } else if (!this.props.endLocation) {
         if (latlngIsWithinBounds(latlng)) {
-          this.props.setEndLocation(latlng);
+          this.props.setEndLocation(latlng)
         }
       }
-    };
+    }
 
     this.handleMarkerDrag = (latlng, type) => {
       if (latlngIsWithinBounds(latlng)) {
         if (type === 'start') {
-          this.props.setStartLocation(latlng);
+          this.props.setStartLocation(latlng)
         } else if (type === 'end') {
-          this.props.setEndLocation(latlng);
+          this.props.setEndLocation(latlng)
         }
       }
-    };
+    }
 
     this.toggleLegendVisibility = () => {
       this.setState({
-        legendVisible: !this.state.legendVisible,
-      });
-    };
+        legendVisible: !this.state.legendVisible
+      })
+    }
 
-    this.toggleBikeLockerVisibility = ()=> {
+    this.toggleBikeLockerVisibility = () => {
       this.setState({
-        bikeLockersVisible: !this.state.bikeLockersVisible,
+        bikeLockersVisible: !this.state.bikeLockersVisible
       }, () => {
-        toggleBikeLockerLayer(this.state.bikeLockersVisible);
-      });
+        toggleBikeLockerLayer(this.state.bikeLockersVisible)
+      })
     }
   }
 
   componentDidMount() {
-    drawMap(this.handleMapClick, this.handleMarkerDrag);
+    drawMap(this.handleMapClick, this.handleMarkerDrag)
   }
 
   static getDerivedStateFromProps(nextProps) {
-    updateStartMarker(nextProps.startLocation);
-    updateEndMarker(nextProps.endLocation);
-    updatePath(nextProps.path);
+    updateStartMarker(nextProps.startLocation)
+    updateEndMarker(nextProps.endLocation)
+    updatePath(nextProps.path)
 
-    return null;
+    return null
   }
 
   componentDidUpdate() {
-    updateMapSize();
+    updateMapSize()
   }
 
   render() {
@@ -116,7 +116,7 @@ class Map extends React.Component {
           >Toggle Map Legend</div>
         )}
       </div>
-    );
+    )
   }
 }
 
@@ -128,7 +128,7 @@ Map.propTypes = {
   setEndLocation: PropTypes.func.isRequired,
   height: PropTypes.number,
   isMobile: PropTypes.bool,
-  mobileView: PropTypes.string,
-};
+  mobileView: PropTypes.string
+}
 
-export default Map;
+export default Map

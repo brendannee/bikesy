@@ -1,5 +1,5 @@
 {
-  "assetPrefix": "https://511contracosta.org/bike",
+  "apiUrl": "https://bikesy.com/api/route",
   "forceSSL": true,
   "googleMapsApiKey": "AIzaSyCdlv6F8kjbh2R6Rd-ULbhmfgUlFHzfDPk",
   "mapboxAccessToken": "pk.eyJ1IjoiYmlrZXN5IiwiYSI6ImNpb2Q5bGxidDAwMDF1bmt4ajcwNWNvMDkifQ.tjhechlMQUuWTlK5KgbafA",
@@ -14,6 +14,5 @@
   "lowBikeSpeedMph": 7.5,
   "highBikeSpeedMph": 10,
   "googleAnalyticsId": "UA-5291794-1",
-  "openWeatherMapApiKey": "802aab6e4bc8a5ae4856eb7663a4adf9",
-  "airNowApiKey": "596AC6D9-CC3C-47E5-9D10-17990CC7ADEA"
+  "openWeatherMapApiKey": "802aab6e4bc8a5ae4856eb7663a4adf9"
 }

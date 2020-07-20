@@ -1,32 +1,8 @@
 {
   "name": "bikesy",
-  "version": "3.1.1",
+  "version": "3.2.0",
   "description": "",
-  "dependencies": {
-    "@fortawesome/fontawesome-svg-core": "^1.2.28",
-    "@fortawesome/free-solid-svg-icons": "^5.13.0",
-    "@fortawesome/react-fontawesome": "0.1.9",
-    "@mapbox/polyline": "^1.1.0",
-    "@turf/turf": "^5.1.6",
-    "auto-link": "^1.0.0",
-    "babel-runtime": "^6.26.0",
-    "classnames": "^2.2.6",
-    "isomorphic-unfetch": "^3.0.0",
-    "lodash": "^4.17.15",
-    "next": "^9.3.3",
-    "prop-types": "^15.7.2",
-    "react": "^16.13.1",
-    "react-dom": "^16.13.1",
-    "react-ga": "^2.7.0",
-    "react-modal": "^3.11.2",
-    "react-no-ssr": "^1.1.0",
-    "recharts": "^1.8.5"
-  },
-  "scripts": {
-    "dev": "next",
-    "export": "next build; next export",
-    "start": "next start"
-  },
+  "license": "MIT",
   "author": {
     "name": "Brendan Nee",
     "email": "brendan@blinktag.com",
@@ -36,8 +12,63 @@
     "type": "git",
     "url": "https://github.com/brendannee/bikesy"
   },
-  "engines": {
-    "node": "10.16.1"
+  "scripts": {
+    "dev": "next dev",
+    "export": "next build; next export",
+    "start": "next start -p $PORT",
+    "test": "xo"
   },
-  "license": "MIT"
+  "dependencies": {
+    "@fortawesome/fontawesome-svg-core": "^1.2.30",
+    "@fortawesome/free-solid-svg-icons": "^5.14.0",
+    "@fortawesome/react-fontawesome": "0.1.11",
+    "@mapbox/polyline": "^1.1.1",
+    "@turf/turf": "^5.1.6",
+    "auto-link": "^1.0.0",
+    "babel-runtime": "^6.26.0",
+    "classnames": "^2.2.6",
+    "isomorphic-unfetch": "^3.0.0",
+    "lodash": "^4.17.19",
+    "next": "^9.4.5-canary.42",
+    "prop-types": "^15.7.2",
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1",
+    "react-ga": "^3.1.2",
+    "react-modal": "^3.11.2",
+    "react-no-ssr": "^1.1.0",
+    "recharts": "^1.8.5"
+  },
+  "xo": {
+    "esnext": true,
+    "space": true,
+    "rules": {
+      "camelcase": [
+        "error",
+        {
+          "properties": "never"
+        }
+      ],
+      "object-curly-spacing": [
+        "error",
+        "always"
+      ],
+      "no-unused-vars": [
+        "error",
+        {
+          "varsIgnorePattern": "^[A-Z]"
+        }
+      ],
+      "semi": [
+        "error",
+        "never"
+      ]
+    }
+  },
+  "devDependencies": {
+    "babel-eslint": "^10.1.0",
+    "eslint-config-xo-nextjs": "^1.6.0",
+    "eslint-plugin-react": "^7.20.3",
+    "eslint-plugin-react-hooks": "^4.0.8",
+    "xo": "^0.32.1"
+  }
 }

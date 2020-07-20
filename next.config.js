@@ -1,11 +1,10 @@
-const config = require('./frontendconfig.json');
-
 module.exports = {
-  exportPathMap: function() {
-    return {
-      '/': { page: '/' },
-      '/privacy-policy': { page: '/privacy-policy' }
-    }
+  async rewrites() {
+    return [
+      {
+        source: '/api.php',
+        destination: '/api/route',
+      },
+    ]
   },
-  assetPrefix: process && process.env.NODE_ENV !== 'development' ? config.assetPrefix : '/'
 }

@@ -1,7 +1,6 @@
 import Head from 'next/head'
 
-
-export default () => (
+const PrivacyPolicy = () => (
   <div>
     <Head>
       <title>Bikesy Privacy Policy</title>
@@ -69,3 +68,5 @@ export default () => (
     </div>
   </div>
 )
+
+export default PrivacyPolicy

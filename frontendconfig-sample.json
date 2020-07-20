@@ -1,5 +1,5 @@
 {
-  "assetPrefix": "https://bikesy.com",
+  "apiUrl": "https://bikesy.com/api/route",
   "forceSSL": true,
   "googleMapsApiKey": "",
   "mapboxAccessToken": "",
@@ -14,6 +14,5 @@
   "lowBikeSpeedMph": 7.5,
   "highBikeSpeedMph": 10,
   "googleAnalyticsId": "",
-  "openWeatherMapApiKey": "",
-  "airNowApiKey": ""
+  "openWeatherMapApiKey": ""
 }
