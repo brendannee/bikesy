@@ -1,3 +1,23 @@
+import Cors from 'cors'
+
+const cors = Cors({
+  methods: ['GET', 'HEAD'],
+})
+
+// Helper method to wait for a middleware to execute before continuing
+// And to throw an error when an error happens in a middleware
+function runMiddleware(req, res, fn) {
+  return new Promise((resolve, reject) => {
+    fn(req, res, (result) => {
+      if (result instanceof Error) {
+        return reject(result)
+      }
+
+      return resolve(result)
+    })
+  })
+}
+
 function getServerUrl(scenario) {
   if (scenario === '1' || scenario === '2' || scenario === '3') {
     return 'http://ec2-54-208-197-111.compute-1.amazonaws.com'
@@ -9,6 +29,9 @@ function getServerUrl(scenario) {
 }
 
 export default async (request, response) => {
+  // Run the CORS middleware
+  await runMiddleware(request, response, cors)
+
   const { lat1, lng1, lat2, lng2, scenario } = request.query
 
   const server = getServerUrl(scenario)
