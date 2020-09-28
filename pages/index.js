@@ -2,7 +2,7 @@ import Head from 'next/head'
 
 import App from '../components/app'
 
-export default () => (
+const Index = () => (
   <div>
     <Head>
       <title>511 Contra Costa Bike Mapper</title>
@@ -19,3 +19,5 @@ export default () => (
     <App />
   </div>
 )
+
+export default Index

@@ -8,7 +8,7 @@ function getServerUrl(scenario) {
   }
 }
 
-export default async (request, response) => {
+const Route = async (request, response) => {
   const { lat1, lng1, lat2, lng2, scenario } = request.query
 
   const server = getServerUrl(scenario)
@@ -22,3 +22,5 @@ export default async (request, response) => {
 
   response.json(result)
 }
+
+export default Route
