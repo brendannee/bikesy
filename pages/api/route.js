@@ -28,7 +28,7 @@ function getServerUrl(scenario) {
   }
 }
 
-export default async (request, response) => {
+const Route = async (request, response) => {
   // Run the CORS middleware
   await runMiddleware(request, response, cors)
 
@@ -45,3 +45,5 @@ export default async (request, response) => {
 
   response.json(result)
 }
+
+export default Route
