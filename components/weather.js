@@ -1,101 +1,71 @@
-const React = require('react')
-import PropTypes from 'prop-types'
-const classNames = require('classnames')
+import React, { useState, useEffect } from 'react'
+import classNames from 'classnames'
 
 import { getWeather } from '../lib/weather'
 import { getAirQuality } from '../lib/airquality'
 
-class Weather extends React.Component {
-  constructor(props) {
-    super(props)
+const Weather = ({ lat, lng }) => {
+  const [weather, setWeather] = useState()
+  const [airQuality, setAirQuality] = useState()
 
-    this.state = {
-      location: {}
+  const updateWeather = async () => {
+    if (!lat || !lng) {
+      return
+    }
+
+    try {
+      const weatherResults = await getWeather(lat, lng)
+
+      if (weatherResults) {
+        setWeather({
+          temperature: Math.round(weatherResults.main.temp * 10) / 10,
+          humidity: weatherResults.main.humidity,
+          description: weatherResults.weather && weatherResults.weather.length ? weatherResults.weather[0].main : ''
+        })
+      }
+    } catch (error) {
+      console.error(error)
+    } 
+
+    try {
+      const airQualityResults = await getAirQuality(lat, lng)
+
+      if (airQualityResults && airQualityResults.length) {
+        setAirQuality({
+          aqi: airQualityResults[0].AQI,
+          categoryNumber: airQualityResults[0].Category.Number,
+          categoryName: airQualityResults[0].Category.Name
+        })
+      }
+    } catch (error) {
+      console.error(error)
     }
   }
 
-  updateWeather() {
-    getWeather(this.state.location.lat, this.state.location.lng)
-      .then(results => {
-        if (results) {
-          this.setState({
-            temperature: Math.round(results.main.temp * 10) / 10,
-            humidity: results.main.humidity,
-            description: results.weather && results.weather.length ? results.weather[0].main : ''
-          })
-        }
-      })
+  useEffect(() => {
+    updateWeather()
+  }, [lat, lng])
 
-    getAirQuality(this.state.location.lat, this.state.location.lng)
-      .then(results => {
-        if (results && results.length) {
-          try {
-            this.setState({
-              aqi: results[0].AQI,
-              categoryNumber: results[0].Category.Number,
-              categoryName: results[0].Category.Name
-            })
-          } catch (error) {
-            console.error(error)
-          }
-        }
-      })
+  if (!weather || !lat || !lng) {
+    return null
   }
 
-  componentDidMount() {
-    if (this.state.location && this.state.location.lat) {
-      this.updateWeather()
-    }
-  }
-
-  componentDidUpdate() {
-    if (this.state.shouldUpdate === true) {
-      this.updateWeather()
-      this.setState({
-        shouldUpdate: false
-      })
-    }
-  }
-
-  static getDerivedStateFromProps(nextProps, previousState) {
-    if (!nextProps.location || !nextProps.location.lat) {
-      return null
-    }
-
-    if (nextProps.location.lat === previousState.location.lat && nextProps.location.lng === previousState.location.lng) {
-      return null
-    }
-
-    return {
-      location: nextProps.location,
-      shouldUpdate: true
-    }
-  }
-
-  render() {
-    if (!this.state.location.lat) {
-      return <div />
-    }
-
-    return (
-      <div className="weather">
-        <h3 className="d-none d-print-block">Current Weather</h3>
-        <div className="temperature">{this.state.temperature}&deg;F</div>
-        <div className="weather-description">{this.state.description}</div>
-        <div className="humidity">Humidity: {this.state.humidity}%</div>
+  return (
+    <div className="weather">
+      <h3 className="d-none d-print-block">Current Weather</h3>
+      <div className="temperature">{weather.temperature}&deg;F</div>
+      <div className="weather-description">{weather.description}</div>
+      <div className="humidity">Humidity: {weather.humidity}%</div>
+      {airQuality && (
         <div
           className="air-quality"
-          hidden={this.state.aqi === undefined}
+          hidden={airQuality.aqi === undefined}
         >Air Quality:
-          <div className={classNames('air-quality-box', `air-quality-box-${this.state.categoryNumber}`)}>{this.state.aqi} {this.state.categoryName}</div>
+          <div className={classNames('air-quality-box', `air-quality-box-${airQuality.categoryNumber}`)}>{airQuality.aqi} {airQuality.categoryName}</div>
         </div>
-      </div>
-    )
-  }
-}
-
-Weather.propTypes = {
-  location: PropTypes.object
+      )}
+    </div>
+  )
 }
 
 export default Weather
