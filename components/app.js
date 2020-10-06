@@ -94,10 +94,19 @@ class App extends React.Component {
           }
 
           const path = polyline.toGeoJSON(results.Geometry)
+          let cumulativeDistance = 0
           this.setState({
             path,
-            distance: results.Distance,
-            elevation: results.Elevation,
+            elevationProfile: results.Elevation.map((elevation, index) => {
+              const elevationNode = {
+                elevation,
+                distance: cumulativeDistance
+              }
+
+              cumulativeDistance += results.Distance[index]
+
+              return elevationNode
+            }),
             steps: results.Steps
           })
           updateUrlParams([this.state.startAddress, this.state.endAddress, this.state.scenario])
