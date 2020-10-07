@@ -19,8 +19,8 @@
     "test": "xo"
   },
   "dependencies": {
-    "@fortawesome/fontawesome-svg-core": "^1.2.30",
-    "@fortawesome/free-solid-svg-icons": "^5.14.0",
+    "@fortawesome/fontawesome-svg-core": "^1.2.32",
+    "@fortawesome/free-solid-svg-icons": "^5.15.1",
     "@fortawesome/react-fontawesome": "0.1.11",
     "@mapbox/polyline": "^1.1.1",
     "@turf/turf": "^5.1.6",
@@ -28,7 +28,7 @@
     "babel-runtime": "^6.26.0",
     "classnames": "^2.2.6",
     "cors": "^2.8.5",
-    "isomorphic-unfetch": "^3.0.0",
+    "isomorphic-unfetch": "^3.1.0",
     "lodash": "^4.17.20",
     "next": "^9.5.3",
     "prop-types": "^15.7.2",
@@ -68,7 +68,7 @@
   "devDependencies": {
     "babel-eslint": "^10.1.0",
     "eslint-config-xo-nextjs": "^1.6.0",
-    "eslint-plugin-react": "^7.21.2",
+    "eslint-plugin-react": "^7.21.3",
     "eslint-plugin-react-hooks": "^4.1.2",
     "xo": "^0.33.1"
   }
