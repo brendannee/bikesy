@@ -1,26 +1,19 @@
 /* global window */
 
-const React = require('react')
-import PropTypes from 'prop-types'
+import React from 'react'
 
 import Weather from './weather'
 
 import { formatDistance, formatTime, formatElevation, getElevationGain, metersToFeet } from '../lib/helper'
 import { getCenter } from '../lib/map'
 
-class Directions extends React.Component {
-  constructor(props) {
-    super(props)
-
-    this.state = {}
-  }
-
-  getDirections() {
-    if (!this.props.directions) {
+const Directions = ({ directions, startAddress, endAddress, startLocation, endLocation, distance, elevationProfile, isMobile, mobileView, height }) => {
+  const getDirections = () => {
+    if (!directions) {
       return ''
     }
 
-    const directionsList = this.props.directions.reduce((memo, direction, idx) => {
+    const directionsList = directions.reduce((memo, direction, idx) => {
       if (direction[1] !== 'nameless') {
         memo.push(<li key={idx}><b>{direction[0]}</b> on <b>{direction[1]}</b></li>)
       }
@@ -29,18 +22,18 @@ class Directions extends React.Component {
     }, [])
 
     directionsList.push((
-      <li key="final"><b>arrive</b> at <b>{this.props.endAddress}</b></li>
+      <li key="final"><b>arrive</b> at <b>{endAddress}</b></li>
     ))
 
-    const location = getCenter(this.props.startLocation, this.props.endLocation)
+    const location = getCenter(startLocation, endLocation)
 
     return (
       <div>
-        <h3>Directions to <b>{this.props.endAddress}<span className="d-none d-print-inline"> from {this.props.startAddress}</span></b></h3>
+        <h3>Directions to <b>{endAddress}<span className="d-none d-print-inline"> from {startAddress}</span></b></h3>
         <div className="stats">
           <h3 className="d-none d-print-block">Ride Summary</h3>
-          <b>{formatDistance(this.props.distance)}, {formatTime(this.props.distance)}</b><br />
-          {formatElevation(metersToFeet(getElevationGain(this.props.elevationProfile)))} of total climbing
+          <b>{formatDistance(distance)}, {formatTime(distance)}</b><br />
+          {formatElevation(metersToFeet(getElevationGain(elevationProfile)))} of total climbing
           <Weather lat={location.lat} lng={location.lng} />
         </div>
 
@@ -53,36 +46,20 @@ class Directions extends React.Component {
     )
   }
 
-  render() {
-    const height = this.props.height ? `${this.props.height}px` : 'auto'
+  return (
+    <div
+      className="directions"
+      hidden={isMobile && mobileView !== 'directions'}
+      style={{ height: height ? `${height}px` : 'auto' }}
+    >
+      {getDirections()}
 
-    return (
-      <div
-        className="directions"
-        hidden={this.props.isMobile && this.props.mobileView !== 'directions'}
-        style={{ height }}
-      >
-        {this.getDirections()}
-        <div className="disclaimer">
-          We offer no guarantee regarding roadway conditions or safety of the proposed routes. Use your best judgment when choosing a route. Obey all vehicle code provisions.
-        </div>
-        <a className="disclaimer" href="https://bikesy.com/about">About Bikesy</a>
+      <div className="disclaimer">
+        We offer no guarantee regarding roadway conditions or safety of the proposed routes. Use your best judgment when choosing a route. Obey all vehicle code provisions.
       </div>
-    )
-  }
-}
-
-Directions.propTypes = {
-  directions: PropTypes.array,
-  startLocation: PropTypes.object,
-  endLocation: PropTypes.object,
-  startAddress: PropTypes.string,
-  endAddress: PropTypes.string,
-  distance: PropTypes.number,
-  elevationProfile: PropTypes.array,
-  height: PropTypes.number,
-  isMobile: PropTypes.bool,
-  mobileView: PropTypes.string
+      <a className="disclaimer" href="https://bikesy.com/about">About Bikesy</a>
+    </div>
+  )
 }
 
 export default Directions
