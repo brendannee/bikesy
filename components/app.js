@@ -103,7 +103,12 @@ const App = () => {
       setPath(geoJSONPath)
       setDistance(getPathDistance(geoJSONPath))
       setDirections(results.directions)
-      setElevationProfile(results.elevationProfile)
+      setElevationProfile(results.elevation_profile.map(node => {
+        return {
+          distance: node[0],
+          elevation: node[1]
+        }
+      }))
 
       logQuery(startAddress, endAddress, startLocation, endLocation)
 
