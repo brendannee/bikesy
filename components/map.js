@@ -16,11 +16,11 @@ class Map extends React.Component {
     this.handleMapClick = latlng => {
       if (!this.props.startLocation) {
         if (latlngIsWithinBounds(latlng)) {
-          this.props.setStartLocation(latlng)
+          this.props.assignStartLocation(latlng)
         }
       } else if (!this.props.endLocation) {
         if (latlngIsWithinBounds(latlng)) {
-          this.props.setEndLocation(latlng)
+          this.props.assignEndLocation(latlng)
         }
       }
     }
@@ -28,9 +28,9 @@ class Map extends React.Component {
     this.handleMarkerDrag = (latlng, type) => {
       if (latlngIsWithinBounds(latlng)) {
         if (type === 'start') {
-          this.props.setStartLocation(latlng)
+          this.props.assignStartLocation(latlng)
         } else if (type === 'end') {
-          this.props.setEndLocation(latlng)
+          this.props.assignEndLocation(latlng)
         }
       }
     }
@@ -118,8 +118,6 @@ Map.propTypes = {
   path: PropTypes.object,
   startLocation: PropTypes.object,
   endLocation: PropTypes.object,
-  setStartLocation: PropTypes.func.isRequired,
-  setEndLocation: PropTypes.func.isRequired,
   height: PropTypes.number,
   isMobile: PropTypes.bool,
   mobileView: PropTypes.string

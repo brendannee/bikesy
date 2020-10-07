@@ -33,7 +33,7 @@ const Directions = ({ directions, startAddress, endAddress, startLocation, endLo
         <div className="stats">
           <h3 className="d-none d-print-block">Ride Summary</h3>
           <b>{formatDistance(distance)}, {formatTime(distance)}</b><br />
-          {formatElevation(metersToFeet(getElevationGain(elevationProfile)))} of total climbing
+          {elevationProfile && `${formatElevation(metersToFeet(getElevationGain(elevationProfile)))} of total climbing`}
           <Weather lat={location.lat} lng={location.lng} />
         </div>
 
