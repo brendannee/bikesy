@@ -14,7 +14,7 @@ const Controls = ({ updateRoute, updateControls, mobileView, isMobile, startAddr
   const [errorFields, setErrorFields] = useState([])
   const [geolocationPending, setGeolocationPending] = useState(false)
   const [startAddressInput, setStartAddressInput] = useState('')
-  const [endAddressInput, setEndAddressInput]= useState('')
+  const [endAddressInput, setEndAddressInput] = useState('')
 
   const processForm = event => {
     event.preventDefault()
@@ -37,7 +37,7 @@ const Controls = ({ updateRoute, updateControls, mobileView, isMobile, startAddr
   const handleRouteTypeChange = event => {
     const scenario = componentsToScenario({
       routeType: event.target.value,
-      hillReluctance: hillReluctance
+      hillReluctance
     })
 
     updateControls({ scenario })
@@ -46,7 +46,7 @@ const Controls = ({ updateRoute, updateControls, mobileView, isMobile, startAddr
 
   const handleHillReluctanceChange = event => {
     const scenario = componentsToScenario({
-      routeType: routeType,
+      routeType,
       hillReluctance: event.target.value
     })
 
@@ -110,27 +110,25 @@ const Controls = ({ updateRoute, updateControls, mobileView, isMobile, startAddr
     return 'Start Address'
   }
 
-  useEffect(() =>{
+  useEffect(() => {
     const components = scenarioToComponents(scenario)
-    if (components.hillReluctance !== hillReluctance){
+    if (components.hillReluctance !== hillReluctance) {
       setHillReluctance(components.hillReluctance)
     }
 
-    if (components.routeType !== routeType){
+    if (components.routeType !== routeType) {
       setRouteType(components.routeType)
     }
-
   }, [scenario])
 
   useEffect(() => {
-    if (startAddress !== startAddressInput){
+    if (startAddress !== startAddressInput) {
       setStartAddressInput(startAddress)
     }
   }, [startAddress])
 
-
   useEffect(() => {
-    if (endAddress !== endAddressInput){
+    if (endAddress !== endAddressInput) {
       setEndAddressInput(endAddress)
     }
   }, [endAddress])

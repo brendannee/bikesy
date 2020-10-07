@@ -25,7 +25,7 @@ const Weather = ({ lat, lng }) => {
       }
     } catch (error) {
       console.error(error)
-    } 
+    }
 
     try {
       const airQualityResults = await getAirQuality(lat, lng)

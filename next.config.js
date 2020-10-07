@@ -3,8 +3,8 @@ module.exports = {
     return [
       {
         source: '/api.php',
-        destination: '/api/route',
-      },
+        destination: '/api/route'
+      }
     ]
-  },
+  }
 }

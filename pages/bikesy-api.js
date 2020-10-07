@@ -18,7 +18,7 @@ const Api = () => (
     </Head>
 
     <div className="container">
-      <h2>About Bikesy</h2> 
+      <h2>About Bikesy</h2>
 
       <p>Bikesy’s bike routes are available via an API. This is still in beta and could change at any time. </p>
       <p>Example</p>
@@ -77,7 +77,7 @@ const Api = () => (
       <p>Example Output</p>
       <div>
         <pre><code>
-{`{
+          {`{
   directions: [
     [
       "start northwest",
@@ -651,10 +651,10 @@ const Api = () => (
 }`}
         </code></pre>
       </div>
-  
+
       <h2>API Details</h2>
       <p>We made assumptions about weighting different <a
-          href="http://wiki.openstreetmap.org/wiki/Highway_tag_usage">OpenStreetMaps road classifications</a> for each
+        href="http://wiki.openstreetmap.org/wiki/Highway_tag_usage">OpenStreetMaps road classifications</a> for each
         scenario. For all scenarios, busier road classifications such as “motorway” and “primary” were given a higher weight
         than less busy road classifications such as “tertiary” and “path”. Weights are multipliers on the actual length of
         the link so a higher weight on a segment of road means that we are more likely to avoid routing on that segment.</p>
@@ -796,7 +796,7 @@ const Api = () => (
       <p>Let us know how you use the API, send us suggestions for improving it or ask us a question about our
         less-than-complete documentation. <a href="mailto:info@bikesy.com">info@bikesy.com</a>. Want to contribute? Fork our
         <a href="http://github.com/brendannee/bikesy">front end</a> or <a
-          href="https://github.com/brendannee/bikesy-server">back end</a> and get going.</p>
+        href="https://github.com/brendannee/bikesy-server">back end</a> and get going.</p>
     </div>
   </div>
 )
