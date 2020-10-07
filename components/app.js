@@ -65,7 +65,7 @@ const App = () => {
         alert('Invalid end address. Please try a different address.')
       })
     ])
-    
+
     if (!results || !results[0] || !results[1]) {
       setLoading(false)
       return
@@ -111,8 +111,7 @@ const App = () => {
       }))
 
       logQuery(startAddress, endAddress, startLocation, endLocation)
-
-    } catch(error) {
+    } catch (error) {
       handleError(error)
     }
   }
@@ -149,12 +148,15 @@ const App = () => {
     if (items.startLocation) {
       assignStartLocation(items.startLocation)
     }
+
     if (items.scenario) {
       setScenario(items.scenario)
     }
+
     if (items.startAddress !== undefined) {
       setStartAddress(items.startAddress)
     }
+
     if (items.endAddress !== undefined) {
       setEndAddress(items.endAddress)
     }
@@ -202,7 +204,7 @@ const App = () => {
     setEndAddress(undefined)
   }
 
-  const checkMobile = (width) => {
+  const checkMobile = width => {
     if (width === undefined) {
       return false
     }
@@ -272,7 +274,7 @@ const App = () => {
   }, [startLocation, endLocation])
 
   useEffect(() => {
-    if (startAddress && endAddress){
+    if (startAddress && endAddress) {
       updateUrlParams([startAddress, endAddress, scenario])
     }
   }, [startAddress, endAddress, scenario])

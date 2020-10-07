@@ -14,9 +14,9 @@ const TitleBar = ({ mobileView, changeMobileView }) => {
         </button>
       )
     }
-    
+
     if (mobileView === 'directions') {
-      return(
+      return (
         <button
           className="btn btn-white btn-sm btn-right d-print-none pt-0"
           onClick={() => changeMobileView('map')}
@@ -28,7 +28,6 @@ const TitleBar = ({ mobileView, changeMobileView }) => {
 
     return null
   }
-
 
   return (
     <div className="titlebar">

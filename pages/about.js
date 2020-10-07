@@ -18,8 +18,8 @@ const About = () => (
     </Head>
 
     <div className="container">
-      <h2>About Bikesy</h2> 
-			<p>Welcome to <a href="https://bikesy.com">Bikesy</a> – an innovative and open bike mapping system specially designed to find flat, safe, and fast routes anywhere in the SF Bay Area.</p>
+      <h2>About Bikesy</h2>
+      <p>Welcome to <a href="https://bikesy.com">Bikesy</a> – an innovative and open bike mapping system specially designed to find flat, safe, and fast routes anywhere in the SF Bay Area.</p>
 
       <h2><strong>We’ve never seen so many features, and we bet you haven’t either.</strong></h2>
       <p><strong>Avoid those uphill climbs.</strong></p>
@@ -35,7 +35,7 @@ const About = () => (
       <p><strong>Cute name, but doesn’t Google do it better?</strong></p>
       <p>Actually, there are a number of other bike mapping services that work in the Bay Area, and they’re all pretty good. We strongly encourage you to try out other services to find out how we’re different, but ours is the only site to give you a complete elevation profile for your trip and to let you choose from nine pre-computed routes.</p>
       <p>If you find some neat features someone else has implemented that you’d like to see on Bikesy, <a href="mailto:info@blinktag.com">let us know</a>.</p>
-=
+      =
       <p>Please, <a href="mailto:info@bikesy.com">let us know</a> if we missed any other bike route planners.</p>
       <p><strong>Wait, who are you?</strong></p>
       <p>Bikesy was started by <a href="https://blinktag.com">BlinkTag Inc</a> with very large contributions from <a href="http://www.baytripper.org/about.html">Jerry Jariyasunant</a> and <a href="http://bmander.com/">Brandon Martin-Anderson</a>.</p>
