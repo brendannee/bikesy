@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 
 import { latlngIsWithinBounds, drawMap, updateStartMarker, updateEndMarker, updatePath, updateMapSize, toggleBikeLockerLayer } from '../lib/map'
 const config = require('../frontendconfig.json')
@@ -7,12 +7,15 @@ const Map = ({ isMobile, mobileView, height, startLocation, endLocation, path, a
   const [legendVisible, setLegendVisible] = useState(!isMobile)
   const [bikeLockersVisible, setBikeLockersVisible] = useState(false)
 
+  const startLocationRef = useRef(startLocation)
+  const endLocationRef = useRef(endLocation)
+
   const handleMapClick = latlng => {
-    if (!startLocation) {
+    if (!startLocationRef.current) {
       if (latlngIsWithinBounds(latlng)) {
         assignStartLocation(latlng)
       }
-    } else if (!endLocation) {
+    } else if (!endLocationRef.current) {
       if (latlngIsWithinBounds(latlng)) {
         assignEndLocation(latlng)
       }
@@ -44,10 +47,12 @@ const Map = ({ isMobile, mobileView, height, startLocation, endLocation, path, a
 
   useEffect(() => {
     updateStartMarker(startLocation)
+    startLocationRef.current = startLocation
   }, [startLocation])
 
   useEffect(() => {
     updateEndMarker(endLocation)
+    endLocationRef.current = endLocation
   }, [endLocation])
 
   useEffect(() => {
@@ -57,7 +62,6 @@ const Map = ({ isMobile, mobileView, height, startLocation, endLocation, path, a
   useEffect(() => {
     updateMapSize()
   }, [height])
-
 
   return (
     <div
