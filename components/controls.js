@@ -1,220 +1,212 @@
 /* global navigator, alert */
 
-const React = require('react')
-import PropTypes from 'prop-types'
+import React, { useState, useEffect } from 'react'
+import _ from 'lodash'
+import classNames from 'classnames'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCircleNotch, faCrosshairs } from '@fortawesome/free-solid-svg-icons'
 
-const _ = require('lodash')
-const classNames = require('classnames')
-
 import { scenarioToComponents, componentsToScenario } from '../lib/scenarios'
 
-class Controls extends React.Component {
-  constructor(props) {
-    super(props)
+const Controls = ({ updateRoute, updateControls, mobileView, isMobile, startAddress, endAddress, scenario, clearRoute, loading }) => {
+  const [routeType, setRouteType] = useState('3')
+  const [hillReluctance, setHillReluctance] = useState('1')
+  const [errorFields, setErrorFields] = useState([])
+  const [geolocationPending, setGeolocationPending] = useState(false)
+  const [startAddressInput, setStartAddressInput] = useState('')
+  const [endAddressInput, setEndAddressInput]= useState('')
 
-    this.state = {
-      routeType: '3',
-      hillReluctance: '1',
-      errorFields: [],
-      geolocationPending: false
-    }
+  const processForm = event => {
+    event.preventDefault()
 
-    this.processForm = event => {
-      event.preventDefault()
+    updateControls({
+      startAddress: startAddressInput,
+      endAddress: endAddressInput
+    })
+    handleForm()
+  }
 
-      this.updateRoute()
-    }
+  const handleStartAddressChange = event => {
+    setStartAddressInput(event.target.value)
+  }
 
-    this.handleStartAddressChange = event => {
-      this.props.updateControls({ startAddress: event.target.value })
-    }
+  const handleEndAddressChange = event => {
+    setEndAddressInput(event.target.value)
+  }
 
-    this.handleEndAddressChange = event => {
-      this.props.updateControls({ endAddress: event.target.value })
-    }
+  const handleRouteTypeChange = event => {
+    const scenario = componentsToScenario({
+      routeType: event.target.value,
+      hillReluctance: hillReluctance
+    })
 
-    this.handleRouteTypeChange = event => {
-      const scenario = componentsToScenario({
-        routeType: event.target.value,
-        hillReluctance: this.state.hillReluctance
-      })
+    updateControls({ scenario })
+    handleForm()
+  }
 
-      this.props.updateControls({ scenario })
-      this.updateRoute()
-    }
+  const handleHillReluctanceChange = event => {
+    const scenario = componentsToScenario({
+      routeType: routeType,
+      hillReluctance: event.target.value
+    })
 
-    this.handleHillReluctanceChange = event => {
-      const scenario = componentsToScenario({
-        routeType: this.state.hillReluctance,
-        hillReluctance: event.target.value
-      })
+    updateControls({ scenario })
+    handleForm()
+  }
 
-      this.props.updateControls({ scenario })
-      this.updateRoute()
-    }
-
-    this.getGeolocation = () => {
-      if ('geolocation' in navigator) {
-        this.setState({
-          geolocationPending: true
+  const getGeolocation = () => {
+    if ('geolocation' in navigator) {
+      setGeolocationPending(true)
+      navigator.geolocation.getCurrentPosition(position => {
+        updateControls({
+          startLocation: {
+            lat: position.coords.latitude,
+            lng: position.coords.longitude
+          }
         })
-        navigator.geolocation.getCurrentPosition(position => {
-          this.props.updateControls({
-            startLocation: {
-              lat: position.coords.latitude,
-              lng: position.coords.longitude
-            }
-          })
-          this.setState({
-            geolocationPending: false
-          })
-        }, () => {
-          alert('Unable to use geolocation in your browser.')
-          this.setState({
-            geolocationPending: false
-          })
-        }, {
-          timeout: 15000
-        })
-      } else {
-        alert('Geolocation is not available in your browser.')
-      }
+        setGeolocationPending(false)
+      }, () => {
+        alert('Unable to use geolocation in your browser.')
+        setGeolocationPending(false)
+      }, {
+        timeout: 15000
+      })
+    } else {
+      alert('Geolocation is not available in your browser.')
     }
   }
 
-  updateRoute() {
-    const errorFields = this.validateForm()
+  const handleForm = () => {
+    const errorFields = validateForm()
 
     if (errorFields.length) {
-      this.setState({ errorFields })
+      setErrorFields(errorFields)
       return false
     }
 
-    this.setState({ errorFields: [] })
+    setErrorFields([])
 
-    return this.props.updateRoute()
+    return updateRoute(startAddressInput, endAddressInput)
   }
 
-  validateForm() {
+  const validateForm = () => {
     const errorFields = []
-    if (!this.props.startAddress) {
+    if (!startAddress) {
       errorFields.push('startAddress')
     }
 
-    if (!this.props.endAddress) {
+    if (!endAddress) {
       errorFields.push('endAddress')
     }
 
     return errorFields
   }
 
-  getStartAddressPlaceholder() {
-    if (this.state.geolocationPending) {
+  const getStartAddressPlaceholder = () => {
+    if (geolocationPending) {
       return ''
     }
 
     return 'Start Address'
   }
 
-  static getDerivedStateFromProps(nextProps, previousState) {
-    const newState = {}
-
-    if (nextProps.scenario) {
-      const components = scenarioToComponents(nextProps.scenario)
-      newState.hillReluctance = components.hillReluctance
-      newState.routeType = components.routeType
+  useEffect(() =>{
+    const components = scenarioToComponents(scenario)
+    if (components.hillReluctance !== hillReluctance){
+      setHillReluctance(components.hillReluctance)
     }
 
-    return newState
-  }
+    if (components.routeType !== routeType){
+      setRouteType(components.routeType)
+    }
 
-  render() {
-    return (
-      <div
-        className="controls d-print-none"
-        hidden={this.props.mobileView !== 'directions' && this.props.isMobile}
-      >
-        <form onSubmit={this.processForm}>
-          <div
-            className={classNames('form-group', 'form-inline', 'start-address', { 'geolocation-pending': this.state.geolocationPending })}
-          >
-            <label className="control-label">Start Location</label>
-            <div className="start-icon" title="Start Location">S</div>
-            <input
-              type="text"
-              value={this.props.startAddress}
-              onChange={this.handleStartAddressChange}
-              className={classNames('form-control', { 'is-invalid': _.includes(this.state.errorFields, 'startAddress') })}
-              placeholder={this.getStartAddressPlaceholder()}
-            />
-            <FontAwesomeIcon icon={faCircleNotch} spin className="loading-animation" />
-            <a
-              className="btn btn-light btn-geolocation"
-              title="Use my location"
-              onClick={this.getGeolocation}
-            >
-              <FontAwesomeIcon icon={faCrosshairs} />
-            </a>
-          </div>
-          <div className="form-group form-inline end-address">
-            <label className="control-label">End Location</label>
-            <div className="end-icon" title="End Location">E</div>
-            <input
-              type="text"
-              value={this.props.endAddress}
-              onChange={this.handleEndAddressChange}
-              className={classNames('form-control', { 'is-invalid': _.includes(this.state.errorFields, 'endAddress') })}
-              placeholder="End Address"
-            />
-          </div>
-          <div className="form-group form-inline route-type">
-            <label className="control-label">Route Type</label>
-            <select
-              className="form-control"
-              onChange={this.handleRouteTypeChange}
-              value={this.state.routeType}
-            >
-              <option value="1">Mostly bike paths & lanes</option>
-              <option value="2">A reasonable route</option>
-              <option value="3">A more direct route</option>
-            </select>
-          </div>
-          <div className="form-group form-inline hill-reluctance">
-            <label className="control-label">Hill Reluctance</label>
-            <select
-              className="form-control"
-              onChange={this.handleHillReluctanceChange}
-              value={this.state.hillReluctance}
-            >
-              <option value="1">Avoid at all costs</option>
-              <option value="2">A reasonable route</option>
-              <option value="3">Bring on the Hills!</option>
-            </select>
-          </div>
-          <a href="#" className="clear-link" onClick={this.props.clearRoute}>Clear</a>
-          <button
-            type="submit"
-            className="btn btn-success btn-update-route"
-          >
-            {this.props.loading && <FontAwesomeIcon icon={faCircleNotch} spin />} Get Directions
-          </button>
-        </form>
-      </div>
-    )
-  }
-}
+  }, [scenario])
 
-Controls.propTypes = {
-  updateRoute: PropTypes.func.isRequired,
-  clearRoute: PropTypes.func.isRequired,
-  startAddress: PropTypes.string,
-  endAddress: PropTypes.string,
-  loading: PropTypes.bool,
-  isMobile: PropTypes.bool,
-  mobileView: PropTypes.string.isRequired,
-  updateControls: PropTypes.func.isRequired
+  useEffect(() => {
+    if (startAddress !== startAddressInput){
+      setStartAddressInput(startAddress)
+    }
+  }, [startAddress])
+
+
+  useEffect(() => {
+    if (endAddress !== endAddressInput){
+      setEndAddressInput(endAddress)
+    }
+  }, [endAddress])
+
+  return (
+    <div
+      className="controls d-print-none"
+      hidden={mobileView !== 'directions' && isMobile}
+    >
+      <form onSubmit={processForm}>
+        <div
+          className={classNames('form-group', 'form-inline', 'start-address', { 'geolocation-pending': geolocationPending })}
+        >
+          <label className="control-label">Start Location</label>
+          <div className="start-icon" title="Start Location">S</div>
+          <input
+            type="text"
+            value={startAddressInput}
+            onChange={handleStartAddressChange}
+            className={classNames('form-control', { 'is-invalid': _.includes(errorFields, 'startAddress') })}
+            placeholder={getStartAddressPlaceholder()}
+          />
+          <FontAwesomeIcon icon={faCircleNotch} spin className="loading-animation" />
+          <a
+            className="btn btn-light btn-geolocation"
+            title="Use my location"
+            onClick={getGeolocation}
+          >
+            <FontAwesomeIcon icon={faCrosshairs} />
+          </a>
+        </div>
+        <div className="form-group form-inline end-address">
+          <label className="control-label">End Location</label>
+          <div className="end-icon" title="End Location">E</div>
+          <input
+            type="text"
+            value={endAddressInput}
+            onChange={handleEndAddressChange}
+            className={classNames('form-control', { 'is-invalid': _.includes(errorFields, 'endAddress') })}
+            placeholder="End Address"
+          />
+        </div>
+        <div className="form-group form-inline route-type">
+          <label className="control-label">Route Type</label>
+          <select
+            className="form-control"
+            onChange={handleRouteTypeChange}
+            value={routeType}
+          >
+            <option value="1">Mostly bike paths & lanes</option>
+            <option value="2">A reasonable route</option>
+            <option value="3">A more direct route</option>
+          </select>
+        </div>
+        <div className="form-group form-inline hill-reluctance">
+          <label className="control-label">Hill Reluctance</label>
+          <select
+            className="form-control"
+            onChange={handleHillReluctanceChange}
+            value={hillReluctance}
+          >
+            <option value="1">Avoid at all costs</option>
+            <option value="2">A reasonable route</option>
+            <option value="3">Bring on the Hills!</option>
+          </select>
+        </div>
+        <a href="#" className="clear-link" onClick={clearRoute}>Clear</a>
+        <button
+          type="submit"
+          className="btn btn-success btn-update-route"
+        >
+          {loading && <FontAwesomeIcon icon={faCircleNotch} spin />} Get Directions
+        </button>
+      </form>
+    </div>
+  )
 }
 
 export default Controls
