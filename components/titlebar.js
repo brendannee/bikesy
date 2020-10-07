@@ -1,69 +1,48 @@
-const React = require('react')
-import PropTypes from 'prop-types'
+import React from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faMap, faListAlt } from '@fortawesome/free-solid-svg-icons'
 
-class TitleBar extends React.Component {
-  constructor(props) {
-    super(props)
-
-    this.state = {}
-
-    this.showDirections = () => {
-      this.props.changeMobileView('directions')
-    }
-
-    this.showMap = () => {
-      this.props.changeMobileView('map')
-    }
-  }
-
-  getRightButton() {
-    let button = ''
-    if (this.props.mobileView === 'map') {
-      button = (
+const TitleBar = ({ mobileView, changeMobileView }) => {
+  const getRightButton = () => {
+    if (mobileView === 'map') {
+      return (
         <button
           className="btn btn-white btn-sm btn-right d-print-none pt-0"
-          onClick={this.showDirections}
+          onClick={() => changeMobileView('directions')}
         >
           <FontAwesomeIcon icon={faListAlt} /> Directions
         </button>
       )
-    } else if (this.props.mobileView === 'directions') {
-      button = (
+    }
+    
+    if (mobileView === 'directions') {
+      return(
         <button
           className="btn btn-white btn-sm btn-right d-print-none pt-0"
-          onClick={this.showMap}
+          onClick={() => changeMobileView('map')}
         >
           <FontAwesomeIcon icon={faMap} /> Map
         </button>
       )
     }
 
-    return button
+    return null
   }
 
-  render() {
-    return (
-      <div className="titlebar">
-        <h1 className="site-title">
-          <img
-            src="/images/bikesy-logo.png"
-            srcSet="/images/bikesy-logo@2x.png 2x"
-            alt="logo"
-            className="logo"
-          />
-        </h1>
-        {this.getRightButton()}
-      </div>
-    )
-  }
-}
 
-TitleBar.propTypes = {
-  changeMobileView: PropTypes.func.isRequired,
-  isMobile: PropTypes.bool,
-  mobileView: PropTypes.string.isRequired
+  return (
+    <div className="titlebar">
+      <h1 className="site-title">
+        <img
+          src="/images/bikesy-logo.png"
+          srcSet="/images/bikesy-logo@2x.png 2x"
+          alt="logo"
+          className="logo"
+        />
+      </h1>
+      {getRightButton()}
+    </div>
+  )
 }
 
 export default TitleBar
