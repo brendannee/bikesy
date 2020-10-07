@@ -88,17 +88,17 @@ class App extends React.Component {
       getRoute(this.state.startLocation, this.state.endLocation, this.state.scenario)
         .then(results => {
           this.setState({ loading: false })
-          if (!results.path || !results.path.length) {
-            handleError(new Error('No path recieved'))
+          if (!results) {
+            handleError(new Error('No routes received'))
             return
           }
 
-          const path = polyline.toGeoJSON(results.path[0])
+          const path = polyline.toGeoJSON(results.Geometry)
           this.setState({
             path,
-            distance: getPathDistance(path),
-            directions: results.directions,
-            elevationProfile: results.elevation_profile
+            distance: results.Distance,
+            elevation: results.Elevation,
+            steps: results.Steps
           })
           updateUrlParams([this.state.startAddress, this.state.endAddress, this.state.scenario])
           logQuery(this.state.startAddress, this.state.endAddress, this.state.startLocation, this.state.endLocation)
