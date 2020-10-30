@@ -21,7 +21,7 @@
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^1.2.32",
     "@fortawesome/free-solid-svg-icons": "^5.15.1",
-    "@fortawesome/react-fontawesome": "0.1.11",
+    "@fortawesome/react-fontawesome": "0.1.12",
     "@mapbox/polyline": "^1.1.1",
     "@turf/turf": "^5.1.6",
     "auto-link": "^1.0.0",
@@ -30,10 +30,10 @@
     "cors": "^2.8.5",
     "isomorphic-unfetch": "^3.1.0",
     "lodash": "^4.17.20",
-    "next": "^9.5.4",
-    "react": "^16.13.1",
-    "react-dom": "^16.13.1",
-    "react-ga": "^3.1.2",
+    "next": "^10.0.0",
+    "react": "^17.0.1",
+    "react-dom": "^17.0.1",
+    "react-ga": "^3.2.0",
     "react-modal": "^3.11.2",
     "react-no-ssr": "^1.1.0",
     "recharts": "^1.8.5"
@@ -67,8 +67,8 @@
   "devDependencies": {
     "babel-eslint": "^10.1.0",
     "eslint-config-xo-nextjs": "^1.6.0",
-    "eslint-plugin-react": "^7.21.3",
-    "eslint-plugin-react-hooks": "^4.1.2",
-    "xo": "^0.33.1"
+    "eslint-plugin-react": "^7.21.5",
+    "eslint-plugin-react-hooks": "^4.2.0",
+    "xo": "^0.34.1"
   }
 }
