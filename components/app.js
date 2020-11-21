@@ -55,7 +55,7 @@ const App = () => {
     setLoading(true)
     setShowWelcomeModal(false)
 
-    const results = await Promise.all([
+    const [startLocation, endLocation] = await Promise.all([
       geocode(selectedStartAddress).catch(() => {
         setLoading(false)
         alert('Invalid start address. Please try a different address.')
@@ -66,23 +66,23 @@ const App = () => {
       })
     ])
 
-    if (!results || !results[0] || !results[1]) {
+    if (!startLocation || !endLocation) {
       setLoading(false)
       return
     }
 
-    if (!latlngIsWithinBounds(results[0], 'start')) {
+    if (!latlngIsWithinBounds(startLocation, 'start')) {
       setLoading(false)
       return
     }
 
-    if (!latlngIsWithinBounds(results[1], 'end')) {
+    if (!latlngIsWithinBounds(endLocation, 'end')) {
       setLoading(false)
       return
     }
 
-    setStartLocation(results[0])
-    setEndLocation(results[1])
+    setStartLocation(startLocation)
+    setEndLocation(endLocation)
     setMobileView('map')
   }
 
@@ -99,22 +99,11 @@ const App = () => {
         return
       }
 
-      const geoJSONPath = polyline.toGeoJSON(results.Geometry)
+      const geoJSONPath = polyline.toGeoJSON(results.geometry)
       setPath(geoJSONPath)
       setDistance(getPathDistance(geoJSONPath))
-      setDirections(results.Steps)
-      let cumulativeDistance = 0
-
-      setElevationProfile(results.Elevation.map((elevation, index) => {
-        const elevationNode = {
-          elevation,
-          distance: cumulativeDistance
-        }
-
-        cumulativeDistance += results.Distance[index]
-
-        return elevationNode
-      }))
+      setDirections(results.steps)
+      setElevationProfile(results.elevation_profile)
 
       logQuery(startAddress, endAddress, startLocation, endLocation)
     } catch (error) {
