@@ -454,9 +454,11 @@
     float: left;
     overflow-y: scroll;
   }
+
   .elevation {
     margin-left: 300px;
   }
+
   .elevation-open-box {
     bottom: 0;
     left: auto;
@@ -506,6 +508,7 @@
   .titlebar {
     display: none;
   }
+
   .directions {
     height: auto !important;
   }
@@ -528,6 +531,7 @@
   .map .leaflet-control-attribution {
     background: #fff !important;
   }
+
   .elevation {
     border: 0;
     margin-top: 20px;
