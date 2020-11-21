@@ -5965,6 +5965,11 @@ os-browserify@^0.3.0:
   resolved "https://registry.yarnpkg.com/os-browserify/-/os-browserify-0.3.0.tgz#854373c7f5c2315914fc9bfc6bd8238fdda1ec27"
   integrity sha1-hUNzx/XCMVkU/Jv8a9gjj92h7Cc=
 
+osrm-text-instructions@^0.14.1-beta.3:
+  version "0.14.1-beta.3"
+  resolved "https://registry.yarnpkg.com/osrm-text-instructions/-/osrm-text-instructions-0.14.1-beta.3.tgz#f01ef8224a2c0e01505f58fe2d2875fac2a910b7"
+  integrity sha512-HHJmm7ZXVF371mSmRybaRH5MSDkGm2GGNnde+WByep8BfAIolNMZ6jIcLoxbrKLcT9eb92XFtSvxaBbEMn4qCQ==
+
 p-cancelable@^1.0.0:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/p-cancelable/-/p-cancelable-1.1.0.tgz#d078d15a3af409220c886f1d9a0ca2e441ab26cc"

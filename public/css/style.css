@@ -208,6 +208,15 @@
   text-transform: capitalize;
 }
 
+.directions .directions-list-distance {
+  color: #888;
+  width: 35px;
+}
+
+.directions .directions-list-way-name {
+  font-weight: bold;
+}
+
 .weather {
   padding: 3px 0;
 }
@@ -505,35 +514,7 @@
 }
 
 @media print {
-  .titlebar {
-    display: none;
-  }
-
   .directions {
     height: auto !important;
-  }
-
-  .directions h3 {
-    font-size: 30px;
-    margin-top: 20px;
-  }
-
-  .directions .directions-list li {
-    font-size: 14px;
-    border-bottom: 0;
-  }
-
-  .map {
-    height: 1700px !important;
-    page-break-before: always;
-  }
-
-  .map .leaflet-control-attribution {
-    background: #fff !important;
-  }
-
-  .elevation {
-    border: 0;
-    margin-top: 20px;
   }
 }

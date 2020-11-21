@@ -37,7 +37,7 @@ const App = () => {
   })
   const [path, setPath] = useState()
   const [distance, setDistance] = useState()
-  const [directions, setDirections] = useState()
+  const [steps, setSteps] = useState()
   const [elevationProfile, setElevationProfile] = useState()
   const [elevationVisible, setElevationVisible] = useState()
 
@@ -102,7 +102,7 @@ const App = () => {
       const geoJSONPath = polyline.toGeoJSON(results.geometry)
       setPath(geoJSONPath)
       setDistance(getPathDistance(geoJSONPath))
-      setDirections(results.steps)
+      setSteps(results.steps)
       setElevationProfile(results.elevation_profile)
 
       logQuery(startAddress, endAddress, startLocation, endLocation)
@@ -188,7 +188,7 @@ const App = () => {
 
   const clearPath = () => {
     setPath(undefined)
-    setDirections(undefined)
+    setSteps(undefined)
     setElevationProfile(undefined)
   }
 
@@ -293,7 +293,7 @@ const App = () => {
         updateControls={updateControls}
       />
       <Directions
-        directions={directions}
+        steps={steps}
         distance={distance}
         startLocation={startLocation}
         endLocation={endLocation}

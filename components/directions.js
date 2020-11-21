@@ -1,29 +1,46 @@
 /* global window */
 
 import React from 'react'
+import osrmTextInstructions from 'osrm-text-instructions'
 
 import Weather from './weather'
 
-import { formatDistance, formatTime, formatElevation, getElevationGain, metersToFeet } from '../lib/helper'
+import { formatDistance, formatDistanceShort, formatTime, formatElevation, getElevationGain, metersToFeet, metersToMiles } from '../lib/helper'
 import { getCenter } from '../lib/map'
 
-const Directions = ({ directions, startAddress, endAddress, startLocation, endLocation, distance, elevationProfile, isMobile, mobileView, height }) => {
+const osrmti = osrmTextInstructions('v5')
+
+const Directions = ({ steps, startAddress, endAddress, startLocation, endLocation, distance, elevationProfile, isMobile, mobileView, height }) => {
   const getDirections = () => {
-    if (!directions) {
+    if (!steps) {
       return ''
     }
 
-    const directionsList = directions.reduce((memo, direction, idx) => {
-      if (direction[1] !== 'nameless') {
-        memo.push(<li key={idx}><b>{direction[0]}</b> on <b>{direction[1]}</b></li>)
-      }
+    let cumulativeDistance = 0;
+    const directionsList = steps.map((step, index) => {
+      const item = (
+        <li key={index} className="d-flex">
+          <div className="mr-2 flex-shrink-0 directions-list-distance">
+            {formatDistanceShort(metersToMiles(cumulativeDistance))}
+          </div>
+          <div dangerouslySetInnerHTML={{
+            __html: osrmti.compile('en', step, {
+              formatToken: (token, value) => {
+                if (token === 'way_name') {
+                  return `<span class="directions-list-way-name">${value}</span>`
+                }
+                
+                return value
+              }
+            })
+          }} />
+        </li>
+      )
 
-      return memo
-    }, [])
+      cumulativeDistance += step.distance
 
-    directionsList.push((
-      <li key="final"><b>arrive</b> at <b>{endAddress}</b></li>
-    ))
+      return item;
+    })
 
     const location = getCenter(startLocation, endLocation)
 
