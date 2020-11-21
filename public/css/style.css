@@ -350,16 +350,6 @@
   opacity: 0.6;
 }
 
-.map-container .map-layers .map-legend-icon.bike-lockers {
-  background: #f41cf1;
-  width: 16px;
-  height: 16px;
-  border-radius: 50%;
-  margin-top: 2px;
-  margin-bottom: 2px;
-  border: 1px solid #530a52;
-}
-
 .map-container .map-layers .map-legend-icon.class1 {
   background: #330066;
 }

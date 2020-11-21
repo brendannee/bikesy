@@ -1,10 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react'
 
-import { latlngIsWithinBounds, drawMap, updateStartMarker, updateEndMarker, updatePath, updateMapSize, toggleBikeLockerLayer } from '../lib/map'
+import { latlngIsWithinBounds, drawMap, updateStartMarker, updateEndMarker, updatePath, updateMapSize } from '../lib/map'
 
 const Map = ({ isMobile, mobileView, height, startLocation, endLocation, path, assignStartLocation, assignEndLocation }) => {
   const [legendVisible, setLegendVisible] = useState(!isMobile)
-  const [bikeLockersVisible, setBikeLockersVisible] = useState(false)
 
   const startLocationRef = useRef(startLocation)
   const endLocationRef = useRef(endLocation)
@@ -33,11 +32,6 @@ const Map = ({ isMobile, mobileView, height, startLocation, endLocation, path, a
 
   const toggleLegendVisibility = () => {
     setLegendVisible(!legendVisible)
-  }
-
-  const toggleBikeLockerVisibility = () => {
-    toggleBikeLockerLayer(!bikeLockersVisible)
-    setBikeLockersVisible(!bikeLockersVisible)
   }
 
   useEffect(() => {
@@ -78,12 +72,6 @@ const Map = ({ isMobile, mobileView, height, startLocation, endLocation, path, a
             onClick={toggleLegendVisibility}
           >&minus;</div>
           <div>
-            <div className="map-legend-item" title="bike lockers">
-              <div className="map-legend-icon bike-lockers"></div>
-              <label>
-                <input type="checkbox" value={bikeLockersVisible} onChange={toggleBikeLockerVisibility} /> Bike Lockers
-              </label>
-            </div>
             <div className="map-legend-item" title="paved, separated (off the street) bikeways">
               <div className="map-legend-icon class1"></div>
               <label>Multi-use Path</label>
