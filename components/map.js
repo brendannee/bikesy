@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react'
 
 import { latlngIsWithinBounds, drawMap, updateStartMarker, updateEndMarker, updatePath, updateMapSize, toggleBikeLockerLayer } from '../lib/map'
-const config = require('../frontendconfig.json')
 
 const Map = ({ isMobile, mobileView, height, startLocation, endLocation, path, assignStartLocation, assignEndLocation }) => {
   const [legendVisible, setLegendVisible] = useState(!isMobile)

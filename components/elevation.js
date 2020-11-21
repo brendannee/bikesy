@@ -16,7 +16,7 @@ const CustomTooltip = ({ active, payload }) => {
 }
 
 const Elevation = ({ elevationProfile, elevationVisible, isMobile, mobileView, toggleElevationVisibility, width, height }) => {
-  if (!elevationProfile || !elevationProfile.length) {
+  if (!elevationProfile || elevationProfile.length === 0) {
     return <div />
   }
 

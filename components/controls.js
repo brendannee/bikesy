@@ -79,7 +79,7 @@ const Controls = ({ updateRoute, updateControls, mobileView, isMobile, startAddr
   const handleForm = () => {
     const errorFields = validateForm()
 
-    if (errorFields.length) {
+    if (errorFields.length > 0) {
       setErrorFields(errorFields)
       return false
     }

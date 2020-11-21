@@ -1,4 +1,4 @@
-/* global window, alert */
+/* global window, location, alert */
 
 import React, { useEffect, useState } from 'react'
 import NoSSR from 'react-no-ssr'
@@ -11,21 +11,21 @@ import Directions from './directions'
 import Elevation from './elevation'
 import Map from './map'
 import TitleBar from './titlebar'
-import WelcomeModal from './welcome_modal'
+import WelcomeModal from './welcome-modal'
 
 import { getRoute } from '../lib/api'
 import { logQuery } from '../lib/analytics'
 import { handleError } from '../lib/error'
 import { geocode, reverseGeocode } from '../lib/geocode'
 import { latlngIsWithinBounds, updateMapSize, getPathDistance } from '../lib/map'
-import { updateUrlParams, readUrlParams, validateUrlParams } from '../lib/url'
+import { updateUrlParameters, readUrlParameters, validateUrlParameters } from '../lib/url'
 
 const App = () => {
+  const elevationHeight = 175
   const [loading, setLoading] = useState(false)
   const [scenario, setScenario] = useState('5')
   const [mobileView, setMobileView] = useState('map')
   const [isMobile, setIsMobile] = useState()
-  const [elevationHeight, setElevationHeight] = useState(175)
   const [showWelcomeModal, setShowWelcomeModal] = useState(true)
   const [startLocation, setStartLocation] = useState()
   const [endLocation, setEndLocation] = useState()
@@ -235,9 +235,9 @@ const App = () => {
       forceSSL()
     }
 
-    const urlParameters = readUrlParams()
+    const urlParameters = readUrlParameters()
 
-    if (validateUrlParams(urlParameters)) {
+    if (validateUrlParameters(urlParameters)) {
       setStartAddress(urlParameters[0])
       setEndAddress(urlParameters[1])
       setScenario(urlParameters[2])
@@ -270,7 +270,7 @@ const App = () => {
 
   useEffect(() => {
     if (startAddress && endAddress) {
-      updateUrlParams([startAddress, endAddress, scenario])
+      updateUrlParameters([startAddress, endAddress, scenario])
     }
   }, [startAddress, endAddress, scenario])
 

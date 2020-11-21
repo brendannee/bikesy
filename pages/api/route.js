@@ -1,3 +1,5 @@
+/* global fetch */
+
 import Cors from 'cors'
 
 const cors = Cors({
@@ -6,9 +8,9 @@ const cors = Cors({
 
 // Helper method to wait for a middleware to execute before continuing
 // And to throw an error when an error happens in a middleware
-function runMiddleware(request, res, fn) {
+function runMiddleware(request, response, fn) {
   return new Promise((resolve, reject) => {
-    fn(request, res, result => {
+    fn(request, response, result => {
       if (result instanceof Error) {
         return reject(result)
       }

@@ -793,10 +793,8 @@ const Api = () => (
       </table>
 
       <h2>Contact Us</h2>
-      <p>Let us know how you use the API, send us suggestions for improving it or ask us a question about our
-        less-than-complete documentation. <a href="mailto:info@bikesy.com">info@bikesy.com</a>. Want to contribute? Fork our
-        <a href="http://github.com/brendannee/bikesy">front end</a> or <a
-        href="https://github.com/brendannee/bikesy-server">back end</a> and get going.</p>
+      <p>Let us know how you use the API, send us suggestions for improving it or ask us a question. <a href="mailto:info@blinktag.com">info@blinktag.com</a>.</p>
+      <p>Want to contribute? Fork our <a href="http://github.com/brendannee/bikesy">front end</a> or <a href="https://github.com/brendannee/bikesy-server">back end</a> and get going.</p>
     </div>
   </div>
 )

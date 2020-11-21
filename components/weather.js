@@ -20,7 +20,7 @@ const Weather = ({ lat, lng }) => {
         setWeather({
           temperature: Math.round(weatherResults.main.temp * 10) / 10,
           humidity: weatherResults.main.humidity,
-          description: weatherResults.weather && weatherResults.weather.length ? weatherResults.weather[0].main : ''
+          description: weatherResults.weather && weatherResults.weather.length > 0 ? weatherResults.weather[0].main : ''
         })
       }
     } catch (error) {
@@ -30,7 +30,7 @@ const Weather = ({ lat, lng }) => {
     try {
       const airQualityResults = await getAirQuality(lat, lng)
 
-      if (airQualityResults && airQualityResults.length) {
+      if (airQualityResults && airQualityResults.length > 0) {
         setAirQuality({
           aqi: airQualityResults[0].AQI,
           categoryNumber: airQualityResults[0].Category.Number,
