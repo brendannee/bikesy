@@ -16,7 +16,7 @@ const Directions = ({ steps, startAddress, endAddress, startLocation, endLocatio
       return ''
     }
 
-    let cumulativeDistance = 0;
+    let cumulativeDistance = 0
     const directionsList = steps.map((step, index) => {
       const item = (
         <li key={index} className="d-flex">
@@ -29,7 +29,7 @@ const Directions = ({ steps, startAddress, endAddress, startLocation, endLocatio
                 if (token === 'way_name') {
                   return `<span class="directions-list-way-name">${value}</span>`
                 }
-                
+
                 return value
               }
             })
@@ -39,7 +39,7 @@ const Directions = ({ steps, startAddress, endAddress, startLocation, endLocatio
 
       cumulativeDistance += step.distance
 
-      return item;
+      return item
     })
 
     const location = getCenter(startLocation, endLocation)

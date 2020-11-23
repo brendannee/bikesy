@@ -16,6 +16,7 @@ import WelcomeModal from './welcome-modal'
 import { getRoute } from '../lib/api'
 import { logQuery } from '../lib/analytics'
 import { handleError } from '../lib/error'
+import { cleanElevationProfile } from '../lib/helper'
 import { geocode, reverseGeocode } from '../lib/geocode'
 import { latlngIsWithinBounds, updateMapSize, getPathDistance } from '../lib/map'
 import { updateUrlParameters, readUrlParameters, validateUrlParameters } from '../lib/url'
@@ -103,7 +104,7 @@ const App = () => {
       setPath(geoJSONPath)
       setDistance(getPathDistance(geoJSONPath))
       setSteps(results.steps)
-      setElevationProfile(results.elevation_profile)
+      setElevationProfile(cleanElevationProfile(results.elevation_profile))
 
       logQuery(startAddress, endAddress, startLocation, endLocation)
     } catch (error) {
