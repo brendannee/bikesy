@@ -3,10 +3,10 @@
 import React from 'react'
 import osrmTextInstructions from 'osrm-text-instructions'
 
-import Weather from './weather'
+import Weather from './weather.js'
 
-import { formatDistance, formatDistanceShort, formatTime, formatElevation, getElevationGain, metersToFeet, metersToMiles } from '../lib/helper'
-import { getCenter } from '../lib/map'
+import { formatDistance, formatDistanceShort, formatTime, formatElevation, getElevationGain, metersToFeet, metersToMiles } from '../lib/helper.js'
+import { getCenter } from '../lib/map.js'
 
 const osrmti = osrmTextInstructions('v5')
 

@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react'
 
-import { latlngIsWithinBounds, drawMap, updateStartMarker, updateEndMarker, updatePath, updateMapSize } from '../lib/map'
+import { latlngIsWithinBounds, drawMap, updateStartMarker, updateEndMarker, updatePath, updateMapSize } from '../lib/map.js'
 
 const Map = ({ isMobile, mobileView, height, startLocation, endLocation, path, assignStartLocation, assignEndLocation }) => {
   const [legendVisible, setLegendVisible] = useState(!isMobile)
@@ -13,10 +13,8 @@ const Map = ({ isMobile, mobileView, height, startLocation, endLocation, path, a
       if (latlngIsWithinBounds(latlng)) {
         assignStartLocation(latlng)
       }
-    } else if (!endLocationRef.current) {
-      if (latlngIsWithinBounds(latlng)) {
-        assignEndLocation(latlng)
-      }
+    } else if (!endLocationRef.current && latlngIsWithinBounds(latlng)) {
+      assignEndLocation(latlng)
     }
   }
 

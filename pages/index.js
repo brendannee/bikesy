@@ -1,6 +1,6 @@
-import Head from 'next/head'
+import Head from 'next/head.js'
 
-import App from '../components/app'
+import App from '../components/app.js'
 
 const Index = () => (
   <div>

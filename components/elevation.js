@@ -1,7 +1,7 @@
 const React = require('react')
 import { CartesianGrid, LineChart, Line, XAxis, YAxis, Tooltip } from 'recharts'
 
-import { formatElevation, metersToFeet, metersToMiles } from '../lib/helper'
+import { formatElevation, metersToFeet, metersToMiles } from '../lib/helper.js'
 
 const CustomTooltip = ({ active, payload }) => {
   if (active) {

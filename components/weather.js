@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react'
 import classNames from 'classnames'
 
-import { getWeather } from '../lib/weather'
-import { getAirQuality } from '../lib/airquality'
+import { getWeather } from '../lib/weather.js'
+import { getAirQuality } from '../lib/airquality.js'
 
 const Weather = ({ lat, lng }) => {
   const [weather, setWeather] = useState()
