@@ -42,7 +42,7 @@ const App = () => {
   const [steps, setSteps] = useState()
   const [elevationProfile, setElevationProfile] = useState()
   const [elevationVisible, setElevationVisible] = useState()
-  let fetching = false;
+  let fetching = false
 
   const handleResize = () => {
     setWindowSize({
