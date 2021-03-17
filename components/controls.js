@@ -6,11 +6,7 @@ import classNames from 'classnames'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCircleNotch, faCrosshairs } from '@fortawesome/free-solid-svg-icons'
 
-import { scenarioToComponents, componentsToScenario } from '../lib/scenarios'
-
-const Controls = ({ updateRoute, updateControls, mobileView, isMobile, startAddress, endAddress, scenario, clearRoute, loading }) => {
-  const [routeType, setRouteType] = useState('3')
-  const [hillReluctance, setHillReluctance] = useState('1')
+const Controls = ({ updateRoute, updateControls, mobileView, isMobile, startAddress, endAddress, hills, safety, clearRoute, loading }) => {
   const [errorFields, setErrorFields] = useState([])
   const [geolocationPending, setGeolocationPending] = useState(false)
   const [startAddressInput, setStartAddressInput] = useState('')
@@ -34,23 +30,13 @@ const Controls = ({ updateRoute, updateControls, mobileView, isMobile, startAddr
     setEndAddressInput(event.target.value)
   }
 
-  const handleRouteTypeChange = event => {
-    const scenario = componentsToScenario({
-      routeType: event.target.value,
-      hillReluctance
-    })
-
-    updateControls({ scenario })
+  const handleSafetyChange = event => {
+    updateControls({ safety: event.target.value })
     handleForm()
   }
 
-  const handleHillReluctanceChange = event => {
-    const scenario = componentsToScenario({
-      routeType,
-      hillReluctance: event.target.value
-    })
-
-    updateControls({ scenario })
+  const handleHillsChange = event => {
+    updateControls({ hills: event.target.value })
     handleForm()
   }
 
@@ -66,12 +52,14 @@ const Controls = ({ updateRoute, updateControls, mobileView, isMobile, startAddr
         })
         setGeolocationPending(false)
       }, () => {
+        /* eslint-disable-next-line no-alert */
         alert('Unable to use geolocation in your browser.')
         setGeolocationPending(false)
       }, {
         timeout: 15000
       })
     } else {
+      /* eslint-disable-next-line no-alert */
       alert('Geolocation is not available in your browser.')
     }
   }
@@ -109,17 +97,6 @@ const Controls = ({ updateRoute, updateControls, mobileView, isMobile, startAddr
 
     return 'Start Address'
   }
-
-  useEffect(() => {
-    const components = scenarioToComponents(scenario)
-    if (components.hillReluctance !== hillReluctance) {
-      setHillReluctance(components.hillReluctance)
-    }
-
-    if (components.routeType !== routeType) {
-      setRouteType(components.routeType)
-    }
-  }, [scenario])
 
   useEffect(() => {
     if (startAddress !== startAddressInput) {
@@ -175,24 +152,24 @@ const Controls = ({ updateRoute, updateControls, mobileView, isMobile, startAddr
           <label className="control-label">Route Type</label>
           <select
             className="form-control"
-            onChange={handleRouteTypeChange}
-            value={routeType}
+            onChange={handleSafetyChange}
+            value={safety}
           >
-            <option value="1">Mostly bike paths & lanes</option>
-            <option value="2">A reasonable route</option>
-            <option value="3">A more direct route</option>
+            <option value="high">Mostly bike paths &amp; lanes</option>
+            <option value="med">A reasonable route</option>
+            <option value="low">A more direct route</option>
           </select>
         </div>
         <div className="form-group form-inline hill-reluctance">
           <label className="control-label">Hill Reluctance</label>
           <select
             className="form-control"
-            onChange={handleHillReluctanceChange}
-            value={hillReluctance}
+            onChange={handleHillsChange}
+            value={hills}
           >
-            <option value="1">Avoid at all costs</option>
-            <option value="2">A reasonable route</option>
-            <option value="3">Bring on the Hills!</option>
+            <option value="low">Avoid at all costs</option>
+            <option value="med">A reasonable route</option>
+            <option value="high">Bring on the Hills!</option>
           </select>
         </div>
         <a href="#" className="clear-link" onClick={clearRoute}>Clear</a>

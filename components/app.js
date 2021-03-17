@@ -6,25 +6,26 @@ import polyline from '@mapbox/polyline'
 
 const config = require('../frontendconfig.json')
 
-import Controls from './controls'
-import Directions from './directions'
-import Elevation from './elevation'
-import Map from './map'
-import TitleBar from './titlebar'
-import WelcomeModal from './welcome-modal'
+import Controls from './controls.js'
+import Directions from './directions.js'
+import Elevation from './elevation.js'
+import Map from './map.js'
+import TitleBar from './titlebar.js'
+import WelcomeModal from './welcome-modal.js'
 
-import { getRoute } from '../lib/api'
-import { logQuery } from '../lib/analytics'
-import { handleError } from '../lib/error'
-import { cleanElevationProfile } from '../lib/helper'
-import { geocode, reverseGeocode } from '../lib/geocode'
-import { latlngIsWithinBounds, updateMapSize, getPathDistance } from '../lib/map'
-import { updateUrlParameters, readUrlParameters, validateUrlParameters } from '../lib/url'
+import { getRoute } from '../lib/api.js'
+import { logQuery } from '../lib/analytics.js'
+import { handleError } from '../lib/error.js'
+import { cleanElevationProfile } from '../lib/helper.js'
+import { geocode, reverseGeocode } from '../lib/geocode.js'
+import { latlngIsWithinBounds, updateMapSize, getPathDistance } from '../lib/map.js'
+import { updateUrlParameters } from '../lib/url.js'
 
 const App = () => {
   const elevationHeight = 175
   const [loading, setLoading] = useState(false)
-  const [scenario, setScenario] = useState('5')
+  const [hills, setHills] = useState('med')
+  const [safety, setSafety] = useState('med')
   const [mobileView, setMobileView] = useState('map')
   const [isMobile, setIsMobile] = useState()
   const [showWelcomeModal, setShowWelcomeModal] = useState(true)
@@ -41,6 +42,7 @@ const App = () => {
   const [steps, setSteps] = useState()
   const [elevationProfile, setElevationProfile] = useState()
   const [elevationVisible, setElevationVisible] = useState()
+  let fetching = false;
 
   const handleResize = () => {
     setWindowSize({
@@ -59,10 +61,12 @@ const App = () => {
     const [startLocation, endLocation] = await Promise.all([
       geocode(selectedStartAddress).catch(() => {
         setLoading(false)
+        /* eslint-disable-next-line no-alert */
         alert('Invalid start address. Please try a different address.')
       }),
       geocode(selectedEndAddress).catch(() => {
         setLoading(false)
+        /* eslint-disable-next-line no-alert */
         alert('Invalid end address. Please try a different address.')
       })
     ])
@@ -91,7 +95,7 @@ const App = () => {
     setLoading(true)
 
     try {
-      const results = await getRoute(startLocation, endLocation, scenario)
+      const results = await getRoute(startLocation, endLocation, hills, safety)
 
       setLoading(false)
 
@@ -145,8 +149,12 @@ const App = () => {
       assignStartLocation(items.startLocation)
     }
 
-    if (items.scenario) {
-      setScenario(items.scenario)
+    if (items.hills) {
+      setHills(items.hills)
+    }
+
+    if (items.safety) {
+      setSafety(items.safety)
     }
 
     if (items.startAddress !== undefined) {
@@ -236,14 +244,26 @@ const App = () => {
       forceSSL()
     }
 
-    const urlParameters = readUrlParameters()
+    const url = new URL(window.location.href)
 
-    if (validateUrlParameters(urlParameters)) {
-      setStartAddress(urlParameters[0])
-      setEndAddress(urlParameters[1])
-      setScenario(urlParameters[2])
+    if (url.searchParams.get('startAddress')) {
+      setStartAddress(url.searchParams.get('startAddress'))
+    }
 
-      updateRoute(urlParameters[0], urlParameters[1])
+    if (url.searchParams.get('endAddress')) {
+      setEndAddress(url.searchParams.get('endAddress'))
+    }
+
+    if (url.searchParams.get('hills')) {
+      setHills(url.searchParams.get('hills'))
+    }
+
+    if (url.searchParams.get('safety')) {
+      setSafety(url.searchParams.get('safety'))
+    }
+
+    if (url.searchParams.get('startAddress') && url.searchParams.get('endAddress')) {
+      updateRoute(url.searchParams.get('startAddress'), url.searchParams.get('endAddress'))
     }
 
     if (typeof window !== 'undefined') {
@@ -263,17 +283,19 @@ const App = () => {
     }
   }, [])
 
-  useEffect(() => {
-    if (startLocation && endLocation) {
-      fetchRoute()
+  useEffect(async () => {
+    if (startLocation && endLocation && !fetching) {
+      fetching = true
+      await fetchRoute()
+      fetching = false
     }
   }, [startLocation, endLocation])
 
   useEffect(() => {
     if (startAddress && endAddress) {
-      updateUrlParameters([startAddress, endAddress, scenario])
+      updateUrlParameters({ startAddress, endAddress, hills, safety })
     }
-  }, [startAddress, endAddress, scenario])
+  }, [startAddress, endAddress, hills, safety])
 
   return (
     <div>
@@ -287,7 +309,8 @@ const App = () => {
         clearRoute={clearRoute}
         startAddress={startAddress}
         endAddress={endAddress}
-        scenario={scenario}
+        hills={hills}
+        safety={safety}
         loading={loading}
         isMobile={isMobile}
         mobileView={mobileView}

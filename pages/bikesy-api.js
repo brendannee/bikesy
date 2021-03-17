@@ -23,8 +23,12 @@ const Api = () => (
       <p>Bikesy’s bike routes are available via an API. This is still in beta and could change at any time. </p>
       <p>Example</p>
       <div>
-        <pre><code>https://api.bikesy.com?lat1=37.7910183&amp;lng1=-122.3991499&amp;lat2=37.7700099&amp;lng2=-122.44693656&amp;scenario=3</code></pre>
+        <pre><code>https://api.bikesy.com/route?lat1=37.7910183&amp;lng1=-122.3991499&amp;lat2=37.7700099&amp;lng2=-122.44693656&amp;hills=low&amp;safety=high</code></pre>
       </div>
+
+      hills: low -> low tolerance, will avoid slopes.  high -> high tolerance, will take standard route.
+      safety: low -> low safety, will consider most roads.  high -> high safety, will prefer bike lanes and non-primary roads.
+
       <p>This example returns JSON for a bike route from the Financial district in San Francisco to Haight and Ashbury.</p>
       <h3>API Input</h3>
       <table className="table table-striped table-hover">
