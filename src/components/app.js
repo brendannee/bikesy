@@ -1,36 +1,36 @@
 /* global window, alert */
 
-import React, { useEffect, useState } from "react";
-import NoSSR from "react-no-ssr";
-import polyline from "@mapbox/polyline";
+import React, { useEffect, useState } from 'react';
+import NoSSR from 'react-no-ssr';
+import polyline from '@mapbox/polyline';
 
-import config from "config/frontendconfig";
+import config from 'config/frontendconfig';
 
-import Controls from "components/controls";
-import Directions from "components/directions";
-import Elevation from "components/elevation";
-import Map from "components/map";
-import TitleBar from "components/titlebar";
-import WelcomeModal from "components/welcome_modal";
+import Controls from 'components/controls';
+import Directions from 'components/directions';
+import Elevation from 'components/elevation';
+import Map from 'components/map';
+import TitleBar from 'components/titlebar';
+import WelcomeModal from 'components/welcome_modal';
 
-import { getRoute } from "lib/api";
-import { logQuery } from "lib/analytics";
-import { handleError } from "lib/error";
-import { geocode, reverseGeocode } from "lib/geocode";
-import { latlngIsWithinBounds, updateMapSize, getPathDistance } from "lib/map";
-import { updateUrlParams, readUrlParams, validateUrlParams } from "lib/url";
+import { getRoute } from 'lib/api';
+import { logQuery } from 'lib/analytics';
+import { handleError } from 'lib/error';
+import { geocode, reverseGeocode } from 'lib/geocode';
+import { latlngIsWithinBounds, updateMapSize, getPathDistance } from 'lib/map';
+import { updateUrlParams, readUrlParams, validateUrlParams } from 'lib/url';
 
 const App = () => {
   const [loading, setLoading] = useState(false);
-  const [scenario, setScenario] = useState("5");
-  const [mobileView, setMobileView] = useState("map");
+  const [scenario, setScenario] = useState('5');
+  const [mobileView, setMobileView] = useState('map');
   const [isMobile, setIsMobile] = useState();
   const [elevationHeight, setElevationHeight] = useState(175);
   const [showWelcomeModal, setShowWelcomeModal] = useState(true);
   const [startLocation, setStartLocation] = useState();
   const [endLocation, setEndLocation] = useState();
-  const [startAddress, setStartAddress] = useState("");
-  const [endAddress, setEndAddress] = useState("");
+  const [startAddress, setStartAddress] = useState('');
+  const [endAddress, setEndAddress] = useState('');
   const [windowSize, setWindowSize] = useState({
     width: undefined,
     height: undefined,
@@ -58,11 +58,11 @@ const App = () => {
     const results = await Promise.all([
       geocode(selectedStartAddress).catch(() => {
         setLoading(false);
-        alert("Invalid start address. Please try a different address.");
+        alert('Invalid start address. Please try a different address.');
       }),
       geocode(selectedEndAddress).catch(() => {
         setLoading(false);
-        alert("Invalid end address. Please try a different address.");
+        alert('Invalid end address. Please try a different address.');
       }),
     ]);
 
@@ -71,19 +71,19 @@ const App = () => {
       return;
     }
 
-    if (!latlngIsWithinBounds(results[0], "start")) {
+    if (!latlngIsWithinBounds(results[0], 'start')) {
       setLoading(false);
       return;
     }
 
-    if (!latlngIsWithinBounds(results[1], "end")) {
+    if (!latlngIsWithinBounds(results[1], 'end')) {
       setLoading(false);
       return;
     }
 
     setStartLocation(results[0]);
     setEndLocation(results[1]);
-    setMobileView("map");
+    setMobileView('map');
   };
 
   const fetchRoute = async () => {
@@ -95,7 +95,7 @@ const App = () => {
       setLoading(false);
 
       if (!results.path || !results.path.length) {
-        handleError(new Error("No path received"));
+        handleError(new Error('No path received'));
         return;
       }
 
@@ -121,13 +121,11 @@ const App = () => {
   const assignStartLocation = (latlng) => {
     clearPath();
     setStartLocation(latlng);
-    setStartAddress("");
+    setStartAddress('');
 
     reverseGeocode(latlng).then((address) => {
       if (!address) {
-        return handleError(
-          new Error("Unable to get reverse geocoding result.")
-        );
+        return handleError(new Error('Unable to get reverse geocoding result.'));
       }
 
       setStartAddress(address);
@@ -137,11 +135,11 @@ const App = () => {
   const assignEndLocation = (latlng) => {
     clearPath();
     setEndLocation(latlng);
-    setEndAddress("");
+    setEndAddress('');
 
     reverseGeocode(latlng).then((address) => {
       if (!address) {
-        return handleError("Unable to get reverse geocoding result.");
+        return handleError('Unable to get reverse geocoding result.');
       }
 
       setEndAddress(address);
@@ -179,7 +177,7 @@ const App = () => {
   const changeMobileView = (mobileView) => {
     setMobileView(mobileView);
 
-    if (mobileView === "map") {
+    if (mobileView === 'map') {
       updateMapSize();
     }
   };
@@ -190,8 +188,8 @@ const App = () => {
   };
 
   const forceSSL = () => {
-    if (location.protocol !== "https:") {
-      location.protocol = "https:";
+    if (location.protocol !== 'https:') {
+      location.protocol = 'https:';
     }
   };
 
@@ -240,7 +238,7 @@ const App = () => {
   }
 
   useEffect(() => {
-    if (process && process.env.NODE_ENV !== "development" && config.forceSSL) {
+    if (process && process.env.NODE_ENV !== 'development' && config.forceSSL) {
       forceSSL();
     }
 
@@ -254,7 +252,7 @@ const App = () => {
       updateRoute(urlParameters[0], urlParameters[1]);
     }
 
-    if (typeof window !== "undefined") {
+    if (typeof window !== 'undefined') {
       const isMobileCalc = checkMobile(window.innerWidth);
 
       setWindowSize({
@@ -263,10 +261,10 @@ const App = () => {
       });
       setIsMobile(isMobileCalc);
       setElevationVisible(!isMobileCalc);
-      window.addEventListener("resize", handleResize);
+      window.addEventListener('resize', handleResize);
 
       return () => {
-        window.removeEventListener("resize", handleResize);
+        window.removeEventListener('resize', handleResize);
       };
     }
   }, []);

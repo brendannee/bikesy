@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef } from 'react';
 import {
   latlngIsWithinBounds,
   drawMap,
@@ -7,7 +7,7 @@ import {
   updatePath,
   updateMapSize,
   toggleBikeLockerLayer,
-} from "lib/map";
+} from 'lib/map';
 
 const Map = ({
   isMobile,
@@ -39,9 +39,9 @@ const Map = ({
 
   const handleMarkerDrag = (latlng, type) => {
     if (latlngIsWithinBounds(latlng)) {
-      if (type === "start") {
+      if (type === 'start') {
         assignStartLocation(latlng);
-      } else if (type === "end") {
+      } else if (type === 'end') {
         assignEndLocation(latlng);
       }
     }
@@ -79,7 +79,7 @@ const Map = ({
   }, [height]);
 
   return (
-    <div className="map-container" hidden={isMobile && mobileView !== "map"}>
+    <div className="map-container" hidden={isMobile && mobileView !== 'map'}>
       <div className="logo">
         <img
           src="/images/bikesy-logo.png"
@@ -101,7 +101,7 @@ const Map = ({
                   type="checkbox"
                   value={bikeLockersVisible}
                   onChange={toggleBikeLockerVisibility}
-                />{" "}
+                />{' '}
                 Bike Lockers
               </label>
             </div>

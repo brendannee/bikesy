@@ -1,6 +1,6 @@
-import fetch from "isomorphic-unfetch";
+import fetch from 'isomorphic-unfetch';
 
-import config from "config/frontendconfig";
+import config from 'config/frontendconfig';
 
 export function getRoute(startLocation, endLocation, scenario) {
   const { apiUrl } = config;

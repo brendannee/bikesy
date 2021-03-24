@@ -1,4 +1,4 @@
-import fetch from "isomorphic-unfetch";
+import fetch from 'isomorphic-unfetch';
 
 // Only fetch air quality info every 5 minutes
 const cacheWindow = 5 * 60 * 60 * 1000;

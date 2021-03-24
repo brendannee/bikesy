@@ -1,34 +1,32 @@
 /* global window */
 
 function encode(string) {
-  return encodeURIComponent(string).replace(/%20/g, "+");
+  return encodeURIComponent(string).replace(/%20/g, '+');
 }
 
 function decode(string) {
-  return decodeURIComponent(string.replace(/\+/g, "%20"));
+  return decodeURIComponent(string.replace(/\+/g, '%20'));
 }
 
 export function validateUrlParams(parameters) {
   return (
-    parameters.length >= 2 &&
-    parameters[0] !== undefined &&
-    parameters[1] !== undefined
+    parameters.length >= 2 && parameters[0] !== undefined && parameters[1] !== undefined
   );
 }
 
 export function updateUrlParams(parameters) {
   if (!validateUrlParams(parameters)) {
-    window.location.hash = "";
+    window.location.hash = '';
     return;
   }
 
-  window.location.hash = parameters.map(encode).join("/");
+  window.location.hash = parameters.map(encode).join('/');
 }
 
 export function readUrlParams() {
   return window.location.hash
-    .replace(/^#\/?|\/$/g, "")
-    .split("/")
+    .replace(/^#\/?|\/$/g, '')
+    .split('/')
     .map(decode);
 }
 

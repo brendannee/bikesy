@@ -1,13 +1,6 @@
-import {
-  CartesianGrid,
-  LineChart,
-  Line,
-  XAxis,
-  YAxis,
-  Tooltip,
-} from "recharts";
+import { CartesianGrid, LineChart, Line, XAxis, YAxis, Tooltip } from 'recharts';
 
-import { formatElevation, metersToFeet, metersToMiles } from "lib/helper";
+import { formatElevation, metersToFeet, metersToMiles } from 'lib/helper';
 
 const CustomTooltip = ({ active, payload }) => {
   if (active) {
@@ -38,7 +31,7 @@ const Elevation = ({
     return (
       <div
         className="elevation-open-box"
-        hidden={isMobile && mobileView !== "map"}
+        hidden={isMobile && mobileView !== 'map'}
         onClick={toggleElevationVisibility}
       >
         Elevation Profile
@@ -54,11 +47,8 @@ const Elevation = ({
   });
 
   return (
-    <div className="elevation" hidden={isMobile && mobileView !== "map"}>
-      <div
-        className="close-box d-print-none"
-        onClick={toggleElevationVisibility}
-      >
+    <div className="elevation" hidden={isMobile && mobileView !== 'map'}>
+      <div className="close-box d-print-none" onClick={toggleElevationVisibility}>
         &minus;
       </div>
 
@@ -74,30 +64,25 @@ const Elevation = ({
         }}
       >
         <CartesianGrid strokeDasharray="3 3" />
-        <Line
-          type="monotone"
-          dataKey="elevation"
-          stroke="#0e51ff"
-          dot={false}
-        />
+        <Line type="monotone" dataKey="elevation" stroke="#0e51ff" dot={false} />
         <XAxis
           dataKey="distance"
           type="number"
           label={{
-            value: "Distance (miles)",
+            value: 'Distance (miles)',
             offset: 0,
-            position: "insideBottom",
-            scale: "linear",
+            position: 'insideBottom',
+            scale: 'linear',
           }}
         />
         <YAxis
           type="number"
           label={{
-            value: "Elevation (feet)",
+            value: 'Elevation (feet)',
             angle: -90,
-            position: "insideBottomLeft",
+            position: 'insideBottomLeft',
             offset: 10,
-            scale: "linear",
+            scale: 'linear',
           }}
         />
         <Tooltip content={<CustomTooltip />} />

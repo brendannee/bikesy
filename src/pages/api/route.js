@@ -1,7 +1,7 @@
-import Cors from "cors";
+import Cors from 'cors';
 
 const cors = Cors({
-  methods: ["GET", "HEAD"],
+  methods: ['GET', 'HEAD'],
 });
 
 // Helper method to wait for a middleware to execute before continuing
@@ -19,16 +19,16 @@ function runMiddleware(request, res, fn) {
 }
 
 function getServerUrl(scenario) {
-  if (scenario === "1" || scenario === "2" || scenario === "3") {
-    return "http://ec2-54-208-197-111.compute-1.amazonaws.com";
+  if (scenario === '1' || scenario === '2' || scenario === '3') {
+    return 'http://ec2-54-208-197-111.compute-1.amazonaws.com';
   }
 
-  if (scenario === "4" || scenario === "5" || scenario === "6") {
-    return "http://ec2-54-84-66-250.compute-1.amazonaws.com";
+  if (scenario === '4' || scenario === '5' || scenario === '6') {
+    return 'http://ec2-54-84-66-250.compute-1.amazonaws.com';
   }
 
-  if (scenario === "7" || scenario === "8" || scenario === "9") {
-    return "http://ec2-34-224-83-87.compute-1.amazonaws.com";
+  if (scenario === '7' || scenario === '8' || scenario === '9') {
+    return 'http://ec2-34-224-83-87.compute-1.amazonaws.com';
   }
 }
 
@@ -41,7 +41,7 @@ const Route = async (request, response) => {
   const server = getServerUrl(scenario);
 
   if (!server) {
-    response.status(400).json({ error: "invalid scenario" });
+    response.status(400).json({ error: 'invalid scenario' });
   }
 
   const url = `${server}?lat1=${lat1}&lng1=${lng1}&lat2=${lat2}&lng2=${lng2}&scenario=${scenario}`;

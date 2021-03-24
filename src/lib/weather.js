@@ -1,6 +1,6 @@
-import fetch from "isomorphic-unfetch";
+import fetch from 'isomorphic-unfetch';
 
-import config from "config/frontendconfig";
+import config from 'config/frontendconfig';
 
 // Only fetch weather info every 5 minutes
 const cacheWindow = 5 * 60 * 60 * 1000;

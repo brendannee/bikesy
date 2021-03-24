@@ -1,10 +1,10 @@
-import { useState, useEffect } from "react";
-import _ from "lodash";
-import classNames from "classnames";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCircleNotch, faCrosshairs } from "@fortawesome/free-solid-svg-icons";
+import { useState, useEffect } from 'react';
+import _ from 'lodash';
+import classNames from 'classnames';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCircleNotch, faCrosshairs } from '@fortawesome/free-solid-svg-icons';
 
-import { scenarioToComponents, componentsToScenario } from "lib/scenarios";
+import { scenarioToComponents, componentsToScenario } from 'lib/scenarios';
 
 const Controls = ({
   updateRoute,
@@ -17,12 +17,12 @@ const Controls = ({
   clearRoute,
   loading,
 }) => {
-  const [routeType, setRouteType] = useState("3");
-  const [hillReluctance, setHillReluctance] = useState("1");
+  const [routeType, setRouteType] = useState('3');
+  const [hillReluctance, setHillReluctance] = useState('1');
   const [errorFields, setErrorFields] = useState([]);
   const [geolocationPending, setGeolocationPending] = useState(false);
-  const [startAddressInput, setStartAddressInput] = useState("");
-  const [endAddressInput, setEndAddressInput] = useState("");
+  const [startAddressInput, setStartAddressInput] = useState('');
+  const [endAddressInput, setEndAddressInput] = useState('');
 
   const processForm = (event) => {
     event.preventDefault();
@@ -63,7 +63,7 @@ const Controls = ({
   };
 
   const getGeolocation = () => {
-    if ("geolocation" in navigator) {
+    if ('geolocation' in navigator) {
       setGeolocationPending(true);
       navigator.geolocation.getCurrentPosition(
         (position) => {
@@ -76,7 +76,7 @@ const Controls = ({
           setGeolocationPending(false);
         },
         () => {
-          alert("Unable to use geolocation in your browser.");
+          alert('Unable to use geolocation in your browser.');
           setGeolocationPending(false);
         },
         {
@@ -84,7 +84,7 @@ const Controls = ({
         }
       );
     } else {
-      alert("Geolocation is not available in your browser.");
+      alert('Geolocation is not available in your browser.');
     }
   };
 
@@ -104,11 +104,11 @@ const Controls = ({
   const validateForm = () => {
     const errorFields = [];
     if (!startAddress) {
-      errorFields.push("startAddress");
+      errorFields.push('startAddress');
     }
 
     if (!endAddress) {
-      errorFields.push("endAddress");
+      errorFields.push('endAddress');
     }
 
     return errorFields;
@@ -116,10 +116,10 @@ const Controls = ({
 
   const getStartAddressPlaceholder = () => {
     if (geolocationPending) {
-      return "";
+      return '';
     }
 
-    return "Start Address";
+    return 'Start Address';
   };
 
   useEffect(() => {
@@ -148,12 +148,12 @@ const Controls = ({
   return (
     <div
       className="controls d-print-none"
-      hidden={mobileView !== "directions" && isMobile}
+      hidden={mobileView !== 'directions' && isMobile}
     >
       <form onSubmit={processForm}>
         <div
-          className={classNames("form-group", "form-inline", "start-address", {
-            "geolocation-pending": geolocationPending,
+          className={classNames('form-group', 'form-inline', 'start-address', {
+            'geolocation-pending': geolocationPending,
           })}
         >
           <label className="control-label">Start Location</label>
@@ -164,16 +164,12 @@ const Controls = ({
             type="text"
             value={startAddressInput}
             onChange={handleStartAddressChange}
-            className={classNames("form-control", {
-              "is-invalid": _.includes(errorFields, "startAddress"),
+            className={classNames('form-control', {
+              'is-invalid': _.includes(errorFields, 'startAddress'),
             })}
             placeholder={getStartAddressPlaceholder()}
           />
-          <FontAwesomeIcon
-            icon={faCircleNotch}
-            spin
-            className="loading-animation"
-          />
+          <FontAwesomeIcon icon={faCircleNotch} spin className="loading-animation" />
           <a
             className="btn btn-light btn-geolocation"
             title="Use my location"
@@ -191,8 +187,8 @@ const Controls = ({
             type="text"
             value={endAddressInput}
             onChange={handleEndAddressChange}
-            className={classNames("form-control", {
-              "is-invalid": _.includes(errorFields, "endAddress"),
+            className={classNames('form-control', {
+              'is-invalid': _.includes(errorFields, 'endAddress'),
             })}
             placeholder="End Address"
           />
@@ -225,8 +221,7 @@ const Controls = ({
           Clear
         </a>
         <button type="submit" className="btn btn-success btn-update-route">
-          {loading && <FontAwesomeIcon icon={faCircleNotch} spin />} Get
-          Directions
+          {loading && <FontAwesomeIcon icon={faCircleNotch} spin />} Get Directions
         </button>
       </form>
     </div>

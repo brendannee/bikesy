@@ -1,4 +1,4 @@
-import config from "config/frontendconfig";
+import config from 'config/frontendconfig';
 
 export function metersToMiles(meters) {
   return meters * 0.000621371;
@@ -22,13 +22,11 @@ export function formatTime(miles) {
 
   let formattedTime;
   if (highEstimate < 1) {
-    formattedTime = `${hoursToMinutes(
-      lowEstimate
-    ).toFixed()} to ${hoursToMinutes(highEstimate).toFixed()} min`;
+    formattedTime = `${hoursToMinutes(lowEstimate).toFixed()} to ${hoursToMinutes(
+      highEstimate
+    ).toFixed()} min`;
   } else {
-    formattedTime = `${lowEstimate.toFixed(1)} to ${highEstimate.toFixed(
-      1
-    )} hours`;
+    formattedTime = `${lowEstimate.toFixed(1)} to ${highEstimate.toFixed(1)} hours`;
   }
 
   return formattedTime;

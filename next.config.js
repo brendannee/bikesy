@@ -9,7 +9,7 @@ module.exports = {
       },
     ];
   },
-  webpack(config, options) {
+  webpack(config) {
     config.resolve.alias["components"] = path.join(__dirname, "src/components");
     config.resolve.alias["config"] = path.join(__dirname, "src/config");
     config.resolve.alias["lib"] = path.join(__dirname, "src/lib");

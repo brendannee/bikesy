@@ -1,8 +1,8 @@
 /* global window */
 
-import ReactGA from "react-ga";
+import ReactGA from 'react-ga';
 
-import config from "config/frontendconfig";
+import config from 'config/frontendconfig';
 
 export function logQuery() {}
 

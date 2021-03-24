@@ -1,5 +1,5 @@
-import Modal from "react-modal";
-Modal.setAppElement("body");
+import Modal from 'react-modal';
+Modal.setAppElement('body');
 
 const WelcomeModal = ({ showWelcomeModal, hideWelcomeModal }) => {
   return (
@@ -14,8 +14,7 @@ const WelcomeModal = ({ showWelcomeModal, hideWelcomeModal }) => {
           <li>Click anywhere to set the start and end points for your trip</li>
           <li>Drag-and-drop markers to recalculate the route</li>
           <li>
-            Use the address boxes on the left to enter a specific address or
-            landmark
+            Use the address boxes on the left to enter a specific address or landmark
           </li>
         </ul>
         <button onClick={hideWelcomeModal} className="btn btn-primary">

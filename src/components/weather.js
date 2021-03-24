@@ -1,8 +1,8 @@
-import { useState, useEffect } from "react";
-import classNames from "classnames";
+import { useState, useEffect } from 'react';
+import classNames from 'classnames';
 
-import { getWeather } from "lib/weather";
-import { getAirQuality } from "lib/airquality";
+import { getWeather } from 'lib/weather';
+import { getAirQuality } from 'lib/airquality';
 
 const Weather = ({ lat, lng }) => {
   const [weather, setWeather] = useState();
@@ -23,7 +23,7 @@ const Weather = ({ lat, lng }) => {
           description:
             weatherResults.weather && weatherResults.weather.length
               ? weatherResults.weather[0].main
-              : "",
+              : '',
         });
       }
     } catch (error) {
@@ -64,7 +64,7 @@ const Weather = ({ lat, lng }) => {
           Air Quality:
           <div
             className={classNames(
-              "air-quality-box",
+              'air-quality-box',
               `air-quality-box-${airQuality.categoryNumber}`
             )}
           >

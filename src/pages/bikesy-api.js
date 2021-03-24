@@ -1,4 +1,4 @@
-import Head from "next/head";
+import Head from 'next/head';
 
 const Api = () => (
   <div>
@@ -22,28 +22,10 @@ const Api = () => (
       />
       <link rel="stylesheet" type="text/css" href="css/style.css" />
 
-      <link
-        rel="apple-touch-icon"
-        sizes="180x180"
-        href="favicon/apple-touch-icon.png"
-      />
-      <link
-        rel="icon"
-        type="image/png"
-        href="favicon/favicon-32x32.png"
-        sizes="32x32"
-      />
-      <link
-        rel="icon"
-        type="image/png"
-        href="favicon/favicon-16x16.png"
-        sizes="16x16"
-      />
-      <link
-        rel="mask-icon"
-        href="favicon/safari-pinned-tab.svg"
-        color="#5bbad5"
-      />
+      <link rel="apple-touch-icon" sizes="180x180" href="favicon/apple-touch-icon.png" />
+      <link rel="icon" type="image/png" href="favicon/favicon-32x32.png" sizes="32x32" />
+      <link rel="icon" type="image/png" href="favicon/favicon-16x16.png" sizes="16x16" />
+      <link rel="mask-icon" href="favicon/safari-pinned-tab.svg" color="#5bbad5" />
       <meta name="theme-color" content="#ffffff" />
     </Head>
 
@@ -51,8 +33,8 @@ const Api = () => (
       <h2>About Bikesy</h2>
 
       <p>
-        Bikesy’s bike routes are available via an API. This is still in beta and
-        could change at any time.{" "}
+        Bikesy’s bike routes are available via an API. This is still in beta and could
+        change at any time.{' '}
       </p>
       <p>Example</p>
       <div>
@@ -63,17 +45,17 @@ const Api = () => (
         </pre>
       </div>
       <p>
-        This example returns JSON for a bike route from the Financial district
-        in San Francisco to Haight and Ashbury.
+        This example returns JSON for a bike route from the Financial district in San
+        Francisco to Haight and Ashbury.
       </p>
       <h3>API Input</h3>
       <table className="table table-striped table-hover">
         <thead>
           <tr>
             <td>Input</td>
-            <td style={{ width: "250px" }}>Description</td>
+            <td style={{ width: '250px' }}>Description</td>
             <td>Format</td>
-            <td style={{ width: "150px" }}>Example</td>
+            <td style={{ width: '150px' }}>Example</td>
           </tr>
         </thead>
         <tbody>
@@ -702,16 +684,15 @@ const Api = () => (
 
       <h2>API Details</h2>
       <p>
-        We made assumptions about weighting different{" "}
+        We made assumptions about weighting different{' '}
         <a href="http://wiki.openstreetmap.org/wiki/Highway_tag_usage">
           OpenStreetMaps road classifications
-        </a>{" "}
-        for each scenario. For all scenarios, busier road classifications such
-        as “motorway” and “primary” were given a higher weight than less busy
-        road classifications such as “tertiary” and “path”. Weights are
-        multipliers on the actual length of the link so a higher weight on a
-        segment of road means that we are more likely to avoid routing on that
-        segment.
+        </a>{' '}
+        for each scenario. For all scenarios, busier road classifications such as
+        “motorway” and “primary” were given a higher weight than less busy road
+        classifications such as “tertiary” and “path”. Weights are multipliers on the
+        actual length of the link so a higher weight on a segment of road means that we
+        are more likely to avoid routing on that segment.
       </p>
       <p>The weights used by bikesy for each scenario are shown below:</p>
       <table className="table table-striped table-hover">
@@ -851,13 +832,11 @@ const Api = () => (
 
       <h2>Contact Us</h2>
       <p>
-        Let us know how you use the API, send us suggestions for improving it or
-        ask us a question about our less-than-complete documentation.{" "}
-        <a href="mailto:info@bikesy.com">info@bikesy.com</a>. Want to
-        contribute? Fork our
-        <a href="http://github.com/brendannee/bikesy">front end</a> or{" "}
-        <a href="https://github.com/brendannee/bikesy-server">back end</a> and
-        get going.
+        Let us know how you use the API, send us suggestions for improving it or ask us a
+        question about our less-than-complete documentation.{' '}
+        <a href="mailto:info@bikesy.com">info@bikesy.com</a>. Want to contribute? Fork our
+        <a href="http://github.com/brendannee/bikesy">front end</a> or{' '}
+        <a href="https://github.com/brendannee/bikesy-server">back end</a> and get going.
       </p>
     </div>
   </div>

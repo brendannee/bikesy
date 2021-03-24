@@ -1,4 +1,4 @@
-import Weather from "./weather";
+import Weather from './weather';
 
 import {
   formatDistance,
@@ -6,8 +6,8 @@ import {
   formatElevation,
   getElevationGain,
   metersToFeet,
-} from "lib/helper";
-import { getCenter } from "lib/map";
+} from 'lib/helper';
+import { getCenter } from 'lib/map';
 
 const Directions = ({
   directions,
@@ -23,11 +23,11 @@ const Directions = ({
 }) => {
   const getDirections = () => {
     if (!directions) {
-      return "";
+      return '';
     }
 
     const directionsList = directions.reduce((memo, direction, idx) => {
-      if (direction[1] !== "nameless") {
+      if (direction[1] !== 'nameless') {
         memo.push(
           <li key={idx}>
             <b>{direction[0]}</b> on <b>{direction[1]}</b>
@@ -49,7 +49,7 @@ const Directions = ({
     return (
       <div>
         <h3>
-          Directions to{" "}
+          Directions to{' '}
           <b>
             {endAddress}
             <span className="d-none d-print-inline"> from {startAddress}</span>
@@ -80,15 +80,15 @@ const Directions = ({
   return (
     <div
       className="directions"
-      hidden={isMobile && mobileView !== "directions"}
-      style={{ height: height ? `${height}px` : "auto" }}
+      hidden={isMobile && mobileView !== 'directions'}
+      style={{ height: height ? `${height}px` : 'auto' }}
     >
       {getDirections()}
 
       <div className="disclaimer">
-        We offer no guarantee regarding roadway conditions or safety of the
-        proposed routes. Use your best judgment when choosing a route. Obey all
-        vehicle code provisions.
+        We offer no guarantee regarding roadway conditions or safety of the proposed
+        routes. Use your best judgment when choosing a route. Obey all vehicle code
+        provisions.
       </div>
       <a className="disclaimer" href="https://bikesy.com/about">
         About Bikesy
