@@ -1,39 +1,79 @@
-import Head from 'next/head'
+import Head from "next/head";
 
 const Api = () => (
   <div>
     <Head>
       <title>Bikesy API</title>
-      <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0" key="viewport" />
-      <meta name="description" content="Avoid hills and find bike routes with Bikesy.com, an innovative and open-source bike mapping system specially designed to find flat, safe, and fast bike routes anywhere in the San Francisco Bay Area. San Francisco isn’t New York – they might have taller buildings, but we’ve got bigger hills. Since we couldn’t find another service that lets you choose slightly longer but less steep routes, we made our own. Even better, Bikesy automatically gives you an elevation profile for your ride to help you prepare for the tough parts." />
+      <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0"
+        key="viewport"
+      />
+      <meta
+        name="description"
+        content="Avoid hills and find bike routes with Bikesy.com, an innovative and open-source bike mapping system specially designed to find flat, safe, and fast bike routes anywhere in the San Francisco Bay Area. San Francisco isn’t New York – they might have taller buildings, but we’ve got bigger hills. Since we couldn’t find another service that lets you choose slightly longer but less steep routes, we made our own. Even better, Bikesy automatically gives you an elevation profile for your ride to help you prepare for the tough parts."
+      />
 
-      <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossOrigin="anonymous" />
+      <link
+        rel="stylesheet"
+        href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+        integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"
+        crossOrigin="anonymous"
+      />
       <link rel="stylesheet" type="text/css" href="css/style.css" />
 
-      <link rel="apple-touch-icon" sizes="180x180" href="favicon/apple-touch-icon.png" />
-      <link rel="icon" type="image/png" href="favicon/favicon-32x32.png" sizes="32x32" />
-      <link rel="icon" type="image/png" href="favicon/favicon-16x16.png" sizes="16x16" />
-      <link rel="mask-icon" href="favicon/safari-pinned-tab.svg" color="#5bbad5" />
+      <link
+        rel="apple-touch-icon"
+        sizes="180x180"
+        href="favicon/apple-touch-icon.png"
+      />
+      <link
+        rel="icon"
+        type="image/png"
+        href="favicon/favicon-32x32.png"
+        sizes="32x32"
+      />
+      <link
+        rel="icon"
+        type="image/png"
+        href="favicon/favicon-16x16.png"
+        sizes="16x16"
+      />
+      <link
+        rel="mask-icon"
+        href="favicon/safari-pinned-tab.svg"
+        color="#5bbad5"
+      />
       <meta name="theme-color" content="#ffffff" />
     </Head>
 
     <div className="container">
       <h2>About Bikesy</h2>
 
-      <p>Bikesy’s bike routes are available via an API. This is still in beta and could change at any time. </p>
+      <p>
+        Bikesy’s bike routes are available via an API. This is still in beta and
+        could change at any time.{" "}
+      </p>
       <p>Example</p>
       <div>
-        <pre><code>https://api.bikesy.com?lat1=37.7910183&amp;lng1=-122.3991499&amp;lat2=37.7700099&amp;lng2=-122.44693656&amp;scenario=3</code></pre>
+        <pre>
+          <code>
+            https://api.bikesy.com?lat1=37.7910183&amp;lng1=-122.3991499&amp;lat2=37.7700099&amp;lng2=-122.44693656&amp;scenario=3
+          </code>
+        </pre>
       </div>
-      <p>This example returns JSON for a bike route from the Financial district in San Francisco to Haight and Ashbury.</p>
+      <p>
+        This example returns JSON for a bike route from the Financial district
+        in San Francisco to Haight and Ashbury.
+      </p>
       <h3>API Input</h3>
       <table className="table table-striped table-hover">
         <thead>
           <tr>
             <td>Input</td>
-            <td style={{ width: '250px' }}>Description</td>
+            <td style={{ width: "250px" }}>Description</td>
             <td>Format</td>
-            <td style={{ width: '150px' }}>Example</td>
+            <td style={{ width: "150px" }}>Example</td>
           </tr>
         </thead>
         <tbody>
@@ -72,12 +112,19 @@ const Api = () => (
 
       <p>Example Input</p>
       <div>
-        <pre><code><a href="https://bikesy.com/api/route?lat1=37.79099655151367&lng1=-122.39909362792969&lat2=37.78794572301525&lng2=-122.40700721740723&scenario=3">https://bikesy.com/api/route?lat1=37.79099655151367&amp;lng1=-122.39909362792969&amp;lat2=37.78794572301525&amp;lng2=-122.40700721740723&amp;scenario=3</a></code></pre>
+        <pre>
+          <code>
+            <a href="https://bikesy.com/api/route?lat1=37.79099655151367&lng1=-122.39909362792969&lat2=37.78794572301525&lng2=-122.40700721740723&scenario=3">
+              https://bikesy.com/api/route?lat1=37.79099655151367&amp;lng1=-122.39909362792969&amp;lat2=37.78794572301525&amp;lng2=-122.40700721740723&amp;scenario=3
+            </a>
+          </code>
+        </pre>
       </div>
       <p>Example Output</p>
       <div>
-        <pre><code>
-          {`{
+        <pre>
+          <code>
+            {`{
   directions: [
     [
       "start northwest",
@@ -649,20 +696,30 @@ const Api = () => (
     ]
   ]
 }`}
-        </code></pre>
+          </code>
+        </pre>
       </div>
 
       <h2>API Details</h2>
-      <p>We made assumptions about weighting different <a
-        href="http://wiki.openstreetmap.org/wiki/Highway_tag_usage">OpenStreetMaps road classifications</a> for each
-        scenario. For all scenarios, busier road classifications such as “motorway” and “primary” were given a higher weight
-        than less busy road classifications such as “tertiary” and “path”. Weights are multipliers on the actual length of
-        the link so a higher weight on a segment of road means that we are more likely to avoid routing on that segment.</p>
+      <p>
+        We made assumptions about weighting different{" "}
+        <a href="http://wiki.openstreetmap.org/wiki/Highway_tag_usage">
+          OpenStreetMaps road classifications
+        </a>{" "}
+        for each scenario. For all scenarios, busier road classifications such
+        as “motorway” and “primary” were given a higher weight than less busy
+        road classifications such as “tertiary” and “path”. Weights are
+        multipliers on the actual length of the link so a higher weight on a
+        segment of road means that we are more likely to avoid routing on that
+        segment.
+      </p>
       <p>The weights used by bikesy for each scenario are shown below:</p>
       <table className="table table-striped table-hover">
         <thead>
           <tr height="20">
-            <td width="254" height="20">Type</td>
+            <td width="254" height="20">
+              Type
+            </td>
             <td width="195">Example</td>
             <td width="88">Low</td>
             <td width="63">Medium</td>
@@ -793,12 +850,17 @@ const Api = () => (
       </table>
 
       <h2>Contact Us</h2>
-      <p>Let us know how you use the API, send us suggestions for improving it or ask us a question about our
-        less-than-complete documentation. <a href="mailto:info@bikesy.com">info@bikesy.com</a>. Want to contribute? Fork our
-        <a href="http://github.com/brendannee/bikesy">front end</a> or <a
-        href="https://github.com/brendannee/bikesy-server">back end</a> and get going.</p>
+      <p>
+        Let us know how you use the API, send us suggestions for improving it or
+        ask us a question about our less-than-complete documentation.{" "}
+        <a href="mailto:info@bikesy.com">info@bikesy.com</a>. Want to
+        contribute? Fork our
+        <a href="http://github.com/brendannee/bikesy">front end</a> or{" "}
+        <a href="https://github.com/brendannee/bikesy-server">back end</a> and
+        get going.
+      </p>
     </div>
   </div>
-)
+);
 
-export default Api
+export default Api;
