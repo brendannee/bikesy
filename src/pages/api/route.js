@@ -24,7 +24,7 @@ function getServerUrl(scenario) {
   }
 
   if (scenario === '4' || scenario === '5' || scenario === '6') {
-    return 'http://ec2-54-84-66-250.compute-1.amazonaws.com';
+    return 'http://ec2-54-174-83-196.compute-1.amazonaws.com';
   }
 
   if (scenario === '7' || scenario === '8' || scenario === '9') {
