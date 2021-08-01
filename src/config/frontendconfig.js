@@ -1,24 +1,21 @@
 const config = {
   apiUrl: '/api/route',
   forceSSL: true,
-  googleMapsApiKey: 'AIzaSyC8VIAjGYj2rCivnaUNeYioEWfmW1saV-E',
+  googleMapsApiKey: 'AIzaSyCdlv6F8kjbh2R6Rd-ULbhmfgUlFHzfDPk',
   mapboxAccessToken:
-    'pk.eyJ1IjoidGFob2ViaWtlIiwiYSI6ImNpc3I1OXR3czAyajEybnBoczNkNzd1YXIifQ.O5qezdcKNSR2pF6U-CLu6A',
+    'pk.eyJ1IjoiYmlrZXN5IiwiYSI6ImNpb2Q5bGxidDAwMDF1bmt4ajcwNWNvMDkifQ.tjhechlMQUuWTlK5KgbafA',
   initialCenterLat: 37.7749,
-  initialCenterLng: -120.033305,
+  initialCenterLng: -122.4194,
   initialZoom: 11,
   minZoom: 9,
-  boundsTop: 39.368232,
-  boundsRight: -119.659482,
-  boundsBottom: 38.750276,
-  boundsLeft: -120.345042,
+  boundsTop: 38.0534,
+  boundsRight: -121.637,
+  boundsBottom: 37.3064,
+  boundsLeft: -122.8,
   lowBikeSpeedMph: 7.5,
   highBikeSpeedMph: 10,
-  googleAnalyticsId: 'UA-59190078-1',
+  googleAnalyticsId: 'UA-306190-15',
   openWeatherMapApiKey: '802aab6e4bc8a5ae4856eb7663a4adf9',
-  keenProjectId: '576bad700727195659a6d282',
-  keenWriteKey:
-    '391e4de18356afb622f2a61a8efdf20322cd36dd79e92108e6fb58deb5c50d98435904735c2ee5b03325eb9fe0e6449544b3e4c2dc6f2e9cc077775fc6bdbe0bddf5d4120b79be9f057d180d730ecef9f106320970ed1320ca77a2809dde81a2',
 };
 
 export default config;
