@@ -1,11 +1,7 @@
-import fetch from 'isomorphic-unfetch';
-
-import config from 'config/frontendconfig';
-
 export function geocode(address) {
   const geocodeApiUrl = 'https://maps.googleapis.com/maps/api/geocode/json';
   const requestUrl = `${geocodeApiUrl}?address=${encodeURIComponent(address)}&key=${
-    config.googleMapsApiKey
+    process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY
   }`;
   return fetch(requestUrl)
     .then((response) => response.json())
@@ -24,7 +20,7 @@ export function geocode(address) {
 
 export function reverseGeocode(latlng) {
   const geocodeApiUrl = 'https://maps.googleapis.com/maps/api/geocode/json';
-  const requestUrl = `${geocodeApiUrl}?latlng=${latlng.lat},${latlng.lng}&key=${config.googleMapsApiKey}`;
+  const requestUrl = `${geocodeApiUrl}?latlng=${latlng.lat},${latlng.lng}&key=${process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}`;
   return fetch(requestUrl)
     .then((response) => response.json())
     .then((json) => {

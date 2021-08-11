@@ -1,5 +1,3 @@
-import config from 'config/frontendconfig';
-
 export function metersToMiles(meters) {
   return meters * 0.000621371;
 }
@@ -17,8 +15,8 @@ export function formatDistance(miles) {
 }
 
 export function formatTime(miles) {
-  const lowEstimate = miles / config.highBikeSpeedMph;
-  const highEstimate = miles / config.lowBikeSpeedMph;
+  const lowEstimate = miles / process.env.NEXT_PUBLIC_BIKESY_HIGH_BIKE_SPEED_MPH || 10;
+  const highEstimate = miles / process.env.NEXT_PUBLIC_BIKESY_LOW_BIKE_SPEED_MPH || 7.5;
 
   let formattedTime;
   if (highEstimate < 1) {

@@ -3,8 +3,6 @@
 import React, { useEffect, useState } from 'react';
 import polyline from '@mapbox/polyline';
 
-import config from 'config/frontendconfig';
-
 import Controls from 'components/controls';
 import Directions from 'components/directions';
 import Elevation from 'components/elevation';
@@ -186,12 +184,6 @@ const App = () => {
     setShowWelcomeModal(false);
   };
 
-  const forceSSL = () => {
-    if (location.protocol !== 'https:') {
-      location.protocol = 'https:';
-    }
-  };
-
   const clearPath = () => {
     setPath(undefined);
     setDirections(undefined);
@@ -237,10 +229,6 @@ const App = () => {
   }
 
   useEffect(() => {
-    if (process && process.env.NODE_ENV !== 'development' && config.forceSSL) {
-      forceSSL();
-    }
-
     const urlParameters = readUrlParams();
 
     if (validateUrlParams(urlParameters)) {

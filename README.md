@@ -16,6 +16,14 @@ You can pull info directly from the bikesy backend using the [Bikesy API](https:
 The assumptions that go into the routes provided by the Bikesy API are documented on the [Bikesy API page](https://blog.bikesy.com/api/) .
 
 
+## Setup
+
+Create a `.env` file by copying `.env.example`.
+
+    cp .env.example .env
+
+Add values to your `.env` config file for all fields.
+
 ## Running Locally
 
 To run locally:

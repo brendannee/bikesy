@@ -3,8 +3,6 @@
 import _ from 'lodash';
 import { length } from '@turf/turf';
 
-import config from 'config/frontendconfig';
-
 let map;
 let isDragging;
 let dragType;
@@ -74,7 +72,7 @@ const pathGeoJSON = {
 };
 
 export function drawMap(handleMapClick, handleMarkerDrag) {
-  mapboxgl.accessToken = config.mapboxAccessToken;
+  mapboxgl.accessToken = process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN;
 
   function mouseDown(type) {
     if (!isCursorOverPoint) {
@@ -129,10 +127,13 @@ export function drawMap(handleMapClick, handleMarkerDrag) {
 
   map = new mapboxgl.Map({
     container: 'map',
-    center: [config.initialCenterLng, config.initialCenterLat],
-    zoom: config.initialZoom,
-    minZoom: config.minZoom,
-    style: 'mapbox://styles/bikesy/ckmec4z6h3ekg17lr1fas6kwx',
+    center: [
+      process.env.NEXT_PUBLIC_INITIAL_CENTER_LON || -122.42,
+      process.env.NEXT_PUBLIC_INITIAL_CENTER_LAT || 37.77
+    ],
+    zoom: process.env.NEXT_PUBLIC_INITIAL_ZOOM || 11,
+    minZoom: process.env.NEXT_PUBLIC_MIN_ZOOM || 9,
+    style: process.env.NEXT_PUBLIC_MAPBOX_STYLE_URL || 'mapbox://styles/bikesy/ckmec4z6h3ekg17lr1fas6kwx',
   });
 
   // Add zoom and rotation controls to the map.
@@ -287,10 +288,10 @@ export function updatePath(path) {
 
 export function latlngIsWithinBounds(latlng, type) {
   const isWithinBounds =
-    latlng.lat <= config.boundsTop &&
-    latlng.lat >= config.boundsBottom &&
-    latlng.lng <= config.boundsRight &&
-    latlng.lng >= config.boundsLeft;
+    latlng.lat <= process.env.NEXT_PUBLIC_BIKESY_BOUNDS_TOP &&
+    latlng.lat >= process.env.NEXT_PUBLIC_BIKESY_BOUNDS_BOTTOM &&
+    latlng.lng <= process.env.NEXT_PUBLIC_BIKESY_BOUNDS_RIGHT &&
+    latlng.lng >= process.env.NEXT_PUBLIC_BIKESY_BOUNDS_LEFT;
   if (!isWithinBounds) {
     let alertText = 'This tool only works for the San Francisco Bay Area.';
     if (type === 'start') {

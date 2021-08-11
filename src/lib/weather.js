@@ -1,14 +1,10 @@
-import fetch from 'isomorphic-unfetch';
-
-import config from 'config/frontendconfig';
-
 // Only fetch weather info every 5 minutes
 const cacheWindow = 5 * 60 * 60 * 1000;
 let weatherFetchTime;
 let weatherResults;
 
 export const getWeather = async (lat, lng) => {
-  const url = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lng}&units=imperial&appid=${config.openWeatherMapApiKey}`;
+  const url = `/api/weather?lat=${lat}&lng=${lng}`;
 
   if (weatherFetchTime && weatherFetchTime + cacheWindow > Date.now()) {
     return weatherResults;
