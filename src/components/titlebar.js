@@ -1,6 +1,5 @@
-import React from 'react'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faMap, faListAlt } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faMap, faListAlt } from '@fortawesome/free-solid-svg-icons';
 
 const TitleBar = ({ mobileView, changeMobileView }) => {
   const getRightButton = () => {
@@ -12,7 +11,7 @@ const TitleBar = ({ mobileView, changeMobileView }) => {
         >
           <FontAwesomeIcon icon={faListAlt} /> Directions
         </button>
-      )
+      );
     }
 
     if (mobileView === 'directions') {
@@ -23,11 +22,11 @@ const TitleBar = ({ mobileView, changeMobileView }) => {
         >
           <FontAwesomeIcon icon={faMap} /> Map
         </button>
-      )
+      );
     }
 
-    return null
-  }
+    return null;
+  };
 
   return (
     <div className="titlebar">
@@ -41,7 +40,7 @@ const TitleBar = ({ mobileView, changeMobileView }) => {
       </h1>
       {getRightButton()}
     </div>
-  )
-}
+  );
+};
 
-export default TitleBar
+export default TitleBar;
