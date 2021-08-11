@@ -43,8 +43,8 @@ const pathLayer = {
   },
   layout: {
     'line-cap': 'round',
-    'line-join': 'round'
-  }
+    'line-join': 'round',
+  },
 };
 
 const startGeoJSON = {
@@ -129,11 +129,13 @@ export function drawMap(handleMapClick, handleMarkerDrag) {
     container: 'map',
     center: [
       process.env.NEXT_PUBLIC_INITIAL_CENTER_LON || -122.42,
-      process.env.NEXT_PUBLIC_INITIAL_CENTER_LAT || 37.77
+      process.env.NEXT_PUBLIC_INITIAL_CENTER_LAT || 37.77,
     ],
     zoom: process.env.NEXT_PUBLIC_INITIAL_ZOOM || 11,
     minZoom: process.env.NEXT_PUBLIC_MIN_ZOOM || 9,
-    style: process.env.NEXT_PUBLIC_MAPBOX_STYLE_URL || 'mapbox://styles/bikesy/ckmec4z6h3ekg17lr1fas6kwx',
+    style:
+      process.env.NEXT_PUBLIC_MAPBOX_STYLE_URL ||
+      'mapbox://styles/bikesy/ckmec4z6h3ekg17lr1fas6kwx',
   });
 
   // Add zoom and rotation controls to the map.
@@ -276,7 +278,7 @@ export function updatePath(path) {
             break;
           }
         }
-        map.addLayer(pathLayer, firstSymbolId)
+        map.addLayer(pathLayer, firstSymbolId);
       }
     }
 

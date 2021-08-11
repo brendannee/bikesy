@@ -8,13 +8,11 @@ It allows users to specify a start and end point to a route along with a hill to
 
 Routes are displayed using the mapbox API.
 
-
 ### Bikesy API
 
 You can pull info directly from the bikesy backend using the [Bikesy API](https://blog.bikesy.com/api/: https://blog.bikesy.com/api/).
 
 The assumptions that go into the routes provided by the Bikesy API are documented on the [Bikesy API page](https://blog.bikesy.com/api/) .
-
 
 ## Setup
 
@@ -28,7 +26,7 @@ Add values to your `.env` config file for all fields.
 
 To run locally:
 
-   yarn dev
+    yarn dev
 
 The open http://localhost:3000 in your browser.
 
@@ -38,6 +36,7 @@ The open http://localhost:3000 in your browser.
 
 Files will be in the `/out` folder
 
-## Tests
+## Lints
 
-    yarn test
+    yarn lint
+    yarn prettier
