@@ -29,8 +29,8 @@ const TitleBar = ({ mobileView, changeMobileView }) => {
     <div className="titlebar">
       <h1 className="site-title">
         <img
-          src="/images/bikesy-logo.png"
-          srcSet="/images/bikesy-logo@2x.png 2x"
+          src="/images/bikemapper-logo.png"
+          srcSet="/images/bikemapper-logo@2x.png 2x"
           alt="logo"
           className="logo"
         />

@@ -90,8 +90,8 @@ const Directions = ({
         routes. Use your best judgment when choosing a route. Obey all vehicle code
         provisions.
       </div>
-      <a className="disclaimer" href="https://bikesy.com/about">
-        About Bikesy
+      <a className="disclaimer" href="https://511contracosta.org/biking/bike-mapper-faq/">
+        About Bike Mapper
       </a>
     </div>
   );

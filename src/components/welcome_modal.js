@@ -9,7 +9,7 @@ const WelcomeModal = ({ showWelcomeModal, hideWelcomeModal }) => {
       contentLabel="Welcome"
     >
       <div className="welcome-modal">
-        <h1>Welcome to Bikesy</h1>
+        <h1>Welcome to Bike Mapper</h1>
         <ul>
           <li>Click anywhere to set the start and end points for your trip</li>
           <li>Drag-and-drop markers to recalculate the route</li>

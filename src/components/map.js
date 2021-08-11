@@ -6,6 +6,7 @@ import {
   updateEndMarker,
   updatePath,
   updateMapSize,
+  toggleBikeLockerLayer,
 } from 'lib/map';
 
 const Map = ({
@@ -19,6 +20,7 @@ const Map = ({
   assignEndLocation,
 }) => {
   const [legendVisible, setLegendVisible] = useState(!isMobile);
+  const [bikeLockersVisible, setBikeLockersVisible] = useState(false);
 
   const startLocationRef = useRef(startLocation);
   const endLocationRef = useRef(endLocation);
@@ -49,6 +51,11 @@ const Map = ({
     setLegendVisible(!legendVisible);
   };
 
+  const toggleBikeLockerVisibility = () => {
+    toggleBikeLockerLayer(!bikeLockersVisible);
+    setBikeLockersVisible(!bikeLockersVisible);
+  };
+
   useEffect(() => {
     drawMap(handleMapClick, handleMarkerDrag);
   }, []);
@@ -75,8 +82,8 @@ const Map = ({
     <div className="map-container" hidden={isMobile && mobileView !== 'map'}>
       <div className="logo">
         <img
-          src="/images/bikesy-logo.png"
-          srcSet="/images/bikesy-logo@2x.png 2x"
+          src="/images/bikemapper-logo.png"
+          srcSet="/images/bikemapper-logo@2x.png 2x"
           alt="logo"
         />
       </div>
@@ -87,6 +94,17 @@ const Map = ({
             &minus;
           </div>
           <div>
+            <div className="map-legend-item" title="bike lockers">
+              <div className="map-legend-icon bike-lockers"></div>
+              <label>
+                <input
+                  type="checkbox"
+                  value={bikeLockersVisible}
+                  onChange={toggleBikeLockerVisibility}
+                />{' '}
+                Bike Lockers
+              </label>
+            </div>
             <div
               className="map-legend-item"
               title="paved, separated (off the street) bikeways"
