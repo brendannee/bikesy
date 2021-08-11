@@ -33,8 +33,7 @@ const Api = () => (
       <h2>About Bikesy</h2>
 
       <p>
-        Bikesy’s bike routes are available via an API. This is still in beta and could
-        change at any time.{' '}
+        Bikesy’s bike routes are available via an API.{' '}
       </p>
       <p>Example</p>
       <div>
@@ -44,6 +43,7 @@ const Api = () => (
           </code>
         </pre>
       </div>
+      
       <p>
         This example returns JSON for a bike route from the Financial district in San
         Francisco to Haight and Ashbury.

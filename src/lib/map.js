@@ -1,9 +1,7 @@
 /* global mapboxgl, alert */
 
 import _ from 'lodash';
-import autoLink from 'auto-link';
 import { length } from '@turf/turf';
-import fetch from 'isomorphic-unfetch';
 
 import config from 'config/frontendconfig';
 
@@ -43,8 +41,12 @@ const pathLayer = {
   paint: {
     'line-color': '#ff6712',
     'line-opacity': 0.8,
-    'line-width': 6,
+    'line-width': 8,
   },
+  layout: {
+    'line-cap': 'round',
+    'line-join': 'round'
+  }
 };
 
 const startGeoJSON = {
@@ -130,7 +132,7 @@ export function drawMap(handleMapClick, handleMarkerDrag) {
     center: [config.initialCenterLng, config.initialCenterLat],
     zoom: config.initialZoom,
     minZoom: config.minZoom,
-    style: 'mapbox://styles/bikesy/cisrx1j8h00022wqa7n21sddv',
+    style: 'mapbox://styles/bikesy/ckmec4z6h3ekg17lr1fas6kwx',
   });
 
   // Add zoom and rotation controls to the map.
@@ -139,12 +141,21 @@ export function drawMap(handleMapClick, handleMarkerDrag) {
   const canvas = map.getCanvasContainer();
 
   map.on('load', () => {
+    // Find the index of the first symbol layer in the map style
+    let firstSymbolId;
+    for (const layer of map.getStyle().layers) {
+      if (layer.type === 'symbol') {
+        firstSymbolId = layer.id;
+        break;
+      }
+    }
+
     map.addSource('path', {
       type: 'geojson',
       data: pathGeoJSON,
     });
 
-    map.addLayer(pathLayer);
+    map.addLayer(pathLayer, firstSymbolId);
 
     map.addSource('start', {
       type: 'geojson',
@@ -256,7 +267,15 @@ export function updatePath(path) {
     if (map.getSource('path')) {
       map.getSource('path').setData(pathGeoJSON);
       if (!map.getLayer('path')) {
-        map.addLayer(pathLayer);
+        // Find the index of the first symbol layer in the map style
+        let firstSymbolId;
+        for (const layer of map.getStyle().layers) {
+          if (layer.type === 'symbol') {
+            firstSymbolId = layer.id;
+            break;
+          }
+        }
+        map.addLayer(pathLayer, firstSymbolId)
       }
     }
 
