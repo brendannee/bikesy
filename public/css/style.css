@@ -83,6 +83,12 @@
   position: absolute;
   left: 60px;
   color: #555;
+  width: 20px;
+  height: 20px;
+  animation-name: spin;
+  animation-duration: 3s;
+  animation-iteration-count: infinite;
+  animation-timing-function: linear;
   display: none;
 }
 
@@ -96,13 +102,13 @@
 
 .controls .start-address .btn-geolocation {
   width: 34px;
+  height: 43px;
   display: inline-block;
   float: right;
   cursor: pointer;
   padding-left: 4px;
   padding-right: 4px;
   margin-left: 6px;
-  font-size: 22px;
 }
 
 .controls .end-address {
@@ -178,6 +184,18 @@
 
 .controls .btn-update-route {
   float: right;
+  display: flex;
+  align-items: center;
+}
+
+.controls .btn-update-route .loading-animation {
+  width: 20px;
+  height: 20px;
+  margin-right: 6px;
+  animation-name: spin;
+  animation-duration: 3s;
+  animation-iteration-count: infinite;
+  animation-timing-function: linear;
 }
 
 .disclaimer {
@@ -408,6 +426,17 @@
 
 .welcome-modal .btn-primary {
   width: 100%;
+}
+
+/* Animations */
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
 @media only screen and (min-width: 667px) {

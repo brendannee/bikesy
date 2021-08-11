@@ -20,10 +20,8 @@
     "prettier": "prettier --write ."
   },
   "dependencies": {
-    "@fortawesome/fontawesome-svg-core": "^1.2.36",
-    "@fortawesome/free-solid-svg-icons": "^5.15.4",
-    "@fortawesome/react-fontawesome": "0.1.15",
     "@mapbox/polyline": "^1.1.1",
+    "@svgr/webpack": "^5.5.0",
     "@turf/turf": "^6.5.0",
     "auto-link": "^1.0.0",
     "babel-runtime": "^6.26.0",

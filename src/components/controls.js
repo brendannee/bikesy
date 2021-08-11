@@ -1,10 +1,10 @@
 import { useState, useEffect } from 'react';
 import _ from 'lodash';
 import classNames from 'classnames';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCircleNotch, faCrosshairs } from '@fortawesome/free-solid-svg-icons';
 
 import { scenarioToComponents, componentsToScenario } from 'lib/scenarios';
+import Crosshairicon from './icons/crosshairs-solid.svg';
+import CircleNotchIcon from './icons/circle-notch-solid.svg';
 
 const Controls = ({
   updateRoute,
@@ -169,13 +169,13 @@ const Controls = ({
             })}
             placeholder={getStartAddressPlaceholder()}
           />
-          <FontAwesomeIcon icon={faCircleNotch} spin className="loading-animation" />
+          <CircleNotchIcon className="loading-animation" />
           <a
             className="btn btn-light btn-geolocation"
             title="Use my location"
             onClick={getGeolocation}
           >
-            <FontAwesomeIcon icon={faCrosshairs} />
+            <Crosshairicon />
           </a>
         </div>
         <div className="form-group form-inline end-address">
@@ -221,7 +221,7 @@ const Controls = ({
           Clear
         </a>
         <button type="submit" className="btn btn-success btn-update-route">
-          {loading && <FontAwesomeIcon icon={faCircleNotch} spin />} Get Directions
+          {loading && <CircleNotchIcon className="loading-animation" />} Get Directions
         </button>
       </form>
     </div>
