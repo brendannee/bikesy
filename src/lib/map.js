@@ -2,7 +2,7 @@
 
 import _ from 'lodash';
 import autoLink from 'auto-link';
-import turf from '@turf/turf';
+import { length } from '@turf/turf';
 import fetch from 'isomorphic-unfetch';
 
 import config from 'config/frontendconfig';
@@ -353,7 +353,7 @@ export function latlngIsWithinBounds(latlng, type) {
 }
 
 export function getPathDistance(path) {
-  return turf.length(path, { units: 'miles' });
+  return length(path, { units: 'miles' });
 }
 
 export function updateMapSize() {

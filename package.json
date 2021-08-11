@@ -16,59 +16,29 @@
     "dev": "next dev",
     "export": "next build; next export",
     "start": "next start -p $PORT",
-    "test": "xo"
+    "lint": "next lint"
   },
   "dependencies": {
-    "@fortawesome/fontawesome-svg-core": "^1.2.32",
-    "@fortawesome/free-solid-svg-icons": "^5.15.1",
-    "@fortawesome/react-fontawesome": "0.1.11",
+    "@fortawesome/fontawesome-svg-core": "^1.2.36",
+    "@fortawesome/free-solid-svg-icons": "^5.15.4",
+    "@fortawesome/react-fontawesome": "0.1.15",
     "@mapbox/polyline": "^1.1.1",
-    "@turf/turf": "^5.1.6",
+    "@turf/turf": "^6.5.0",
     "auto-link": "^1.0.0",
     "babel-runtime": "^6.26.0",
-    "classnames": "^2.2.6",
+    "classnames": "^2.3.1",
     "cors": "^2.8.5",
     "isomorphic-unfetch": "^3.1.0",
-    "lodash": "^4.17.20",
-    "next": "^9.5.5",
-    "react": "^17.0.0",
-    "react-dom": "^17.0.0",
-    "react-ga": "^3.2.0",
-    "react-modal": "^3.11.2",
-    "react-no-ssr": "^1.1.0",
-    "recharts": "^1.8.5"
-  },
-  "xo": {
-    "esnext": true,
-    "space": true,
-    "rules": {
-      "camelcase": [
-        "error",
-        {
-          "properties": "never"
-        }
-      ],
-      "object-curly-spacing": [
-        "error",
-        "always"
-      ],
-      "no-unused-vars": [
-        "error",
-        {
-          "varsIgnorePattern": "^[A-Z]"
-        }
-      ],
-      "semi": [
-        "error",
-        "never"
-      ]
-    }
+    "lodash": "^4.17.21",
+    "next": "^11.0.1",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
+    "react-ga": "^3.3.0",
+    "react-modal": "^3.14.3",
+    "recharts": "^2.1.0"
   },
   "devDependencies": {
-    "babel-eslint": "^10.1.0",
-    "eslint-config-xo-nextjs": "^1.6.0",
-    "eslint-plugin-react": "^7.21.5",
-    "eslint-plugin-react-hooks": "^4.2.0",
-    "xo": "^0.34.1"
+    "eslint": "^7.32.0",
+    "eslint-config-next": "^11.0.1"
   }
 }

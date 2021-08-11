@@ -1,7 +1,6 @@
 /* global window, alert */
 
 import React, { useEffect, useState } from 'react';
-import NoSSR from 'react-no-ssr';
 import polyline from '@mapbox/polyline';
 
 import config from 'config/frontendconfig';
@@ -311,18 +310,16 @@ const App = () => {
         isMobile={isMobile}
         mobileView={mobileView}
       />
-      <NoSSR>
-        <Map
-          startLocation={startLocation}
-          endLocation={endLocation}
-          path={path}
-          assignStartLocation={assignStartLocation}
-          assignEndLocation={assignEndLocation}
-          height={mapHeight}
-          isMobile={isMobile}
-          mobileView={mobileView}
-        />
-      </NoSSR>
+      <Map
+        startLocation={startLocation}
+        endLocation={endLocation}
+        path={path}
+        assignStartLocation={assignStartLocation}
+        assignEndLocation={assignEndLocation}
+        height={mapHeight}
+        isMobile={isMobile}
+        mobileView={mobileView}
+      />
       <Elevation
         elevationProfile={elevationProfile}
         width={elevationWidth}
@@ -332,12 +329,10 @@ const App = () => {
         isMobile={isMobile}
         mobileView={mobileView}
       />
-      <NoSSR>
-        <WelcomeModal
-          showWelcomeModal={showWelcomeModal}
-          hideWelcomeModal={hideWelcomeModal}
-        />
-      </NoSSR>
+      <WelcomeModal
+        showWelcomeModal={showWelcomeModal}
+        hideWelcomeModal={hideWelcomeModal}
+      />
     </div>
   );
 };
