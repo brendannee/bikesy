@@ -10,7 +10,7 @@ Routes are displayed using the mapbox API.
 
 ### Bikesy API
 
-You can pull info directly from the bikesy backend using the [Bikesy API](https://blog.bikesy.com/api/: https://blog.bikesy.com/api/).
+You can pull info directly from the bikesy backend using the [Bikesy API](https://blog.bikesy.com/api/).
 
 The assumptions that go into the routes provided by the Bikesy API are documented on the [Bikesy API page](https://blog.bikesy.com/api/) .
 
@@ -22,13 +22,17 @@ Create a `.env` file by copying `.env.example`.
 
 Add values to your `.env` config file for all fields.
 
+Install dependencies:
+
+    yarn install
+
 ## Running Locally
 
 To run locally:
 
     yarn dev
 
-The open http://localhost:3000 in your browser.
+Then open http://localhost:3000 in your browser.
 
 ## Compiling to static files
 
