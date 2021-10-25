@@ -17,9 +17,7 @@ import { geocode, reverseGeocode } from 'lib/geocode';
 import { latlngIsWithinBounds, updateMapSize, getPathDistance } from 'lib/map';
 import { updateUrlParams, readUrlParams, validateUrlParams } from 'lib/url';
 
-// Show the welcome modal by default if env var is not configured or if configured to anything other than "false"
-const SHOULD_SHOW_WELCOME_MODAL_DEFAULT = process.env.NEXT_PUBLIC_SHOULD_SHOW_WELCOME_MODAL != "false"
-
+import appConfig from 'appConfig';
 
 const App = () => {
   const [loading, setLoading] = useState(false);
@@ -27,7 +25,9 @@ const App = () => {
   const [mobileView, setMobileView] = useState('map');
   const [isMobile, setIsMobile] = useState();
   const [elevationHeight, setElevationHeight] = useState(175);
-  const [showWelcomeModal, setShowWelcomeModal] = useState(SHOULD_SHOW_WELCOME_MODAL_DEFAULT);
+  const [showWelcomeModal, setShowWelcomeModal] = useState(
+    appConfig.SHOULD_SHOW_WELCOME_MODAL
+  );
   const [startLocation, setStartLocation] = useState();
   const [endLocation, setEndLocation] = useState();
   const [startAddress, setStartAddress] = useState('');
