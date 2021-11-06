@@ -32,9 +32,9 @@ export function formatTime(miles) {
 
 export function getElevationGain(profile) {
   let totalElevGain = 0;
-  profile.forEach((p, idx) => {
-    if (idx < profile.length - 1 && profile[idx][1] < profile[idx + 1][1]) {
-      totalElevGain += profile[idx + 1][1] - profile[idx][1];
+  profile.forEach((_, idx) => {
+    if (idx < profile.length - 1 && profile[idx]['elevation'] < profile[idx + 1]['elevation']) {
+      totalElevGain += profile[idx + 1]['elevation'] - profile[idx]['elevation'];
     }
   });
 
