@@ -291,7 +291,7 @@ export function latlngIsWithinBounds(latlng, type) {
     latlng.lng <= appConfig.SEARCH_BOUNDS.RIGHT &&
     latlng.lng >= appConfig.SEARCH_BOUNDS.LEFT;
   if (!isWithinBounds) {
-    let alertText = 'This tool only works for the San Francisco Bay Area.';
+    let alertText = appConfig.SEARCH_BOUNDS.ALERT_TEXT;
     if (type === 'start') {
       alertText += ' Change your start address and try again.';
     } else if (type === 'end') {

@@ -16,6 +16,7 @@ const config = {
     RIGHT: -121.637,
     BOTTOM: 37.3064,
     LEFT: -122.8,
+    ALERT_TEXT: 'This tool only works for the San Francisco Bay Area.',
   },
   SHOULD_SHOW_WELCOME_MODAL: true,
   WELCOME_MODAL_TITLE: 'Welcome to Bikesy',

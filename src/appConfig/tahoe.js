@@ -6,6 +6,7 @@ const config = {
     RIGHT: -119.659482,
     BOTTOM: 38.750276,
     LEFT: -122.8,
+    ALERT_TEXT: 'This tool only works for the Lake Tahoe region.',
   },
 
   MAPBOX_STYLE_URL: 'mapbox://styles/tahoebike/ck3cbc5z81vr71clhw1rfylmy',
