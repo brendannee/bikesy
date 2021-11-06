@@ -73,7 +73,7 @@ const pathGeoJSON = {
 
 export function drawMap(handleMapClick, handleMarkerDrag) {
   mapboxgl.accessToken = process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN;
-
+  console.log('TOKEN', mapboxgl.accessToken);
   function mouseDown(type) {
     if (!isCursorOverPoint) {
       return;
@@ -322,6 +322,8 @@ export function updateMapSize() {
 }
 
 export function getCenter(point1, point2) {
+  if (!point1 || !point2) return null;
+
   return {
     lat: (point1.lat + point2.lat) / 2,
     lng: (point1.lng + point2.lng) / 2,

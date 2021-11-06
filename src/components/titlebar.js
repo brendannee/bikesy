@@ -1,33 +1,18 @@
-const TitleBar = ({ mobileView, changeMobileView }) => {
-  const getRightButton = () => {
-    if (mobileView === 'map') {
-      return (
-        <button
-          className="btn btn-white btn-sm btn-right d-print-none pt-0"
-          onClick={() => changeMobileView('directions')}
-        >
-          Directions
-        </button>
-      );
-    }
+import styled from 'styled-components';
 
-    if (mobileView === 'directions') {
-      return (
-        <button
-          className="btn btn-white btn-sm btn-right d-print-none pt-0"
-          onClick={() => changeMobileView('map')}
-        >
-          Map
-        </button>
-      );
-    }
+const Wrapper = styled.div`
+  left: 1rem;
+  position: fixed;
+  top: 0;
+  img {
+    float: left;
+  }
+`;
 
-    return null;
-  };
-
+const TitleBar = () => {
   return (
-    <div className="titlebar">
-      <h1 className="site-title">
+    <Wrapper>
+      <h1>
         <img
           src="/images/bikesy-logo.png"
           srcSet="/images/bikesy-logo@2x.png 2x"
@@ -35,8 +20,7 @@ const TitleBar = ({ mobileView, changeMobileView }) => {
           className="logo"
         />
       </h1>
-      {getRightButton()}
-    </div>
+    </Wrapper>
   );
 };
 

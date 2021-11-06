@@ -199,9 +199,7 @@
 }
 
 .disclaimer {
-  clear: both;
   font-size: 10px;
-  margin-top: 30px;
 }
 
 .directions {
@@ -321,16 +319,14 @@
 
 .map-container {
   position: relative;
-  padding-top: 37px;
 }
 
 .map-container .logo {
   display: none;
 }
 
-.map-container .map-layers {
+.map-layers {
   position: absolute;
-  bottom: 37px;
   right: 0;
   background: #fff;
   border: 1px solid #999;
@@ -342,66 +338,38 @@
   font-weight: bold;
 }
 
-.map-container .map-layers .close-box {
-  position: absolute;
-  top: 2px;
-  right: 2px;
-  color: #333;
-  cursor: pointer;
-  width: 20px;
-  height: 20px;
-  text-align: center;
-  line-height: 20px;
-  font-size: 20px;
-}
-
 .map-container .map-layers .map-legend-item {
   margin: 4px 0;
   display: flex;
   align-items: center;
 }
 
-.map-container .map-layers .map-legend-icon {
+.map-layers .map-legend-icon {
   width: 15px;
   height: 3px;
   margin-right: 6px;
   opacity: 0.6;
 }
 
-.map-container .map-layers .map-legend-icon.class1 {
+.map-layers .map-legend-icon.class1 {
   background: #330066;
 }
 
-.map-container .map-layers .map-legend-icon.class2 {
+.map-layers .map-legend-icon.class2 {
   background: hsl(280, 97%, 48%);
 }
 
-.map-container .map-layers .map-legend-icon.class3 {
+.map-layers .map-legend-icon.class3 {
   background: hsl(280, 59%, 71%);
 }
 
-.map-container .map-layers label {
+.map-layers label {
   margin-bottom: 0;
   padding: 2px 0;
 }
 
-.map-container .map-layers label input[type='checkbox'] {
+.map-layers label input[type='checkbox'] {
   padding-top: 3px;
-}
-
-.map-layers-open-box {
-  position: absolute;
-  bottom: 37px;
-  right: 30px;
-  background: #ffffff;
-  border: 1px solid #999;
-  border-top: 0;
-  border-bottom-left-radius: 5px;
-  border-bottom-right-radius: 5px;
-  padding: 3px 10px;
-  cursor: pointer;
-  transform: rotate(90deg);
-  transform-origin: right bottom 0;
 }
 
 .icon-not-loading {
@@ -494,7 +462,6 @@
   }
 
   .map-container {
-    margin-left: 300px;
     padding-top: 0;
   }
 

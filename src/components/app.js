@@ -1,14 +1,10 @@
-/* global window, alert */
-
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import polyline from '@mapbox/polyline';
 
-import Controls from 'components/controls';
-import Directions from 'components/directions';
-import Elevation from 'components/elevation';
-import Map from 'components/map';
-import TitleBar from 'components/titlebar';
-import WelcomeModal from 'components/welcome_modal';
+import Elevation from 'components/Elevation';
+import Map from 'components/Map';
+import Sidebar from 'components/Sidebar';
+import WelcomeModal from 'components/WelcomeModal';
 
 import { getRoute } from 'lib/api';
 import { logQuery } from 'lib/analytics';
@@ -17,9 +13,13 @@ import { geocode, reverseGeocode } from 'lib/geocode';
 import { latlngIsWithinBounds, updateMapSize, getPathDistance } from 'lib/map';
 import { updateUrlParams, readUrlParams, validateUrlParams } from 'lib/url';
 
-// Show the welcome modal by default if env var is not configured or if configured to anything other than "false"
-const SHOULD_SHOW_WELCOME_MODAL_DEFAULT = process.env.NEXT_PUBLIC_SHOULD_SHOW_WELCOME_MODAL != "false"
+const SHOULD_SHOW_WELCOME_MODAL_DEFAULT =
+  process.env.NEXT_PUBLIC_SHOULD_SHOW_WELCOME_MODAL != 'false';
 
+// TODO - Eventually move to shared context in separate file or switch to global store like
+// Redux. Helps abstract prop drilling away in the meantime.
+const DataContext = React.createContext();
+const useData = () => useContext(DataContext);
 
 const App = () => {
   const [loading, setLoading] = useState(false);
@@ -27,7 +27,9 @@ const App = () => {
   const [mobileView, setMobileView] = useState('map');
   const [isMobile, setIsMobile] = useState();
   const [elevationHeight, setElevationHeight] = useState(175);
-  const [showWelcomeModal, setShowWelcomeModal] = useState(SHOULD_SHOW_WELCOME_MODAL_DEFAULT);
+  const [showWelcomeModal, setShowWelcomeModal] = useState(
+    SHOULD_SHOW_WELCOME_MODAL_DEFAULT
+  );
   const [startLocation, setStartLocation] = useState();
   const [endLocation, setEndLocation] = useState();
   const [startAddress, setStartAddress] = useState('');
@@ -261,47 +263,36 @@ const App = () => {
   }, []);
 
   useEffect(() => {
-    if (startLocation && endLocation) {
-      fetchRoute();
-    }
-  }, [startLocation, endLocation]);
+    if (startLocation && endLocation) fetchRoute();
+  }, [startLocation, endLocation, fetchRoute]);
 
   useEffect(() => {
-    if (startAddress && endAddress) {
-      updateUrlParams([startAddress, endAddress, scenario]);
-    }
+    if (startAddress && endAddress) updateUrlParams([startAddress, endAddress, scenario]);
   }, [startAddress, endAddress, scenario]);
 
   return (
-    <div>
-      <TitleBar
-        changeMobileView={changeMobileView}
-        isMobile={isMobile}
-        mobileView={mobileView}
-      />
-      <Controls
-        updateRoute={updateRoute}
-        clearRoute={clearRoute}
-        startAddress={startAddress}
-        endAddress={endAddress}
-        scenario={scenario}
-        loading={loading}
-        isMobile={isMobile}
-        mobileView={mobileView}
-        updateControls={updateControls}
-      />
-      <Directions
-        directions={directions}
-        distance={distance}
-        startLocation={startLocation}
-        endLocation={endLocation}
-        startAddress={startAddress}
-        endAddress={endAddress}
-        elevationProfile={elevationProfile}
-        height={directionsHeight}
-        isMobile={isMobile}
-        mobileView={mobileView}
-      />
+    <DataContext.Provider
+      value={{
+        changeMobileView,
+        clearRoute,
+        directions,
+        directionsHeight,
+        distance,
+        elevationProfile,
+        endAddress,
+        endLocation,
+        isMobile,
+        loading,
+        mobileView,
+        scenario,
+        startAddress,
+        startLocation,
+        updateControls,
+        updateRoute,
+      }}
+    >
+      <Sidebar />
+
       <Map
         startLocation={startLocation}
         endLocation={endLocation}
@@ -325,8 +316,10 @@ const App = () => {
         showWelcomeModal={showWelcomeModal}
         hideWelcomeModal={hideWelcomeModal}
       />
-    </div>
+    </DataContext.Provider>
   );
 };
 
 export default App;
+
+export { DataContext, useData };

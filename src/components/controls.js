@@ -1,22 +1,48 @@
 import { useState, useEffect } from 'react';
 import _ from 'lodash';
 import classNames from 'classnames';
+import styled from 'styled-components';
+
+import { useData } from 'components/app';
+import Card from 'components/Card';
 
 import { scenarioToComponents, componentsToScenario } from 'lib/scenarios';
 import Crosshairicon from './icons/crosshairs-solid.svg';
 import CircleNotchIcon from './icons/circle-notch-solid.svg';
 
-const Controls = ({
-  updateRoute,
-  updateControls,
-  mobileView,
-  isMobile,
-  startAddress,
-  endAddress,
-  scenario,
-  clearRoute,
-  loading,
-}) => {
+const InputGroup = styled.div`
+  overflow: hidden;
+  position: relative;
+  & + & {
+    border-top: 1px solid #ddd;
+  }
+`;
+
+const Input = styled.input`
+  border: none;
+  padding: 0.5rem 1rem;
+  width: 100%;
+`;
+
+const Label = styled.label`
+  height: 0;
+  left: -99999px;
+  position: absolute;
+  top: -99999px;
+  width: 0;
+`;
+
+const Controls = () => {
+  const {
+    updateRoute,
+    updateControls,
+    startAddress,
+    endAddress,
+    scenario,
+    clearRoute,
+    loading,
+  } = useData();
+
   const [routeType, setRouteType] = useState('3');
   const [hillReluctance, setHillReluctance] = useState('1');
   const [errorFields, setErrorFields] = useState([]);
@@ -114,14 +140,6 @@ const Controls = ({
     return errorFields;
   };
 
-  const getStartAddressPlaceholder = () => {
-    if (geolocationPending) {
-      return '';
-    }
-
-    return 'Start Address';
-  };
-
   useEffect(() => {
     const components = scenarioToComponents(scenario);
     if (components.hillReluctance !== hillReluctance) {
@@ -146,85 +164,37 @@ const Controls = ({
   }, [endAddress]);
 
   return (
-    <div
-      className="controls d-print-none"
-      hidden={mobileView !== 'directions' && isMobile}
-    >
+    <Card>
       <form onSubmit={processForm}>
-        <div
-          className={classNames('form-group', 'form-inline', 'start-address', {
-            'geolocation-pending': geolocationPending,
-          })}
-        >
-          <label className="control-label">Start Location</label>
-          <div className="start-icon" title="Start Location">
-            S
-          </div>
-          <input
+        <InputGroup>
+          <Label>Start Location</Label>
+          <Input
             type="text"
             value={startAddressInput}
             onChange={handleStartAddressChange}
-            className={classNames('form-control', {
-              'is-invalid': _.includes(errorFields, 'startAddress'),
-            })}
-            placeholder={getStartAddressPlaceholder()}
+            placeholder="595 Oak St"
           />
-          <CircleNotchIcon className="loading-animation" />
-          <a
-            className="btn btn-light btn-geolocation"
-            title="Use my location"
-            onClick={getGeolocation}
-          >
-            <Crosshairicon />
-          </a>
-        </div>
-        <div className="form-group form-inline end-address">
-          <label className="control-label">End Location</label>
-          <div className="end-icon" title="End Location">
-            E
-          </div>
-          <input
+
+          {/* <FontAwesomeIcon icon={faCircleNotch} spin className="loading-animation" /> */}
+          {/* <a title="Use my location" onClick={getGeolocation}>
+              <FontAwesomeIcon icon={faCrosshairs} />
+            </a> */}
+        </InputGroup>
+
+        <InputGroup>
+          <Label>End Location</Label>
+          <Input
             type="text"
             value={endAddressInput}
             onChange={handleEndAddressChange}
-            className={classNames('form-control', {
-              'is-invalid': _.includes(errorFields, 'endAddress'),
-            })}
-            placeholder="End Address"
+            placeholder="665 Balboa St"
           />
-        </div>
-        <div className="form-group form-inline route-type">
-          <label className="control-label">Route Type</label>
-          <select
-            className="form-control"
-            onChange={handleRouteTypeChange}
-            value={routeType}
-          >
-            <option value="1">Mostly bike paths & lanes</option>
-            <option value="2">A reasonable route</option>
-            <option value="3">A more direct route</option>
-          </select>
-        </div>
-        <div className="form-group form-inline hill-reluctance">
-          <label className="control-label">Hill Reluctance</label>
-          <select
-            className="form-control"
-            onChange={handleHillReluctanceChange}
-            value={hillReluctance}
-          >
-            <option value="1">Avoid at all costs</option>
-            <option value="2">A reasonable route</option>
-            <option value="3">Bring on the Hills!</option>
-          </select>
-        </div>
-        <a href="#" className="clear-link" onClick={clearRoute}>
-          Clear
-        </a>
-        <button type="submit" className="btn btn-success btn-update-route">
-          {loading && <CircleNotchIcon className="loading-animation" />} Get Directions
-        </button>
+        </InputGroup>
+        {/* <button type="submit">
+          {loading && <FontAwesomeIcon icon={faCircleNotch} spin />} Get Directions
+        </button> */}
       </form>
-    </div>
+    </Card>
   );
 };
 
