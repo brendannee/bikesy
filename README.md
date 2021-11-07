@@ -20,7 +20,7 @@ Create a `.env` file by copying `.env.example`.
 
     cp .env.example .env
 
-Add values to your `.env` config file for all fields.
+Add values to your `.env` config file for all fields.  Choose a region, currently `sf` for San Francisco or `tahoe` for Lake Tahoe. Or, make your own file in the `src/appConfig` folder to support a new region and specify that as NEXT_PUBLIC_REGION in your `.env` file.
 
 Install dependencies:
 
