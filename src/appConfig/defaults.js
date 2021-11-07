@@ -20,6 +20,8 @@ const config = {
   },
   SHOULD_SHOW_WELCOME_MODAL: true,
   WELCOME_MODAL_TITLE: 'Welcome to Bikesy',
+  ABOUT_LINK_TITLE: 'About Bikesy',
+  ABOUT_LINK_URL: 'https://bikesy.com/about',
 };
 
 export default config

@@ -12,5 +12,7 @@ const config = {
   MAPBOX_STYLE_URL: 'mapbox://styles/tahoebike/ck3cbc5z81vr71clhw1rfylmy',
   INITIAL_CENTER_LAT: 39.086855,
   INITIAL_CENTER_LNG: -120.033305,
+  ABOUT_LINK_TITLE: 'About the Lake Tahoe Bicycle Coalition',
+  ABOUT_LINK_URL: 'https://tahoebike.org',
 };
 export default config;
