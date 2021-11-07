@@ -11,6 +11,7 @@ const config =  {
   MAPBOX_STYLE_URL: 'mapbox://styles/bikesy/ckmec4z6h3ekg17lr1fas6kwx',
   INITIAL_CENTER_LAT: 37.7749,
   INITIAL_CENTER_LNG: -122.4194,
+  PAGE_TITLE: 'San Francisco Bay Area Bike Mapper - Bikesy',
 };
 
 export default config

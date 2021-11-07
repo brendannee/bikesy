@@ -22,6 +22,7 @@ const config = {
   WELCOME_MODAL_TITLE: 'Welcome to Bikesy',
   ABOUT_LINK_TITLE: 'About Bikesy',
   ABOUT_LINK_URL: 'https://bikesy.com/about',
+  PAGE_TITLE: 'Bikesy',
 };
 
 export default config

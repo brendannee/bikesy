@@ -14,5 +14,6 @@ const config = {
   INITIAL_CENTER_LNG: -120.033305,
   ABOUT_LINK_TITLE: 'About the Lake Tahoe Bicycle Coalition',
   ABOUT_LINK_URL: 'https://tahoebike.org',
+  PAGE_TITLE: 'Tahoe Bike Map',
 };
 export default config;
