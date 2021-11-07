@@ -25,4 +25,4 @@ const config = {
   PAGE_TITLE: 'Bikesy',
 };
 
-export default config
+export default config;

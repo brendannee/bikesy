@@ -1,4 +1,4 @@
-const config =  {
+const config = {
   WELCOME_MODAL_TITLE: 'Welcome to Bikesy',
   SHOULD_SHOW_WELCOME_MODAL: true,
   SEARCH_BOUNDS: {
@@ -14,4 +14,4 @@ const config =  {
   PAGE_TITLE: 'San Francisco Bay Area Bike Mapper - Bikesy',
 };
 
-export default config
+export default config;
