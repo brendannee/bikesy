@@ -1,3 +1,4 @@
+import appConfig from 'appConfig';
 import Head from 'next/head';
 
 import App from 'components/app';
@@ -5,7 +6,7 @@ import App from 'components/app';
 const Index = () => (
   <div>
     <Head>
-      <title>San Francisco Bay Area Bike Mapper - Bikesy</title>
+      <title>{appConfig.PAGE_TITLE}</title>
       <meta
         name="viewport"
         content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0"

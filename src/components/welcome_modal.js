@@ -1,4 +1,6 @@
 import Modal from 'react-modal';
+import appConfig from 'appConfig';
+
 Modal.setAppElement('body');
 
 const WelcomeModal = ({ showWelcomeModal, hideWelcomeModal }) => {
@@ -9,7 +11,7 @@ const WelcomeModal = ({ showWelcomeModal, hideWelcomeModal }) => {
       contentLabel="Welcome"
     >
       <div className="welcome-modal">
-        <h1>{process.env.NEXT_PUBLIC_WELCOME_MODAL_TITLE || 'Welcome to Bikesy'}</h1>
+        <h1>{appConfig.WELCOME_MODAL_TITLE}</h1>
         <ul>
           <li>Click anywhere to set the start and end points for your trip</li>
           <li>Drag-and-drop markers to recalculate the route</li>

@@ -1,3 +1,4 @@
+import appConfig from 'appConfig';
 import Weather from './weather';
 
 import {
@@ -90,8 +91,8 @@ const Directions = ({
         routes. Use your best judgment when choosing a route. Obey all vehicle code
         provisions.
       </div>
-      <a className="disclaimer" href="https://bikesy.com/about">
-        About Bikesy
+      <a className="disclaimer" href={appConfig.ABOUT_LINK_URL}>
+        {appConfig.ABOUT_LINK_TITLE}
       </a>
     </div>
   );
