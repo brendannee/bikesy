@@ -30,17 +30,7 @@ const Directions = () => {
       {directions && (
         <Card>
           <div>
-            <h3>
-              Directions to{' '}
-              <b>
-                {endAddress}
-                <span className="d-none d-print-inline"> from {startAddress}</span>
-              </b>
-            </h3>
-
             <div className="stats">
-              <h3 className="d-none d-print-block">Ride Summary</h3>
-
               <b>
                 {formatDistance(distance)}, {formatTime(distance)}
               </b>
@@ -75,19 +65,6 @@ const Directions = () => {
           </div>
         </Card>
       )}
-
-      <Card>
-        <Card.Content>
-          <div className="disclaimer">
-            We offer no guarantee regarding roadway conditions or safety of the proposed
-            routes. Use your best judgment when choosing a route. Obey all vehicle code
-            provisions.
-          </div>
-          <a className="disclaimer" href="https://bikesy.com/about">
-            About Bikesy
-          </a>
-        </Card.Content>
-      </Card>
     </>
   );
 };

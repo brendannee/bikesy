@@ -1,14 +1,11 @@
 import { useState, useEffect } from 'react';
 import _ from 'lodash';
-import classNames from 'classnames';
 import styled from 'styled-components';
 
 import { useData } from 'components/app';
 import Card from 'components/Card';
 
 import { scenarioToComponents, componentsToScenario } from 'lib/scenarios';
-import Crosshairicon from './icons/crosshairs-solid.svg';
-import CircleNotchIcon from './icons/circle-notch-solid.svg';
 
 const InputGroup = styled.div`
   overflow: hidden;
@@ -33,16 +30,6 @@ const Label = styled.label`
 `;
 
 const Controls = () => {
-  const {
-    updateRoute,
-    updateControls,
-    startAddress,
-    endAddress,
-    scenario,
-    clearRoute,
-    loading,
-  } = useData();
-
   const [routeType, setRouteType] = useState('3');
   const [hillReluctance, setHillReluctance] = useState('1');
   const [errorFields, setErrorFields] = useState([]);
@@ -91,6 +78,7 @@ const Controls = () => {
   const getGeolocation = () => {
     if ('geolocation' in navigator) {
       setGeolocationPending(true);
+
       navigator.geolocation.getCurrentPosition(
         (position) => {
           updateControls({

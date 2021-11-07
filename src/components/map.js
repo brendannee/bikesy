@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect } from 'react';
 
 import {
   latlngIsWithinBounds,
@@ -9,30 +9,50 @@ import {
   updateMapSize,
 } from 'lib/map';
 
-const Map = ({
-  isMobile,
-  mobileView,
-  height,
-  startLocation,
-  endLocation,
-  path,
-  assignStartLocation,
-  assignEndLocation,
-}) => {
-  const startLocationRef = useRef(startLocation);
-  const endLocationRef = useRef(endLocation);
+const Map = () => {
+  const startLocation = useSelector((state) => state.search.startLocation);
+  const endLocation = useSelector((state) => state.search.endLocation);
 
-  const handleMapClick = (latlng) => {
-    if (!startLocationRef.current) {
-      if (latlngIsWithinBounds(latlng)) {
-        assignStartLocation(latlng);
-      }
-    } else if (!endLocationRef.current) {
-      if (latlngIsWithinBounds(latlng)) {
-        assignEndLocation(latlng);
-      }
-    }
-  };
+  // const assignStartLocation = (latlng) => {
+  //   clearPath();
+  //   setStartLocation(latlng);
+  //   setStartAddress('');
+
+  //   reverseGeocode(latlng).then((address) => {
+  //     if (!address) {
+  //       return handleError(new Error('Unable to get reverse geocoding result.'));
+  //     }
+
+  //     setStartAddress(address);
+  //   });
+  // };
+
+  // const assignEndLocation = (latlng) => {
+  //   clearPath();
+  //   setEndLocation(latlng);
+  //   setEndAddress('');
+
+  //   reverseGeocode(latlng).then((address) => {
+  //     if (!address) {
+  //       return handleError('Unable to get reverse geocoding result.');
+  //     }
+
+  //     setEndAddress(address);
+  //   });
+  // };
+
+  const handleMapClick = (latlng) => dispatch(addLocation(latlng));
+
+  //   if (!startLocationRef.current) {
+  //     if (latlngIsWithinBounds(latlng)) {
+  //       assignStartLocation(latlng);
+  //     }
+  //   } else if (!endLocationRef.current) {
+  //     if (latlngIsWithinBounds(latlng)) {
+  //       assignEndLocation(latlng);
+  //     }
+  //   }
+  // };
 
   const handleMarkerDrag = (latlng, type) => {
     if (latlngIsWithinBounds(latlng)) {

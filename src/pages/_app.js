@@ -1,4 +1,7 @@
 import { ThemeProvider } from 'styled-components';
+import { Provider } from 'react-redux';
+
+import { store } from 'app/store';
 
 const theme = {
   colors: {
@@ -8,8 +11,10 @@ const theme = {
 
 export default function App({ Component, pageProps }) {
   return (
-    <ThemeProvider theme={theme}>
-      <Component {...pageProps} />
-    </ThemeProvider>
+    <Provider store={store}>
+      <ThemeProvider theme={theme}>
+        <Component {...pageProps} />
+      </ThemeProvider>
+    </Provider>
   );
 }

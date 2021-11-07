@@ -16,307 +16,43 @@ import { updateUrlParams, readUrlParams, validateUrlParams } from 'lib/url';
 const SHOULD_SHOW_WELCOME_MODAL_DEFAULT =
   process.env.NEXT_PUBLIC_SHOULD_SHOW_WELCOME_MODAL != 'false';
 
-// TODO - Eventually move to shared context in separate file or switch to global store like
-// Redux. Helps abstract prop drilling away in the meantime.
-const DataContext = React.createContext();
-const useData = () => useContext(DataContext);
-
 const App = () => {
-  const [loading, setLoading] = useState(false);
-  const [scenario, setScenario] = useState('5');
-  const [mobileView, setMobileView] = useState('map');
-  const [isMobile, setIsMobile] = useState();
-  const [elevationHeight, setElevationHeight] = useState(175);
-  const [showWelcomeModal, setShowWelcomeModal] = useState(
-    SHOULD_SHOW_WELCOME_MODAL_DEFAULT
-  );
-  const [startLocation, setStartLocation] = useState();
-  const [endLocation, setEndLocation] = useState();
-  const [startAddress, setStartAddress] = useState('');
-  const [endAddress, setEndAddress] = useState('');
-  const [windowSize, setWindowSize] = useState({
-    width: undefined,
-    height: undefined,
-  });
-  const [path, setPath] = useState();
-  const [distance, setDistance] = useState();
-  const [directions, setDirections] = useState();
-  const [elevationProfile, setElevationProfile] = useState();
-  const [elevationVisible, setElevationVisible] = useState();
+  // const hideWelcomeModal = (event) => {
+  //   event.preventDefault();
+  //   setShowWelcomeModal(false);
+  // };
 
-  const handleResize = () => {
-    setWindowSize({
-      height: window.innerHeight,
-      width: window.innerWidth,
-    });
+  // useEffect(() => {
+  //   const urlParameters = readUrlParams();
 
-    setIsMobile(checkMobile(window.innerWidth));
-  };
+  //   if (validateUrlParams(urlParameters)) {
+  //     setStartAddress(urlParameters[0]);
+  //     setEndAddress(urlParameters[1]);
+  //     setScenario(urlParameters[2]);
 
-  const updateRoute = async (selectedStartAddress, selectedEndAddress) => {
-    clearPath();
-    setLoading(true);
-    setShowWelcomeModal(false);
+  //     updateRoute(urlParameters[0], urlParameters[1]);
+  //   }
+  // }, []);
 
-    const results = await Promise.all([
-      geocode(selectedStartAddress).catch(() => {
-        setLoading(false);
-        alert('Invalid start address. Please try a different address.');
-      }),
-      geocode(selectedEndAddress).catch(() => {
-        setLoading(false);
-        alert('Invalid end address. Please try a different address.');
-      }),
-    ]);
+  // useEffect(() => {
+  // if (startLocation && endLocation) fetchRoute();
+  // }, [startLocation, endLocation, fetchRoute]);
 
-    if (!results || !results[0] || !results[1]) {
-      setLoading(false);
-      return;
-    }
-
-    if (!latlngIsWithinBounds(results[0], 'start')) {
-      setLoading(false);
-      return;
-    }
-
-    if (!latlngIsWithinBounds(results[1], 'end')) {
-      setLoading(false);
-      return;
-    }
-
-    setStartLocation(results[0]);
-    setEndLocation(results[1]);
-    setMobileView('map');
-  };
-
-  const fetchRoute = async () => {
-    setLoading(true);
-
-    try {
-      const results = await getRoute(startLocation, endLocation, scenario);
-
-      setLoading(false);
-
-      if (!results.path || !results.path.length) {
-        handleError(new Error('No path received'));
-        return;
-      }
-
-      const geoJSONPath = polyline.toGeoJSON(results.path[0]);
-      setPath(geoJSONPath);
-      setDistance(getPathDistance(geoJSONPath));
-      setDirections(results.directions);
-      setElevationProfile(
-        results.elevation_profile.map((node) => {
-          return {
-            distance: node[0],
-            elevation: node[1],
-          };
-        })
-      );
-
-      logQuery(startAddress, endAddress, startLocation, endLocation);
-    } catch (error) {
-      handleError(error);
-    }
-  };
-
-  const assignStartLocation = (latlng) => {
-    clearPath();
-    setStartLocation(latlng);
-    setStartAddress('');
-
-    reverseGeocode(latlng).then((address) => {
-      if (!address) {
-        return handleError(new Error('Unable to get reverse geocoding result.'));
-      }
-
-      setStartAddress(address);
-    });
-  };
-
-  const assignEndLocation = (latlng) => {
-    clearPath();
-    setEndLocation(latlng);
-    setEndAddress('');
-
-    reverseGeocode(latlng).then((address) => {
-      if (!address) {
-        return handleError('Unable to get reverse geocoding result.');
-      }
-
-      setEndAddress(address);
-    });
-  };
-
-  const updateControls = (items) => {
-    if (items.startLocation) {
-      assignStartLocation(items.startLocation);
-    }
-
-    if (items.scenario) {
-      setScenario(items.scenario);
-    }
-
-    if (items.startAddress !== undefined) {
-      setStartAddress(items.startAddress);
-    }
-
-    if (items.endAddress !== undefined) {
-      setEndAddress(items.endAddress);
-    }
-  };
-
-  const clearRoute = () => {
-    clearPath();
-    clearMarkers();
-  };
-
-  const toggleElevationVisibility = () => {
-    setElevationVisible(!elevationVisible);
-    updateMapSize();
-  };
-
-  const changeMobileView = (mobileView) => {
-    setMobileView(mobileView);
-
-    if (mobileView === 'map') {
-      updateMapSize();
-    }
-  };
-
-  const hideWelcomeModal = (event) => {
-    event.preventDefault();
-    setShowWelcomeModal(false);
-  };
-
-  const clearPath = () => {
-    setPath(undefined);
-    setDirections(undefined);
-    setElevationProfile(undefined);
-  };
-
-  const clearMarkers = () => {
-    setStartLocation(undefined);
-    setEndLocation(undefined);
-    setStartAddress(undefined);
-    setEndAddress(undefined);
-  };
-
-  const checkMobile = (width) => {
-    if (width === undefined) {
-      return false;
-    }
-
-    const mobileBreakpoint = 667;
-    return width <= mobileBreakpoint;
-  };
-
-  const controlsHeight = 252;
-  const sidebarWidth = 300;
-  const titlebarHeight = 38;
-  let elevationWidth;
-  let directionsHeight;
-  let mapHeight = windowSize.height;
-
-  if (isMobile) {
-    elevationWidth = windowSize.width;
-  } else {
-    elevationWidth = windowSize.width - sidebarWidth;
-    directionsHeight = windowSize.height - controlsHeight;
-  }
-
-  if (elevationVisible && elevationProfile) {
-    mapHeight -= elevationHeight;
-  }
-
-  if (isMobile) {
-    mapHeight -= titlebarHeight;
-  }
-
-  useEffect(() => {
-    const urlParameters = readUrlParams();
-
-    if (validateUrlParams(urlParameters)) {
-      setStartAddress(urlParameters[0]);
-      setEndAddress(urlParameters[1]);
-      setScenario(urlParameters[2]);
-
-      updateRoute(urlParameters[0], urlParameters[1]);
-    }
-
-    if (typeof window !== 'undefined') {
-      const isMobileCalc = checkMobile(window.innerWidth);
-
-      setWindowSize({
-        height: window.innerHeight,
-        width: window.innerWidth,
-      });
-      setIsMobile(isMobileCalc);
-      setElevationVisible(!isMobileCalc);
-      window.addEventListener('resize', handleResize);
-
-      return () => {
-        window.removeEventListener('resize', handleResize);
-      };
-    }
-  }, []);
-
-  useEffect(() => {
-    if (startLocation && endLocation) fetchRoute();
-  }, [startLocation, endLocation, fetchRoute]);
-
-  useEffect(() => {
-    if (startAddress && endAddress) updateUrlParams([startAddress, endAddress, scenario]);
-  }, [startAddress, endAddress, scenario]);
+  // useEffect(() => {
+  //   if (startAddress && endAddress) updateUrlParams([startAddress, endAddress, scenario]);
+  // }, [startAddress, endAddress, scenario]);
 
   return (
-    <DataContext.Provider
-      value={{
-        changeMobileView,
-        clearRoute,
-        directions,
-        directionsHeight,
-        distance,
-        elevationProfile,
-        endAddress,
-        endLocation,
-        isMobile,
-        loading,
-        mobileView,
-        scenario,
-        startAddress,
-        startLocation,
-        updateControls,
-        updateRoute,
-      }}
-    >
+    <div>
       <Sidebar />
+      <Map />
+      <Elevation />
 
-      <Map
-        startLocation={startLocation}
-        endLocation={endLocation}
-        path={path}
-        assignStartLocation={assignStartLocation}
-        assignEndLocation={assignEndLocation}
-        height={mapHeight}
-        isMobile={isMobile}
-        mobileView={mobileView}
-      />
-      <Elevation
-        elevationProfile={elevationProfile}
-        width={elevationWidth}
-        height={elevationHeight}
-        toggleElevationVisibility={toggleElevationVisibility}
-        elevationVisible={elevationVisible && Boolean(elevationProfile)}
-        isMobile={isMobile}
-        mobileView={mobileView}
-      />
-      <WelcomeModal
+      {/* <WelcomeModal
         showWelcomeModal={showWelcomeModal}
         hideWelcomeModal={hideWelcomeModal}
-      />
-    </DataContext.Provider>
+      /> */}
+    </div>
   );
 };
 
