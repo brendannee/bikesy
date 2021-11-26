@@ -114,7 +114,9 @@ export function drawMap(handleMapClick, handleMarkerDrag) {
       return;
     }
 
-    const coords = event.lngLat;
+    // Recopying values as Mapbox returns a non-serializable object
+    // by default that causes Redux to blow up.
+    const coords = { lat: event.lngLat.lat, lng: event.lngLat.lng };
 
     handleMarkerDrag(coords, dragType);
 
@@ -179,7 +181,9 @@ export function drawMap(handleMapClick, handleMarkerDrag) {
         return;
       }
 
-      handleMapClick(event.lngLat);
+      // Recopying values as Mapbox returns a non-serializable object
+      // by default that causes Redux to blow up.
+      handleMapClick({ lat: event.lngLat.lat, lng: event.lngLat.lng });
     });
 
     // When the cursor enters a feature in the point layer, prepare for dragging.
