@@ -220,7 +220,7 @@ const Controls = ({
             <option value="3">Bring on the Hills!</option>
           </select>
         </div>
-        <a href="#" className="clear-link" onClick={dispatch(clearRoute())}>
+        <a href="#" className="clear-link" onClick={() => dispatch(clearRoute())}>
           Clear
         </a>
         <button type="submit" className="btn btn-success btn-update-route">

@@ -3,12 +3,14 @@ import { createSlice } from '@reduxjs/toolkit';
 export const searchSlice = createSlice({
   name: 'search',
   initialState: {
-    startAddress: null,
-    endAddress: null,
+    startAddress: '',
+    endAddress: '',
     startLocation: null,
     endLocation: null,
     distance: null,
     directions: null,
+    elevationProfile: null,
+    path: null,
   },
   reducers: {
     setStartAddress: (state, action) => {
@@ -45,15 +47,15 @@ export const searchSlice = createSlice({
       ...state,
       startLocation: null,
       endLocation: null,
-      startAddress: null,
-      endAddress: null,
+      startAddress: '',
+      endAddress: '',
     }),
     clearRoute: (state) => ({
       ...state,
       startLocation: null,
       endLocation: null,
-      startAddress: null,
-      endAddress: null,
+      startAddress: '',
+      endAddress: '',
       path: null,
       directions: null,
       elevationProfile: null,
