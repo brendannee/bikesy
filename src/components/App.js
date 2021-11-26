@@ -1,6 +1,7 @@
 /* global window, alert */
 
 import React, { useEffect, useState } from 'react';
+import { useDispatch } from 'react-redux';
 import polyline from '@mapbox/polyline';
 import { useSelector } from 'react-redux';
 
@@ -23,6 +24,7 @@ import appConfig from 'appConfig';
 const ELEVATION_HEIGHT = 175;
 
 const App = () => {
+  const dispatch = useDispatch();
   const startAddress = useSelector((state) => state.search.startAddress);
   const endAddress = useSelector((state) => state.search.endAddress);
   const startLocation = useSelector((state) => state.search.startLocation);
