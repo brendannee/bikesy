@@ -2,13 +2,14 @@
 
 import React, { useEffect, useState } from 'react';
 import polyline from '@mapbox/polyline';
+import { useSelector } from 'react-redux';
 
-import Controls from 'components/controls';
-import Directions from 'components/directions';
-import Elevation from 'components/elevation';
-import Map from 'components/map';
-import TitleBar from 'components/titlebar';
-import WelcomeModal from 'components/welcome_modal';
+import Controls from 'components/Controls';
+import Directions from 'components/Directions';
+import Elevation from 'components/Elevation';
+import Map from 'components/Map';
+import TitleBar from 'components/Titlebar';
+import WelcomeModal from 'components/WelcomeModal';
 
 import { getRoute } from 'lib/api';
 import { logQuery } from 'lib/analytics';
@@ -19,28 +20,29 @@ import { updateUrlParams, readUrlParams, validateUrlParams } from 'lib/url';
 
 import appConfig from 'appConfig';
 
+const ELEVATION_HEIGHT = 175;
+
 const App = () => {
+  const startAddress = useSelector((state) => state.search.startAddress);
+  const endAddress = useSelector((state) => state.search.endAddress);
+  const startLocation = useSelector((state) => state.search.startLocation);
+  const endLocation = useSelector((state) => state.search.endLocation);
+  const elevationProfile = useSelector((state) => state.search.elevationProfile);
+
   const [loading, setLoading] = useState(false);
   const [scenario, setScenario] = useState('5');
   const [mobileView, setMobileView] = useState('map');
   const [isMobile, setIsMobile] = useState();
-  const [elevationHeight, setElevationHeight] = useState(175);
   const [showWelcomeModal, setShowWelcomeModal] = useState(
     appConfig.SHOULD_SHOW_WELCOME_MODAL
   );
-  const [startLocation, setStartLocation] = useState();
-  const [endLocation, setEndLocation] = useState();
-  const [startAddress, setStartAddress] = useState('');
-  const [endAddress, setEndAddress] = useState('');
+
   const [windowSize, setWindowSize] = useState({
     width: undefined,
     height: undefined,
   });
-  const [path, setPath] = useState();
-  const [distance, setDistance] = useState();
-  const [directions, setDirections] = useState();
-  const [elevationProfile, setElevationProfile] = useState();
-  const [elevationVisible, setElevationVisible] = useState();
+
+  const [elevationVisible, setElevationVisible] = useState(false);
 
   const handleResize = () => {
     setWindowSize({
@@ -52,7 +54,7 @@ const App = () => {
   };
 
   const updateRoute = async (selectedStartAddress, selectedEndAddress) => {
-    clearPath();
+    dispatch(clearPath());
     setLoading(true);
     setShowWelcomeModal(false);
 
@@ -82,8 +84,8 @@ const App = () => {
       return;
     }
 
-    setStartLocation(results[0]);
-    setEndLocation(results[1]);
+    dispatch(setStartLocation(results[0]));
+    dispatch(setEndLocation(results[1]));
     setMobileView('map');
   };
 
@@ -101,16 +103,19 @@ const App = () => {
       }
 
       const geoJSONPath = polyline.toGeoJSON(results.path[0]);
-      setPath(geoJSONPath);
-      setDistance(getPathDistance(geoJSONPath));
-      setDirections(results.directions);
-      setElevationProfile(
-        results.elevation_profile.map((node) => {
-          return {
-            distance: node[0],
-            elevation: node[1],
-          };
-        })
+
+      dispatch(setPath(geoJSONPath));
+      dispatch(setDistance(getPathDistance(geoJSONPath)));
+      dispatch(setDirections(results.directions));
+      dispatch(
+        setElevationProfile(
+          results.elevation_profile.map((node) => {
+            return {
+              distance: node[0],
+              elevation: node[1],
+            };
+          })
+        )
       );
 
       logQuery(startAddress, endAddress, startLocation, endLocation);
@@ -120,54 +125,37 @@ const App = () => {
   };
 
   const assignStartLocation = (latlng) => {
-    clearPath();
-    setStartLocation(latlng);
-    setStartAddress('');
+    dispatch(clearPath());
+    dispatch(setStartLocation(latlng));
+    dispatch(setStartAddress(''));
 
     reverseGeocode(latlng).then((address) => {
-      if (!address) {
+      if (!address)
         return handleError(new Error('Unable to get reverse geocoding result.'));
-      }
 
-      setStartAddress(address);
+      dispatch(setStartAddress(address));
     });
   };
 
   const assignEndLocation = (latlng) => {
-    clearPath();
-    setEndLocation(latlng);
-    setEndAddress('');
+    dispatch(clearPath());
+    dispatch(setEndLocation(latlng));
+    dispatch(setEndAddress(''));
 
     reverseGeocode(latlng).then((address) => {
       if (!address) {
         return handleError('Unable to get reverse geocoding result.');
       }
 
-      setEndAddress(address);
+      dispatch(setEndAddress(address));
     });
   };
 
   const updateControls = (items) => {
-    if (items.startLocation) {
-      assignStartLocation(items.startLocation);
-    }
-
-    if (items.scenario) {
-      setScenario(items.scenario);
-    }
-
-    if (items.startAddress !== undefined) {
-      setStartAddress(items.startAddress);
-    }
-
-    if (items.endAddress !== undefined) {
-      setEndAddress(items.endAddress);
-    }
-  };
-
-  const clearRoute = () => {
-    clearPath();
-    clearMarkers();
+    if (items.startLocation) assignStartLocation(items.startLocation);
+    if (items.scenario) setScenario(items.scenario);
+    if (items.startAddress !== undefined) dispatch(setStartAddress(items.startAddress));
+    if (items.endAddress !== undefined) dispatch(setEndAddress(items.endAddress));
   };
 
   const toggleElevationVisibility = () => {
@@ -188,23 +176,8 @@ const App = () => {
     setShowWelcomeModal(false);
   };
 
-  const clearPath = () => {
-    setPath(undefined);
-    setDirections(undefined);
-    setElevationProfile(undefined);
-  };
-
-  const clearMarkers = () => {
-    setStartLocation(undefined);
-    setEndLocation(undefined);
-    setStartAddress(undefined);
-    setEndAddress(undefined);
-  };
-
   const checkMobile = (width) => {
-    if (width === undefined) {
-      return false;
-    }
+    if (width === undefined) return false;
 
     const mobileBreakpoint = 667;
     return width <= mobileBreakpoint;
@@ -225,7 +198,7 @@ const App = () => {
   }
 
   if (elevationVisible && elevationProfile) {
-    mapHeight -= elevationHeight;
+    mapHeight -= ELEVATION_HEIGHT;
   }
 
   if (isMobile) {
@@ -236,40 +209,35 @@ const App = () => {
     const urlParameters = readUrlParams();
 
     if (validateUrlParams(urlParameters)) {
-      setStartAddress(urlParameters[0]);
-      setEndAddress(urlParameters[1]);
+      dispatch(setStartAddress(urlParameters[0]));
+      dispatch(setEndAddress(urlParameters[1]));
       setScenario(urlParameters[2]);
 
       updateRoute(urlParameters[0], urlParameters[1]);
     }
 
-    if (typeof window !== 'undefined') {
-      const isMobileCalc = checkMobile(window.innerWidth);
+    const isMobileCalc = checkMobile(window.innerWidth);
 
-      setWindowSize({
-        height: window.innerHeight,
-        width: window.innerWidth,
-      });
-      setIsMobile(isMobileCalc);
-      setElevationVisible(!isMobileCalc);
-      window.addEventListener('resize', handleResize);
+    setWindowSize({
+      height: window.innerHeight,
+      width: window.innerWidth,
+    });
 
-      return () => {
-        window.removeEventListener('resize', handleResize);
-      };
-    }
+    setIsMobile(isMobileCalc);
+    setElevationVisible(!isMobileCalc);
+    window.addEventListener('resize', handleResize);
+
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
   }, []);
 
   useEffect(() => {
-    if (startLocation && endLocation) {
-      fetchRoute();
-    }
+    if (startLocation && endLocation) fetchRoute();
   }, [startLocation, endLocation]);
 
   useEffect(() => {
-    if (startAddress && endAddress) {
-      updateUrlParams([startAddress, endAddress, scenario]);
-    }
+    if (startAddress && endAddress) updateUrlParams([startAddress, endAddress, scenario]);
   }, [startAddress, endAddress, scenario]);
 
   return (
@@ -279,48 +247,35 @@ const App = () => {
         isMobile={isMobile}
         mobileView={mobileView}
       />
+
       <Controls
         updateRoute={updateRoute}
-        clearRoute={clearRoute}
-        startAddress={startAddress}
-        endAddress={endAddress}
         scenario={scenario}
         loading={loading}
         isMobile={isMobile}
         mobileView={mobileView}
         updateControls={updateControls}
       />
-      <Directions
-        directions={directions}
-        distance={distance}
-        startLocation={startLocation}
-        endLocation={endLocation}
-        startAddress={startAddress}
-        endAddress={endAddress}
-        elevationProfile={elevationProfile}
-        height={directionsHeight}
-        isMobile={isMobile}
-        mobileView={mobileView}
-      />
+
+      <Directions height={directionsHeight} isMobile={isMobile} mobileView={mobileView} />
+
       <Map
-        startLocation={startLocation}
-        endLocation={endLocation}
-        path={path}
         assignStartLocation={assignStartLocation}
         assignEndLocation={assignEndLocation}
         height={mapHeight}
         isMobile={isMobile}
         mobileView={mobileView}
       />
+
       <Elevation
-        elevationProfile={elevationProfile}
         width={elevationWidth}
-        height={elevationHeight}
+        height={ELEVATION_HEIGHT}
         toggleElevationVisibility={toggleElevationVisibility}
         elevationVisible={elevationVisible && Boolean(elevationProfile)}
         isMobile={isMobile}
         mobileView={mobileView}
       />
+
       <WelcomeModal
         showWelcomeModal={showWelcomeModal}
         hideWelcomeModal={hideWelcomeModal}

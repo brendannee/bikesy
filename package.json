@@ -21,6 +21,7 @@
   },
   "dependencies": {
     "@mapbox/polyline": "^1.1.1",
+    "@reduxjs/toolkit": "^1.6.2",
     "@svgr/webpack": "^5.5.0",
     "@turf/turf": "^6.5.0",
     "auto-link": "^1.0.0",
@@ -33,7 +34,9 @@
     "react-dom": "^17.0.2",
     "react-ga": "^3.3.0",
     "react-modal": "^3.14.3",
-    "recharts": "^2.1.6"
+    "react-redux": "^7.2.6",
+    "recharts": "^2.1.6",
+    "redux": "^4.1.2"
   },
   "devDependencies": {
     "eslint": "<8.0.0",

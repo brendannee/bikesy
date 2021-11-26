@@ -1,4 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
+import { useSelector } from 'react-redux';
+
 import {
   latlngIsWithinBounds,
   drawMap,
@@ -12,12 +14,13 @@ const Map = ({
   isMobile,
   mobileView,
   height,
-  startLocation,
-  endLocation,
-  path,
   assignStartLocation,
   assignEndLocation,
 }) => {
+  const startLocation = useSelector((state) => state.search.startLocation);
+  const endLocation = useSelector((state) => state.search.endLocation);
+  const path = useSelector((state) => state.search.path);
+
   const [legendVisible, setLegendVisible] = useState(!isMobile);
 
   const startLocationRef = useRef(startLocation);

@@ -1,4 +1,5 @@
 import { CartesianGrid, LineChart, Line, XAxis, YAxis, Tooltip } from 'recharts';
+import { useSelector } from 'react-redux';
 
 import { formatElevation, metersToFeet, metersToMiles } from 'lib/helper';
 
@@ -15,7 +16,6 @@ const CustomTooltip = ({ active, payload }) => {
 };
 
 const Elevation = ({
-  elevationProfile,
   elevationVisible,
   isMobile,
   mobileView,
@@ -23,9 +23,9 @@ const Elevation = ({
   width,
   height,
 }) => {
-  if (!elevationProfile || !elevationProfile.length) {
-    return <div />;
-  }
+  const elevationProfile = useSelector((state) => state.search.elevationProfile);
+
+  if (!elevationProfile || !elevationProfile.length) return null;
 
   if (!elevationVisible) {
     return (
