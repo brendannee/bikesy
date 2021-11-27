@@ -1,7 +1,9 @@
 import { useState, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import _ from 'lodash';
 import classNames from 'classnames';
 
+import { clearRoute } from '@redux/slices/search';
 import { scenarioToComponents, componentsToScenario } from 'lib/scenarios';
 import Crosshairicon from './icons/crosshairs-solid.svg';
 import CircleNotchIcon from './icons/circle-notch-solid.svg';
@@ -11,12 +13,13 @@ const Controls = ({
   updateControls,
   mobileView,
   isMobile,
-  startAddress,
-  endAddress,
   scenario,
-  clearRoute,
   loading,
 }) => {
+  const dispatch = useDispatch();
+  const startAddress = useSelector((state) => state.search.startAddress);
+  const endAddress = useSelector((state) => state.search.endAddress);
+
   const [routeType, setRouteType] = useState('3');
   const [hillReluctance, setHillReluctance] = useState('1');
   const [errorFields, setErrorFields] = useState([]);
@@ -217,7 +220,7 @@ const Controls = ({
             <option value="3">Bring on the Hills!</option>
           </select>
         </div>
-        <a href="#" className="clear-link" onClick={clearRoute}>
+        <a href="#" className="clear-link" onClick={() => dispatch(clearRoute())}>
           Clear
         </a>
         <button type="submit" className="btn btn-success btn-update-route">

@@ -1,3 +1,5 @@
+import { useSelector } from 'react-redux';
+
 import appConfig from 'appConfig';
 import Weather from './weather';
 
@@ -10,18 +12,15 @@ import {
 } from 'lib/helper';
 import { getCenter } from 'lib/map';
 
-const Directions = ({
-  directions,
-  startAddress,
-  endAddress,
-  startLocation,
-  endLocation,
-  distance,
-  elevationProfile,
-  isMobile,
-  mobileView,
-  height,
-}) => {
+const Directions = ({ isMobile, mobileView, height }) => {
+  const directions = useSelector((state) => state.search.directions);
+  const startAddress = useSelector((state) => state.search.startAddress);
+  const endAddress = useSelector((state) => state.search.endAddress);
+  const startLocation = useSelector((state) => state.search.startLocation);
+  const endLocation = useSelector((state) => state.search.endLocation);
+  const distance = useSelector((state) => state.search.distance);
+  const elevationProfile = useSelector((state) => state.search.elevationProfile);
+
   const getDirections = () => {
     if (!directions) {
       return '';
