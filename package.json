@@ -21,27 +21,27 @@
   },
   "dependencies": {
     "@mapbox/polyline": "^1.1.1",
-    "@reduxjs/toolkit": "^1.6.2",
-    "@svgr/webpack": "^5.5.0",
+    "@reduxjs/toolkit": "^1.7.1",
+    "@svgr/webpack": "^6.2.0",
     "@turf/turf": "^6.5.0",
     "auto-link": "^1.0.0",
     "babel-runtime": "^6.26.0",
     "classnames": "^2.3.1",
     "cors": "^2.8.5",
     "lodash": "^4.17.21",
-    "next": "^12.0.3",
+    "next": "^12.0.8",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-ga": "^3.3.0",
-    "react-modal": "^3.14.3",
+    "react-modal": "^3.14.4",
     "react-redux": "^7.2.6",
-    "recharts": "^2.1.6",
+    "recharts": "^2.1.8",
     "redux": "^4.1.2"
   },
   "devDependencies": {
-    "eslint": "<8.0.0",
-    "eslint-config-next": "^12.0.3",
-    "prettier": "^2.4.1",
+    "eslint": "^8.7.0",
+    "eslint-config-next": "^12.0.8",
+    "prettier": "^2.5.1",
     "redux-logger": "^3.0.6"
   }
 }
