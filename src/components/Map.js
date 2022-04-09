@@ -79,9 +79,7 @@ const Map = ({
         />
       </div>
       <div className="map" id="map" style={{ height: `${height}px` }}></div>
-      {isMobile !== undefined && (
-        <MapLayers isInitiallyVisible={!isMobile} />
-      )}
+      {isMobile !== undefined && <MapLayers isInitiallyVisible={!isMobile} />}
     </div>
   );
 };
