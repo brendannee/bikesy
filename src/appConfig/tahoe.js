@@ -9,6 +9,7 @@ const config = {
     ALERT_TEXT: 'This tool only works for the Lake Tahoe region.',
   },
   LOGO_FILENAME_ROOT: 'ltbc-logo',
+  LOGO_CLASSNAME: 'logo ltbc-logo',
   MAPBOX_STYLE_URL: 'mapbox://styles/tahoebike/ck3cbc5z81vr71clhw1rfylmy',
   INITIAL_CENTER_LAT: 39.086855,
   INITIAL_CENTER_LNG: -120.033305,

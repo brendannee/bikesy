@@ -77,7 +77,7 @@ const Map = ({
 
   return (
     <div className="map-container" hidden={isMobile && mobileView !== 'map'}>
-      <div className="logo">
+      <div className={appConfig.LOGO_CLASSNAME}>
         <a href={appConfig.ABOUT_LINK_URL}>
           <img
             src={`/images/${appConfig.LOGO_FILENAME_ROOT}.png`}

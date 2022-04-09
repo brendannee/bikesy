@@ -518,6 +518,27 @@
     z-index: 10;
   }
 
+  .map-container .logo.ltbc-logo {
+    /*
+    Specific styling for the LTBC Logo overlay:
+
+    Bikesy logo has an opaque #333 colored background
+    And some more padding around the logo built into the tif
+    LTBC Logo has a transparent background and less padding
+    So padding needs to be added here. 
+    TODO, update the LTBC PNG and then these styles can be removed?
+    */
+    background: #fff;
+    padding: 4px 7px;
+    /*
+    Rounded corners and a thin solid border look nice too.
+    These are included in the old tahoe bike map
+    */
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
+    border: 1px solid #999;
+  }
+
   .titlebar {
     display: none;
   }
