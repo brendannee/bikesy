@@ -45,7 +45,8 @@ const IndexPage = () => {
   const [loading, setLoading] = useState(false);
   const [scenario, setScenario] = useState('5');
   const [mobileView, setMobileView] = useState('map');
-  const [isMobile, setIsMobile] = useState();
+  // window width is not known until after the component mounts
+  const [isMobile, setIsMobile] = useState(undefined);
   const [showWelcomeModal, setShowWelcomeModal] = useState(
     appConfig.SHOULD_SHOW_WELCOME_MODAL
   );

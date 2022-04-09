@@ -9,6 +9,7 @@ import {
   updatePath,
   updateMapSize,
 } from 'lib/map';
+import MapLayers from 'components/MapLayers';
 
 const Map = ({
   isMobile,
@@ -20,8 +21,6 @@ const Map = ({
   const startLocation = useSelector((state) => state.search.startLocation);
   const endLocation = useSelector((state) => state.search.endLocation);
   const path = useSelector((state) => state.search.path);
-
-  const [legendVisible, setLegendVisible] = useState(!isMobile);
 
   const startLocationRef = useRef(startLocation);
   const endLocationRef = useRef(endLocation);
@@ -46,10 +45,6 @@ const Map = ({
         assignEndLocation(latlng);
       }
     }
-  };
-
-  const toggleLegendVisibility = () => {
-    setLegendVisible(!legendVisible);
   };
 
   useEffect(() => {
@@ -84,40 +79,7 @@ const Map = ({
         />
       </div>
       <div className="map" id="map" style={{ height: `${height}px` }}></div>
-      {legendVisible ? (
-        <div className="map-layers d-print-none">
-          <div className="close-box" onClick={toggleLegendVisibility}>
-            &minus;
-          </div>
-          <div>
-            <div
-              className="map-legend-item"
-              title="paved, separated (off the street) bikeways"
-            >
-              <div className="map-legend-icon class1"></div>
-              <label>Multi-use Path</label>
-            </div>
-            <div
-              className="map-legend-item"
-              title="dedicated on-street bikeways, marked by striping on pavement"
-            >
-              <div className="map-legend-icon class2"></div>
-              <label>Bike Lane</label>
-            </div>
-            <div
-              className="map-legend-item"
-              title="on-street routes signed for bicyclists"
-            >
-              <div className="map-legend-icon class3"></div>
-              <label>Bike Route</label>
-            </div>
-          </div>
-        </div>
-      ) : (
-        <div className="map-layers-open-box" onClick={toggleLegendVisibility}>
-          Toggle Map Legend
-        </div>
-      )}
+      {isMobile !== undefined && <MapLayers isInitiallyVisible={!isMobile} />}
     </div>
   );
 };
