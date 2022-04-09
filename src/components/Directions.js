@@ -1,7 +1,7 @@
 import { useSelector } from 'react-redux';
 
 import appConfig from 'appConfig';
-import Weather from './weather';
+import Weather from './Weather';
 
 import {
   formatDistance,
