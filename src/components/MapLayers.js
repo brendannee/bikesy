@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState } from 'react';
 
 const MapLayers = ({ isInitiallyVisible }) => {
   const [isVisible, setisVisible] = useState(isInitiallyVisible);
