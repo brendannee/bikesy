@@ -1,14 +1,14 @@
 import { useState, useEffect, useRef } from 'react';
 
-const MapLayers = (isInitiallyVisible) => {
+const MapLayers = ({ isInitiallyVisible }) => {
   const [isVisible, setisVisible] = useState(isInitiallyVisible);
   const toggleLegendVisibility = () => {
     setisVisible(!isVisible);
   };
 
   return (
-      isVisible ? (
-      <div className = "map-layers d-print-none" >
+    isVisible ? (
+      <div className="map-layers d-print-none" >
         <div className="close-box" onClick={toggleLegendVisibility}>
           &minus;
         </div>
@@ -37,11 +37,11 @@ const MapLayers = (isInitiallyVisible) => {
         </div>
       </div >
     ) : (
-    <div className="map-layers-open-box" onClick={toggleLegendVisibility}>
-      Toggle Map Legend
-    </div>
+      <div className="map-layers-open-box" onClick={toggleLegendVisibility}>
+        Toggle Map Legend
+      </div>
+    )
   )
-)
 }
 
 export default MapLayers
