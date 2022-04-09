@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { useSelector } from 'react-redux';
 
+import appConfig from 'appConfig';
 import {
   latlngIsWithinBounds,
   drawMap,
@@ -77,11 +78,13 @@ const Map = ({
   return (
     <div className="map-container" hidden={isMobile && mobileView !== 'map'}>
       <div className="logo">
-        <img
-          src="/images/bikesy-logo.png"
-          srcSet="/images/bikesy-logo@2x.png 2x"
-          alt="logo"
-        />
+        <a href={appConfig.ABOUT_LINK_URL}>
+          <img
+            src={`/images/${appConfig.LOGO_FILENAME_ROOT}.png`}
+            srcSet={`/images/${appConfig.LOGO_FILENAME_ROOT}@2x.png 2x`}
+            alt="logo"
+          />
+        </a>
       </div>
       <div className="map" id="map" style={{ height: `${height}px` }}></div>
       {legendVisible ? (

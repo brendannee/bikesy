@@ -515,10 +515,7 @@
     position: absolute;
     top: 0;
     left: 52px;
-    width: 125px;
-    height: 50px;
     z-index: 10;
-    background: #fff;
   }
 
   .titlebar {

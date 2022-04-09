@@ -1,3 +1,5 @@
+import appConfig from 'appConfig';
+
 const TitleBar = ({ mobileView, changeMobileView }) => {
   const getRightButton = () => {
     if (mobileView === 'map') {
@@ -28,12 +30,14 @@ const TitleBar = ({ mobileView, changeMobileView }) => {
   return (
     <div className="titlebar">
       <h1 className="site-title">
-        <img
-          src="/images/bikesy-logo.png"
-          srcSet="/images/bikesy-logo@2x.png 2x"
-          alt="logo"
-          className="logo"
-        />
+        <a href={appConfig.ABOUT_LINK_URL}>
+          <img
+            src={`/images/${appConfig.LOGO_FILENAME_ROOT}.png`}
+            srcSet={`/images/${appConfig.LOGO_FILENAME_ROOT}@2x.png 2x`}
+            alt="logo"
+            className="logo"
+          />
+        </a>
       </h1>
       {getRightButton()}
     </div>

@@ -5,7 +5,8 @@ const config = {
   MIN_ZOOM: 9,
   BIKESY_LOW_BIKE_SPEED_MPH: 7.5,
   BIKESY_HIGH_BIKE_SPEED_MPH: 10,
-
+  LOGO_FILENAME_ROOT: 'bikesy-logo',
+  
   // Expected to be overridden for all regions:
   // TODO consider putting placeholders here to force regional overrides
   MAPBOX_STYLE_URL: 'mapbox://styles/bikesy/ckmec4z6h3ekg17lr1fas6kwx',
