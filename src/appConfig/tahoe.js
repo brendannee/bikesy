@@ -22,7 +22,13 @@ const config = {
       label: 'Construction',
       description: undefined,
       iconClassName: 'construction',
-      iconURL: 'images/ltbc-logo.png', // Placeholder
+      layerProperties: {
+        type: 'symbol',
+        layout: {
+          'icon-image': 'images/ltbc-logo.png', // Placeholder
+          'icon-size': 0.25,
+        }
+      },
       datasetId: 'tahoebike/ck3pdyl2g5fn42tpnfsh5pibh',
       isInitiallyChecked: true,
     },
@@ -31,7 +37,13 @@ const config = {
       label: 'Bike Parking',
       description: undefined,
       iconClassName: 'bikeParking',
-      iconURL: 'images/ltbc-logo.png', // Placeholder
+      layerProperties: {
+        type: 'symbol',
+        layout: {
+          'icon-image': 'images/ltbc-logo.png', // Placeholder
+          'icon-size': 0.25,
+        }
+      },
       datasetId: 'tahoebike/ck3pdz0lj0ezu2injv641rf8z',
       isInitiallyChecked: false,
     },
@@ -40,7 +52,13 @@ const config = {
       label: 'Bike Shops',
       description: undefined,
       iconClassName: 'bikeShops',
-      iconURL: 'images/ltbc-logo.png', // Placeholder
+      layerProperties: {
+        type: 'symbol',
+        layout: {
+          'icon-image': 'images/ltbc-logo.png', // Placeholder
+          'icon-size': 0.25,
+        }
+      },
       datasetId: 'tahoebike/ck3pdzfet26fm2ilhadvn614o',
       isInitiallyChecked: false,
     },
@@ -49,6 +67,13 @@ const config = {
       label: 'Multi-use Path',
       description: 'paved, separated (off the street) bikeways',
       iconClassName: 'class1',
+      layerProperties: {
+        type: 'line',
+        layout: {
+          // TODO determine styling
+        }
+      },
+      datasetId: 'tahoebike/cl1sw0vau1rmm28rs0zwud8el',
       isInitiallyChecked: true,
     },
     {
@@ -56,6 +81,13 @@ const config = {
       label: 'Bike Lane',
       description: 'dedicated on-street bikeways, marked by striping on pavement',
       iconClassName: 'class2',
+      layerProperties: {
+        type: 'line',
+        layout: {
+          // TODO determine styling
+        }
+      },
+      datasetId: 'tahoebike/cl1swsss40zax2emy7z7isg57',
       isInitiallyChecked: true,
     },
     {
@@ -63,6 +95,13 @@ const config = {
       label: 'Bike Route',
       description: 'on-street routes signed for bicyclists',
       iconClassName: 'class3',
+      layerProperties: {
+        type: 'line',
+        layout: {
+          // TODO determine styling
+        }
+      },
+      datasetId: 'tahoebike/cl1swuzh0265221qxzoua365u',
       isInitiallyChecked: true,
     },
     {
@@ -70,6 +109,13 @@ const config = {
       label: 'Plowed Winter Path',
       description: 'Bike paths that may be plowed for winter access. Paths get plowed after streets.',
       iconClassName: 'winter',
+      layerProperties: {
+        type: 'line',
+        layout: {
+          // TODO determine styling
+        }
+      },
+      datasetId: undefined, // TODO this layer is derived from several others. Process offline?
       isInitiallyChecked: false,
     },
   ],

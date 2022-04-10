@@ -21,7 +21,7 @@ const MapLayers = ({ isInitiallyVisible, mapRef }) => {
             label={layer.label}
             description={layer.description}
             iconClassName={layer.iconClassName}
-            iconURL={layer.iconURL}
+            layerProperties={layer.layerProperties}
             datasetId={layer.datasetId}
             isInitiallyChecked={layer.isInitiallyChecked}
             mapRef={mapRef}

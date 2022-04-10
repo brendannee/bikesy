@@ -1,32 +1,29 @@
+import * as _ from 'lodash';
 import { useEffect, useState } from 'react';
 import { getMapboxDatasetURL } from 'lib/map';
 
-const MapLayersItem = ({ type, label, description, iconClassName, isInitiallyChecked, datasetId, iconURL, mapRef }) => {
+const MapLayersItem = ({ type, label, description, iconClassName, isInitiallyChecked, datasetId, layerProperties, mapRef }) => {
   const [isChecked, setIsChecked] = useState(isInitiallyChecked);
-  
-  const loadIconIntoMap = () => {
-    mapRef.current.loadImage(
-      iconURL,
-      (error, image) => {
-        if (error) throw error;
-        mapRef.current.addImage(label, image);
-      }
-    )
-  }
 
-  const unloadIconFromMap = () => {
-    // TODO consider checking if hasImage first.
-    if (mapRef.current.hasImage(label)) {
-      mapRef.current.removeImage(label);
+  const loadIconIntoMap = () => {
+    const imgUrl = _.get(layerProperties, 'layout.icon-image');
+    if (imgUrl && !mapRef.current.hasImage(imgUrl)) {
+      mapRef.current.loadImage(
+        imgUrl,
+        (error, image) => {
+          if (error) throw error;
+          // TODO consider whether the image might have already been added while loading
+          // Check again? Somehow prevent duplicate loading?
+          mapRef.current.addImage(imgUrl, image);
+          console.log('loaded ', imgUrl)
+        }
+      )
     }
   }
 
   useEffect(() => {
-    if (iconURL) {
-      loadIconIntoMap();
-    }
-    return unloadIconFromMap;
-  }, [label, iconURL]);
+    loadIconIntoMap();
+  }, [label, layerProperties]);
 
   const onChange = () => {
     if (!isChecked) {
@@ -39,13 +36,9 @@ const MapLayersItem = ({ type, label, description, iconClassName, isInitiallyChe
       }
       if (!mapRef.current.getLayer(label)) {
         mapRef.current.addLayer({
+          ...layerProperties,
           'id': label,
-          'type': 'symbol',
           'source': label,
-          'layout': {
-            'icon-image': label,
-            'icon-size': 0.25,
-          }
         });
       }
     } else {
@@ -55,7 +48,7 @@ const MapLayersItem = ({ type, label, description, iconClassName, isInitiallyChe
       }
     }
     setIsChecked(!isChecked);
-    
+
   }
 
   switch (type) {
@@ -83,6 +76,6 @@ const MapLayersItem = ({ type, label, description, iconClassName, isInitiallyChe
     default:
       throw new Error(`Unexpected type ${type} for map layer with label ${label}`)
   }
-  
+
 };
 export default MapLayersItem;
