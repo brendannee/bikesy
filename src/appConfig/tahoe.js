@@ -16,5 +16,22 @@ const config = {
   ABOUT_LINK_TITLE: 'About the Lake Tahoe Bicycle Coalition',
   ABOUT_LINK_URL: 'https://tahoebike.org',
   PAGE_TITLE: 'Tahoe Bike Map',
+  MAP_LAYERS: [
+    {
+      label: 'Multi-use Path',
+      description: 'paved, separated (off the street) bikeways',
+      iconClassName: 'class1',
+    },
+    {
+      label: 'Bike Lane',
+      description: 'dedicated on-street bikeways, marked by striping on pavement',
+      iconClassName: 'class2',
+    },
+    {
+      label: 'Bike Route',
+      description: 'on-street routes signed for bicyclists',
+      iconClassName: 'class3',
+    },
+  ],
 };
 export default config;

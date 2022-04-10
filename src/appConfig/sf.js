@@ -12,6 +12,23 @@ const config = {
   INITIAL_CENTER_LAT: 37.7749,
   INITIAL_CENTER_LNG: -122.4194,
   PAGE_TITLE: 'San Francisco Bay Area Bike Mapper - Bikesy',
+  MAP_LAYERS: [
+    {
+      label: 'Multi-use Path',
+      description: 'paved, separated (off the street) bikeways',
+      iconClassName: 'class1',
+    },
+    {
+      label: 'Bike Lane',
+      description: 'dedicated on-street bikeways, marked by striping on pavement',
+      iconClassName: 'class2',
+    },
+    {
+      label: 'Bike Route',
+      description: 'on-street routes signed for bicyclists',
+      iconClassName: 'class3',
+    },
+  ],
 };
 
 export default config;

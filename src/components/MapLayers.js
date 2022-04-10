@@ -1,4 +1,6 @@
 import { useState } from 'react';
+
+import appConfig from 'appConfig';
 import MapLayersItem from './MapLayersItem';
 
 const MapLayers = ({ isInitiallyVisible }) => {
@@ -13,21 +15,14 @@ const MapLayers = ({ isInitiallyVisible }) => {
         &minus;
       </div>
       <div>
-        <MapLayersItem
-          label="Multi-use Path"
-          description="paved, separated (off the street) bikeways"
-          iconClassName="class1"
-        />
-        <MapLayersItem
-          label="Bike Lane"
-          description="dedicated on-street bikeways, marked by striping on pavement"
-          iconClassName="class2"
-        />
-        <MapLayersItem
-          label="Bike Route"
-          description="on-street routes signed for bicyclists"
-          iconClassName="class3"
-        />
+        {appConfig.MAP_LAYERS.map((layer) => (
+          <MapLayersItem
+            label={layer.label}
+            description={layer.description}
+            iconClassName={layer.iconClassName}
+            key={layer.label}
+          />
+        ))}
       </div>
     </div>
   ) : (
