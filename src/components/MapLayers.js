@@ -4,9 +4,9 @@ import appConfig from 'appConfig';
 import MapLayersItem from './MapLayersItem';
 
 const MapLayers = ({ isInitiallyVisible }) => {
-  const [isVisible, setisVisible] = useState(isInitiallyVisible);
+  const [isVisible, setIsVisible] = useState(isInitiallyVisible);
   const toggleLegendVisibility = () => {
-    setisVisible(!isVisible);
+    setIsVisible(!isVisible);
   };
 
   return isVisible ? (
@@ -17,9 +17,11 @@ const MapLayers = ({ isInitiallyVisible }) => {
       <div>
         {appConfig.MAP_LAYERS.map((layer) => (
           <MapLayersItem
+            type={layer.type}  
             label={layer.label}
             description={layer.description}
             iconClassName={layer.iconClassName}
+            isInitiallyChecked={layer.isInitiallyChecked}
             key={layer.label}
           />
         ))}

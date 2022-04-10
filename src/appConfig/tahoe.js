@@ -18,19 +18,53 @@ const config = {
   PAGE_TITLE: 'Tahoe Bike Map',
   MAP_LAYERS: [
     {
+      type: 'mapbox-dataset',
+      label: 'Construction',
+      description: undefined,
+      iconClassName: 'construction',
+      isInitiallyChecked: true,
+    },
+    {
+      type: 'mapbox-dataset',
+      label: 'Bike Parking',
+      description: undefined,
+      iconClassName: 'bikeParking',
+      isInitiallyChecked: false,
+    },
+    {
+      type: 'mapbox-dataset',
+      label: 'Bike Shops',
+      description: undefined,
+      iconClassName: 'bikeShops',
+      isInitiallyChecked: false,
+    },
+    {
+      type: 'mapbox-dataset',
       label: 'Multi-use Path',
       description: 'paved, separated (off the street) bikeways',
       iconClassName: 'class1',
+      isInitiallyChecked: true,
     },
     {
+      type: 'mapbox-dataset',
       label: 'Bike Lane',
       description: 'dedicated on-street bikeways, marked by striping on pavement',
       iconClassName: 'class2',
+      isInitiallyChecked: true,
     },
     {
+      type: 'mapbox-dataset',
       label: 'Bike Route',
       description: 'on-street routes signed for bicyclists',
       iconClassName: 'class3',
+      isInitiallyChecked: true,
+    },
+    {
+      type: 'mapbox-dataset',
+      label: 'Plowed Winter Path',
+      description: 'Bike paths that may be plowed for winter access. Paths get plowed after streets.',
+      iconClassName: 'winter',
+      isInitiallyChecked: false,
     },
   ],
 };

@@ -368,6 +368,31 @@
   opacity: 0.6;
 }
 
+/* TODO construction logo doesn't look quite right */
+.map-container .map-layers .map-legend-icon.construction {
+  background: url('../images/construction_marker.svg') 0 0 no-repeat;
+  background-size: 15px 18px;
+  width: 15px;
+  height: 18px;
+  overflow: visible;
+}
+
+.map-container .map-layers .map-legend-icon.bikeParking {
+  background: url('../images/BikeParkingIcon.svg') 0 0 no-repeat;
+  background-size: 15px 18px;
+  width: 15px;
+  height: 18px;
+  overflow: visible;
+}
+
+.map-container .map-layers .map-legend-icon.bikeShops {
+  background: url('../images/BikeShopIcon.svg') 0 0 no-repeat;
+  background-size: 15px 18px;
+  width: 15px;
+  height: 18px;
+  overflow: visible;
+}
+
 .map-container .map-layers .map-legend-icon.class1 {
   background: #330066;
 }
@@ -378,6 +403,12 @@
 
 .map-container .map-layers .map-legend-icon.class3 {
   background: hsl(280, 59%, 71%);
+}
+
+.map-container .map-layers .map-legend-icon.winter {
+  border-top: 3px dashed #ff0000;
+  height: 0px;
+  vertical-align: -2px;
 }
 
 .map-container .map-layers label {
