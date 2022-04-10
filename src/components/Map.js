@@ -26,6 +26,8 @@ const Map = ({
   const startLocationRef = useRef(startLocation);
   const endLocationRef = useRef(endLocation);
 
+  const mapRef = useRef(null);
+
   const handleMapClick = (latlng) => {
     if (!startLocationRef.current) {
       if (latlngIsWithinBounds(latlng)) {
@@ -49,7 +51,7 @@ const Map = ({
   };
 
   useEffect(() => {
-    drawMap(handleMapClick, handleMarkerDrag);
+    mapRef.current = drawMap(handleMapClick, handleMarkerDrag);
   }, []);
 
   useEffect(() => {
@@ -82,7 +84,7 @@ const Map = ({
         </a>
       </div>
       <div className="map" id="map" style={{ height: `${height}px` }}></div>
-      {isMobile !== undefined && <MapLayers isInitiallyVisible={!isMobile} />}
+      {isMobile !== undefined && mapRef.current !== null && <MapLayers isInitiallyVisible={!isMobile} mapRef={mapRef} />}
     </div>
   );
 };

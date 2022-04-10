@@ -4,6 +4,8 @@ import _ from 'lodash';
 import { length } from '@turf/turf';
 import appConfig from 'appConfig';
 
+const MAPBOX_DATASETS_API = 'https://api.mapbox.com/datasets/v1';
+
 let map;
 let isDragging;
 let dragType;
@@ -212,6 +214,7 @@ export function drawMap(handleMapClick, handleMarkerDrag) {
     map.on('touchstart', 'start', () => mouseDown('start'));
     map.on('touchstart', 'end', () => mouseDown('end'));
   });
+  return map;
 }
 
 export function updateStartMarker(latlng) {
@@ -326,4 +329,11 @@ export function getCenter(point1, point2) {
     lat: (point1.lat + point2.lat) / 2,
     lng: (point1.lng + point2.lng) / 2,
   };
+}
+
+export function getMapboxDatasetURL(datasetId) {
+  if (!datasetId) {
+    throw Error(`Cannot Fetch Mapbox Dataset URL for datasetId ${datasetId}`);
+  }
+  return `${MAPBOX_DATASETS_API}/${datasetId}/features?access_token=${process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN}`;
 }

@@ -22,6 +22,8 @@ const config = {
       label: 'Construction',
       description: undefined,
       iconClassName: 'construction',
+      iconURL: 'images/ltbc-logo.png', // Placeholder
+      datasetId: 'tahoebike/ck3pdyl2g5fn42tpnfsh5pibh',
       isInitiallyChecked: true,
     },
     {
@@ -29,6 +31,8 @@ const config = {
       label: 'Bike Parking',
       description: undefined,
       iconClassName: 'bikeParking',
+      iconURL: 'images/ltbc-logo.png', // Placeholder
+      datasetId: 'tahoebike/ck3pdz0lj0ezu2injv641rf8z',
       isInitiallyChecked: false,
     },
     {
@@ -36,6 +40,8 @@ const config = {
       label: 'Bike Shops',
       description: undefined,
       iconClassName: 'bikeShops',
+      iconURL: 'images/ltbc-logo.png', // Placeholder
+      datasetId: 'tahoebike/ck3pdzfet26fm2ilhadvn614o',
       isInitiallyChecked: false,
     },
     {

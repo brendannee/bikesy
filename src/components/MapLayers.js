@@ -3,7 +3,7 @@ import { useState } from 'react';
 import appConfig from 'appConfig';
 import MapLayersItem from './MapLayersItem';
 
-const MapLayers = ({ isInitiallyVisible }) => {
+const MapLayers = ({ isInitiallyVisible, mapRef }) => {
   const [isVisible, setIsVisible] = useState(isInitiallyVisible);
   const toggleLegendVisibility = () => {
     setIsVisible(!isVisible);
@@ -21,7 +21,10 @@ const MapLayers = ({ isInitiallyVisible }) => {
             label={layer.label}
             description={layer.description}
             iconClassName={layer.iconClassName}
+            iconURL={layer.iconURL}
+            datasetId={layer.datasetId}
             isInitiallyChecked={layer.isInitiallyChecked}
+            mapRef={mapRef}
             key={layer.label}
           />
         ))}

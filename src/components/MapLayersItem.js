@@ -1,11 +1,61 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { getMapboxDatasetURL } from 'lib/map';
 
-const MapLayersItem = ({ type, label, description, iconClassName, isInitiallyChecked }) => {
+const MapLayersItem = ({ type, label, description, iconClassName, isInitiallyChecked, datasetId, iconURL, mapRef }) => {
   const [isChecked, setIsChecked] = useState(isInitiallyChecked);
   
+  const loadIconIntoMap = () => {
+    mapRef.current.loadImage(
+      iconURL,
+      (error, image) => {
+        if (error) throw error;
+        mapRef.current.addImage(label, image);
+      }
+    )
+  }
+
+  const unloadIconFromMap = () => {
+    // TODO consider checking if hasImage first.
+    if (mapRef.current.hasImage(label)) {
+      mapRef.current.removeImage(label);
+    }
+  }
+
+  useEffect(() => {
+    if (iconURL) {
+      loadIconIntoMap();
+    }
+    return unloadIconFromMap;
+  }, [label, iconURL]);
+
   const onChange = () => {
-    // TODO actually toggle on the map
+    if (!isChecked) {
+      // Turn on layer
+      if (!mapRef.current.getSource(label)) {
+        mapRef.current.addSource(label, {
+          type: 'geojson',
+          data: getMapboxDatasetURL(datasetId),
+        })
+      }
+      if (!mapRef.current.getLayer(label)) {
+        mapRef.current.addLayer({
+          'id': label,
+          'type': 'symbol',
+          'source': label,
+          'layout': {
+            'icon-image': label,
+            'icon-size': 0.25,
+          }
+        });
+      }
+    } else {
+      // Turn off layer
+      if (mapRef.current.getLayer(label)) {
+        mapRef.current.removeLayer(label)
+      }
+    }
     setIsChecked(!isChecked);
+    
   }
 
   switch (type) {
