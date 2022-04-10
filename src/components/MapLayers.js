@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import MapLayersItem from './MapLayersItem';
 
 const MapLayers = ({ isInitiallyVisible }) => {
   const [isVisible, setisVisible] = useState(isInitiallyVisible);
@@ -12,24 +13,21 @@ const MapLayers = ({ isInitiallyVisible }) => {
         &minus;
       </div>
       <div>
-        <div
-          className="map-legend-item"
-          title="paved, separated (off the street) bikeways"
-        >
-          <div className="map-legend-icon class1"></div>
-          <label>Multi-use Path</label>
-        </div>
-        <div
-          className="map-legend-item"
-          title="dedicated on-street bikeways, marked by striping on pavement"
-        >
-          <div className="map-legend-icon class2"></div>
-          <label>Bike Lane</label>
-        </div>
-        <div className="map-legend-item" title="on-street routes signed for bicyclists">
-          <div className="map-legend-icon class3"></div>
-          <label>Bike Route</label>
-        </div>
+        <MapLayersItem
+          label="Multi-use Path"
+          description="paved, separated (off the street) bikeways"
+          iconClassName="class1"
+        />
+        <MapLayersItem
+          label="Bike Lane"
+          description="dedicated on-street bikeways, marked by striping on pavement"
+          iconClassName="class2"
+        />
+        <MapLayersItem
+          label="Bike Route"
+          description="on-street routes signed for bicyclists"
+          iconClassName="class3"
+        />
       </div>
     </div>
   ) : (
