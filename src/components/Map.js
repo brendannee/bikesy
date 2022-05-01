@@ -53,8 +53,12 @@ const Map = ({
   };
 
   useEffect(() => {
+    setIsMapLoaded(false);
     mapRef.current = drawMap(handleMapClick, handleMarkerDrag);
     mapRef.current.on('load', () => setIsMapLoaded(true));
+    return () => {
+      mapRef.current.remove();
+    }
   }, []);
 
   useEffect(() => {
@@ -62,6 +66,7 @@ const Map = ({
     startLocationRef.current = startLocation;
   }, [startLocation]);
 
+  
   useEffect(() => {
     updateEndMarker(endLocation);
     endLocationRef.current = endLocation;
