@@ -66,31 +66,32 @@ const MapLayersItem = ({ type, label, description, iconClassName, isInitiallyChe
     setIsChecked(!isChecked);
   }
 
-  switch (type) {
-    case 'static':
-      return (
-        <div className="map-legend-item" title={description}>
-          <div className={`map-legend-icon ${iconClassName}`}></div>
-          <label>{label}</label>
-        </div>
-      );
-    case 'mapbox-dataset':
-      return (
-        <div className="map-legend-item" title={description}>
-          <div className={`map-legend-icon ${iconClassName}`}></div>
-          <label>
-            <input
-              type="checkbox"
-              checked={isChecked}
-              onChange={onChange}
-            />
-            <span>{label}</span>
-          </label>
-        </div>
-      );
-    default:
-      throw new Error(`Unexpected type ${type} for map layer with label ${label}`)
+  const renderInnerLabel = () => {
+    switch (type) {
+      case 'static':
+        return label
+      case 'mapbox-dataset':
+        return (<>
+          <input
+            type="checkbox"
+            checked={isChecked}
+            onChange={onChange}
+          />
+          <span>{label}</span>
+        </>)
+      default:
+        throw new Error(`Unexpected type ${type} for map layer with label ${label}`);
+    }
   }
+
+  return (
+    <div className="map-legend-item" title={description}>
+      <div className={`map-legend-icon ${iconClassName}`}></div>
+      <label>
+        {renderInnerLabel()}
+      </label>
+    </div>
+  );
 
 };
 export default MapLayersItem;
