@@ -5,8 +5,7 @@ import { getMapboxDatasetURL } from 'lib/map';
 const MapLayersItem = ({ type, label, description, iconClassName, isInitiallyChecked, datasetId, layerProperties, mapRef }) => {
   const [isChecked, setIsChecked] = useState(isInitiallyChecked);
 
-  const loadIconIntoMap = () => {
-    const imgUrl = _.get(layerProperties, 'layout.icon-image');
+  const loadIconIntoMap = (imgUrl) => {
     if (imgUrl && !mapRef.current.hasImage(imgUrl)) {
       mapRef.current.loadImage(
         imgUrl,
@@ -16,39 +15,55 @@ const MapLayersItem = ({ type, label, description, iconClassName, isInitiallyChe
           // Check again? Somehow prevent duplicate loading?
           mapRef.current.addImage(imgUrl, image);
           console.log('loaded ', imgUrl)
+          if (isChecked) {
+            addToMap();
+          }
         }
       )
     }
   }
 
   useEffect(() => {
-    loadIconIntoMap();
+    const imgUrl = _.get(layerProperties, 'layout.icon-image');
+    // Icon layers need to be loaded into the map before we can addToMap
+    if (imgUrl) {
+      loadIconIntoMap(imgUrl);
+    } else {
+      if (isChecked) {
+        addToMap();
+      }
+    }
   }, [label, layerProperties]);
+
+  const addToMap = () => {
+    if (!mapRef.current.getSource(label)) {
+      mapRef.current.addSource(label, {
+        type: 'geojson',
+        data: getMapboxDatasetURL(datasetId),
+      })
+    }
+    if (!mapRef.current.getLayer(label)) {
+      mapRef.current.addLayer({
+        ...layerProperties,
+        'id': label,
+        'source': label,
+      });
+    }
+  }
+
+  const removeFromMap = () => {
+    if (mapRef.current.getLayer(label)) {
+      mapRef.current.removeLayer(label)
+    }
+  }
 
   const onChange = () => {
     if (!isChecked) {
-      // Turn on layer
-      if (!mapRef.current.getSource(label)) {
-        mapRef.current.addSource(label, {
-          type: 'geojson',
-          data: getMapboxDatasetURL(datasetId),
-        })
-      }
-      if (!mapRef.current.getLayer(label)) {
-        mapRef.current.addLayer({
-          ...layerProperties,
-          'id': label,
-          'source': label,
-        });
-      }
+      addToMap();
     } else {
-      // Turn off layer
-      if (mapRef.current.getLayer(label)) {
-        mapRef.current.removeLayer(label)
-      }
+      removeFromMap();
     }
     setIsChecked(!isChecked);
-
   }
 
   switch (type) {
