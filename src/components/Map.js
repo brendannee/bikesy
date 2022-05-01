@@ -63,7 +63,9 @@ const Map = ({
       setIsMapLoaded(true);
     });
     return () => {
-      mapRef.current.remove();
+      // TODO it would be nice to remove the map when this component unmounts,
+      // But this is leading to problems during fast refresh hot module reloading during development
+      // mapRef.current.remove();
     }
   }, []);
 
