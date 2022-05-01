@@ -54,8 +54,14 @@ const Map = ({
 
   useEffect(() => {
     setIsMapLoaded(false);
-    mapRef.current = drawMap(handleMapClick, handleMarkerDrag);
-    mapRef.current.on('load', () => setIsMapLoaded(true));
+    const map = drawMap(handleMapClick, handleMarkerDrag);
+    map.on('load', () => {
+      if (mapRef.current) {
+        mapRef.current.remove();
+      }
+      mapRef.current = map;
+      setIsMapLoaded(true);
+    });
     return () => {
       mapRef.current.remove();
     }
