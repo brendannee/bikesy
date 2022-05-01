@@ -11,10 +11,10 @@ const MapLayersItem = ({ type, label, description, iconClassName, isInitiallyChe
         imgUrl,
         (error, image) => {
           if (error) throw error;
-          // TODO consider whether the image might have already been added while loading
-          // Check again? Somehow prevent duplicate loading?
-          mapRef.current.addImage(imgUrl, image);
-          console.log('loaded ', imgUrl)
+          // Prevent adding the same image twice in case multiple components have loaded the image at the same time
+          if (!mapRef.current.hasImage(imgUrl)) {
+            mapRef.current.addImage(imgUrl, image);
+          }
           if (isChecked) {
             addToMap();
           }
