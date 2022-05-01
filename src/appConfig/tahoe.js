@@ -25,8 +25,9 @@ const config = {
       layerProperties: {
         type: 'symbol',
         layout: {
-          'icon-image': 'images/ltbc-logo.png', // Placeholder
-          'icon-size': 0.25,
+          'icon-image': 'images/construction_marker.png',
+          'icon-size': ['interpolate', ['linear'], ['zoom'], 9, 0.15, 18, 0.2],
+          'icon-allow-overlap': true,
         }
       },
       datasetId: 'tahoebike/ck3pdyl2g5fn42tpnfsh5pibh',
@@ -40,8 +41,9 @@ const config = {
       layerProperties: {
         type: 'symbol',
         layout: {
-          'icon-image': 'images/ltbc-logo.png', // Placeholder
-          'icon-size': 0.25,
+          'icon-image': 'images/BikeParkingIcon.png',
+          'icon-size': ['interpolate', ['linear'], ['zoom'], 9, 0.15, 20, 0.35],
+          'icon-allow-overlap': true,
         }
       },
       datasetId: 'tahoebike/ck3pdz0lj0ezu2injv641rf8z',
@@ -55,8 +57,9 @@ const config = {
       layerProperties: {
         type: 'symbol',
         layout: {
-          'icon-image': 'images/ltbc-logo.png', // Placeholder
-          'icon-size': 0.25,
+          'icon-image': 'images/BikeShopIcon.png',
+          'icon-size': ['interpolate', ['linear'], ['zoom'], 9, 0.15, 20, 0.35],
+          'icon-allow-overlap': true,
         }
       },
       datasetId: 'tahoebike/ck3pdzfet26fm2ilhadvn614o',
