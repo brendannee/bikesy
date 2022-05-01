@@ -69,12 +69,15 @@ const config = {
       type: 'mapbox-dataset',
       label: 'Multi-use Path',
       description: 'paved, separated (off the street) bikeways',
-      iconClassName: 'class1',
+      iconClassName: 'tahoe-class1',
       layerProperties: {
         type: 'line',
-        layout: {
-          // TODO determine styling
-        }
+        paint: {
+          'line-color': '#330066',
+          'line-width': 1,
+          'line-opacity': 0.8,
+          'line-gap-width': 2,
+        },
       },
       datasetId: 'tahoebike/cl1sw0vau1rmm28rs0zwud8el',
       isInitiallyChecked: true,
@@ -83,12 +86,14 @@ const config = {
       type: 'mapbox-dataset',
       label: 'Bike Lane',
       description: 'dedicated on-street bikeways, marked by striping on pavement',
-      iconClassName: 'class2',
+      iconClassName: 'tahoe-class2',
       layerProperties: {
         type: 'line',
-        layout: {
-          // TODO determine styling
-        }
+        paint: {
+          'line-color': '#660099',
+          'line-width': 3,
+          'line-opacity': 0.8,
+        },
       },
       datasetId: 'tahoebike/cl1swsss40zax2emy7z7isg57',
       isInitiallyChecked: true,
@@ -97,12 +102,15 @@ const config = {
       type: 'mapbox-dataset',
       label: 'Bike Route',
       description: 'on-street routes signed for bicyclists',
-      iconClassName: 'class3',
+      iconClassName: 'tahoe-class3',
       layerProperties: {
         type: 'line',
-        layout: {
-          // TODO determine styling
-        }
+        paint: {
+          'line-color': '#9933CC',
+          'line-width': 3,
+          'line-opacity': 0.8,
+          'line-dasharray': [3,5],
+        },
       },
       datasetId: 'tahoebike/cl1swuzh0265221qxzoua365u',
       isInitiallyChecked: true,
@@ -111,12 +119,15 @@ const config = {
       type: 'mapbox-dataset',
       label: 'Plowed Winter Path',
       description: 'Bike paths that may be plowed for winter access. Paths get plowed after streets.',
-      iconClassName: 'winter',
+      iconClassName: 'tahoe-winter',
       layerProperties: {
         type: 'line',
-        layout: {
-          // TODO determine styling
-        }
+        paint: {
+          'line-color': '#ff0000',
+          'line-width': 3,
+          'line-opacity': 0.8,
+          'line-dasharray': [3, 5],
+        },
       },
       datasetId: undefined, // TODO this layer is derived from several others. Process offline?
       isInitiallyChecked: false,
