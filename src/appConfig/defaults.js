@@ -7,7 +7,7 @@ const config = {
   BIKESY_HIGH_BIKE_SPEED_MPH: 10,
   LOGO_FILENAME_ROOT: 'bikesy-logo',
   LOGO_CLASSNAME: 'logo',
-  
+
   // Expected to be overridden for all regions:
   // TODO consider putting placeholders here to force regional overrides
   MAPBOX_STYLE_URL: 'mapbox://styles/bikesy/ckmec4z6h3ekg17lr1fas6kwx',
@@ -25,6 +25,7 @@ const config = {
   ABOUT_LINK_TITLE: 'About Bikesy',
   ABOUT_LINK_URL: 'https://bikesy.com/about',
   PAGE_TITLE: 'Bikesy',
+  MAP_LAYERS: [],
 };
 
 export default config;

@@ -368,16 +368,68 @@
   opacity: 0.6;
 }
 
-.map-container .map-layers .map-legend-icon.class1 {
+/* TODO construction logo doesn't look quite right */
+.map-container .map-layers .map-legend-icon.construction {
+  background: url('../images/construction_marker.png') 0 0 no-repeat;
+  background-size: 15px 18px;
+  width: 15px;
+  height: 18px;
+  overflow: visible;
+}
+
+.map-container .map-layers .map-legend-icon.bikeParking {
+  background: url('../images/BikeParkingIcon.png') 0 0 no-repeat;
+  background-size: 15px 18px;
+  width: 15px;
+  height: 18px;
+  overflow: visible;
+}
+
+.map-container .map-layers .map-legend-icon.bikeShops {
+  background: url('../images/BikeShopIcon.png') 0 0 no-repeat;
+  background-size: 15px 18px;
+  width: 15px;
+  height: 18px;
+  overflow: visible;
+}
+
+.map-container .map-layers .map-legend-icon.sf-class1 {
   background: #330066;
 }
 
-.map-container .map-layers .map-legend-icon.class2 {
+.map-container .map-layers .map-legend-icon.sf-class2 {
   background: hsl(280, 97%, 48%);
 }
 
-.map-container .map-layers .map-legend-icon.class3 {
+.map-container .map-layers .map-legend-icon.sf-class3 {
   background: hsl(280, 59%, 71%);
+}
+
+
+.map-container .map-layers .map-legend-icon.tahoe-class1 {
+  background: #fcf4db;
+  border-top: 1px solid #330066;
+  border-bottom: 1px solid #330066;
+  height: 3px;
+  vertical-align: -2px;
+}
+
+.map-container .map-layers .map-legend-icon.tahoe-class2 {
+  border-top: 3px solid #660099;
+  height: 0px;
+  vertical-align: -2px;
+}
+
+.map-container .map-layers .map-legend-icon.tahoe-class3 {
+  border-top: 3px dashed #9933CC;
+  height: 0px;
+  vertical-align: -2px;
+}
+
+.map-container .map-layers .map-legend-icon.tahoe-winter {
+  border-top: 3px dashed #ff0000;
+  height: 0px;
+  vertical-align: -2px;
 }
 
 .map-container .map-layers label {

@@ -1,9 +1,12 @@
 import { useState } from 'react';
 
-const MapLayers = ({ isInitiallyVisible }) => {
-  const [isVisible, setisVisible] = useState(isInitiallyVisible);
+import appConfig from 'appConfig';
+import MapLayersItem from './MapLayersItem';
+
+const MapLayers = ({ isInitiallyVisible, mapRef }) => {
+  const [isVisible, setIsVisible] = useState(isInitiallyVisible);
   const toggleLegendVisibility = () => {
-    setisVisible(!isVisible);
+    setIsVisible(!isVisible);
   };
 
   return isVisible ? (
@@ -12,24 +15,19 @@ const MapLayers = ({ isInitiallyVisible }) => {
         &minus;
       </div>
       <div>
-        <div
-          className="map-legend-item"
-          title="paved, separated (off the street) bikeways"
-        >
-          <div className="map-legend-icon class1"></div>
-          <label>Multi-use Path</label>
-        </div>
-        <div
-          className="map-legend-item"
-          title="dedicated on-street bikeways, marked by striping on pavement"
-        >
-          <div className="map-legend-icon class2"></div>
-          <label>Bike Lane</label>
-        </div>
-        <div className="map-legend-item" title="on-street routes signed for bicyclists">
-          <div className="map-legend-icon class3"></div>
-          <label>Bike Route</label>
-        </div>
+        {appConfig.MAP_LAYERS.map((layer) => (
+          <MapLayersItem
+            type={layer.type}  
+            label={layer.label}
+            description={layer.description}
+            iconClassName={layer.iconClassName}
+            layerProperties={layer.layerProperties}
+            datasetId={layer.datasetId}
+            isInitiallyChecked={layer.isInitiallyChecked}
+            mapRef={mapRef}
+            key={layer.label}
+          />
+        ))}
       </div>
     </div>
   ) : (
