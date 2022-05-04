@@ -31,13 +31,15 @@ export function formatTime(miles) {
 }
 
 export function getElevationGain(profile) {
+  // Compute the sum of all the positive elevation gain segments along the route
+  // profile is a list of objects with "elevation" and "distance" properties, each corresponding to a path segment
   let totalElevGain = 0;
-  profile.forEach((p, idx) => {
-    if (idx < profile.length - 1 && profile[idx][1] < profile[idx + 1][1]) {
-      totalElevGain += profile[idx + 1][1] - profile[idx][1];
+  for (let idx = 0; idx < profile.length - 1; idx++) {
+    const elevationStep = profile[idx + 1]['elevation'] - profile[idx]['elevation'];
+    if (elevationStep > 0) {
+      totalElevGain += elevationStep;
     }
-  });
-
+  }
   return totalElevGain;
 }
 
