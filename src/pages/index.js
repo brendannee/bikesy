@@ -1,5 +1,5 @@
-import Head from 'next/head';
 import React, { useEffect, useState } from 'react';
+import Head from 'next/head';
 import { useDispatch } from 'react-redux';
 import polyline from '@mapbox/polyline';
 import { useSelector } from 'react-redux';
@@ -288,8 +288,6 @@ const IndexPage = () => {
         />
         <link rel="mask-icon" href="favicon/safari-pinned-tab.svg" color="#5bbad5" />
         <meta name="theme-color" content="#ffffff" />
-
-        <script src="https://api.mapbox.com/mapbox-gl-js/v1.10.1/mapbox-gl.js"></script>
       </Head>
       <div>
         <TitleBar
