@@ -405,7 +405,6 @@
   background: hsl(280, 59%, 71%);
 }
 
-
 .map-container .map-layers .map-legend-icon.tahoe-class1 {
   background: #fcf4db;
   border-top: 1px solid #330066;
@@ -421,7 +420,7 @@
 }
 
 .map-container .map-layers .map-legend-icon.tahoe-class3 {
-  border-top: 3px dashed #9933CC;
+  border-top: 3px dashed #9933cc;
   height: 0px;
   vertical-align: -2px;
 }

@@ -28,7 +28,7 @@ const config = {
           'icon-image': 'images/construction_marker.png',
           'icon-size': ['interpolate', ['linear'], ['zoom'], 9, 0.15, 18, 0.2],
           'icon-allow-overlap': true,
-        }
+        },
       },
       datasetId: 'tahoebike/ck3pdyl2g5fn42tpnfsh5pibh',
       isInitiallyChecked: true,
@@ -44,7 +44,7 @@ const config = {
           'icon-image': 'images/BikeParkingIcon.png',
           'icon-size': ['interpolate', ['linear'], ['zoom'], 9, 0.15, 20, 0.35],
           'icon-allow-overlap': true,
-        }
+        },
       },
       datasetId: 'tahoebike/ck3pdz0lj0ezu2injv641rf8z',
       isInitiallyChecked: false,
@@ -60,7 +60,7 @@ const config = {
           'icon-image': 'images/BikeShopIcon.png',
           'icon-size': ['interpolate', ['linear'], ['zoom'], 9, 0.15, 20, 0.35],
           'icon-allow-overlap': true,
-        }
+        },
       },
       datasetId: 'tahoebike/ck3pdzfet26fm2ilhadvn614o',
       isInitiallyChecked: false,
@@ -109,7 +109,7 @@ const config = {
           'line-color': '#9933CC',
           'line-width': 3,
           'line-opacity': 0.8,
-          'line-dasharray': [3,5],
+          'line-dasharray': [3, 5],
         },
       },
       datasetId: 'tahoebike/cl1swuzh0265221qxzoua365u',
@@ -118,7 +118,8 @@ const config = {
     {
       type: 'mapbox-dataset',
       label: 'Plowed Winter Path',
-      description: 'Bike paths that may be plowed for winter access. Paths get plowed after streets.',
+      description:
+        'Bike paths that may be plowed for winter access. Paths get plowed after streets.',
       iconClassName: 'tahoe-winter',
       layerProperties: {
         type: 'line',

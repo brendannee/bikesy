@@ -17,7 +17,7 @@ const MapLayers = ({ isInitiallyVisible, mapRef }) => {
       <div>
         {appConfig.MAP_LAYERS.map((layer) => (
           <MapLayersItem
-            type={layer.type}  
+            type={layer.type}
             label={layer.label}
             description={layer.description}
             iconClassName={layer.iconClassName}

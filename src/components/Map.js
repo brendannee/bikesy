@@ -66,7 +66,7 @@ const Map = ({
       // TODO it would be nice to remove the map when this component unmounts,
       // But this is leading to problems during fast refresh hot module reloading during development
       // mapRef.current.remove();
-    }
+    };
   }, []);
 
   useEffect(() => {
@@ -74,7 +74,6 @@ const Map = ({
     startLocationRef.current = startLocation;
   }, [startLocation]);
 
-  
   useEffect(() => {
     updateEndMarker(endLocation);
     endLocationRef.current = endLocation;
@@ -100,7 +99,9 @@ const Map = ({
         </a>
       </div>
       <div className="map" id="map" style={{ height: `${height}px` }}></div>
-      {isMobile !== undefined && isMapLoaded && <MapLayers isInitiallyVisible={!isMobile} mapRef={mapRef} />}
+      {isMobile !== undefined && isMapLoaded && (
+        <MapLayers isInitiallyVisible={!isMobile} mapRef={mapRef} />
+      )}
     </div>
   );
 };
