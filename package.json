@@ -21,7 +21,7 @@
   },
   "dependencies": {
     "@mapbox/polyline": "^1.1.1",
-    "@reduxjs/toolkit": "^1.8.1",
+    "@reduxjs/toolkit": "^1.8.2",
     "@svgr/webpack": "^6.2.1",
     "@turf/turf": "^6.5.0",
     "auto-link": "^1.0.0",
@@ -29,18 +29,18 @@
     "classnames": "^2.3.1",
     "cors": "^2.8.5",
     "lodash": "^4.17.21",
-    "next": "^12.1.4",
-    "react": "^18.0.0",
-    "react-dom": "^18.0.0",
+    "next": "^12.1.6",
+    "react": "^18.1.0",
+    "react-dom": "^18.1.0",
     "react-ga": "^3.3.0",
-    "react-modal": "^3.14.4",
-    "react-redux": "^7.2.8",
-    "recharts": "^2.1.9",
-    "redux": "^4.1.2"
+    "react-modal": "^3.15.1",
+    "react-redux": "^8.0.2",
+    "recharts": "^2.1.10",
+    "redux": "^4.2.0"
   },
   "devDependencies": {
-    "eslint": "^8.13.0",
-    "eslint-config-next": "^12.1.4",
+    "eslint": "^8.17.0",
+    "eslint-config-next": "^12.1.6",
     "prettier": "^2.6.2",
     "redux-logger": "^3.0.6"
   }
