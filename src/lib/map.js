@@ -10,7 +10,6 @@ let map;
 let isDragging;
 let dragType;
 let isCursorOverPoint;
-let mouseOverMarker = false;
 const startLayer = {
   id: 'start',
   type: 'circle',
@@ -178,9 +177,16 @@ export function drawMap(handleMapClick, handleMarkerDrag) {
       map.addLayer(endLayer);
     }
 
+    const mapLayersWithPopup = appConfig.MAP_LAYERS.filter(layer => layer.popup).map(layer => layer.label);
+
     map.on('click', (event) => {
-      if (mouseOverMarker) {
-        return;
+      // Don't trigger this event if there is a marker with a popup at the clicked location
+      if (mapLayersWithPopup) {
+        const features = map.queryRenderedFeatures(event.point, { layers: mapLayersWithPopup });
+
+        if (features.length > 0) {
+          return;
+        }
       }
 
       // Recopying values as Mapbox returns a non-serializable object

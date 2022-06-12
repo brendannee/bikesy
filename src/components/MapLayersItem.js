@@ -5,6 +5,7 @@ import { getMapboxDatasetURL } from 'lib/map';
 const MapLayersItem = ({
   type,
   label,
+  popup,
   description,
   iconClassName,
   isInitiallyChecked,
@@ -53,6 +54,25 @@ const MapLayersItem = ({
         ...layerProperties,
         id: label,
         source: label,
+      });
+    }
+
+    if (popup) {
+      // Change cursor to pointer on hover.
+      mapRef.current.on('mouseenter', label, () => {
+        mapRef.current.getCanvas().style.cursor = 'pointer';
+      });
+
+      // Change it back to a pointer when it leaves.
+      mapRef.current.on('mouseleave', label, () => {
+        mapRef.current.getCanvas().style.cursor = '';
+      });
+
+      mapRef.current.on('click', label, (e) => {
+        new mapboxgl.Popup()
+          .setLngLat(e.features[0].geometry.coordinates)
+          .setHTML(popup(e.features[0]))
+          .addTo(mapRef.current);
       });
     }
   };
