@@ -1,0 +1,3 @@
+# Ignore build and output
+.next
+out

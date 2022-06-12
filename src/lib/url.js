@@ -10,8 +10,24 @@ function decode(string) {
 
 export function validateUrlParams(parameters) {
   return (
-    parameters.length >= 2 && parameters[0] !== undefined && parameters[1] !== undefined
+    parameters.length >= 4 &&
+    parameters[0] !== undefined &&
+    parameters[1] !== undefined &&
+    parameters[2] !== undefined &&
+    parameters[3] !== undefined
   );
+}
+
+export function formatLatLngForUrl(latlng) {
+  return `${latlng.lng},${latlng.lat}`;
+}
+
+export function parseLatLngFromUrlParameter(parameter) {
+  const coordinates = parameter.split(',');
+  return {
+    lat: parseFloat(coordinates[1]),
+    lng: parseFloat(coordinates[0]),
+  };
 }
 
 export function updateUrlParams(parameters) {

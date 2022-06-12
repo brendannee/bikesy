@@ -10,10 +10,12 @@ module.exports = {
     ];
   },
   webpack(config) {
+    config.resolve.alias['appConfig'] = path.join(__dirname, 'src/appConfig');
     config.resolve.alias['components'] = path.join(__dirname, 'src/components');
-    config.resolve.alias['config'] = path.join(__dirname, 'src/config');
     config.resolve.alias['lib'] = path.join(__dirname, 'src/lib');
     config.resolve.alias['pages'] = path.join(__dirname, 'src/pages');
+    config.resolve.alias['@redux'] = path.join(__dirname, 'src/redux');
+    config.resolve.alias['slices'] = path.join(__dirname, 'src/redux/slices');
 
     config.module.rules.push({
       test: /\.svg$/,

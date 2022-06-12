@@ -1,4 +1,7 @@
-import Weather from './weather';
+import { useSelector } from 'react-redux';
+
+import appConfig from 'appConfig';
+import Weather from './Weather';
 
 import {
   formatDistance,
@@ -9,18 +12,15 @@ import {
 } from 'lib/helper';
 import { getCenter } from 'lib/map';
 
-const Directions = ({
-  directions,
-  startAddress,
-  endAddress,
-  startLocation,
-  endLocation,
-  distance,
-  elevationProfile,
-  isMobile,
-  mobileView,
-  height,
-}) => {
+const Directions = ({ isMobile, mobileView, height }) => {
+  const directions = useSelector((state) => state.search.directions);
+  const startAddress = useSelector((state) => state.search.startAddress);
+  const endAddress = useSelector((state) => state.search.endAddress);
+  const startLocation = useSelector((state) => state.search.startLocation);
+  const endLocation = useSelector((state) => state.search.endLocation);
+  const distance = useSelector((state) => state.search.distance);
+  const elevationProfile = useSelector((state) => state.search.elevationProfile);
+
   const getDirections = () => {
     if (!directions) {
       return '';
@@ -90,8 +90,8 @@ const Directions = ({
         routes. Use your best judgment when choosing a route. Obey all vehicle code
         provisions.
       </div>
-      <a className="disclaimer" href="https://511contracosta.org/biking/bike-mapper-faq/">
-        About Bike Mapper
+      <a className="disclaimer" href={appConfig.ABOUT_LINK_URL}>
+        {appConfig.ABOUT_LINK_TITLE}
       </a>
     </div>
   );

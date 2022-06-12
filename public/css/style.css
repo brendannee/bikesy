@@ -59,7 +59,7 @@
 }
 
 .controls .start-address .start-icon {
-  margin-right: 10px;
+  margin-right: 8px;
   width: 24px;
   height: 24px;
   background: #19b566;
@@ -74,9 +74,9 @@
 
 .controls .start-address .form-control {
   vertical-align: 18px;
-  width: 194px;
-  display: inline-block;
-  float: right;
+  width: auto;
+  flex-grow: 1;
+  font-size: 0.8rem;
 }
 
 .controls .start-address .loading-animation {
@@ -122,7 +122,7 @@
 }
 
 .controls .end-address .end-icon {
-  margin-right: 10px;
+  margin-right: 8px;
   width: 24px;
   height: 24px;
   background: #cf3043;
@@ -137,9 +137,9 @@
 
 .controls .end-address .form-control {
   vertical-align: 18px;
-  width: 245px;
-  display: inline-block;
-  float: right;
+  flex-grow: 1;
+  width: auto;
+  font-size: 0.8rem;
 }
 
 .controls input:focus::-webkit-input-placeholder {
@@ -368,27 +368,67 @@
   opacity: 0.6;
 }
 
-.map-container .map-layers .map-legend-icon.bike-lockers {
-  background: #f41cf1;
-  width: 16px;
-  height: 16px;
-  border-radius: 50%;
-  margin-top: 2px;
-  margin-bottom: 2px;
-  border: 1px solid #530a52;
-  opacity: 1;
+/* TODO construction logo doesn't look quite right */
+.map-container .map-layers .map-legend-icon.construction {
+  background: url('../images/construction_marker.png') 0 0 no-repeat;
+  background-size: 15px 18px;
+  width: 15px;
+  height: 18px;
+  overflow: visible;
 }
 
-.map-container .map-layers .map-legend-icon.class1 {
+.map-container .map-layers .map-legend-icon.bikeParking {
+  background: url('../images/BikeParkingIcon.png') 0 0 no-repeat;
+  background-size: 15px 18px;
+  width: 15px;
+  height: 18px;
+  overflow: visible;
+}
+
+.map-container .map-layers .map-legend-icon.bikeShops {
+  background: url('../images/BikeShopIcon.png') 0 0 no-repeat;
+  background-size: 15px 18px;
+  width: 15px;
+  height: 18px;
+  overflow: visible;
+}
+
+.map-container .map-layers .map-legend-icon.sf-class1 {
   background: #330066;
 }
 
-.map-container .map-layers .map-legend-icon.class2 {
+.map-container .map-layers .map-legend-icon.sf-class2 {
   background: hsl(280, 97%, 48%);
 }
 
-.map-container .map-layers .map-legend-icon.class3 {
+.map-container .map-layers .map-legend-icon.sf-class3 {
   background: hsl(280, 59%, 71%);
+}
+
+.map-container .map-layers .map-legend-icon.tahoe-class1 {
+  background: #fcf4db;
+  border-top: 1px solid #330066;
+  border-bottom: 1px solid #330066;
+  height: 3px;
+  vertical-align: -2px;
+}
+
+.map-container .map-layers .map-legend-icon.tahoe-class2 {
+  border-top: 3px solid #660099;
+  height: 0px;
+  vertical-align: -2px;
+}
+
+.map-container .map-layers .map-legend-icon.tahoe-class3 {
+  border-top: 3px dashed #9933cc;
+  height: 0px;
+  vertical-align: -2px;
+}
+
+.map-container .map-layers .map-legend-icon.tahoe-winter {
+  border-top: 3px dashed #ff0000;
+  height: 0px;
+  vertical-align: -2px;
 }
 
 .map-container .map-layers label {
@@ -452,23 +492,14 @@
 
 @media only screen and (min-width: 667px) {
   .controls {
-    width: 300px;
+    width: 340px;
     float: left;
     padding: 10px 15px;
     max-width: none;
   }
 
-  .controls .start-address .form-control {
-    float: none;
-  }
-
   .controls .start-address .loading-animation {
     left: 50px;
-  }
-
-  .controls .end-address .form-control {
-    float: none;
-    width: 234px;
   }
 
   .controls .route-type {
@@ -477,7 +508,7 @@
   }
 
   .controls .route-type .form-control {
-    width: 175px;
+    width: 180px;
   }
 
   .controls .hill-reluctance {
@@ -485,17 +516,17 @@
   }
 
   .controls .hill-reluctance .form-control {
-    width: 155px;
+    width: 180px;
   }
 
   .directions {
-    width: 300px;
+    width: 340px;
     clear: left;
     float: left;
     overflow-y: scroll;
   }
   .elevation {
-    margin-left: 300px;
+    margin-left: 340px;
   }
   .elevation-open-box {
     bottom: 0;
@@ -505,7 +536,7 @@
   }
 
   .map-container {
-    margin-left: 300px;
+    margin-left: 340px;
     padding-top: 0;
   }
 
@@ -527,8 +558,27 @@
     top: 0;
     left: 52px;
     z-index: 10;
+  }
+
+  .map-container .logo.ltbc-logo {
+    /*
+    Specific styling for the LTBC Logo overlay:
+
+    Bikesy logo has an opaque #333 colored background
+    And some more padding around the logo built into the tif
+    LTBC Logo has a transparent background and less padding
+    So padding needs to be added here. 
+    TODO, update the LTBC PNG and then these styles can be removed?
+    */
     background: #fff;
-    padding: 4px;
+    padding: 4px 7px;
+    /*
+    Rounded corners and a thin solid border look nice too.
+    These are included in the old tahoe bike map
+    */
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
+    border: 1px solid #999;
   }
 
   .titlebar {
