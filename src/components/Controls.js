@@ -2,8 +2,10 @@ import { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import _ from 'lodash';
 import classNames from 'classnames';
+import { usePlacesWidget } from 'react-google-autocomplete';
 
 import { clearRoute } from '@redux/slices/search';
+import appConfig from 'appConfig';
 import { scenarioToComponents, componentsToScenario } from 'lib/scenarios';
 import Crosshairicon from './icons/crosshairs-solid.svg';
 import CircleNotchIcon from './icons/circle-notch-solid.svg';
@@ -18,14 +20,18 @@ const Controls = ({
 }) => {
   const dispatch = useDispatch();
   const startAddress = useSelector((state) => state.search.startAddress);
+  const startLocation = useSelector((state) => state.search.startLocation);
   const endAddress = useSelector((state) => state.search.endAddress);
+  const endLocation = useSelector((state) => state.search.endLocation);
 
   const [routeType, setRouteType] = useState('3');
   const [hillReluctance, setHillReluctance] = useState('1');
   const [errorFields, setErrorFields] = useState([]);
   const [geolocationPending, setGeolocationPending] = useState(false);
   const [startAddressInput, setStartAddressInput] = useState('');
+  const [startLocationInput, setStartLocationInput] = useState('');
   const [endAddressInput, setEndAddressInput] = useState('');
+  const [endLocationInput, setEndLocationInput] = useState('');
 
   const processForm = (event) => {
     event.preventDefault();
@@ -35,14 +41,6 @@ const Controls = ({
       endAddress: endAddressInput,
     });
     handleForm();
-  };
-
-  const handleStartAddressChange = (event) => {
-    setStartAddressInput(event.target.value);
-  };
-
-  const handleEndAddressChange = (event) => {
-    setEndAddressInput(event.target.value);
   };
 
   const handleRouteTypeChange = (event) => {
@@ -101,16 +99,21 @@ const Controls = ({
 
     setErrorFields([]);
 
-    return updateRoute(startAddressInput, endAddressInput);
+    return updateRoute({
+      startAddress: startAddressInput,
+      startLocation: startLocationInput,
+      endAddress: endAddressInput,
+      endLocation: endLocationInput,
+    });
   };
 
   const validateForm = () => {
     const errorFields = [];
-    if (!startAddress) {
+    if (!startAddressInput) {
       errorFields.push('startAddress');
     }
 
-    if (!endAddress) {
+    if (!endAddressInput) {
       errorFields.push('endAddress');
     }
 
@@ -136,17 +139,62 @@ const Controls = ({
     }
   }, [scenario]);
 
+  // If start address changes, update input to match
   useEffect(() => {
     if (startAddress !== startAddressInput) {
       setStartAddressInput(startAddress);
+      setStartLocationInput(startLocation);
     }
   }, [startAddress]);
 
+  // If end address changes, update input to match
   useEffect(() => {
     if (endAddress !== endAddressInput) {
       setEndAddressInput(endAddress);
+      setEndLocationInput(endLocation);
     }
   }, [endAddress]);
+
+  const bounds = {
+    north: appConfig.SEARCH_BOUNDS.TOP,
+    east: appConfig.SEARCH_BOUNDS.RIGHT,
+    south: appConfig.SEARCH_BOUNDS.BOTTOM,
+    west: appConfig.SEARCH_BOUNDS.LEFT,
+  };
+
+  const { ref: startAddressRef } = usePlacesWidget({
+    apiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY,
+    onPlaceSelected: (result) => {
+      setStartAddressInput(result.formatted_address);
+      setStartLocationInput({
+        lat: result.geometry.location.lat(),
+        lng: result.geometry.location.lng(),
+      });
+    },
+    options: {
+      types: ['geocode'],
+      bounds,
+      fields: ['formatted_address', 'geometry.location'],
+      strictBounds: true,
+    },
+  });
+
+  const { ref: endAddressRef } = usePlacesWidget({
+    apiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY,
+    onPlaceSelected: (result) => {
+      setEndAddressInput(result.formatted_address);
+      setEndLocationInput({
+        lat: result.geometry.location.lat(),
+        lng: result.geometry.location.lng(),
+      });
+    },
+    options: {
+      types: ['geocode'],
+      bounds,
+      fields: ['formatted_address', 'geometry.location'],
+      strictBounds: true,
+    },
+  });
 
   return (
     <div
@@ -166,11 +214,12 @@ const Controls = ({
           <input
             type="text"
             value={startAddressInput}
-            onChange={handleStartAddressChange}
+            onChange={(event) => setStartAddressInput(event.target.value)}
             className={classNames('form-control', {
               'is-invalid': _.includes(errorFields, 'startAddress'),
             })}
             placeholder={getStartAddressPlaceholder()}
+            ref={startAddressRef}
           />
           <CircleNotchIcon className="loading-animation" />
           <a
@@ -189,11 +238,12 @@ const Controls = ({
           <input
             type="text"
             value={endAddressInput}
-            onChange={handleEndAddressChange}
+            onChange={(event) => setEndAddressInput(event.target.value)}
             className={classNames('form-control', {
               'is-invalid': _.includes(errorFields, 'endAddress'),
             })}
             placeholder="End Address"
+            ref={endAddressRef}
           />
         </div>
         <div className="form-group form-inline route-type">

@@ -14,7 +14,7 @@ import WelcomeModal from 'components/WelcomeModal';
 import { getRoute } from 'lib/api';
 import { logQuery } from 'lib/analytics';
 import { handleError } from 'lib/error';
-import { geocode, reverseGeocode } from 'lib/geocode';
+import { reverseGeocode } from 'lib/geocode';
 import { latlngIsWithinBounds, updateMapSize, getPathDistance } from 'lib/map';
 import { updateUrlParams, readUrlParams, validateUrlParams } from 'lib/url';
 
@@ -31,6 +31,7 @@ import {
 } from '@redux/slices/search';
 
 import appConfig from 'appConfig';
+import { formatLatLngForUrl, parseLatLngFromUrlParameter } from '../lib/url';
 
 const ELEVATION_HEIGHT = 175;
 
@@ -67,40 +68,29 @@ const IndexPage = () => {
     setIsMobile(checkMobile(window.innerWidth));
   };
 
-  const updateRoute = async (selectedStartAddress, selectedEndAddress) => {
+  const updateRoute = async ({
+    startAddress,
+    startLocation,
+    endAddress,
+    endLocation,
+  }) => {
     dispatch(clearPath());
     setLoading(true);
     setShowWelcomeModal(false);
 
-    const results = await Promise.all([
-      geocode(selectedStartAddress).catch(() => {
-        setLoading(false);
-        alert('Invalid start address. Please try a different address.');
-      }),
-      geocode(selectedEndAddress).catch(() => {
-        setLoading(false);
-        alert('Invalid end address. Please try a different address.');
-      }),
-    ]);
-
-    if (!results || !results[0] || !results[1]) {
+    if (!latlngIsWithinBounds(startLocation, 'start')) {
       setLoading(false);
       return;
     }
 
-    if (!latlngIsWithinBounds(results[0], 'start')) {
+    if (!latlngIsWithinBounds(endLocation, 'end')) {
       setLoading(false);
       return;
     }
-
-    if (!latlngIsWithinBounds(results[1], 'end')) {
-      setLoading(false);
-      return;
-    }
-
-    console.log('[A]', typeof results[0], results[0]);
-    dispatch(setStartLocation(results[0]));
-    dispatch(setEndLocation(results[1]));
+    dispatch(setStartAddress(startAddress));
+    dispatch(setStartLocation(startLocation));
+    dispatch(setEndAddress(endAddress));
+    dispatch(setEndLocation(endLocation));
     setMobileView('map');
   };
 
@@ -141,7 +131,6 @@ const IndexPage = () => {
 
   const assignStartLocation = (latlng) => {
     dispatch(clearPath());
-    console.log('[B]', latlng, typeof latlng);
     dispatch(setStartLocation(latlng));
     dispatch(setStartAddress(''));
 
@@ -168,10 +157,21 @@ const IndexPage = () => {
   };
 
   const updateControls = (items) => {
-    if (items.startLocation) assignStartLocation(items.startLocation);
-    if (items.scenario) setScenario(items.scenario);
-    if (items.startAddress !== undefined) dispatch(setStartAddress(items.startAddress));
-    if (items.endAddress !== undefined) dispatch(setEndAddress(items.endAddress));
+    if (items.startLocation) {
+      assignStartLocation(items.startLocation);
+    }
+    if (items.endLocation) {
+      assignEndLocation(items.endLocation);
+    }
+    if (items.scenario) {
+      setScenario(items.scenario);
+    }
+    if (items.startAddress !== undefined) {
+      dispatch(setStartAddress(items.startAddress));
+    }
+    if (items.endAddress !== undefined) {
+      dispatch(setEndAddress(items.endAddress));
+    }
   };
 
   const toggleElevationVisibility = () => {
@@ -222,14 +222,18 @@ const IndexPage = () => {
   }
 
   useEffect(() => {
+    //On page load, read in URL paramaters and route based on these
     const urlParameters = readUrlParams();
 
     if (validateUrlParams(urlParameters)) {
-      dispatch(setStartAddress(urlParameters[0]));
-      dispatch(setEndAddress(urlParameters[1]));
-      setScenario(urlParameters[2]);
+      setScenario(urlParameters[4]);
 
-      updateRoute(urlParameters[0], urlParameters[1]);
+      updateRoute({
+        startAddress: urlParameters[0],
+        startLocation: parseLatLngFromUrlParameter(urlParameters[1]),
+        endAddress: urlParameters[2],
+        endLocation: parseLatLngFromUrlParameter(urlParameters[3]),
+      });
     }
 
     const isMobileCalc = checkMobile(window.innerWidth);
@@ -249,12 +253,22 @@ const IndexPage = () => {
   }, []);
 
   useEffect(() => {
-    if (startLocation && endLocation) fetchRoute();
+    if (startLocation && endLocation) {
+      fetchRoute();
+    }
   }, [startLocation, endLocation]);
 
   useEffect(() => {
-    if (startAddress && endAddress) updateUrlParams([startAddress, endAddress, scenario]);
-  }, [startAddress, endAddress, scenario]);
+    if (startAddress && startLocation && endAddress && endLocation) {
+      updateUrlParams([
+        startAddress,
+        formatLatLngForUrl(startLocation),
+        endAddress,
+        formatLatLngForUrl(endLocation),
+        scenario,
+      ]);
+    }
+  }, [startAddress, startLocation, endAddress, endLocation, scenario]);
 
   return (
     <>
