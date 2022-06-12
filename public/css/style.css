@@ -59,7 +59,7 @@
 }
 
 .controls .start-address .start-icon {
-  margin-right: 10px;
+  margin-right: 8px;
   width: 24px;
   height: 24px;
   background: #19b566;
@@ -74,9 +74,9 @@
 
 .controls .start-address .form-control {
   vertical-align: 18px;
-  width: 194px;
-  display: inline-block;
-  float: right;
+  width: auto;
+  flex-grow: 1;
+  font-size: 0.8rem;
 }
 
 .controls .start-address .loading-animation {
@@ -122,7 +122,7 @@
 }
 
 .controls .end-address .end-icon {
-  margin-right: 10px;
+  margin-right: 8px;
   width: 24px;
   height: 24px;
   background: #cf3043;
@@ -137,9 +137,9 @@
 
 .controls .end-address .form-control {
   vertical-align: 18px;
-  width: 245px;
-  display: inline-block;
-  float: right;
+  flex-grow: 1;
+  width: auto;
+  font-size: 0.8rem;
 }
 
 .controls input:focus::-webkit-input-placeholder {
@@ -492,23 +492,14 @@
 
 @media only screen and (min-width: 667px) {
   .controls {
-    width: 300px;
+    width: 340px;
     float: left;
     padding: 10px 15px;
     max-width: none;
   }
 
-  .controls .start-address .form-control {
-    float: none;
-  }
-
   .controls .start-address .loading-animation {
     left: 50px;
-  }
-
-  .controls .end-address .form-control {
-    float: none;
-    width: 234px;
   }
 
   .controls .route-type {
@@ -517,7 +508,7 @@
   }
 
   .controls .route-type .form-control {
-    width: 175px;
+    width: 180px;
   }
 
   .controls .hill-reluctance {
@@ -525,17 +516,17 @@
   }
 
   .controls .hill-reluctance .form-control {
-    width: 155px;
+    width: 180px;
   }
 
   .directions {
-    width: 300px;
+    width: 340px;
     clear: left;
     float: left;
     overflow-y: scroll;
   }
   .elevation {
-    margin-left: 300px;
+    margin-left: 340px;
   }
   .elevation-open-box {
     bottom: 0;
@@ -545,7 +536,7 @@
   }
 
   .map-container {
-    margin-left: 300px;
+    margin-left: 340px;
     padding-top: 0;
   }
 
