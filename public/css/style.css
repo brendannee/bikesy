@@ -431,6 +431,16 @@
   vertical-align: -2px;
 }
 
+.map-container .map-layers .map-legend-icon.contracosta-lockers {
+  width: 16px;
+  height: 16px;
+  margin-right: 6px;
+  background-color:#f41cf1;
+  border: 1px solid #530a52;
+  border-radius: 50%;
+  opacity: 1;
+}
+
 .map-container .map-layers label {
   margin-bottom: 0;
   padding: 2px 0;
@@ -438,6 +448,7 @@
 
 .map-container .map-layers label input[type='checkbox'] {
   padding-top: 3px;
+  margin-right: 5px;
 }
 
 .map-layers-open-box {
@@ -569,6 +580,21 @@
     LTBC Logo has a transparent background and less padding
     So padding needs to be added here. 
     TODO, update the LTBC PNG and then these styles can be removed?
+    */
+    background: #fff;
+    padding: 4px 7px;
+    /*
+    Rounded corners and a thin solid border look nice too.
+    These are included in the old tahoe bike map
+    */
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
+    border: 1px solid #999;
+  }
+
+  .map-container .logo.contracosta-logo {
+    /*
+    Specific styling for the 511 Contra Costa Bike Mapper Logo overlay:
     */
     background: #fff;
     padding: 4px 7px;
