@@ -19,6 +19,7 @@ const MapLayers = ({ isInitiallyVisible, mapRef }) => {
           <MapLayersItem
             type={layer.type}
             label={layer.label}
+            popup={layer.popup}
             description={layer.description}
             iconClassName={layer.iconClassName}
             layerProperties={layer.layerProperties}
