@@ -201,7 +201,7 @@ const IndexPage = () => {
   };
 
   const controlsHeight = 252;
-  const sidebarWidth = 300;
+  const sidebarWidth = 340;
   const titlebarHeight = 38;
   let elevationWidth;
   let directionsHeight;
