@@ -20,6 +20,7 @@ import { updateUrlParams, readUrlParams, validateUrlParams } from 'lib/url';
 
 import {
   clearPath,
+  setScenario,
   setStartLocation,
   setStartAddress,
   setEndLocation,
@@ -37,6 +38,7 @@ const ELEVATION_HEIGHT = 175;
 
 const IndexPage = () => {
   const dispatch = useDispatch();
+  const scenario = useSelector((state) => state.search.scenario);
   const startAddress = useSelector((state) => state.search.startAddress);
   const endAddress = useSelector((state) => state.search.endAddress);
   const startLocation = useSelector((state) => state.search.startLocation);
@@ -44,7 +46,6 @@ const IndexPage = () => {
   const elevationProfile = useSelector((state) => state.search.elevationProfile);
 
   const [loading, setLoading] = useState(false);
-  const [scenario, setScenario] = useState('5');
   const [mobileView, setMobileView] = useState('map');
   // window width is not known until after the component mounts
   const [isMobile, setIsMobile] = useState(undefined);
@@ -164,7 +165,7 @@ const IndexPage = () => {
       assignEndLocation(items.endLocation);
     }
     if (items.scenario) {
-      setScenario(items.scenario);
+      dispatch(setScenario(items.scenario));
     }
     if (items.startAddress !== undefined) {
       dispatch(setStartAddress(items.startAddress));
@@ -226,7 +227,7 @@ const IndexPage = () => {
     const urlParameters = readUrlParams();
 
     if (validateUrlParams(urlParameters)) {
-      setScenario(urlParameters[4]);
+      dispatch(setScenario(urlParameters[4]));
 
       updateRoute({
         startAddress: urlParameters[0],
@@ -256,7 +257,7 @@ const IndexPage = () => {
     if (startLocation && endLocation) {
       fetchRoute();
     }
-  }, [startLocation, endLocation]);
+  }, [startLocation, endLocation, scenario]);
 
   useEffect(() => {
     if (startAddress && startLocation && endAddress && endLocation) {
