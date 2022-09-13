@@ -3,6 +3,7 @@ import { createSlice } from '@reduxjs/toolkit';
 export const searchSlice = createSlice({
   name: 'search',
   initialState: {
+    scenario: '5',
     startAddress: '',
     endAddress: '',
     startLocation: null,
@@ -13,6 +14,9 @@ export const searchSlice = createSlice({
     path: null,
   },
   reducers: {
+    setScenario: (state, action) => {
+      state.scenario = action.payload;
+    },
     setStartAddress: (state, action) => {
       state.startAddress = action.payload;
     },
@@ -64,6 +68,7 @@ export const searchSlice = createSlice({
 });
 
 export const {
+  setScenario,
   setStartAddress,
   setEndAddress,
   setStartLocation,
