@@ -48,3 +48,11 @@ export function getElevationGain(profile) {
 export function formatElevation(feet) {
   return `${feet.toFixed()} feet`;
 }
+
+export function calculateGrade(previousNode, nextNode) {
+  return (nextNode.elevation - previousNode.elevation) / (nextNode.distance - previousNode.distance);
+}
+
+export function formatGrade(grade) {
+  return `${Math.round(grade * 100)}%`;
+}
