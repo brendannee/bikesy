@@ -96,11 +96,6 @@ const About = () => (
         If you find some neat features someone else has implemented that you’d like to see
         on Bikesy, <a href="mailto:info@blinktag.com">let us know</a>.
       </p>
-      =
-      <p>
-        Please, <a href="mailto:info@bikesy.com">let us know</a> if we missed any other
-        bike route planners.
-      </p>
       <p>
         <strong>Wait, who are you?</strong>
       </p>

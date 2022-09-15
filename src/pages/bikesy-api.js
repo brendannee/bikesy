@@ -824,7 +824,7 @@ const Api = () => (
       <p>
         Let us know how you use the API, send us suggestions for improving it or ask us a
         question about our less-than-complete documentation.{' '}
-        <a href="mailto:info@bikesy.com">info@bikesy.com</a>. Want to contribute? Fork our
+        <a href="mailto:info@blinktag.com">info@blinktag.com</a>. Want to contribute? Fork our
         <a href="http://github.com/brendannee/bikesy">front end</a> or{' '}
         <a href="https://github.com/brendannee/bikesy-server">back end</a> and get going.
       </p>
