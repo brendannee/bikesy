@@ -9,6 +9,7 @@ import appConfig from 'appConfig';
 import { scenarioToComponents, componentsToScenario } from 'lib/scenarios';
 import Crosshairicon from './icons/crosshairs-solid.svg';
 import CircleNotchIcon from './icons/circle-notch-solid.svg';
+import { geocode } from '../lib/geocode';
 
 const Controls = ({
   updateRoute,
@@ -29,9 +30,9 @@ const Controls = ({
   const [errorFields, setErrorFields] = useState([]);
   const [geolocationPending, setGeolocationPending] = useState(false);
   const [startAddressInput, setStartAddressInput] = useState('');
-  const [startLocationInput, setStartLocationInput] = useState('');
+  const [startCoordinates, setStartCoordinates] = useState();
   const [endAddressInput, setEndAddressInput] = useState('');
-  const [endLocationInput, setEndLocationInput] = useState('');
+  const [endCoordinates, setEndCoordinates] = useState();
 
   const processForm = (event) => {
     event.preventDefault();
@@ -93,8 +94,10 @@ const Controls = ({
     }
   };
 
-  const handleForm = () => {
+  const handleForm = async () => {
     const errorFields = validateForm();
+    let updatedStartCoordinates = startCoordinates
+    let updatedEndCoordinates = endCoordinates
 
     if (errorFields.length) {
       setErrorFields(errorFields);
@@ -103,11 +106,30 @@ const Controls = ({
 
     setErrorFields([]);
 
+    if (!updatedStartCoordinates) {
+      try {
+        updatedStartCoordinates = await geocode(startAddressInput)
+        setStartCoordinates(updatedStartCoordinates)
+      } catch (error) {
+        alert(`Error: Unable to find start address "${startAddressInput}".`);
+        return;
+      }
+    }
+
+    if (!updatedEndCoordinates) {
+      try {
+        updatedEndCoordinates = await geocode(endAddressInput)
+      } catch (error) {
+        alert(`Error: Unable to find end address "${endAddressInput}".`);
+        return;
+      }
+    }
+
     return updateRoute({
       startAddress: startAddressInput,
-      startLocation: startLocationInput,
+      startLocation: updatedStartCoordinates,
       endAddress: endAddressInput,
-      endLocation: endLocationInput,
+      endLocation: updatedEndCoordinates,
     });
   };
 
@@ -147,7 +169,7 @@ const Controls = ({
   useEffect(() => {
     if (startAddress !== startAddressInput) {
       setStartAddressInput(startAddress);
-      setStartLocationInput(startLocation);
+      setStartCoordinates(startLocation);
     }
   }, [startAddress]);
 
@@ -155,7 +177,7 @@ const Controls = ({
   useEffect(() => {
     if (endAddress !== endAddressInput) {
       setEndAddressInput(endAddress);
-      setEndLocationInput(endLocation);
+      setEndCoordinates(endLocation);
     }
   }, [endAddress]);
 
@@ -170,7 +192,7 @@ const Controls = ({
     apiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY,
     onPlaceSelected: (result) => {
       setStartAddressInput(result.formatted_address);
-      setStartLocationInput({
+      setStartCoordinates({
         lat: result.geometry.location.lat(),
         lng: result.geometry.location.lng(),
       });
@@ -187,7 +209,7 @@ const Controls = ({
     apiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY,
     onPlaceSelected: (result) => {
       setEndAddressInput(result.formatted_address);
-      setEndLocationInput({
+      setEndCoordinates({
         lat: result.geometry.location.lat(),
         lng: result.geometry.location.lng(),
       });
@@ -218,7 +240,10 @@ const Controls = ({
           <input
             type="text"
             value={startAddressInput}
-            onChange={(event) => setStartAddressInput(event.target.value)}
+            onChange={(event) => {
+              setStartAddressInput(event.target.value)
+              setStartCoordinates()
+            }}
             className={classNames('form-control', {
               'is-invalid': _.includes(errorFields, 'startAddress'),
             })}
@@ -242,7 +267,10 @@ const Controls = ({
           <input
             type="text"
             value={endAddressInput}
-            onChange={(event) => setEndAddressInput(event.target.value)}
+            onChange={(event) => {
+              setEndAddressInput(event.target.value)
+              setEndCoordinates()
+            }}
             className={classNames('form-control', {
               'is-invalid': _.includes(errorFields, 'endAddress'),
             })}
