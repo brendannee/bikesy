@@ -50,7 +50,9 @@ const Controls = ({
     });
 
     updateControls({ scenario });
-    handleForm();
+    if (startAddressInput && endAddressInput) {
+      handleForm();
+    }
   };
 
   const handleHillReluctanceChange = (event) => {
@@ -60,7 +62,9 @@ const Controls = ({
     });
 
     updateControls({ scenario });
-    handleForm();
+    if (startAddressInput && endAddressInput) {
+      handleForm();
+    }
   };
 
   const getGeolocation = () => {
