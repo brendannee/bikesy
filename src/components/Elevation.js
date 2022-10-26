@@ -2,11 +2,9 @@ import { CartesianGrid, LineChart, Line, XAxis, YAxis, Tooltip } from 'recharts'
 import { useSelector } from 'react-redux';
 
 import { formatElevation, formatGrade, metersToFeet, metersToMiles, calculateGrade } from 'lib/helper';
-import next from 'next';
 
 const CustomTooltip = ({ active, payload }) => {
   if (active) {
-    console.log(payload)
     return (
       <div className="custom-tooltip">
         <p className="label">{formatGrade(payload[0].payload.grade)} grade, {formatElevation(payload[0].value)}</p>
@@ -45,7 +43,6 @@ const Elevation = ({
     const previousNode = index < 5 ? elevationProfile[0] : elevationProfile[index - 5];
     const nextNode = index > elevationProfile.length - 6 ? elevationProfile[elevationProfile.length - 1] : elevationProfile[index + 5];
 
-    console.log(previousNode, nextNode)
     return {
       elevation: metersToFeet(node.elevation),
       distance: metersToMiles(node.distance),
