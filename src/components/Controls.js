@@ -198,7 +198,7 @@ const Controls = ({
       });
     },
     options: {
-      types: ['geocode'],
+      types: [],
       bounds,
       fields: ['formatted_address', 'geometry.location'],
       strictBounds: true,
