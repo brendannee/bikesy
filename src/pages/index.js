@@ -12,7 +12,6 @@ import TitleBar from 'components/Titlebar';
 import WelcomeModal from 'components/WelcomeModal';
 
 import { getRoute } from 'lib/api';
-import { logQuery } from 'lib/analytics';
 import { handleError } from 'lib/error';
 import { reverseGeocode } from 'lib/geocode';
 import { latlngIsWithinBounds, updateMapSize, getPathDistance } from 'lib/map';
@@ -123,8 +122,6 @@ const IndexPage = () => {
           })
         )
       );
-
-      logQuery(startAddress, endAddress, startLocation, endLocation);
     } catch (error) {
       handleError(error);
     }
