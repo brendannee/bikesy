@@ -28,7 +28,7 @@ function getServerUrl(scenario) {
   }
 
   if (scenario === '7' || scenario === '8' || scenario === '9') {
-    return 'http://ec2-34-224-83-87.compute-1.amazonaws.com';
+    return 'http://ec2-54-158-221-228.compute-1.amazonaws.com';
   }
 }
 
