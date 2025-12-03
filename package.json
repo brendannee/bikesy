@@ -20,29 +20,29 @@
     "prettier": "prettier --write ."
   },
   "dependencies": {
-    "@mapbox/polyline": "^1.1.1",
-    "@reduxjs/toolkit": "^1.8.6",
-    "@svgr/webpack": "^6.5.0",
+    "@mapbox/polyline": "^1.2.1",
+    "@reduxjs/toolkit": "^1.9.7",
+    "@svgr/webpack": "^6.5.1",
     "@turf/turf": "^6.5.0",
     "auto-link": "^1.0.0",
     "babel-runtime": "^6.26.0",
-    "classnames": "^2.3.2",
+    "classnames": "^2.5.1",
     "cors": "^2.8.5",
     "lodash": "^4.17.21",
-    "next": "^13.0.0",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
+    "next": "^13.5.11",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
     "react-ga": "^3.3.1",
-    "react-google-autocomplete": "^2.7.0",
-    "react-modal": "^3.16.1",
-    "react-redux": "^8.0.4",
-    "recharts": "^2.1.15",
-    "redux": "^4.2.0"
+    "react-google-autocomplete": "^2.7.5",
+    "react-modal": "^3.16.3",
+    "react-redux": "^8.1.3",
+    "recharts": "^2.15.4",
+    "redux": "^4.2.1"
   },
   "devDependencies": {
-    "eslint": "^8.26.0",
-    "eslint-config-next": "^13.0.0",
-    "prettier": "^2.7.1",
+    "eslint": "^8.57.1",
+    "eslint-config-next": "^13.5.11",
+    "prettier": "^2.8.8",
     "redux-logger": "^3.0.6"
   }
 }
