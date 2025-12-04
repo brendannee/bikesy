@@ -20,15 +20,15 @@ function runMiddleware(request, res, fn) {
 
 function getServerUrl(scenario) {
   if (scenario === '1' || scenario === '2' || scenario === '3') {
-    return 'http://ec2-54-208-197-111.compute-1.amazonaws.com';
+    return 'http://ec2-54-196-193-14.compute-1.amazonaws.com';
   }
 
   if (scenario === '4' || scenario === '5' || scenario === '6') {
-    return 'http://ec2-54-174-83-196.compute-1.amazonaws.com';
+    return 'http://ec2-100-26-222-3.compute-1.amazonaws.com';
   }
 
   if (scenario === '7' || scenario === '8' || scenario === '9') {
-    return 'http://ec2-54-158-221-228.compute-1.amazonaws.com';
+    return 'http://ec2-54-157-131-188.compute-1.amazonaws.com';
   }
 }
 
