@@ -1,4 +1,5 @@
 const config = {
+  HILL_ROUTING_OPTIONS: [],
   WELCOME_MODAL_TITLE: 'Welcome to the Tahoe Bike Map',
   SHOULD_SHOW_WELCOME_MODAL: true,
   SEARCH_BOUNDS: {

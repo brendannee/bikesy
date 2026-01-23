@@ -290,18 +290,22 @@ const Controls = ({
             <option value="3">A more direct route</option>
           </select>
         </div>
-        <div className="form-group form-inline hill-reluctance">
-          <label className="control-label">Hill Reluctance</label>
-          <select
-            className="form-control"
-            onChange={handleHillReluctanceChange}
-            value={hillReluctance}
-          >
-            <option value="1">Avoid at all costs</option>
-            <option value="2">A reasonable route</option>
-            <option value="3">Bring on the Hills!</option>
-          </select>
-        </div>
+        {!!appConfig.HILL_ROUTING_OPTIONS.length && (
+          <div className="form-group form-inline hill-reluctance">
+            <label className="control-label">Hill Reluctance</label>
+            <select
+              className="form-control"
+              onChange={handleHillReluctanceChange}
+              value={hillReluctance}
+            >
+              {appConfig.HILL_ROUTING_OPTIONS.map((hillRoutingOption) => (
+                <option key={hillRoutingOption.value} value={hillRoutingOption.value}>
+                  {hillRoutingOption.text}
+                </option>
+              ))}
+            </select>
+          </div>
+        )}
         <a href="#" className="clear-link" onClick={() => dispatch(clearRoute())}>
           Clear
         </a>

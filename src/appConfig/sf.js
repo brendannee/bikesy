@@ -32,6 +32,20 @@ const config = {
       iconClassName: 'sf-class3',
     },
   ],
+  HILL_ROUTING_OPTIONS: [
+    {
+      text: 'Avoid at all costs',
+      value: 1,
+    },
+    {
+      text: 'A reasonable route',
+      value: 2,
+    },
+    {
+      text: 'Bring on the Hills!',
+      value: 3,
+    },
+  ],
 };
 
 export default config;
