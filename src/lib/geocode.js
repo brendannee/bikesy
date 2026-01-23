@@ -1,4 +1,3 @@
-
 export function geocode(address) {
   const geocodeApiUrl = 'https://maps.googleapis.com/maps/api/geocode/json';
   const requestUrl = `${geocodeApiUrl}?address=${encodeURIComponent(address)}&key=${
