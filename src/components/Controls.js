@@ -285,9 +285,11 @@ const Controls = ({
             onChange={handleRouteTypeChange}
             value={routeType}
           >
-            <option value="1">Mostly bike paths & lanes</option>
-            <option value="2">A reasonable route</option>
-            <option value="3">A more direct route</option>
+            {appConfig.ROUTE_TYPE_OPTIONS.map((routeType) => (
+              <option key={routeType.value} value={routeType.value}>
+                {routeType.text}
+              </option>
+            ))}
           </select>
         </div>
         {!!appConfig.HILL_ROUTING_OPTIONS.length && (

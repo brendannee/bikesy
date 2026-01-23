@@ -1,5 +1,15 @@
 const config = {
   HILL_ROUTING_OPTIONS: [],
+  ROUTE_TYPE_OPTIONS: [
+    {
+      text: 'Mostly bike paths & lanes',
+      value: 1,
+    },
+    {
+      text: 'A more direct route',
+      value: 2,
+    },
+  ],
   WELCOME_MODAL_TITLE: 'Welcome to the Tahoe Bike Map',
   SHOULD_SHOW_WELCOME_MODAL: true,
   SEARCH_BOUNDS: {

@@ -58,6 +58,7 @@ const config = {
   LOGO_FILENAME_ROOT: 'bikemapper-logo',
   LOGO_CLASSNAME: 'logo contracosta-logo',
   HILL_ROUTING_OPTIONS: sfConfig.HILL_ROUTING_OPTIONS,
+  ROUTE_TYPE_OPTIONS: sfConfig.ROUTE_TYPE_OPTIONS,
 };
 
 export default config;
