@@ -163,7 +163,7 @@ const Controls = ({
     if (components.routeType !== routeType) {
       setRouteType(components.routeType);
     }
-  }, [scenario]);
+  }, [hillReluctance, routeType, scenario]);
 
   // If start address changes, update input to match
   useEffect(() => {
