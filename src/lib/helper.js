@@ -50,7 +50,10 @@ export function formatElevation(feet) {
 }
 
 export function calculateGrade(previousNode, nextNode) {
-  return (nextNode.elevation - previousNode.elevation) / (nextNode.distance - previousNode.distance);
+  return (
+    (nextNode.elevation - previousNode.elevation) /
+    (nextNode.distance - previousNode.distance)
+  );
 }
 
 export function formatGrade(grade) {

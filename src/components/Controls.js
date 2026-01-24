@@ -96,8 +96,8 @@ const Controls = ({
 
   const handleForm = async () => {
     const errorFields = validateForm();
-    let updatedStartCoordinates = startCoordinates
-    let updatedEndCoordinates = endCoordinates
+    let updatedStartCoordinates = startCoordinates;
+    let updatedEndCoordinates = endCoordinates;
 
     if (errorFields.length) {
       setErrorFields(errorFields);
@@ -108,8 +108,8 @@ const Controls = ({
 
     if (!updatedStartCoordinates) {
       try {
-        updatedStartCoordinates = await geocode(startAddressInput)
-        setStartCoordinates(updatedStartCoordinates)
+        updatedStartCoordinates = await geocode(startAddressInput);
+        setStartCoordinates(updatedStartCoordinates);
       } catch (error) {
         alert(`Error: Unable to find start address "${startAddressInput}".`);
         return;
@@ -118,7 +118,7 @@ const Controls = ({
 
     if (!updatedEndCoordinates) {
       try {
-        updatedEndCoordinates = await geocode(endAddressInput)
+        updatedEndCoordinates = await geocode(endAddressInput);
       } catch (error) {
         alert(`Error: Unable to find end address "${endAddressInput}".`);
         return;
@@ -241,8 +241,8 @@ const Controls = ({
             type="text"
             value={startAddressInput}
             onChange={(event) => {
-              setStartAddressInput(event.target.value)
-              setStartCoordinates()
+              setStartAddressInput(event.target.value);
+              setStartCoordinates();
             }}
             className={classNames('form-control', {
               'is-invalid': _.includes(errorFields, 'startAddress'),
@@ -268,8 +268,8 @@ const Controls = ({
             type="text"
             value={endAddressInput}
             onChange={(event) => {
-              setEndAddressInput(event.target.value)
-              setEndCoordinates()
+              setEndAddressInput(event.target.value);
+              setEndCoordinates();
             }}
             className={classNames('form-control', {
               'is-invalid': _.includes(errorFields, 'endAddress'),
