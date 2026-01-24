@@ -1,3 +1,4 @@
 # Ignore build and output
 .next
 out
+pnpm-lock.yaml

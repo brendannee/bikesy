@@ -31,7 +31,8 @@ const config = {
       },
       datasetId: 'bikesy/cjdr13xe624z133qhr55la61v',
       isInitiallyChecked: false,
-      popup: (feature) => `<div style="font-size: 0.7rem;"><b>${feature.properties.Name}</b><br><b>${feature.properties.quantity} Lockers</b><br>${feature.properties.description}</div>`
+      popup: (feature) =>
+        `<div style="font-size: 0.7rem;"><b>${feature.properties.Name}</b><br><b>${feature.properties.quantity} Lockers</b><br>${feature.properties.description}</div>`,
     },
     {
       type: 'static',
