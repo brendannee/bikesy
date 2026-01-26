@@ -13,6 +13,10 @@ const config = {
   MAPBOX_STYLE_URL: 'mapbox://styles/bikesy/ckmec4z6h3ekg17lr1fas6kwx',
   INITIAL_CENTER_LAT: 37.7749,
   INITIAL_CENTER_LNG: -122.4194,
+  HILL_ROUTING_OPTIONS: [],
+  ROUTE_TYPE_OPTIONS: [],
+  DEFAULT_SCENARIO: '1',
+  SCENARIOS: {},
   SEARCH_BOUNDS: {
     TOP: 38.0534,
     RIGHT: -121.637,

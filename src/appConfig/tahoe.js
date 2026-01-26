@@ -1,4 +1,28 @@
 const config = {
+  HILL_ROUTING_OPTIONS: [],
+  ROUTE_TYPE_OPTIONS: [
+    {
+      text: 'Mostly bike paths & lanes',
+      value: 1,
+    },
+    {
+      text: 'A more direct route',
+      value: 2,
+    },
+  ],
+  DEFAULT_SCENARIO: '1',
+  SCENARIOS: {
+    1: {
+      routeType: '1',
+      hillReluctance: null,
+      server: 'http://ec2-52-35-131-66.us-west-2.compute.amazonaws.com',
+    },
+    2: {
+      routeType: '2',
+      hillReluctance: null,
+      server: 'http://ec2-52-35-131-66.us-west-2.compute.amazonaws.com',
+    },
+  },
   WELCOME_MODAL_TITLE: 'Welcome to the Tahoe Bike Map',
   SHOULD_SHOW_WELCOME_MODAL: true,
   SEARCH_BOUNDS: {

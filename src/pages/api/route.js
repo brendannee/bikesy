@@ -1,3 +1,4 @@
+import appConfig from 'appConfig';
 import Cors from 'cors';
 
 const cors = Cors({
@@ -19,17 +20,7 @@ function runMiddleware(request, res, fn) {
 }
 
 function getServerUrl(scenario) {
-  if (scenario === '1' || scenario === '2' || scenario === '3') {
-    return 'http://ec2-54-196-193-14.compute-1.amazonaws.com';
-  }
-
-  if (scenario === '4' || scenario === '5' || scenario === '6') {
-    return 'http://ec2-100-26-222-3.compute-1.amazonaws.com';
-  }
-
-  if (scenario === '7' || scenario === '8' || scenario === '9') {
-    return 'http://ec2-54-157-131-188.compute-1.amazonaws.com';
-  }
+  return appConfig.SCENARIOS[scenario].server;
 }
 
 const Route = async (request, response) => {
