@@ -1,3 +1,5 @@
+import sfConfig from './sf';
+
 const config = {
   WELCOME_MODAL_TITLE: 'Welcome to Bike Mapper',
   ABOUT_LINK_TITLE: 'About Bike Mapper',
@@ -55,6 +57,10 @@ const config = {
   ],
   LOGO_FILENAME_ROOT: 'bikemapper-logo',
   LOGO_CLASSNAME: 'logo contracosta-logo',
+  HILL_ROUTING_OPTIONS: sfConfig.HILL_ROUTING_OPTIONS,
+  ROUTE_TYPE_OPTIONS: sfConfig.ROUTE_TYPE_OPTIONS,
+  DEFAULT_SCENARIO: sfConfig.DEFAULT_SCENARIO,
+  SCENARIOS: sfConfig.SCENARIOS,
 };
 
 export default config;

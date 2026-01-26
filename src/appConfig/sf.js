@@ -32,6 +32,82 @@ const config = {
       iconClassName: 'sf-class3',
     },
   ],
+  HILL_ROUTING_OPTIONS: [
+    {
+      text: 'Avoid at all costs',
+      value: 1,
+    },
+    {
+      text: 'A reasonable route',
+      value: 2,
+    },
+    {
+      text: 'Bring on the Hills!',
+      value: 3,
+    },
+  ],
+  ROUTE_TYPE_OPTIONS: [
+    {
+      text: 'Mostly bike paths & lanes',
+      value: 1,
+    },
+    {
+      text: 'A reasonable route',
+      value: 2,
+    },
+    {
+      text: 'A more direct route',
+      value: 3,
+    },
+  ],
+  DEFAULT_SCENARIO: '5',
+  SCENARIOS: {
+    1: {
+      routeType: '3',
+      hillReluctance: '1',
+      server: 'http://ec2-54-196-193-14.compute-1.amazonaws.com',
+    },
+    2: {
+      routeType: '3',
+      hillReluctance: '2',
+      server: 'http://ec2-54-196-193-14.compute-1.amazonaws.com',
+    },
+    3: {
+      routeType: '3',
+      hillReluctance: '3',
+      server: 'http://ec2-54-196-193-14.compute-1.amazonaws.com',
+    },
+    4: {
+      routeType: '2',
+      hillReluctance: '1',
+      server: 'http://ec2-100-26-222-3.compute-1.amazonaws.com',
+    },
+    5: {
+      routeType: '2',
+      hillReluctance: '2',
+      server: 'http://ec2-100-26-222-3.compute-1.amazonaws.com',
+    },
+    6: {
+      routeType: '2',
+      hillReluctance: '3',
+      server: 'http://ec2-100-26-222-3.compute-1.amazonaws.com',
+    },
+    7: {
+      routeType: '1',
+      hillReluctance: '1',
+      server: 'http://ec2-54-157-131-188.compute-1.amazonaws.com',
+    },
+    8: {
+      routeType: '1',
+      hillReluctance: '2',
+      server: 'http://ec2-54-157-131-188.compute-1.amazonaws.com',
+    },
+    9: {
+      routeType: '1',
+      hillReluctance: '3',
+      server: 'http://ec2-54-157-131-188.compute-1.amazonaws.com',
+    },
+  },
 };
 
 export default config;
