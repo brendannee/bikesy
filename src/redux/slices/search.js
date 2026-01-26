@@ -1,9 +1,10 @@
 import { createSlice } from '@reduxjs/toolkit';
+import appConfig from 'appConfig';
 
 export const searchSlice = createSlice({
   name: 'search',
   initialState: {
-    scenario: '5',
+    scenario: appConfig.DEFAULT_SCENARIO,
     startAddress: '',
     endAddress: '',
     startLocation: null,

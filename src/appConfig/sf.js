@@ -60,6 +60,54 @@ const config = {
       value: 3,
     },
   ],
+  DEFAULT_SCENARIO: '5',
+  SCENARIOS: {
+    1: {
+      routeType: '3',
+      hillReluctance: '1',
+      server: 'http://ec2-54-196-193-14.compute-1.amazonaws.com',
+    },
+    2: {
+      routeType: '3',
+      hillReluctance: '2',
+      server: 'http://ec2-54-196-193-14.compute-1.amazonaws.com',
+    },
+    3: {
+      routeType: '3',
+      hillReluctance: '3',
+      server: 'http://ec2-54-196-193-14.compute-1.amazonaws.com',
+    },
+    4: {
+      routeType: '2',
+      hillReluctance: '1',
+      server: 'http://ec2-100-26-222-3.compute-1.amazonaws.com',
+    },
+    5: {
+      routeType: '2',
+      hillReluctance: '2',
+      server: 'http://ec2-100-26-222-3.compute-1.amazonaws.com',
+    },
+    6: {
+      routeType: '2',
+      hillReluctance: '3',
+      server: 'http://ec2-100-26-222-3.compute-1.amazonaws.com',
+    },
+    7: {
+      routeType: '1',
+      hillReluctance: '1',
+      server: 'http://ec2-54-157-131-188.compute-1.amazonaws.com',
+    },
+    8: {
+      routeType: '1',
+      hillReluctance: '2',
+      server: 'http://ec2-54-157-131-188.compute-1.amazonaws.com',
+    },
+    9: {
+      routeType: '1',
+      hillReluctance: '3',
+      server: 'http://ec2-54-157-131-188.compute-1.amazonaws.com',
+    },
+  },
 };
 
 export default config;

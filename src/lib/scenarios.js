@@ -1,3 +1,4 @@
+import appConfig from 'appConfig';
 const _ = require('lodash');
 
 const scenarios = {
@@ -40,9 +41,9 @@ const scenarios = {
 };
 
 export function scenarioToComponents(scenario) {
-  return scenarios[scenario];
+  return appConfig.SCENARIOS[scenario];
 }
 
 export function componentsToScenario(components) {
-  return _.findKey(scenarios, (scenario) => _.isMatch(scenario, components));
+  return _.findKey(appConfig.SCENARIOS, (scenario) => _.isMatch(scenario, components));
 }
