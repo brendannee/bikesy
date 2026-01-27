@@ -29,7 +29,7 @@ const config = {
     TOP: 39.368232,
     RIGHT: -119.659482,
     BOTTOM: 38.750276,
-    LEFT: -122.8,
+    LEFT: -120.399814,
     ALERT_TEXT: 'This tool only works for the Lake Tahoe region.',
   },
   LOGO_FILENAME_ROOT: 'ltbc-logo',
