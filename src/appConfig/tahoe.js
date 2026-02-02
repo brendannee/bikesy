@@ -56,6 +56,25 @@ const config = {
       },
       datasetId: 'tahoebike/ck3pdyl2g5fn42tpnfsh5pibh',
       isInitiallyChecked: true,
+      popup: (feature) => {
+        const disclaimer =
+          'Construction notices provided by map users. Note that less recent notices may be out of date, and require confirmation.';
+        return `
+          <div class="popup-container">
+            <p><b>${feature.properties.title}</b></p>
+            <p>${feature.properties.description}</p>
+            <small>
+              ${
+                feature.properties.last_updated
+                  ? `Last Updated: ${feature.properties.last_updated}`
+                  : ''
+              }
+              <br />
+              ${disclaimer}
+            </small>
+          </div>
+        `;
+      },
     },
     {
       type: 'mapbox-dataset',
@@ -72,6 +91,12 @@ const config = {
       },
       datasetId: 'tahoebike/ck3pdz0lj0ezu2injv641rf8z',
       isInitiallyChecked: false,
+      popup: (feature) => `
+        <div class="popup-container">
+          <p><b>${feature.properties.description}</b></p>
+          ${feature.properties.image ? `<div>${feature.properties.image}</div>` : ''}
+        </div>
+      `,
     },
     {
       type: 'mapbox-dataset',
@@ -88,6 +113,25 @@ const config = {
       },
       datasetId: 'tahoebike/ck3pdzfet26fm2ilhadvn614o',
       isInitiallyChecked: false,
+      popup: (feature) => {
+        let textContent = feature.properties.name
+          ? `<b>${feature.properties.name}</b>`
+          : 'Unknown Bike Shop';
+        if (feature.properties.business_member) {
+          textContent += '<br />LTBC Business Member';
+        }
+        if (feature.properties.address) {
+          textContent += `<br />${feature.properties.address}`;
+        }
+        if (feature.properties.phone_number) {
+          textContent += `<br />${feature.properties.phone_number}`;
+        }
+        if (feature.properties.website) {
+          textContent += `<br /><a href="${feature.properties.website}" target="_blank">${feature.properties.website}</a>`;
+        }
+
+        return `<div class='popup-container'>${textContent}</div>`;
+      },
     },
     {
       type: 'mapbox-dataset',
