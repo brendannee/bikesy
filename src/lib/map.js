@@ -185,7 +185,8 @@ export function drawMap(handleMapClick, handleMarkerDrag) {
       // Don't trigger this event if there is a marker with a popup at the clicked location
       if (mapLayersWithPopup) {
         const features = map.queryRenderedFeatures(event.point, {
-          layers: mapLayersWithPopup,
+          // Filter prevents error that occurs when specifying hidden layers
+          layers: mapLayersWithPopup.filter((layer) => map.getLayer(layer)),
         });
 
         if (features.length > 0) {

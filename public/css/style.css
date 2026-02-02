@@ -465,6 +465,18 @@
   transform-origin: right bottom 0;
 }
 
+.popup-container {
+  margin-top: 10px;
+  overflow-wrap: break-word;
+}
+
+.popup-container p,
+.popup-container b {
+  font-size: 15px;
+  line-height: 20px;
+  margin: 0 0 10px;
+}
+
 .icon-not-loading {
   display: none;
 }
