@@ -368,10 +368,9 @@
   opacity: 0.6;
 }
 
-/* TODO construction logo doesn't look quite right */
 .map-container .map-layers .map-legend-icon.construction {
   background: url('../images/construction_marker.png') 0 0 no-repeat;
-  background-size: 15px 18px;
+  background-size: 15px 15px;
   width: 15px;
   height: 18px;
   overflow: visible;
