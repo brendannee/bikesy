@@ -7,6 +7,7 @@ const config = {
   BIKESY_HIGH_BIKE_SPEED_MPH: 10,
   LOGO_FILENAME_ROOT: 'bikesy-logo',
   LOGO_CLASSNAME: 'logo',
+  ELEVATION_CHART_Y_DOMAIN: [0, 'auto'],
 
   // Expected to be overridden for all regions:
   // TODO consider putting placeholders here to force regional overrides
