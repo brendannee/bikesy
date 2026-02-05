@@ -8,6 +8,7 @@ import {
   metersToMiles,
   calculateGrade,
 } from 'lib/helper';
+import config from 'appConfig';
 
 const CustomTooltip = ({ active, payload }) => {
   if (active) {
@@ -93,6 +94,7 @@ const Elevation = ({
         />
         <YAxis
           type="number"
+          domain={config.ELEVATION_CHART_Y_DOMAIN}
           label={{
             value: 'Elevation (feet)',
             angle: -90,
