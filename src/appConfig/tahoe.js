@@ -1,4 +1,12 @@
 const config = {
+  // Round elevation chart Y-axis to nearest 1000 feet to make hills more visible.
+  // Previously the range was 0 to max, which made hills imperceptible at high elevations.
+  // Dynamic rounding (vs static values) handles multiple service areas at different elevations
+  // (e.g., Carson City ~4,700 ft vs Tahoe ~6,200 ft vs Echo Summit ~7,400 ft).
+  ELEVATION_CHART_Y_DOMAIN: [
+    (dataMin) => Math.floor(dataMin / 1000) * 1000,
+    (dataMax) => Math.ceil(dataMax / 1000) * 1000,
+  ],
   HILL_ROUTING_OPTIONS: [],
   ROUTE_TYPE_OPTIONS: [
     {
