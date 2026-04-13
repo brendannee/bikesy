@@ -3,7 +3,7 @@ import sfConfig from './sf';
 const config = {
   WELCOME_MODAL_TITLE: 'Welcome to Bike Mapper',
   ABOUT_LINK_TITLE: 'About Bike Mapper',
-  ABOUT_LINK_URL: 'https://511contracosta.org/biking/bike-mapper-faq/',
+  ABOUT_LINK_URL: 'https://511.ccta.ca.gov/biking/bike-mapper-faq/',
   SHOULD_SHOW_WELCOME_MODAL: true,
   SEARCH_BOUNDS: {
     TOP: 38.0534,
@@ -15,7 +15,7 @@ const config = {
   MAPBOX_STYLE_URL: 'mapbox://styles/bikesy/ckmec4z6h3ekg17lr1fas6kwx',
   INITIAL_CENTER_LAT: 37.880002,
   INITIAL_CENTER_LNG: -122.094,
-  PAGE_TITLE: '511 Contra Costa Bike Mapper',
+  PAGE_TITLE: '511 CCTA Bike Mapper',
   MAP_LAYERS: [
     {
       type: 'mapbox-dataset',
@@ -55,7 +55,7 @@ const config = {
       iconClassName: 'sf-class3',
     },
   ],
-  LOGO_FILENAME_ROOT: 'bikemapper-logo',
+  LOGO_FILENAME_ROOT: '511-ccta-bikemapper-logo',
   LOGO_CLASSNAME: 'logo contracosta-logo',
   HILL_ROUTING_OPTIONS: sfConfig.HILL_ROUTING_OPTIONS,
   ROUTE_TYPE_OPTIONS: sfConfig.ROUTE_TYPE_OPTIONS,

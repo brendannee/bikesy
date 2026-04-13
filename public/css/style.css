@@ -10,12 +10,21 @@
 .titlebar .site-title {
   font-size: 14px;
   margin: 0;
-  line-height: 35px;
+  line-height: 32px;
   padding-left: 10px;
 }
 
 .titlebar .site-title .logo {
   height: 30px;
+}
+
+.titlebar .site-title .logo img {
+  height: auto;
+  width: 100%;
+}
+
+.titlebar .site-title .logo.contracosta-logo {
+  height: 26px;
 }
 
 .titlebar .site-title .titlebar-text {
@@ -570,6 +579,11 @@
     z-index: 10;
   }
 
+  .map-container .logo img {
+    width: 100%;
+    height: auto;
+  }
+
   .map-container .logo.ltbc-logo {
     /*
     Specific styling for the LTBC Logo overlay:
@@ -593,10 +607,12 @@
 
   .map-container .logo.contracosta-logo {
     /*
-    Specific styling for the 511 Contra Costa Bike Mapper Logo overlay:
+    Specific styling for the 511 CCTA Bike Mapper Logo overlay:
     */
     background: #fff;
-    padding: 4px 7px;
+    padding: 8px 8px;
+    width: 100px;
+    height: 100px;
     /*
     Rounded corners and a thin solid border look nice too.
     These are included in the old tahoe bike map

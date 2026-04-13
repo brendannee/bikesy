@@ -35,7 +35,7 @@ const TitleBar = ({ mobileView, changeMobileView }) => {
             src={`/images/${appConfig.LOGO_FILENAME_ROOT}.png`}
             srcSet={`/images/${appConfig.LOGO_FILENAME_ROOT}@2x.png 2x`}
             alt="logo"
-            className="logo"
+            className={appConfig.LOGO_CLASSNAME}
           />
         </a>
       </h1>
