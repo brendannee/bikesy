@@ -2,7 +2,7 @@
 
 import _ from 'lodash';
 import { length } from '@turf/turf';
-import appConfig from 'appConfig';
+import appConfig from '../appConfig';
 
 const MAPBOX_DATASETS_API = 'https://api.mapbox.com/datasets/v1';
 

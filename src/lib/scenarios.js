@@ -1,4 +1,4 @@
-import appConfig from 'appConfig';
+import appConfig from '../appConfig';
 const _ = require('lodash');
 
 export function scenarioToComponents(scenario) {

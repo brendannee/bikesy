@@ -1,4 +1,4 @@
-import appConfig from 'appConfig';
+import appConfig from '../appConfig';
 
 export function metersToMiles(meters) {
   return meters * 0.000621371;

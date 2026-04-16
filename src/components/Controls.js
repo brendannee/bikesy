@@ -4,11 +4,11 @@ import _ from 'lodash';
 import classNames from 'classnames';
 import { usePlacesWidget } from 'react-google-autocomplete';
 
-import { clearRoute } from '@redux/slices/search';
-import appConfig from 'appConfig';
-import { scenarioToComponents, componentsToScenario } from 'lib/scenarios';
-import Crosshairicon from './icons/crosshairs-solid.svg';
-import CircleNotchIcon from './icons/circle-notch-solid.svg';
+import { clearRoute } from '../redux/slices/search';
+import appConfig from '../appConfig';
+import { scenarioToComponents, componentsToScenario } from '../lib/scenarios';
+import crosshairIcon from './icons/crosshairs-solid.svg';
+import circleNotchIcon from './icons/circle-notch-solid.svg';
 import { geocode } from '../lib/geocode';
 
 const Controls = ({
@@ -250,13 +250,18 @@ const Controls = ({
             placeholder={getStartAddressPlaceholder()}
             ref={startAddressRef}
           />
-          <CircleNotchIcon className="loading-animation" />
+          <img
+            className="loading-animation"
+            src={circleNotchIcon?.src ?? circleNotchIcon}
+            alt=""
+            aria-hidden="true"
+          />
           <a
             className="btn btn-light btn-geolocation"
             title="Use my location"
             onClick={getGeolocation}
           >
-            <Crosshairicon />
+            <img src={crosshairIcon?.src ?? crosshairIcon} alt="" aria-hidden="true" />
           </a>
         </div>
         <div className="form-group form-inline end-address">
@@ -312,7 +317,15 @@ const Controls = ({
           Clear
         </a>
         <button type="submit" className="btn btn-success btn-update-route">
-          {loading && <CircleNotchIcon className="loading-animation" />} Get Directions
+          {loading && (
+            <img
+              className="loading-animation"
+              src={circleNotchIcon?.src ?? circleNotchIcon}
+              alt=""
+              aria-hidden="true"
+            />
+          )}{' '}
+          Get Directions
         </button>
       </form>
     </div>

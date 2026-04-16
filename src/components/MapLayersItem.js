@@ -1,6 +1,6 @@
 import * as _ from 'lodash';
 import { useEffect, useState } from 'react';
-import { getMapboxDatasetURL } from 'lib/map';
+import { getMapboxDatasetURL } from '../lib/map';
 
 const MapLayersItem = ({
   type,
