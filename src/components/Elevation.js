@@ -7,8 +7,8 @@ import {
   metersToFeet,
   metersToMiles,
   calculateGrade,
-} from 'lib/helper';
-import config from 'appConfig';
+} from '../lib/helper';
+import config from '../appConfig';
 
 const CustomTooltip = ({ active, payload }) => {
   if (active) {

@@ -1,5 +1,5 @@
 import Modal from 'react-modal';
-import appConfig from 'appConfig';
+import appConfig from '../appConfig';
 
 Modal.setAppElement('body');
 

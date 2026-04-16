@@ -2,7 +2,7 @@
 
 import _ from 'lodash';
 import { length } from '@turf/turf';
-import appConfig from 'appConfig';
+import appConfig from '../appConfig';
 
 const MAPBOX_DATASETS_API = 'https://api.mapbox.com/datasets/v1';
 
@@ -185,7 +185,8 @@ export function drawMap(handleMapClick, handleMarkerDrag) {
       // Don't trigger this event if there is a marker with a popup at the clicked location
       if (mapLayersWithPopup) {
         const features = map.queryRenderedFeatures(event.point, {
-          layers: mapLayersWithPopup,
+          // Filter prevents error that occurs when specifying hidden layers
+          layers: mapLayersWithPopup.filter((layer) => map.getLayer(layer)),
         });
 
         if (features.length > 0) {

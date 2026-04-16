@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import appConfig from 'appConfig';
+import appConfig from '../../appConfig';
 
 export const searchSlice = createSlice({
   name: 'search',

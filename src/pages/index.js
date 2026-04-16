@@ -4,18 +4,18 @@ import { useDispatch } from 'react-redux';
 import polyline from '@mapbox/polyline';
 import { useSelector } from 'react-redux';
 
-import Controls from 'components/Controls';
-import Directions from 'components/Directions';
-import Elevation from 'components/Elevation';
-import Map from 'components/Map';
-import TitleBar from 'components/Titlebar';
-import WelcomeModal from 'components/WelcomeModal';
+import Controls from '../components/Controls';
+import Directions from '../components/Directions';
+import Elevation from '../components/Elevation';
+import Map from '../components/Map';
+import TitleBar from '../components/Titlebar';
+import WelcomeModal from '../components/WelcomeModal';
 
-import { getRoute } from 'lib/api';
-import { handleError } from 'lib/error';
-import { reverseGeocode } from 'lib/geocode';
-import { latlngIsWithinBounds, updateMapSize, getPathDistance } from 'lib/map';
-import { updateUrlParams, readUrlParams, validateUrlParams } from 'lib/url';
+import { getRoute } from '../lib/api';
+import { handleError } from '../lib/error';
+import { reverseGeocode } from '../lib/geocode';
+import { latlngIsWithinBounds, updateMapSize, getPathDistance } from '../lib/map';
+import { updateUrlParams, readUrlParams, validateUrlParams } from '../lib/url';
 
 import {
   clearPath,
@@ -28,9 +28,9 @@ import {
   setDistance,
   setDirections,
   setElevationProfile,
-} from '@redux/slices/search';
+} from '../redux/slices/search';
 
-import appConfig from 'appConfig';
+import appConfig from '../appConfig';
 import { formatLatLngForUrl, parseLatLngFromUrlParameter } from '../lib/url';
 
 const ELEVATION_HEIGHT = 175;

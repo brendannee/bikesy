@@ -1,6 +1,6 @@
 import * as _ from 'lodash';
 import { useEffect, useState } from 'react';
-import { getMapboxDatasetURL } from 'lib/map';
+import { getMapboxDatasetURL } from '../lib/map';
 
 const MapLayersItem = ({
   type,
@@ -69,6 +69,14 @@ const MapLayersItem = ({
       });
 
       mapRef.current.on('click', label, (e) => {
+        // Only opens popup for first layer click handler.
+        // This prevents multiple popups when features from multiple layers are stacked.
+        // This happens frequently when the map is zoomed out.
+        if (e.originalEvent.cancelBubble) {
+          return;
+        }
+        e.originalEvent.cancelBubble = true;
+
         new mapboxgl.Popup()
           .setLngLat(e.features[0].geometry.coordinates)
           .setHTML(popup(e.features[0]))

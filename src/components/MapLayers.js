@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-import appConfig from 'appConfig';
+import appConfig from '../appConfig';
 import MapLayersItem from './MapLayersItem';
 
 const MapLayers = ({ isInitiallyVisible, mapRef }) => {

@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { useSelector } from 'react-redux';
 
-import appConfig from 'appConfig';
+import appConfig from '../appConfig';
 import {
   latlngIsWithinBounds,
   drawMap,
@@ -9,8 +9,8 @@ import {
   updateEndMarker,
   updatePath,
   updateMapSize,
-} from 'lib/map';
-import MapLayers from 'components/MapLayers';
+} from '../lib/map';
+import MapLayers from '../components/MapLayers';
 
 const Map = ({
   isMobile,

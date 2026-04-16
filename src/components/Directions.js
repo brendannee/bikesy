@@ -1,6 +1,6 @@
 import { useSelector } from 'react-redux';
 
-import appConfig from 'appConfig';
+import appConfig from '../appConfig';
 import Weather from './Weather';
 
 import {
@@ -9,8 +9,8 @@ import {
   formatElevation,
   getElevationGain,
   metersToFeet,
-} from 'lib/helper';
-import { getCenter } from 'lib/map';
+} from '../lib/helper';
+import { getCenter } from '../lib/map';
 
 const Directions = ({ isMobile, mobileView, height }) => {
   const directions = useSelector((state) => state.search.directions);

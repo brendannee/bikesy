@@ -1,4 +1,4 @@
-import appConfig from 'appConfig';
+import appConfig from '../appConfig';
 
 const TitleBar = ({ mobileView, changeMobileView }) => {
   const getRightButton = () => {
