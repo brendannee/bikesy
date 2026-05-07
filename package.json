@@ -21,12 +21,12 @@
   },
   "dependencies": {
     "@mapbox/polyline": "^1.2.1",
-    "@reduxjs/toolkit": "^1.9.7",
+    "@reduxjs/toolkit": "^2.11.2",
     "@turf/turf": "^7.3.5",
     "babel-runtime": "^6.26.0",
     "classnames": "^2.5.1",
     "lodash": "^4.18.1",
-    "next": "^16.2.5",
+    "next": "^16.2.6",
     "react": "^19.2.6",
     "react-dom": "^19.2.6",
     "react-ga": "^3.3.1",
@@ -34,7 +34,7 @@
     "react-modal": "^3.16.3",
     "react-redux": "^9.2.0",
     "recharts": "^3.8.1",
-    "redux": "^4.2.1"
+    "redux": "^5.0.1"
   },
   "devDependencies": {
     "eslint": "^10.3.0",
@@ -42,9 +42,5 @@
     "prettier": "^3.8.3",
     "redux-logger": "^3.0.6"
   },
-  "pnpm": {
-    "overrides": {
-      "lodash": ">=4.18.1"
-    }
-  }
+  "packageManager": "pnpm@11.0.8"
 }
