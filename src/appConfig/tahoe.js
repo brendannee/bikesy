@@ -206,7 +206,19 @@ const config = {
           'line-dasharray': [3, 5],
         },
       },
-      datasetId: undefined, // TODO this layer is derived from several others. Process offline?
+      /*
+      This dataset has been uploaded to Mapbox.
+        - Includes TRPA and Truckee city data
+        - Preprocessing included to only select winter plowed paths
+          - TRPA:
+            - Only include trails with WNT_MAINT == 'YES'
+            - Exclude trails with "MAINT_JURS" == "EL DORADO COUNTY" because they stopped plowing.
+          - Truckee
+            - Only include trails with CLASS == "I", and MAINTBY == "Town of Truckee"
+            - "The trails that we plow in the winter are only those Class I paved trails managed by the Town" - Sarah Kunnen, Engineering Technician, Town Of Truckee
+            - Exclude routes with install dates in the future
+      */
+      datasetId: 'tahoebike/cmod6xwi31ykt1npixuglmko7',
       isInitiallyChecked: false,
     },
   ],
