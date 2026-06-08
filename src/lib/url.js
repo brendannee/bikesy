@@ -10,11 +10,11 @@ function decode(string) {
 
 export function validateUrlParams(parameters) {
   return (
-    parameters.length >= 4 &&
+    parameters.length >= 2 &&
     parameters[0] !== undefined &&
+    parameters[0] !== '' &&
     parameters[1] !== undefined &&
-    parameters[2] !== undefined &&
-    parameters[3] !== undefined
+    parameters[1] !== ''
   );
 }
 
@@ -36,7 +36,7 @@ export function updateUrlParams(parameters) {
     return;
   }
 
-  window.location.hash = parameters.map(encode).join('/');
+  window.location.hash = parameters.filter(Boolean).map(encode).join('/');
 }
 
 export function readUrlParams() {

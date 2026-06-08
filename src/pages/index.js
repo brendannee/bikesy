@@ -78,19 +78,27 @@ const IndexPage = () => {
     setLoading(true);
     setShowWelcomeModal(false);
 
-    if (!latlngIsWithinBounds(startLocation, 'start')) {
+    if (startLocation && !latlngIsWithinBounds(startLocation, 'start')) {
       setLoading(false);
       return;
     }
 
-    if (!latlngIsWithinBounds(endLocation, 'end')) {
+    if (endLocation && !latlngIsWithinBounds(endLocation, 'end')) {
       setLoading(false);
       return;
     }
+
+    if (!startLocation && !endLocation) {
+      setLoading(false);
+      return;
+    }
+
     dispatch(setStartAddress(startAddress));
     dispatch(setStartLocation(startLocation));
     dispatch(setEndAddress(endAddress));
     dispatch(setEndLocation(endLocation));
+
+    setLoading(false);
     setMobileView('map');
   };
 
@@ -224,13 +232,17 @@ const IndexPage = () => {
     const urlParameters = readUrlParams();
 
     if (validateUrlParams(urlParameters)) {
-      dispatch(setScenario(urlParameters[4]));
+      if (urlParameters[4]) {
+        dispatch(setScenario(urlParameters[4]));
+      }
 
       updateRoute({
         startAddress: urlParameters[0],
         startLocation: parseLatLngFromUrlParameter(urlParameters[1]),
         endAddress: urlParameters[2],
-        endLocation: parseLatLngFromUrlParameter(urlParameters[3]),
+        endLocation: urlParameters[3]
+          ? parseLatLngFromUrlParameter(urlParameters[3])
+          : undefined,
       });
     }
 
@@ -257,13 +269,14 @@ const IndexPage = () => {
   }, [startLocation, endLocation, scenario]);
 
   useEffect(() => {
-    if (startAddress && startLocation && endAddress && endLocation) {
+    if (startAddress && startLocation) {
+      const hasFullRoute = Boolean(endAddress && endLocation);
       updateUrlParams([
         startAddress,
         formatLatLngForUrl(startLocation),
-        endAddress,
-        formatLatLngForUrl(endLocation),
-        scenario,
+        endAddress || '',
+        endLocation ? formatLatLngForUrl(endLocation) : '',
+        hasFullRoute ? scenario : '',
       ]);
     }
   }, [startAddress, startLocation, endAddress, endLocation, scenario]);

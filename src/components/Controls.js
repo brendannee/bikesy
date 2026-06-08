@@ -116,7 +116,7 @@ const Controls = ({
       }
     }
 
-    if (!updatedEndCoordinates) {
+    if (!updatedEndCoordinates && endAddressInput) {
       try {
         updatedEndCoordinates = await geocode(endAddressInput);
       } catch (error) {

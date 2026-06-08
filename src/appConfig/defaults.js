@@ -31,6 +31,7 @@ const config = {
   ABOUT_LINK_URL: 'https://bikesy.com/about',
   PAGE_TITLE: 'Bikesy',
   MAP_LAYERS: [],
+  URL_LOCATIONS: {},
 };
 
 export default config;
