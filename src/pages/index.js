@@ -49,7 +49,7 @@ const IndexPage = () => {
   // window width is not known until after the component mounts
   const [isMobile, setIsMobile] = useState(undefined);
   const [showWelcomeModal, setShowWelcomeModal] = useState(
-    appConfig.SHOULD_SHOW_WELCOME_MODAL
+    appConfig.SHOULD_SHOW_WELCOME_MODAL,
   );
 
   const [windowSize, setWindowSize] = useState({
@@ -119,8 +119,8 @@ const IndexPage = () => {
               distance: node[0],
               elevation: node[1],
             };
-          })
-        )
+          }),
+        ),
       );
     } catch (error) {
       handleError(error);

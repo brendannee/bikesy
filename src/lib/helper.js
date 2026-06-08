@@ -23,7 +23,7 @@ export function formatTime(miles) {
   let formattedTime;
   if (highEstimate < 1) {
     formattedTime = `${hoursToMinutes(lowEstimate).toFixed()} to ${hoursToMinutes(
-      highEstimate
+      highEstimate,
     ).toFixed()} min`;
   } else {
     formattedTime = `${lowEstimate.toFixed(1)} to ${highEstimate.toFixed(1)} hours`;

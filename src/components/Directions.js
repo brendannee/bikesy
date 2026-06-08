@@ -31,7 +31,7 @@ const Directions = ({ isMobile, mobileView, height }) => {
         memo.push(
           <li key={idx}>
             <b>{direction[0]}</b> on <b>{direction[1]}</b>
-          </li>
+          </li>,
         );
       }
 
@@ -41,7 +41,7 @@ const Directions = ({ isMobile, mobileView, height }) => {
     directionsList.push(
       <li key="final">
         <b>arrive</b> at <b>{endAddress}</b>
-      </li>
+      </li>,
     );
 
     const location = getCenter(startLocation, endLocation);
@@ -63,7 +63,7 @@ const Directions = ({ isMobile, mobileView, height }) => {
           <br />
           {elevationProfile &&
             `${formatElevation(
-              metersToFeet(getElevationGain(elevationProfile))
+              metersToFeet(getElevationGain(elevationProfile)),
             )} of total climbing`}
           <Weather lat={location.lat} lng={location.lng} />
         </div>

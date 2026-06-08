@@ -65,7 +65,7 @@ const Weather = ({ lat, lng }) => {
           <div
             className={classNames(
               'air-quality-box',
-              `air-quality-box-${airQuality.categoryNumber}`
+              `air-quality-box-${airQuality.categoryNumber}`,
             )}
           >
             {airQuality.aqi} {airQuality.categoryName}
