@@ -24,7 +24,7 @@ export async function GET(request) {
       {
         error: `Unable to reach the air quality service${error?.message ? `: ${error.message}` : '.'}`,
       },
-      { status: 502 }
+      { status: 502 },
     );
   }
 
@@ -44,7 +44,7 @@ export async function GET(request) {
           payload?.error ||
           `Air quality request failed with status ${upstreamResponse.status}.`,
       },
-      { status: upstreamResponse.status }
+      { status: upstreamResponse.status },
     );
   }
 

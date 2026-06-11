@@ -41,7 +41,7 @@ export async function GET(request) {
       {
         error: 'lat1, lng1, lat2, lng2, and scenario are required.',
       },
-      { status: 400 }
+      { status: 400 },
     );
   }
 
@@ -62,7 +62,7 @@ export async function GET(request) {
       {
         error: `Unable to reach the routing service${error?.message ? `: ${error.message}` : '.'}`,
       },
-      { status: 502 }
+      { status: 502 },
     );
   }
 
@@ -82,7 +82,7 @@ export async function GET(request) {
           payload?.message ||
           `Routing service failed with status ${upstreamResponse.status}.`,
       },
-      { status: upstreamResponse.status }
+      { status: upstreamResponse.status },
     );
   }
 

@@ -178,7 +178,7 @@ export function drawMap(handleMapClick, handleMarkerDrag) {
     }
 
     const mapLayersWithPopup = appConfig.MAP_LAYERS.filter((layer) => layer.popup).map(
-      (layer) => layer.label
+      (layer) => layer.label,
     );
 
     map.on('click', (event) => {
