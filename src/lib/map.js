@@ -73,6 +73,11 @@ const pathGeoJSON = {
   },
 };
 
+let isStartFromUrl = false;
+export function setIsStartFromUrl() {
+  isStartFromUrl = true;
+}
+
 export function drawMap(handleMapClick, handleMarkerDrag) {
   mapboxgl.accessToken = process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN;
 
@@ -240,6 +245,18 @@ export function updateStartMarker(latlng) {
       if (!map.getLayer('start')) {
         map.addLayer(startLayer);
       }
+    }
+
+    // Only zoom when there's no end marker and no path yet, so we don't
+    // override fitBounds when a full route is being drawn.
+    const hasEndMarker = endGeoJSON.geometry.coordinates[0] !== 0;
+    const hasPath = pathGeoJSON.geometry.coordinates.length > 0;
+    if (isStartFromUrl && !hasEndMarker && !hasPath) {
+      isStartFromUrl = false;
+      map.flyTo({
+        center: [latlng.lng, latlng.lat],
+        zoom: appConfig.START_LOCATION_ZOOM,
+      });
     }
   } else if (map.getLayer('start')) {
     map.removeLayer('start');

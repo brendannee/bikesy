@@ -14,7 +14,12 @@ import WelcomeModal from '../components/WelcomeModal';
 import { getRoute } from '../lib/api';
 import { handleError } from '../lib/error';
 import { reverseGeocode } from '../lib/geocode';
-import { latlngIsWithinBounds, updateMapSize, getPathDistance } from '../lib/map';
+import {
+  latlngIsWithinBounds,
+  updateMapSize,
+  getPathDistance,
+  setIsStartFromUrl,
+} from '../lib/map';
 import { updateUrlParams, readUrlParams, validateUrlParams } from '../lib/url';
 
 import {
@@ -235,6 +240,8 @@ const IndexPage = () => {
       if (urlParameters[4]) {
         dispatch(setScenario(urlParameters[4]));
       }
+
+      setIsStartFromUrl();
 
       updateRoute({
         startAddress: urlParameters[0],
