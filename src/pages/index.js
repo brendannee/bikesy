@@ -15,7 +15,12 @@ import WelcomeModal from '../components/WelcomeModal';
 import { getRoute } from '../lib/api';
 import { handleError } from '../lib/error';
 import { reverseGeocode } from '../lib/geocode';
-import { latlngIsWithinBounds, updateMapSize, getPathDistance } from '../lib/map';
+import {
+  latlngIsWithinBounds,
+  updateMapSize,
+  getPathDistance,
+  setIsStartFromQR,
+} from '../lib/map';
 import { updateUrlParams, readUrlParams, validateUrlParams } from '../lib/url';
 
 import {
@@ -232,6 +237,7 @@ const IndexPage = () => {
         const latlng = { lat: coords[0], lng: coords[1] };
         
         setShowWelcomeModal(false);
+        setIsStartFromQR();
         assignStartLocation(latlng);
       }
 
