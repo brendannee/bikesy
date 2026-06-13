@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import Head from 'next/head';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { useDispatch } from 'react-redux';
 import polyline from '@mapbox/polyline';
 import { useSelector } from 'react-redux';
@@ -43,6 +44,10 @@ const IndexPage = () => {
   const startLocation = useSelector((state) => state.search.startLocation);
   const endLocation = useSelector((state) => state.search.endLocation);
   const elevationProfile = useSelector((state) => state.search.elevationProfile);
+
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const qrCode = searchParams.get('qr');
 
   const [loading, setLoading] = useState(false);
   const [mobileView, setMobileView] = useState('map');
@@ -218,6 +223,21 @@ const IndexPage = () => {
   if (isMobile) {
     mapHeight -= titlebarHeight;
   }
+
+  useEffect(() => {
+    if (qrCode) {
+      // Map slug to lat-long using appConfig URL_LOCATIONS
+      const coords = appConfig.URL_LOCATIONS && appConfig.URL_LOCATIONS[Number(qrCode)];
+      if (coords) {
+        const latlng = { lat: coords[0], lng: coords[1] };
+        
+        setShowWelcomeModal(false);
+        assignStartLocation(latlng);
+      }
+
+      router.replace('/')
+    }
+  }, [qrCode]);
 
   useEffect(() => {
     //On page load, read in URL paramaters and route based on these
