@@ -26,11 +26,13 @@ const config = {
     ALERT_TEXT: 'This tool only works for the San Francisco Bay Area.',
   },
   SHOULD_SHOW_WELCOME_MODAL: true,
+  START_LOCATION_ZOOM: 13,
   WELCOME_MODAL_TITLE: 'Welcome to Bikesy',
   ABOUT_LINK_TITLE: 'About Bikesy',
   ABOUT_LINK_URL: 'https://bikesy.com/about',
   PAGE_TITLE: 'Bikesy',
   MAP_LAYERS: [],
+  URL_LOCATIONS: {},
 };
 
 export default config;
