@@ -13,7 +13,7 @@ export async function GET(request) {
     return json({ error: 'lat and lng are required.' }, { status: 400 });
   }
 
-  const url = `http://www.airnowapi.org/aq/forecast/latLong/?format=application/json&latitude=${lat}&longitude=${lng}&distance=5&API_KEY=${process.env.AIRNOW_API_KEY}`;
+  const url = `http://www.airnowapi.org/aq/forecast/current/?format=application/json&Latitude=${lat}&Longitude=${lng}&API_KEY=${process.env.AIRNOW_API_KEY}`;
 
   let upstreamResponse;
 

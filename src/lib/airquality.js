@@ -14,6 +14,10 @@ export const getAirQuality = async (lat, lng) => {
 
   const response = await fetch(url);
 
+  if (!response.ok) {
+    throw new Error(`Air quality request failed with status ${response.status}.`);
+  }
+
   dataResults = response.json();
 
   return dataResults;

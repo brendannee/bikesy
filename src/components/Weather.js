@@ -35,9 +35,9 @@ const Weather = ({ lat, lng }) => {
 
       if (airQualityResults && airQualityResults.length) {
         setAirQuality({
-          aqi: airQualityResults[0].AQI,
-          categoryNumber: airQualityResults[0].Category.Number,
-          categoryName: airQualityResults[0].Category.Name,
+          aqi: airQualityResults[0].aqi,
+          categoryNumber: airQualityResults[0].categoryNumber,
+          categoryName: airQualityResults[0].categoryName,
         });
       }
     } catch (error) {
@@ -49,16 +49,18 @@ const Weather = ({ lat, lng }) => {
     updateWeather();
   }, [lat, lng]);
 
-  if (!weather || !lat || !lng) {
+  if (!lat || !lng) {
     return null;
   }
 
   return (
     <div className="weather">
       <h3 className="d-none d-print-block">Current Weather</h3>
-      <div className="temperature">{weather.temperature}&deg;F</div>
-      <div className="weather-description">{weather.description}</div>
-      <div className="humidity">Humidity: {weather.humidity}%</div>
+      {weather && <>
+        <div className="temperature">{weather.temperature}&deg;F</div>
+        <div className="weather-description">{weather.description}</div>
+        <div className="humidity">Humidity: {weather.humidity}%</div>
+      </>}
       {airQuality && (
         <div className="air-quality" hidden={airQuality.aqi === undefined}>
           Air Quality:
