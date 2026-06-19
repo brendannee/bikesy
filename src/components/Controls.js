@@ -87,7 +87,7 @@ const Controls = ({
         },
         {
           timeout: 15000,
-        }
+        },
       );
     } else {
       alert('Geolocation is not available in your browser.');

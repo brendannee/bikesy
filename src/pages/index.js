@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import Head from 'next/head';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { useDispatch } from 'react-redux';
 import polyline from '@mapbox/polyline';
 import { useSelector } from 'react-redux';
@@ -14,7 +15,12 @@ import WelcomeModal from '../components/WelcomeModal';
 import { getRoute } from '../lib/api';
 import { handleError } from '../lib/error';
 import { reverseGeocode } from '../lib/geocode';
-import { latlngIsWithinBounds, updateMapSize, getPathDistance } from '../lib/map';
+import {
+  latlngIsWithinBounds,
+  updateMapSize,
+  getPathDistance,
+  setIsStartFromQR,
+} from '../lib/map';
 import { updateUrlParams, readUrlParams, validateUrlParams } from '../lib/url';
 
 import {
@@ -44,12 +50,16 @@ const IndexPage = () => {
   const endLocation = useSelector((state) => state.search.endLocation);
   const elevationProfile = useSelector((state) => state.search.elevationProfile);
 
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const qrCode = searchParams.get('qr');
+
   const [loading, setLoading] = useState(false);
   const [mobileView, setMobileView] = useState('map');
   // window width is not known until after the component mounts
   const [isMobile, setIsMobile] = useState(undefined);
   const [showWelcomeModal, setShowWelcomeModal] = useState(
-    appConfig.SHOULD_SHOW_WELCOME_MODAL
+    appConfig.SHOULD_SHOW_WELCOME_MODAL,
   );
 
   const [windowSize, setWindowSize] = useState({
@@ -119,8 +129,8 @@ const IndexPage = () => {
               distance: node[0],
               elevation: node[1],
             };
-          })
-        )
+          }),
+        ),
       );
     } catch (error) {
       handleError(error);
@@ -218,6 +228,22 @@ const IndexPage = () => {
   if (isMobile) {
     mapHeight -= titlebarHeight;
   }
+
+  useEffect(() => {
+    if (qrCode) {
+      // Map slug to lat-long using appConfig URL_LOCATIONS
+      const coords = appConfig.URL_LOCATIONS && appConfig.URL_LOCATIONS[Number(qrCode)];
+      if (coords) {
+        const latlng = { lat: coords[0], lng: coords[1] };
+        
+        setShowWelcomeModal(false);
+        setIsStartFromQR();
+        assignStartLocation(latlng);
+      }
+
+      router.replace('/')
+    }
+  }, [qrCode]);
 
   useEffect(() => {
     //On page load, read in URL paramaters and route based on these

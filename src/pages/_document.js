@@ -14,7 +14,7 @@ export default function Document() {
           href="https://api.mapbox.com/mapbox-gl-js/v2.8.2/mapbox-gl.css"
           rel="stylesheet"
         />
-        <link rel="stylesheet" type="text/css" href="css/style.css" />
+        <link rel="stylesheet" type="text/css" href="/css/style.css" />
       </Head>
       <body>
         <Main />

@@ -24,7 +24,7 @@ export async function GET(request) {
       {
         error: `Unable to reach the weather service${error?.message ? `: ${error.message}` : '.'}`,
       },
-      { status: 502 }
+      { status: 502 },
     );
   }
 
@@ -40,9 +40,11 @@ export async function GET(request) {
     return json(
       {
         error:
-          payload?.message || payload?.error || `Weather request failed with status ${upstreamResponse.status}.`,
+          payload?.message ||
+          payload?.error ||
+          `Weather request failed with status ${upstreamResponse.status}.`,
       },
-      { status: upstreamResponse.status }
+      { status: upstreamResponse.status },
     );
   }
 

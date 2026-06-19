@@ -14,6 +14,10 @@ export const getWeather = async (lat, lng) => {
 
   const response = await fetch(url);
 
+  if (!response.ok) {
+    throw new Error(`Weather request failed with status ${response.status}.`);
+  }
+
   weatherResults = response.json();
 
   return weatherResults;
