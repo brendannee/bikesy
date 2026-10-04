@@ -30,7 +30,6 @@
     "react": "^19.3.0",
     "react-dom": "^19.3.0",
     "react-ga": "^3.3.1",
-    "react-google-autocomplete": "^2.7.5",
     "react-modal": "^3.16.3",
     "react-redux": "^9.3.0",
     "recharts": "^3.10.1",
