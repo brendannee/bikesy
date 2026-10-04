@@ -2,7 +2,12 @@ import assert from 'node:assert/strict';
 import { test } from 'node:test';
 import { bindPlaceAutocomplete, fetchRoutePlace, loadPlacesLibrary } from './places.js';
 
-function prediction({ address = '123 Main St', location = true, wait } = {}) {
+function prediction({
+  address = '123 Main St',
+  text = address,
+  location = true,
+  wait,
+} = {}) {
   const calls = [];
   const place = {
     formattedAddress: address,
@@ -12,7 +17,7 @@ function prediction({ address = '123 Main St', location = true, wait } = {}) {
       await wait;
     },
   };
-  return { calls, text: { toString: () => 'Prediction address' }, toPlace: () => place };
+  return { calls, text: { toString: () => text }, toPlace: () => place };
 }
 
 function fixture() {
@@ -49,13 +54,39 @@ test('fetches exactly the two Essentials fields from the session-linked Place', 
 
 test('uses prediction text without fetching displayName, and rejects missing coordinates', async () => {
   assert.equal(
-    (await fetchRoutePlace(prediction({ address: '' }))).address,
+    (await fetchRoutePlace(prediction({ address: '', text: 'Prediction address' })))
+      .address,
     'Prediction address',
   );
   await assert.rejects(
     fetchRoutePlace(prediction({ location: false })),
     /no routing location/,
   );
+});
+
+test('preserves the business name in the input and selected route label without extra fields', async () => {
+  const f = fixture();
+  const label = 'San Francisco International Airport (SFO), San Francisco, CA, USA';
+  const result = prediction({ address: 'San Francisco, CA 94128, USA', text: label });
+  f.select(result);
+  await settle();
+  assert.equal(f.element.value, label);
+  assert.deepEqual(f.selected, [
+    {
+      address: label,
+      coordinates: { lat: 37.9, lng: -122.1 },
+    },
+  ]);
+  assert.deepEqual(result.calls, [{ fields: ['formattedAddress', 'location'] }]);
+});
+
+test('falls back to the formatted address when prediction text is blank or missing', async () => {
+  const blank = prediction({ text: '   ' });
+  const missing = prediction();
+  delete missing.text;
+  for (const result of [blank, missing]) {
+    assert.equal((await fetchRoutePlace(result)).address, '123 Main St');
+  }
 });
 
 test('selection updates address and coordinates and releases pending state', async () => {
