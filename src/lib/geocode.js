@@ -1,37 +1,35 @@
-export function geocode(address) {
-  const geocodeApiUrl = 'https://maps.googleapis.com/maps/api/geocode/json';
-  const requestUrl = `${geocodeApiUrl}?address=${encodeURIComponent(address)}&key=${
-    process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY
-  }`;
-  return fetch(requestUrl)
-    .then((response) => response.json())
-    .then((json) => {
-      if (json.status !== 'OK') {
-        throw new Error('Error geocoding');
-      }
+import { loadGoogleMapsLibrary } from './google-maps.js';
 
-      if (!json.results.length) {
-        throw new Error('No geocoding results');
-      }
-
-      return json.results[0].geometry.location;
-    });
+async function getGeocodingResults(request) {
+  const { Geocoder } = await loadGoogleMapsLibrary('geocoding');
+  const { results } = await new Geocoder().geocode({
+    ...request,
+    fulfillOnZeroResults: true,
+  });
+  return results;
 }
 
-export function reverseGeocode(latlng) {
-  const geocodeApiUrl = 'https://maps.googleapis.com/maps/api/geocode/json';
-  const requestUrl = `${geocodeApiUrl}?latlng=${latlng.lat},${latlng.lng}&key=${process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}`;
-  return fetch(requestUrl)
-    .then((response) => response.json())
-    .then((json) => {
-      if (json.status !== 'OK') {
-        return 'Unable to get address';
-      }
+export async function geocode(address) {
+  const results = await getGeocodingResults({ address });
+  if (!results.length) {
+    throw new Error('No geocoding results');
+  }
 
-      if (!json.results.length) {
-        return 'Unknown Address';
-      }
+  // Redux and the routing API need plain coordinates, not a Google LatLng.
+  const location = results[0].geometry.location;
+  return { lat: location.lat(), lng: location.lng() };
+}
 
-      return json.results[0].formatted_address;
-    });
+export async function reverseGeocode(latlng) {
+  try {
+    const results = await getGeocodingResults({ location: latlng });
+    if (!results.length) {
+      return 'Unknown Address';
+    }
+
+    return results[0].formatted_address;
+  } catch {
+    // Map-click and geolocation callers expect an address string on failure.
+    return 'Unable to get address';
+  }
 }
