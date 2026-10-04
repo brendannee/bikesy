@@ -50,7 +50,8 @@ export async function fetchRoutePlace(placePrediction) {
   }
 
   return {
-    address: place.formattedAddress || placePrediction.text.toString(),
+    // Preserve the suggestion's business name and address without fetching displayName.
+    address: placePrediction.text?.toString().trim() || place.formattedAddress,
     coordinates: { lat: place.location.lat(), lng: place.location.lng() },
   };
 }
