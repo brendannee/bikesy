@@ -1,41 +1,7 @@
-let placesLibraryPromise;
+import { loadGoogleMapsLibrary } from './google-maps.js';
 
 export function loadPlacesLibrary() {
-  if (!placesLibraryPromise) {
-    placesLibraryPromise = new Promise((resolve, reject) => {
-      if (window.google?.maps?.importLibrary) {
-        resolve();
-        return;
-      }
-
-      const script = document.createElement('script');
-      const callback = '__bikesyPlacesReady';
-      window[callback] = () => {
-        delete window[callback];
-        resolve();
-      };
-      script.src = `https://maps.googleapis.com/maps/api/js?${new URLSearchParams({
-        key: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY,
-        loading: 'async',
-        v: 'weekly',
-        callback,
-      })}`;
-      script.async = true;
-      script.onerror = () => {
-        delete window[callback];
-        script.remove();
-        reject(new Error('Unable to load Google Places.'));
-      };
-      document.head.appendChild(script);
-    })
-      .then(() => window.google.maps.importLibrary('places'))
-      .catch((error) => {
-        placesLibraryPromise = undefined;
-        throw error;
-      });
-  }
-
-  return placesLibraryPromise;
+  return loadGoogleMapsLibrary('places');
 }
 
 // Keep the widget's session token by using the prediction's Place instance.

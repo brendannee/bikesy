@@ -24,7 +24,9 @@ Add values to your `.env` config file for all fields. Choose a region, currently
 
 The Google Maps key (`NEXT_PUBLIC_GOOGLE_MAPS_API_KEY`) needs **Maps JavaScript API**, **Places API (New)**, and **Geocoding API** enabled. Allow the deployed site and localhost in the key's HTTP referrer restrictions, and include these APIs in its API restrictions.
 
-Address autocomplete uses Google's `PlaceAutocompleteElement` with the region's search bounds and automatic autocomplete session handling. A selection fetches only `formattedAddress` and `location`, both Place Details Essentials fields. Do not add `displayName`, ratings, reviews, atmosphere fields, or a wildcard to the field list in `src/lib/places.js`; they are unnecessary for routing and can increase the billing tier. Typed addresses without a selected suggestion still use the existing Geocoding API fallback.
+Address autocomplete uses Google's `PlaceAutocompleteElement` with the region's search bounds and automatic autocomplete session handling. A selection fetches only `formattedAddress` and `location`, both Place Details Essentials fields. Do not add `displayName`, ratings, reviews, atmosphere fields, or a wildcard to the field list in `src/lib/places.js`; they are unnecessary for routing and can increase the billing tier.
+
+Typed addresses without a selected suggestion and reverse geocoding for map clicks or geolocation use `google.maps.Geocoder`. Places and geocoding share one Maps JavaScript loader and the same website-restricted key; the browser does not call the Geocoding REST endpoint directly. Geocoding requests do not request extra computations or Places details.
 
 Install dependencies:
 
