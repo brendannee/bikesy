@@ -22,6 +22,10 @@ Create a `.env` file by copying `.env.example`.
 
 Add values to your `.env` config file for all fields. Choose a region, currently `sf` for San Francisco or `tahoe` for Lake Tahoe. Or, make your own file in the `src/appConfig` folder to support a new region and specify that as NEXT_PUBLIC_REGION in your `.env` file.
 
+The Google Maps key (`NEXT_PUBLIC_GOOGLE_MAPS_API_KEY`) needs **Maps JavaScript API**, **Places API (New)**, and **Geocoding API** enabled. Allow the deployed site and localhost in the key's HTTP referrer restrictions, and include these APIs in its API restrictions.
+
+Address autocomplete uses Google's `PlaceAutocompleteElement` with the region's search bounds and automatic autocomplete session handling. A selection fetches only `formattedAddress` and `location`, both Place Details Essentials fields. Do not add `displayName`, ratings, reviews, atmosphere fields, or a wildcard to the field list in `src/lib/places.js`; they are unnecessary for routing and can increase the billing tier. Typed addresses without a selected suggestion still use the existing Geocoding API fallback.
+
 Install dependencies:
 
     yarn install

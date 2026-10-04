@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import _ from 'lodash';
 import classNames from 'classnames';
-import { usePlacesWidget } from 'react-google-autocomplete';
+import PlacesAutocomplete from './PlacesAutocomplete';
 
 import { clearRoute } from '../redux/slices/search';
 import appConfig from '../appConfig';
@@ -33,6 +33,8 @@ const Controls = ({
   const [startCoordinates, setStartCoordinates] = useState();
   const [endAddressInput, setEndAddressInput] = useState('');
   const [endCoordinates, setEndCoordinates] = useState();
+  const [startPlacePending, setStartPlacePending] = useState(false);
+  const [endPlacePending, setEndPlacePending] = useState(false);
 
   const processForm = (event) => {
     event.preventDefault();
@@ -95,6 +97,10 @@ const Controls = ({
   };
 
   const handleForm = async () => {
+    if (startPlacePending || endPlacePending) {
+      return;
+    }
+
     const errorFields = validateForm();
     let updatedStartCoordinates = startCoordinates;
     let updatedEndCoordinates = endCoordinates;
@@ -181,47 +187,6 @@ const Controls = ({
     }
   }, [endAddress]);
 
-  const bounds = {
-    north: appConfig.SEARCH_BOUNDS.TOP,
-    east: appConfig.SEARCH_BOUNDS.RIGHT,
-    south: appConfig.SEARCH_BOUNDS.BOTTOM,
-    west: appConfig.SEARCH_BOUNDS.LEFT,
-  };
-
-  const { ref: startAddressRef } = usePlacesWidget({
-    apiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY,
-    onPlaceSelected: (result) => {
-      setStartAddressInput(result.formatted_address);
-      setStartCoordinates({
-        lat: result.geometry.location.lat(),
-        lng: result.geometry.location.lng(),
-      });
-    },
-    options: {
-      types: [],
-      bounds,
-      fields: ['formatted_address', 'geometry.location'],
-      strictBounds: true,
-    },
-  });
-
-  const { ref: endAddressRef } = usePlacesWidget({
-    apiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY,
-    onPlaceSelected: (result) => {
-      setEndAddressInput(result.formatted_address);
-      setEndCoordinates({
-        lat: result.geometry.location.lat(),
-        lng: result.geometry.location.lng(),
-      });
-    },
-    options: {
-      types: [],
-      bounds,
-      fields: ['formatted_address', 'geometry.location'],
-      strictBounds: true,
-    },
-  });
-
   return (
     <div
       className="controls d-print-none"
@@ -233,22 +198,28 @@ const Controls = ({
             'geolocation-pending': geolocationPending,
           })}
         >
-          <label className="control-label">Start Location</label>
+          <label className="control-label" htmlFor="start-address">
+            Start Location
+          </label>
           <div className="start-icon" title="Start Location">
             S
           </div>
-          <input
-            type="text"
+          <PlacesAutocomplete
+            id="start-address"
             value={startAddressInput}
-            onChange={(event) => {
-              setStartAddressInput(event.target.value);
+            onChange={(value) => {
+              setStartAddressInput(value);
               setStartCoordinates();
             }}
             className={classNames('form-control', {
               'is-invalid': _.includes(errorFields, 'startAddress'),
             })}
             placeholder={getStartAddressPlaceholder()}
-            ref={startAddressRef}
+            onPlaceSelected={({ address, coordinates }) => {
+              setStartAddressInput(address);
+              setStartCoordinates(coordinates);
+            }}
+            onPendingChange={setStartPlacePending}
           />
           <img
             className="loading-animation"
@@ -265,22 +236,28 @@ const Controls = ({
           </a>
         </div>
         <div className="form-group form-inline end-address">
-          <label className="control-label">End Location</label>
+          <label className="control-label" htmlFor="end-address">
+            End Location
+          </label>
           <div className="end-icon" title="End Location">
             E
           </div>
-          <input
-            type="text"
+          <PlacesAutocomplete
+            id="end-address"
             value={endAddressInput}
-            onChange={(event) => {
-              setEndAddressInput(event.target.value);
+            onChange={(value) => {
+              setEndAddressInput(value);
               setEndCoordinates();
             }}
             className={classNames('form-control', {
               'is-invalid': _.includes(errorFields, 'endAddress'),
             })}
             placeholder="End Address"
-            ref={endAddressRef}
+            onPlaceSelected={({ address, coordinates }) => {
+              setEndAddressInput(address);
+              setEndCoordinates(coordinates);
+            }}
+            onPendingChange={setEndPlacePending}
           />
         </div>
         <div className="form-group form-inline route-type">
@@ -313,10 +290,26 @@ const Controls = ({
             </select>
           </div>
         )}
-        <a href="#" className="clear-link" onClick={() => dispatch(clearRoute())}>
+        <a
+          href="#"
+          className="clear-link"
+          onClick={(event) => {
+            event.preventDefault();
+            setStartAddressInput('');
+            setEndAddressInput('');
+            setStartCoordinates();
+            setEndCoordinates();
+            setErrorFields([]);
+            dispatch(clearRoute());
+          }}
+        >
           Clear
         </a>
-        <button type="submit" className="btn btn-success btn-update-route">
+        <button
+          type="submit"
+          className="btn btn-success btn-update-route"
+          disabled={startPlacePending || endPlacePending}
+        >
           {loading && (
             <img
               className="loading-animation"
