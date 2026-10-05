@@ -1,6 +1,8 @@
+import { BIKESY_ROUTE_URL } from '../lib/routing.js';
+
 const config = {
   // Likely common for most regions:
-  BIKESY_API_URL: '/api/route',
+  BIKESY_API_URL: BIKESY_ROUTE_URL,
   INITIAL_ZOOM: 11,
   MIN_ZOOM: 9,
   BIKESY_LOW_BIKE_SPEED_MPH: 7.5,
