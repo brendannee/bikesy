@@ -1,0 +1,52 @@
+<?xml version='1.0' encoding='utf-8'?>
+<osm version="0.6" generator="Bikesy Fort Mason fixture; real way tags and coordinates, synthetic node IDs">
+  <node id="1" version="1" timestamp="2026-10-06T00:00:00Z" lon="-122.4322714" lat="37.8053172" />
+  <node id="2" version="1" timestamp="2026-10-06T00:00:00Z" lon="-122.4335913" lat="37.8051395" />
+  <node id="3" version="1" timestamp="2026-10-06T00:00:00Z" lon="-122.4319408" lat="37.8051362" />
+  <node id="4" version="1" timestamp="2026-10-06T00:00:00Z" lon="-122.4319693" lat="37.8051822" />
+  <node id="5" version="1" timestamp="2026-10-06T00:00:00Z" lon="-122.4319818" lat="37.8052225" />
+  <node id="6" version="1" timestamp="2026-10-06T00:00:00Z" lon="-122.431998" lat="37.8052424" />
+  <node id="7" version="1" timestamp="2026-10-06T00:00:00Z" lon="-122.4320196" lat="37.8052693" />
+  <node id="8" version="1" timestamp="2026-10-06T00:00:00Z" lon="-122.4320682" lat="37.8052846" />
+  <node id="9" version="1" timestamp="2026-10-06T00:00:00Z" lon="-122.4321413" lat="37.8053052" />
+  <node id="10" version="1" timestamp="2026-10-06T00:00:00Z" lon="-122.4322228" lat="37.8053089" />
+  <node id="11" version="1" timestamp="2026-10-06T00:00:00Z" lon="-122.4322228" lat="37.8053089" />
+  <node id="12" version="1" timestamp="2026-10-06T00:00:00Z" lon="-122.4322363" lat="37.8053086" />
+  <node id="13" version="1" timestamp="2026-10-06T00:00:00Z" lon="-122.4322714" lat="37.8053172" />
+  <way id="302293975" version="7" timestamp="2025-05-14T20:12:03Z">
+    <nd ref="1" />
+    <nd ref="2" />
+    <tag k="check_date:lit" v="2023-10-12" />
+    <tag k="foot" v="yes" />
+    <tag k="footway" v="sidewalk" />
+    <tag k="highway" v="cycleway" />
+    <tag k="lit" v="yes" />
+    <tag k="segregated" v="no" />
+    <tag k="surface" v="asphalt" />
+  </way>
+  <way id="302293980" version="6" timestamp="2025-05-14T19:52:58Z">
+    <nd ref="3" />
+    <nd ref="4" />
+    <nd ref="5" />
+    <nd ref="6" />
+    <nd ref="7" />
+    <nd ref="8" />
+    <nd ref="9" />
+    <nd ref="10" />
+    <tag k="bicycle" v="designated" />
+    <tag k="foot" v="designated" />
+    <tag k="footway" v="sidewalk" />
+    <tag k="highway" v="cycleway" />
+    <tag k="segregated" v="no" />
+    <tag k="surface" v="concrete:plates" />
+  </way>
+  <way id="858625772" version="1" timestamp="2020-10-13T16:51:16Z">
+    <nd ref="11" />
+    <nd ref="12" />
+    <nd ref="13" />
+    <tag k="foot" v="yes" />
+    <tag k="footway" v="sidewalk" />
+    <tag k="highway" v="cycleway" />
+    <tag k="surface" v="concrete:plates" />
+  </way>
+</osm>
