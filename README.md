@@ -24,6 +24,20 @@ The new data image covers the Bay Area. The regional configuration files remain 
 
 The native source available for review uses ordinary `fetch` against `/api.php/`. Redirect-following and JSON compatibility can be checked locally, but the published iOS/Android binaries still need a device smoke test after the frontend is deployed. These local changes do not update the live bikesy.com redirects until publication.
 
+## Planner page warmup
+
+On the planner's initial mount, the existing URL parser checks for a trip. If one
+is present, the automatic route request warms the backend. Otherwise, the page
+fires a nonblocking `GET /health` on the origin of `appConfig.BIKESY_API_URL`
+(normally `https://api.bikesy.com/health`), with `cache: 'no-store'` and no credentials.
+Failures are ignored. Trip detection uses the existing URL field-presence check;
+it adds no separate coordinate or scenario validation.
+
+There is no periodic keepalive, retry, timer, or shared lifecycle registry. The
+check runs on each planner mount (development effect replay can repeat it). It
+only runs in the browser and does not delay routing or change route cancellation.
+Deploy the frontend for this behavior to take effect.
+
 ## Tests and production build
 
 ```sh

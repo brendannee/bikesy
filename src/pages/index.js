@@ -13,6 +13,7 @@ import TitleBar from '../components/Titlebar';
 import WelcomeModal from '../components/WelcomeModal';
 
 import { getRoute } from '../lib/api';
+import { warmupRoutingBackend } from '../lib/routing-warmup';
 import { handleError } from '../lib/error';
 import { reverseGeocode } from '../lib/geocode';
 import {
@@ -247,8 +248,9 @@ const IndexPage = () => {
   }, [qrCode]);
 
   useEffect(() => {
-    //On page load, read in URL paramaters and route based on these
+    // On page load, use the trip in the URL or warm the backend for later.
     const urlParameters = readUrlParams();
+    void warmupRoutingBackend(urlParameters, appConfig.BIKESY_API_URL);
 
     if (validateUrlParams(urlParameters)) {
       dispatch(setScenario(urlParameters[4]));
