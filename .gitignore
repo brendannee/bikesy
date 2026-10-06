@@ -38,3 +38,10 @@ yarn-error.log*
 # TypeScript
 *.tsbuildinfo
 next-env.d.ts
+
+# Local bicycle overlay tooling
+/scripts/bicycle-overlays/.venv/
+/scripts/bicycle-overlays/__pycache__/
+
+# Local-only overlay comparison tools and reports
+/local-tools/bicycle-overlay-comparison/

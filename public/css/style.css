@@ -438,8 +438,13 @@
   overflow: visible;
 }
 
+.map-container .map-layers .map-legend-icon.sf-class4 {
+  background: hsl(280, 100%, 20%);
+  height: 5px;
+}
+
 .map-container .map-layers .map-legend-icon.sf-class1 {
-  background: #330066;
+  background: hsl(280, 100%, 30%);
 }
 
 .map-container .map-layers .map-legend-icon.sf-class2 {

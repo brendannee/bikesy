@@ -15,6 +15,12 @@ const config = {
   MAP_LAYERS: [
     {
       type: 'static',
+      label: 'Protected Bike Lane',
+      description: 'bikeways separated from traffic with physical barriers',
+      iconClassName: 'sf-class4',
+    },
+    {
+      type: 'static',
       label: 'Multi-use Path',
       description: 'paved, separated (off the street) bikeways',
       iconClassName: 'sf-class1',
@@ -22,7 +28,8 @@ const config = {
     {
       type: 'static',
       label: 'Bike Lane',
-      description: 'dedicated on-street bikeways, marked by striping on pavement',
+      description:
+        'dedicated on-street bikeways, marked by striping on pavement',
       iconClassName: 'sf-class2',
     },
     {
@@ -99,6 +106,6 @@ const config = {
       hillReluctance: '3',
     },
   },
-};
+}
 
-export default config;
+export default config
