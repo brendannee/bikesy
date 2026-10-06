@@ -1,0 +1,72 @@
+{
+  "source_sha256": "d4981aa8350a53dffc4e4263d2df7c77f87a89716296b7bee5541ebd5a4e84b6",
+  "attribution": "\u00a9 OpenStreetMap contributors, ODbL",
+  "purpose": "Representative tag snapshots, not complete trail geometry or live access verification",
+  "ways": [
+    {
+      "id": "7852603",
+      "timestamp": "2025-12-07 00:12:13+00:00",
+      "tags": {
+        "abandoned:railway": "rail",
+        "bicycle": "designated",
+        "foot": "designated",
+        "gauge": "1435",
+        "highway": "cycleway",
+        "motor_vehicle": "no",
+        "name": "Iron Horse Regional Trail",
+        "oneway": "no",
+        "owner": "Contra Costa County",
+        "railway": "abandoned",
+        "surface": "paved"
+      }
+    },
+    {
+      "id": "7852606",
+      "timestamp": "2025-12-07 00:12:13+00:00",
+      "tags": {
+        "abandoned:railway": "rail",
+        "bicycle": "designated",
+        "foot": "designated",
+        "gauge": "1435",
+        "highway": "cycleway",
+        "motor_vehicle": "no",
+        "name": "Iron Horse Regional Trail",
+        "oneway": "no",
+        "owner": "Contra Costa County",
+        "railway": "abandoned",
+        "surface": "paved",
+        "tiger:cfcc": "A71",
+        "tiger:county": "Contra Costa, CA",
+        "tiger:reviewed": "yes"
+      }
+    },
+    {
+      "id": "31431865",
+      "timestamp": "2020-10-20 22:37:25+00:00",
+      "tags": {
+        "bicycle": "designated",
+        "bridge": "yes",
+        "foot": "designated",
+        "highway": "cycleway",
+        "horse": "yes",
+        "motorcycle": "no",
+        "name": "Lafayette-Moraga Trail",
+        "surface": "paved"
+      }
+    },
+    {
+      "id": "31483637",
+      "timestamp": "2009-02-24 21:37:40+00:00",
+      "tags": {
+        "bicycle": "yes",
+        "created_by": "Potlatch 0.10f",
+        "foot": "yes",
+        "highway": "cycleway",
+        "horse": "yes",
+        "motorcycle": "no",
+        "name": "Lafayette-Moraga Trail",
+        "surface": "paved"
+      }
+    }
+  ]
+}

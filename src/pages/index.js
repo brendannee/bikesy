@@ -104,13 +104,12 @@ const IndexPage = () => {
     setMobileView('map');
   };
 
-  const fetchRoute = async () => {
+  const fetchRoute = async (signal) => {
     setLoading(true);
 
     try {
-      const results = await getRoute(startLocation, endLocation, scenario);
-
-      setLoading(false);
+      const results = await getRoute(startLocation, endLocation, scenario, { signal });
+      if (signal.aborted) return;
 
       if (!results.path || !results.path.length) {
         handleError(new Error('No path received'));
@@ -133,7 +132,9 @@ const IndexPage = () => {
         ),
       );
     } catch (error) {
-      handleError(error);
+      if (!signal.aborted) handleError(error);
+    } finally {
+      if (!signal.aborted) setLoading(false);
     }
   };
 
@@ -277,9 +278,13 @@ const IndexPage = () => {
   }, []);
 
   useEffect(() => {
+    const controller = new AbortController();
     if (startLocation && endLocation) {
-      fetchRoute();
+      fetchRoute(controller.signal);
+    } else {
+      setLoading(false);
     }
+    return () => controller.abort();
   }, [startLocation, endLocation, scenario]);
 
   useEffect(() => {

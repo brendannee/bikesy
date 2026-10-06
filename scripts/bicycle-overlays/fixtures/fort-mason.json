@@ -1,0 +1,72 @@
+{
+  "source_sha256": "d4981aa8350a53dffc4e4263d2df7c77f87a89716296b7bee5541ebd5a4e84b6",
+  "attribution": "\u00a9 OpenStreetMap contributors, ODbL",
+  "ways": [
+    {
+      "id": "302293975",
+      "version": 7,
+      "timestamp": "2025-05-14 20:12:03+00:00",
+      "tags": {
+        "check_date:lit": "2023-10-12",
+        "foot": "yes",
+        "footway": "sidewalk",
+        "highway": "cycleway",
+        "lit": "yes",
+        "segregated": "no",
+        "surface": "asphalt"
+      },
+      "geometry": {
+        "coordinates": [
+          [-122.4322714, 37.8053172],
+          [-122.4335913, 37.8051395]
+        ],
+        "type": "LineString"
+      }
+    },
+    {
+      "id": "302293980",
+      "version": 6,
+      "timestamp": "2025-05-14 19:52:58+00:00",
+      "tags": {
+        "bicycle": "designated",
+        "foot": "designated",
+        "footway": "sidewalk",
+        "highway": "cycleway",
+        "segregated": "no",
+        "surface": "concrete:plates"
+      },
+      "geometry": {
+        "coordinates": [
+          [-122.4319408, 37.8051362],
+          [-122.4319693, 37.8051822],
+          [-122.4319818, 37.8052225],
+          [-122.431998, 37.8052424],
+          [-122.4320196, 37.8052693],
+          [-122.4320682, 37.8052846],
+          [-122.4321413, 37.8053052],
+          [-122.4322228, 37.8053089]
+        ],
+        "type": "LineString"
+      }
+    },
+    {
+      "id": "858625772",
+      "version": 1,
+      "timestamp": "2020-10-13 16:51:16+00:00",
+      "tags": {
+        "foot": "yes",
+        "footway": "sidewalk",
+        "highway": "cycleway",
+        "surface": "concrete:plates"
+      },
+      "geometry": {
+        "coordinates": [
+          [-122.4322228, 37.8053089],
+          [-122.4322363, 37.8053086],
+          [-122.4322714, 37.8053172]
+        ],
+        "type": "LineString"
+      }
+    }
+  ]
+}

@@ -1,0 +1,196 @@
+<?xml version='1.0' encoding='utf-8'?>
+<osm version="0.6" generator="Bikesy synthetic fixture">
+  <node id="1" version="1" timestamp="2026-10-01T00:00:00Z" lon="-122.45" lat="37.77" />
+  <node id="2" version="1" timestamp="2026-10-01T00:00:00Z" lon="-122.449" lat="37.770001" />
+  <node id="3" version="1" timestamp="2026-10-01T00:00:00Z" lon="-122.448" lat="37.77" />
+  <way id="101" version="1" timestamp="2026-10-01T00:00:00Z">
+    <nd ref="1" />
+    <nd ref="2" />
+    <nd ref="3" />
+    <tag k="highway" v="residential" />
+    <tag k="cycleway:left" v="track" />
+    <tag k="cycleway:right" v="lane" />
+    <tag k="surface" v="asphalt" />
+  </way>
+  <way id="102" version="1" timestamp="2026-10-01T00:00:00Z">
+    <nd ref="1" />
+    <nd ref="2" />
+    <nd ref="3" />
+    <tag k="highway" v="residential" />
+    <tag k="cycleway:both" v="lane" />
+    <tag k="cycleway:left" v="no" />
+    <tag k="cycleway:right" v="separate" />
+  </way>
+  <way id="103" version="1" timestamp="2026-10-01T00:00:00Z">
+    <nd ref="1" />
+    <nd ref="2" />
+    <nd ref="3" />
+    <tag k="highway" v="cycleway" />
+    <tag k="is_sidepath" v="no" />
+    <tag k="surface" v="asphalt" />
+  </way>
+  <way id="104" version="1" timestamp="2026-10-01T00:00:00Z">
+    <nd ref="1" />
+    <nd ref="2" />
+    <nd ref="3" />
+    <tag k="highway" v="path" />
+    <tag k="bicycle" v="yes" />
+    <tag k="surface" v="compacted" />
+  </way>
+  <way id="105" version="1" timestamp="2026-10-01T00:00:00Z">
+    <nd ref="1" />
+    <nd ref="2" />
+    <nd ref="3" />
+    <tag k="highway" v="residential" />
+    <tag k="cycleway" v="lane" />
+    <tag k="access" v="no" />
+    <tag k="bicycle" v="yes" />
+  </way>
+  <way id="106" version="1" timestamp="2026-10-01T00:00:00Z">
+    <nd ref="1" />
+    <nd ref="2" />
+    <nd ref="3" />
+    <tag k="highway" v="residential" />
+    <tag k="cycleway" v="lane" />
+    <tag k="bicycle" v="private" />
+  </way>
+  <way id="107" version="1" timestamp="2026-10-01T00:00:00Z">
+    <nd ref="1" />
+    <nd ref="2" />
+    <nd ref="3" />
+    <tag k="highway" v="residential" />
+    <tag k="cycleway" v="lane" />
+    <tag k="bicycle:conditional" v="no @ (Su)" />
+  </way>
+  <way id="108" version="1" timestamp="2026-10-01T00:00:00Z">
+    <nd ref="1" />
+    <nd ref="2" />
+    <nd ref="3" />
+    <tag k="highway" v="steps" />
+    <tag k="ramp:bicycle" v="yes" />
+  </way>
+  <way id="109" version="1" timestamp="2026-10-01T00:00:00Z">
+    <nd ref="1" />
+    <nd ref="2" />
+    <nd ref="3" />
+    <tag k="highway" v="residential" />
+    <tag k="cycleway" v="share_busway" />
+    <tag k="surface" v="asphalt" />
+  </way>
+  <way id="110" version="1" timestamp="2026-10-01T00:00:00Z">
+    <nd ref="1" />
+    <nd ref="2" />
+    <nd ref="3" />
+    <tag k="highway" v="residential" />
+    <tag k="cycleway" v="lane" />
+    <tag k="cycleway:lane" v="advisory" />
+    <tag k="surface" v="asphalt" />
+  </way>
+  <way id="111" version="1" timestamp="2026-10-01T00:00:00Z">
+    <nd ref="1" />
+    <nd ref="2" />
+    <nd ref="3" />
+    <tag k="highway" v="cycleway" />
+    <tag k="is_sidepath" v="yes" />
+    <tag k="foot" v="yes" />
+  </way>
+  <way id="112" version="1" timestamp="2026-10-01T00:00:00Z">
+    <nd ref="1" />
+    <nd ref="2" />
+    <nd ref="3" />
+    <tag k="highway" v="residential" />
+  </way>
+  <way id="113" version="1" timestamp="2026-10-01T00:00:00Z">
+    <nd ref="1" />
+    <nd ref="2" />
+    <nd ref="3" />
+    <tag k="highway" v="motorway" />
+  </way>
+  <way id="114" version="1" timestamp="2026-10-01T00:00:00Z">
+    <nd ref="1" />
+    <nd ref="2" />
+    <nd ref="3" />
+    <tag k="highway" v="construction" />
+    <tag k="construction" v="cycleway" />
+    <tag k="cycleway" v="track" />
+  </way>
+  <way id="115" version="1" timestamp="2026-10-01T00:00:00Z">
+    <nd ref="1" />
+    <nd ref="999" />
+    <nd ref="3" />
+    <tag k="highway" v="residential" />
+    <tag k="cycleway" v="track" />
+  </way>
+  <way id="116" version="1" timestamp="2026-10-01T00:00:00Z">
+    <nd ref="1" />
+    <nd ref="2" />
+    <nd ref="3" />
+    <tag k="highway" v="cycleway" />
+    <tag k="area" v="yes" />
+    <tag k="bicycle" v="yes" />
+  </way>
+  <way id="117" version="1" timestamp="2026-10-01T00:00:00Z">
+    <nd ref="1" />
+    <nd ref="2" />
+    <nd ref="3" />
+    <tag k="highway" v="path" />
+    <tag k="bicycle" v="designated" />
+    <tag k="surface" v="asphalt" />
+  </way>
+  <way id="118" version="1" timestamp="2026-10-01T00:00:00Z">
+    <nd ref="1" />
+    <nd ref="2" />
+    <nd ref="3" />
+    <tag k="highway" v="footway" />
+    <tag k="bicycle" v="designated" />
+    <tag k="surface" v="asphalt" />
+  </way>
+  <way id="119" version="1" timestamp="2026-10-01T00:00:00Z">
+    <nd ref="1" />
+    <nd ref="2" />
+    <nd ref="3" />
+    <tag k="highway" v="cycleway" />
+    <tag k="is_sidepath" v="yes" />
+    <tag k="foot" v="no" />
+    <tag k="surface" v="asphalt" />
+  </way>
+  <way id="120" version="1" timestamp="2026-10-01T00:00:00Z">
+    <nd ref="1" />
+    <nd ref="2" />
+    <nd ref="3" />
+    <tag k="highway" v="path" />
+    <tag k="bicycle" v="yes" />
+    <tag k="surface" v="asphalt" />
+  </way>
+  <way id="121" version="1" timestamp="2026-10-01T00:00:00Z">
+    <nd ref="1" />
+    <nd ref="2" />
+    <nd ref="3" />
+    <tag k="highway" v="cycleway" />
+    <tag k="bicycle" v="no" />
+    <tag k="surface" v="asphalt" />
+  </way>
+  <way id="122" version="1" timestamp="2026-10-01T00:00:00Z">
+    <nd ref="1" />
+    <nd ref="2" />
+    <nd ref="3" />
+    <tag k="highway" v="track" />
+    <tag k="bicycle" v="yes" />
+    <tag k="surface" v="ground" />
+  </way>
+  <relation id="201" version="1" timestamp="2026-10-01T00:00:00Z">
+    <member type="way" ref="101" role="" />
+    <member type="way" ref="112" role="" />
+    <member type="way" ref="113" role="" />
+    <tag k="type" v="route" />
+    <tag k="route" v="bicycle" />
+    <tag k="network" v="lcn" />
+    <tag k="ref" v="TEST" />
+  </relation>
+  <relation id="202" version="1" timestamp="2026-10-01T00:00:00Z">
+    <member type="relation" ref="201" role="" />
+    <tag k="type" v="route" />
+    <tag k="route" v="bicycle" />
+    <tag k="network" v="rcn" />
+  </relation>
+</osm>

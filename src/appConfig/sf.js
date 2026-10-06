@@ -15,6 +15,12 @@ const config = {
   MAP_LAYERS: [
     {
       type: 'static',
+      label: 'Protected Bike Lane',
+      description: 'bikeways separated from traffic with physical barriers',
+      iconClassName: 'sf-class4',
+    },
+    {
+      type: 'static',
       label: 'Multi-use Path',
       description: 'paved, separated (off the street) bikeways',
       iconClassName: 'sf-class1',
@@ -22,7 +28,8 @@ const config = {
     {
       type: 'static',
       label: 'Bike Lane',
-      description: 'dedicated on-street bikeways, marked by striping on pavement',
+      description:
+        'dedicated on-street bikeways, marked by striping on pavement',
       iconClassName: 'sf-class2',
     },
     {
@@ -65,49 +72,40 @@ const config = {
     1: {
       routeType: '3',
       hillReluctance: '1',
-      server: 'http://ec2-54-196-193-14.compute-1.amazonaws.com',
     },
     2: {
       routeType: '3',
       hillReluctance: '2',
-      server: 'http://ec2-54-196-193-14.compute-1.amazonaws.com',
     },
     3: {
       routeType: '3',
       hillReluctance: '3',
-      server: 'http://ec2-54-196-193-14.compute-1.amazonaws.com',
     },
     4: {
       routeType: '2',
       hillReluctance: '1',
-      server: 'http://ec2-100-26-222-3.compute-1.amazonaws.com',
     },
     5: {
       routeType: '2',
       hillReluctance: '2',
-      server: 'http://ec2-100-26-222-3.compute-1.amazonaws.com',
     },
     6: {
       routeType: '2',
       hillReluctance: '3',
-      server: 'http://ec2-100-26-222-3.compute-1.amazonaws.com',
     },
     7: {
       routeType: '1',
       hillReluctance: '1',
-      server: 'http://ec2-54-157-131-188.compute-1.amazonaws.com',
     },
     8: {
       routeType: '1',
       hillReluctance: '2',
-      server: 'http://ec2-54-157-131-188.compute-1.amazonaws.com',
     },
     9: {
       routeType: '1',
       hillReluctance: '3',
-      server: 'http://ec2-54-157-131-188.compute-1.amazonaws.com',
     },
   },
-};
+}
 
-export default config;
+export default config
