@@ -8,45 +8,49 @@ const Weather = ({ lat, lng }) => {
   const [weather, setWeather] = useState();
   const [airQuality, setAirQuality] = useState();
 
-  const updateWeather = async () => {
-    if (!lat || !lng) {
-      return;
-    }
-
-    try {
-      const weatherResults = await getWeather(lat, lng);
-
-      if (weatherResults) {
-        setWeather({
-          temperature: Math.round(weatherResults.main.temp * 10) / 10,
-          humidity: weatherResults.main.humidity,
-          description:
-            weatherResults.weather && weatherResults.weather.length
-              ? weatherResults.weather[0].main
-              : '',
-        });
-      }
-    } catch (error) {
-      console.error(error);
-    }
-
-    try {
-      const airQualityResults = await getAirQuality(lat, lng);
-
-      if (airQualityResults && airQualityResults.length) {
-        setAirQuality({
-          aqi: airQualityResults[0].aqi,
-          categoryNumber: airQualityResults[0].categoryNumber,
-          categoryName: airQualityResults[0].categoryName,
-        });
-      }
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
   useEffect(() => {
-    updateWeather();
+    let disposed = false;
+    setWeather(undefined);
+    setAirQuality(undefined);
+
+    const updateWeather = async () => {
+      if (!lat || !lng) return;
+      try {
+        const weatherResults = await getWeather(lat, lng);
+        if (disposed) return;
+        if (weatherResults) {
+          setWeather({
+            temperature: Math.round(weatherResults.main.temp * 10) / 10,
+            humidity: weatherResults.main.humidity,
+            description:
+              weatherResults.weather && weatherResults.weather.length
+                ? weatherResults.weather[0].main
+                : '',
+          });
+        }
+      } catch (error) {
+        if (!disposed) console.error(error);
+      }
+
+      if (disposed) return;
+      try {
+        const airQualityResults = await getAirQuality(lat, lng);
+        if (disposed) return;
+        if (airQualityResults && airQualityResults.length) {
+          setAirQuality({
+            aqi: airQualityResults[0].aqi,
+            categoryNumber: airQualityResults[0].categoryNumber,
+            categoryName: airQualityResults[0].categoryName,
+          });
+        }
+      } catch (error) {
+        if (!disposed) console.error(error);
+      }
+    };
+    void updateWeather();
+    return () => {
+      disposed = true;
+    };
   }, [lat, lng]);
 
   if (!lat || !lng) {
@@ -56,11 +60,13 @@ const Weather = ({ lat, lng }) => {
   return (
     <div className="weather">
       <h3 className="d-none d-print-block">Current Weather</h3>
-      {weather && <>
-        <div className="temperature">{weather.temperature}&deg;F</div>
-        <div className="weather-description">{weather.description}</div>
-        <div className="humidity">Humidity: {weather.humidity}%</div>
-      </>}
+      {weather && (
+        <>
+          <div className="temperature">{weather.temperature}&deg;F</div>
+          <div className="weather-description">{weather.description}</div>
+          <div className="humidity">Humidity: {weather.humidity}%</div>
+        </>
+      )}
       {airQuality && (
         <div className="air-quality" hidden={airQuality.aqi === undefined}>
           Air Quality:

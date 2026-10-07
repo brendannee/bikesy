@@ -44,12 +44,12 @@ disable history-based pageviews; see [manual pageviews](https://developers.googl
 
 ### Events and privacy
 
-| Event | When | Custom properties |
-| --- | --- | --- |
-| `page_view` | Initial page and navigation to a different sanitized page | None |
-| `route_submit` | Each Get Directions form submission, or an accepted pin drag-end with the other endpoint present | `source: form` or `pin_drag`, `scenario: 1`–`9` or `unknown` |
-| `geolocation` | Use my location click, then its browser result | `outcome: requested`, `success`, `permission_denied`, `unavailable`, `timeout`, `unsupported`, or `error` |
-| `route_clear` | Each Clear click | None |
+| Event          | When                                                                                             | Custom properties                                                                                         |
+| -------------- | ------------------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------------------------- |
+| `page_view`    | Initial page and navigation to a different sanitized page                                        | None                                                                                                      |
+| `route_submit` | Each Get Directions form submission, or an accepted pin drag-end with the other endpoint present | `source: form` or `pin_drag`, `scenario: 1`–`9` or `unknown`                                              |
+| `geolocation`  | Use my location click, then its browser result                                                   | `outcome: requested`, `success`, `permission_denied`, `unavailable`, `timeout`, `unsupported`, or `error` |
+| `route_clear`  | Each Clear click                                                                                 | None                                                                                                      |
 
 Privacy defaults are queued before the Next.js component initializes the tag.
 Initial automatic pageviews are disabled; the app sends one manual pageview per
@@ -78,6 +78,17 @@ event-scoped custom dimensions in GA Admin. No remote settings are changed here.
 
 Checks: `node --test src/lib/*.test.mjs` and `pnpm exec next build`. Browser checks
 use a mocked Google tag and intercepted requests, not real collection traffic.
+
+## Weather and air quality cache
+
+Weather and AQI responses are cached in browser memory for **five minutes after a
+successful response**, separately for each exact latitude/longitude pair and API
+endpoint. Concurrent requests for the same location share one pending request.
+Network, HTTP and JSON errors are not cached; a later call can retry. Expired
+entries are removed on the next lookup. Location changes clear the displayed data,
+and late responses for a previous location or an unmounted view are ignored.
+There is no polling timer or shared server cache. Provider URLs and payloads remain
+unchanged; this browser cache does not replace server/API rate limits.
 
 ## Bicycle overlay tags
 

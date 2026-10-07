@@ -1,24 +1,6 @@
-// Only fetch weather info every 5 minutes
-const cacheWindow = 5 * 60 * 60 * 1000;
-let weatherFetchTime;
-let weatherResults;
+import { createCachedJsonFetch } from './cached-json.js';
 
-export const getWeather = async (lat, lng) => {
-  const url = `/api/weather?lat=${lat}&lng=${lng}`;
+const fetchWeather = createCachedJsonFetch('Weather');
 
-  if (weatherFetchTime && weatherFetchTime + cacheWindow > Date.now()) {
-    return weatherResults;
-  }
-
-  weatherFetchTime = Date.now();
-
-  const response = await fetch(url);
-
-  if (!response.ok) {
-    throw new Error(`Weather request failed with status ${response.status}.`);
-  }
-
-  weatherResults = response.json();
-
-  return weatherResults;
-};
+export const getWeather = (lat, lng) =>
+  fetchWeather(`/api/weather?${new URLSearchParams({ lat, lng })}`);
