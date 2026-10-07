@@ -8,6 +8,77 @@ It allows users to specify a start and end point to a route along with a hill to
 
 Routes are displayed using the mapbox API.
 
+## Google Analytics 4
+
+The frontend uses `GoogleAnalytics` and `sendGAEvent` from
+`@next/third-parties/google`, matching Next.js 16.3.8. This replaces the old direct
+Google scripts, unused Universal Analytics `react-ga` package, and Vercel Analytics.
+The public measurement ID is **G-S9DP8E6902**, shared across regional builds unless
+`NEXT_PUBLIC_GOOGLE_ANALYTICS_ID` overrides it. No secret is required for the client
+Google tag. See [Next.js integration](https://nextjs.org/docs/pages/guides/third-party-libraries#google-analytics).
+
+### Activation
+
+Analytics is **off by default**. Before enabling it, the GA4 stream owner must turn
+**Enhanced Measurement off** for this web data stream in Google Analytics Admin
+→ Data streams → the web stream. This prevents automatic history, form, search,
+and outbound-link events from collecting unsanitized inputs alongside our events.
+This repository does not change or verify that dashboard setting.
+
+Then set these public environment variables for the intended production build:
+
+```dotenv
+NEXT_PUBLIC_GOOGLE_ANALYTICS_ID=G-S9DP8E6902
+NEXT_PUBLIC_GOOGLE_ANALYTICS_ENABLED=true
+```
+
+Only builds with `NODE_ENV=production`, an explicit `true` enable flag, and a valid
+`G-` ID load the tag. Leave the flag unset or false for previews and local use.
+Public variables are embedded at build time, so changing them requires rebuilding
+and deploying. No deployment or live analytics delivery has been verified here.
+
+The enable flag is an operator acknowledgement of the stream prerequisite, not an
+API check. Setting it before Enhanced Measurement is off can reintroduce automatic
+events. Google explicitly documents that `send_page_view: false` alone does not
+disable history-based pageviews; see [manual pageviews](https://developers.google.com/analytics/devguides/collection/ga4/views).
+
+### Events and privacy
+
+| Event | When | Custom properties |
+| --- | --- | --- |
+| `page_view` | Initial page and navigation to a different sanitized page | None |
+| `route_submit` | Each Get Directions form submission, or an accepted pin drag-end with the other endpoint present | `source: form` or `pin_drag`, `scenario: 1`–`9` or `unknown` |
+| `geolocation` | Use my location click, then its browser result | `outcome: requested`, `success`, `permission_denied`, `unavailable`, `timeout`, `unsupported`, or `error` |
+| `route_clear` | Each Clear click | None |
+
+Privacy defaults are queued before the Next.js component initializes the tag.
+Initial automatic pageviews are disabled; the app sends one manual pageview per
+sanitized page transition. Rerenders, effect replays, trip hashes and query changes
+on the same page do not duplicate pageviews. Custom events run only in action
+handlers. Form submissions measure intent, not successful routing. A pin drag emits
+once at drag-end when the moved point is within bounds and the other endpoint is
+present, using the current scenario. Movement, rejected drops, and drags without
+a complete trip do not emit it. Routing from shared links, map clicks and scenario
+changes alone is not counted.
+Geolocation normally produces one request event and one result event.
+
+Every manual event includes sanitized `page_location` and `page_referrer`, a fixed
+`page_title: Bikesy`, and the intended `send_to` ID. Query strings and trip hashes
+are removed, QR paths become `/qr`, other unrecognized paths become `/other`, and
+incoming referrers retain only their origin. SPA pageview referrers use the previous
+sanitized page. The actual trip links and routing state are untouched. The document
+uses an origin-only HTTP referrer policy. No addresses, coordinates, search text,
+polylines, QR identifiers, or raw errors are included in custom properties.
+
+Blocked or failing analytics never interrupts routing, geolocation or clearing.
+The Google tag can still generate standard lifecycle events (such as session start);
+this integration does not claim that only our four named events exist. To report
+`scenario`, `source`, or `outcome` as GA4 report dimensions, register the relevant
+event-scoped custom dimensions in GA Admin. No remote settings are changed here.
+
+Checks: `node --test src/lib/*.test.mjs` and `pnpm exec next build`. Browser checks
+use a mocked Google tag and intercepted requests, not real collection traffic.
+
 ## Bicycle overlay tags
 
 The [overlay generator](scripts/bicycle-overlays/README.md) infers display classes
