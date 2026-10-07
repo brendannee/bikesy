@@ -1,4 +1,5 @@
 import App from 'next/app';
+import { Analytics } from '@vercel/analytics/next';
 import Script from 'next/script';
 import { Provider } from 'react-redux';
 
@@ -27,6 +28,15 @@ class MyApp extends App {
           `}
         </Script>
         <Component {...pageProps} />
+        <Analytics
+          beforeSend={(event) => {
+            // Trip URLs contain addresses and coordinates; keep only the page path.
+            const url = new URL(event.url);
+            url.search = '';
+            url.hash = '';
+            return { ...event, url: url.toString() };
+          }}
+        />
       </Provider>
     );
   }
