@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { useSelector } from 'react-redux';
 
 import appConfig from '../appConfig';
+import { trackEvent } from '../lib/analytics';
 import {
   latlngIsWithinBounds,
   drawMap,
@@ -22,9 +23,11 @@ const Map = ({
   const startLocation = useSelector((state) => state.search.startLocation);
   const endLocation = useSelector((state) => state.search.endLocation);
   const path = useSelector((state) => state.search.path);
+  const scenario = useSelector((state) => state.search.scenario);
 
   const startLocationRef = useRef(startLocation);
   const endLocationRef = useRef(endLocation);
+  const scenarioRef = useRef(scenario);
 
   const mapRef = useRef(null);
 
@@ -46,8 +49,14 @@ const Map = ({
     if (latlngIsWithinBounds(latlng)) {
       if (type === 'start') {
         assignStartLocation(latlng);
+        if (endLocationRef.current) {
+          trackEvent('route_submit', { source: 'pin_drag', scenario: scenarioRef.current });
+        }
       } else if (type === 'end') {
         assignEndLocation(latlng);
+        if (startLocationRef.current) {
+          trackEvent('route_submit', { source: 'pin_drag', scenario: scenarioRef.current });
+        }
       }
     }
   };
@@ -78,6 +87,10 @@ const Map = ({
     updateEndMarker(endLocation);
     endLocationRef.current = endLocation;
   }, [endLocation]);
+
+  useEffect(() => {
+    scenarioRef.current = scenario;
+  }, [scenario]);
 
   useEffect(() => {
     updatePath(path);

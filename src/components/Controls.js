@@ -1,15 +1,16 @@
-import { useState, useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import _ from 'lodash';
-import classNames from 'classnames';
-import PlacesAutocomplete from './PlacesAutocomplete';
+import { useState, useEffect } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import _ from 'lodash'
+import classNames from 'classnames'
+import PlacesAutocomplete from './PlacesAutocomplete'
 
-import { clearRoute } from '../redux/slices/search';
-import appConfig from '../appConfig';
-import { scenarioToComponents, componentsToScenario } from '../lib/scenarios';
-import crosshairIcon from './icons/crosshairs-solid.svg';
-import circleNotchIcon from './icons/circle-notch-solid.svg';
-import { geocode } from '../lib/geocode';
+import { clearRoute } from '../redux/slices/search'
+import appConfig from '../appConfig'
+import { scenarioToComponents, componentsToScenario } from '../lib/scenarios'
+import crosshairIcon from './icons/crosshairs-solid.svg'
+import circleNotchIcon from './icons/circle-notch-solid.svg'
+import { geocode } from '../lib/geocode'
+import { trackEvent } from '../lib/analytics'
 
 const Controls = ({
   updateRoute,
@@ -19,115 +20,125 @@ const Controls = ({
   scenario,
   loading,
 }) => {
-  const dispatch = useDispatch();
-  const startAddress = useSelector((state) => state.search.startAddress);
-  const startLocation = useSelector((state) => state.search.startLocation);
-  const endAddress = useSelector((state) => state.search.endAddress);
-  const endLocation = useSelector((state) => state.search.endLocation);
+  const dispatch = useDispatch()
+  const startAddress = useSelector((state) => state.search.startAddress)
+  const startLocation = useSelector((state) => state.search.startLocation)
+  const endAddress = useSelector((state) => state.search.endAddress)
+  const endLocation = useSelector((state) => state.search.endLocation)
 
-  const [routeType, setRouteType] = useState('3');
-  const [hillReluctance, setHillReluctance] = useState('1');
-  const [errorFields, setErrorFields] = useState([]);
-  const [geolocationPending, setGeolocationPending] = useState(false);
-  const [startAddressInput, setStartAddressInput] = useState('');
-  const [startCoordinates, setStartCoordinates] = useState();
-  const [endAddressInput, setEndAddressInput] = useState('');
-  const [endCoordinates, setEndCoordinates] = useState();
-  const [startPlacePending, setStartPlacePending] = useState(false);
-  const [endPlacePending, setEndPlacePending] = useState(false);
+  const [routeType, setRouteType] = useState('3')
+  const [hillReluctance, setHillReluctance] = useState('1')
+  const [errorFields, setErrorFields] = useState([])
+  const [geolocationPending, setGeolocationPending] = useState(false)
+  const [startAddressInput, setStartAddressInput] = useState('')
+  const [startCoordinates, setStartCoordinates] = useState()
+  const [endAddressInput, setEndAddressInput] = useState('')
+  const [endCoordinates, setEndCoordinates] = useState()
+  const [startPlacePending, setStartPlacePending] = useState(false)
+  const [endPlacePending, setEndPlacePending] = useState(false)
 
   const processForm = (event) => {
-    event.preventDefault();
+    event.preventDefault()
+    trackEvent('route_submit', { scenario })
 
     updateControls({
       startAddress: startAddressInput,
       endAddress: endAddressInput,
-    });
-    handleForm();
-  };
+    })
+    handleForm()
+  }
 
   const handleRouteTypeChange = (event) => {
     const scenario = componentsToScenario({
       routeType: event.target.value,
       hillReluctance,
-    });
+    })
 
-    updateControls({ scenario });
+    updateControls({ scenario })
     if (startAddressInput && endAddressInput) {
-      handleForm();
+      handleForm()
     }
-  };
+  }
 
   const handleHillReluctanceChange = (event) => {
     const scenario = componentsToScenario({
       routeType,
       hillReluctance: event.target.value,
-    });
+    })
 
-    updateControls({ scenario });
+    updateControls({ scenario })
     if (startAddressInput && endAddressInput) {
-      handleForm();
+      handleForm()
     }
-  };
+  }
 
   const getGeolocation = () => {
+    trackEvent('geolocation', { outcome: 'requested' })
     if ('geolocation' in navigator) {
-      setGeolocationPending(true);
+      setGeolocationPending(true)
       navigator.geolocation.getCurrentPosition(
         (position) => {
+          trackEvent('geolocation', { outcome: 'success' })
           updateControls({
             startLocation: {
               lat: position.coords.latitude,
               lng: position.coords.longitude,
             },
-          });
-          setGeolocationPending(false);
+          })
+          setGeolocationPending(false)
         },
-        () => {
-          alert('Unable to use geolocation in your browser.');
-          setGeolocationPending(false);
+        (error) => {
+          trackEvent('geolocation', {
+            outcome:
+              { 1: 'permission_denied', 2: 'unavailable', 3: 'timeout' }[
+                error?.code
+              ] || 'error',
+          })
+          alert('Unable to use geolocation in your browser.')
+          setGeolocationPending(false)
         },
         {
           timeout: 15000,
         },
-      );
+      )
     } else {
-      alert('Geolocation is not available in your browser.');
+      trackEvent('geolocation', { outcome: 'unsupported' })
+      alert('Geolocation is not available in your browser.')
     }
-  };
+  }
 
   const handleForm = async () => {
     if (startPlacePending || endPlacePending) {
-      return;
+      return
     }
 
-    const errorFields = validateForm();
-    let updatedStartCoordinates = startCoordinates;
-    let updatedEndCoordinates = endCoordinates;
+    const errorFields = validateForm()
+    let updatedStartCoordinates = startCoordinates
+    let updatedEndCoordinates = endCoordinates
 
     if (errorFields.length) {
-      setErrorFields(errorFields);
-      return false;
+      setErrorFields(errorFields)
+      return false
     }
 
-    setErrorFields([]);
+    setErrorFields([])
 
     if (!updatedStartCoordinates) {
       try {
-        updatedStartCoordinates = await geocode(startAddressInput);
-        setStartCoordinates(updatedStartCoordinates);
+        updatedStartCoordinates = await geocode(startAddressInput)
+        setStartCoordinates(updatedStartCoordinates)
       } catch (error) {
-        alert(`Error: Unable to find start address "${startAddressInput}".`);
-        return;
+        alert(`Error: Unable to find start address "${startAddressInput}".`)
+        return
       }
     }
 
     if (!updatedEndCoordinates) {
       try {
-        updatedEndCoordinates = await geocode(endAddressInput);
+        updatedEndCoordinates = await geocode(endAddressInput)
       } catch (error) {
-        alert(`Error: Unable to find end address "${endAddressInput}".`);
-        return;
+        alert(`Error: Unable to find end address "${endAddressInput}".`)
+        return
       }
     }
 
@@ -136,56 +147,56 @@ const Controls = ({
       startLocation: updatedStartCoordinates,
       endAddress: endAddressInput,
       endLocation: updatedEndCoordinates,
-    });
-  };
+    })
+  }
 
   const validateForm = () => {
-    const errorFields = [];
+    const errorFields = []
     if (!startAddressInput) {
-      errorFields.push('startAddress');
+      errorFields.push('startAddress')
     }
 
     if (!endAddressInput) {
-      errorFields.push('endAddress');
+      errorFields.push('endAddress')
     }
 
-    return errorFields;
-  };
+    return errorFields
+  }
 
   const getStartAddressPlaceholder = () => {
     if (geolocationPending) {
-      return '';
+      return ''
     }
 
-    return 'Start Address';
-  };
+    return 'Start Address'
+  }
 
   useEffect(() => {
-    const components = scenarioToComponents(scenario);
+    const components = scenarioToComponents(scenario)
     if (components.hillReluctance !== hillReluctance) {
-      setHillReluctance(components.hillReluctance);
+      setHillReluctance(components.hillReluctance)
     }
 
     if (components.routeType !== routeType) {
-      setRouteType(components.routeType);
+      setRouteType(components.routeType)
     }
-  }, [hillReluctance, routeType, scenario]);
+  }, [hillReluctance, routeType, scenario])
 
   // If start address changes, update input to match
   useEffect(() => {
     if (startAddress !== startAddressInput) {
-      setStartAddressInput(startAddress);
-      setStartCoordinates(startLocation);
+      setStartAddressInput(startAddress)
+      setStartCoordinates(startLocation)
     }
-  }, [startAddress]);
+  }, [startAddress])
 
   // If end address changes, update input to match
   useEffect(() => {
     if (endAddress !== endAddressInput) {
-      setEndAddressInput(endAddress);
-      setEndCoordinates(endLocation);
+      setEndAddressInput(endAddress)
+      setEndCoordinates(endLocation)
     }
-  }, [endAddress]);
+  }, [endAddress])
 
   return (
     <div
@@ -208,16 +219,16 @@ const Controls = ({
             id="start-address"
             value={startAddressInput}
             onChange={(value) => {
-              setStartAddressInput(value);
-              setStartCoordinates();
+              setStartAddressInput(value)
+              setStartCoordinates()
             }}
             className={classNames('form-control', {
               'is-invalid': _.includes(errorFields, 'startAddress'),
             })}
             placeholder={getStartAddressPlaceholder()}
             onPlaceSelected={({ address, coordinates }) => {
-              setStartAddressInput(address);
-              setStartCoordinates(coordinates);
+              setStartAddressInput(address)
+              setStartCoordinates(coordinates)
             }}
             onPendingChange={setStartPlacePending}
           />
@@ -232,7 +243,11 @@ const Controls = ({
             title="Use my location"
             onClick={getGeolocation}
           >
-            <img src={crosshairIcon?.src ?? crosshairIcon} alt="" aria-hidden="true" />
+            <img
+              src={crosshairIcon?.src ?? crosshairIcon}
+              alt=""
+              aria-hidden="true"
+            />
           </a>
         </div>
         <div className="form-group form-inline end-address">
@@ -246,16 +261,16 @@ const Controls = ({
             id="end-address"
             value={endAddressInput}
             onChange={(value) => {
-              setEndAddressInput(value);
-              setEndCoordinates();
+              setEndAddressInput(value)
+              setEndCoordinates()
             }}
             className={classNames('form-control', {
               'is-invalid': _.includes(errorFields, 'endAddress'),
             })}
             placeholder="End Address"
             onPlaceSelected={({ address, coordinates }) => {
-              setEndAddressInput(address);
-              setEndCoordinates(coordinates);
+              setEndAddressInput(address)
+              setEndCoordinates(coordinates)
             }}
             onPendingChange={setEndPlacePending}
           />
@@ -283,7 +298,10 @@ const Controls = ({
               value={hillReluctance}
             >
               {appConfig.HILL_ROUTING_OPTIONS.map((hillRoutingOption) => (
-                <option key={hillRoutingOption.value} value={hillRoutingOption.value}>
+                <option
+                  key={hillRoutingOption.value}
+                  value={hillRoutingOption.value}
+                >
                   {hillRoutingOption.text}
                 </option>
               ))}
@@ -294,13 +312,14 @@ const Controls = ({
           href="#"
           className="clear-link"
           onClick={(event) => {
-            event.preventDefault();
-            setStartAddressInput('');
-            setEndAddressInput('');
-            setStartCoordinates();
-            setEndCoordinates();
-            setErrorFields([]);
-            dispatch(clearRoute());
+            event.preventDefault()
+            trackEvent('route_clear')
+            setStartAddressInput('')
+            setEndAddressInput('')
+            setStartCoordinates()
+            setEndCoordinates()
+            setErrorFields([])
+            dispatch(clearRoute())
           }}
         >
           Clear
@@ -322,7 +341,7 @@ const Controls = ({
         </button>
       </form>
     </div>
-  );
-};
+  )
+}
 
-export default Controls;
+export default Controls
