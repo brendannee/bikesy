@@ -4,7 +4,33 @@ function json(data, init) {
   return NextResponse.json(data, init);
 }
 
+const RATE_LIMIT_WINDOW_MS = 60 * 1000;
+const RATE_LIMIT_MAX_REQUESTS = 30;
+const requestLog = new Map();
+
+function isRateLimited(key) {
+  const now = Date.now();
+  const timestamps = (requestLog.get(key) || []).filter(
+    (t) => now - t < RATE_LIMIT_WINDOW_MS,
+  );
+
+  if (timestamps.length >= RATE_LIMIT_MAX_REQUESTS) {
+    requestLog.set(key, timestamps);
+    return true;
+  }
+
+  timestamps.push(now);
+  requestLog.set(key, timestamps);
+  return false;
+}
+
 export async function GET(request) {
+  const ip = request.headers.get('x-forwarded-for')?.split(',')[0].trim() || 'unknown';
+
+  if (isRateLimited(ip)) {
+    return json({ error: 'Too many requests. Please try again later.' }, { status: 429 });
+  }
+
   const searchParams = request.nextUrl.searchParams;
   const lat = searchParams.get('lat');
   const lng = searchParams.get('lng');
