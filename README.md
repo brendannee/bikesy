@@ -8,6 +8,88 @@ It allows users to specify a start and end point to a route along with a hill to
 
 Routes are displayed using the mapbox API.
 
+## Bicycle overlay tags
+
+The [overlay generator](scripts/bicycle-overlays/README.md) infers display classes
+from an OSM snapshot. These are **not official agency designations or safety
+ratings**. The table describes the implemented rules (version 1.2.1), using the
+default `--path-policy practical`. Classification does not change backend routing
+costs or automatically update the hosted map style. All matches below must also
+pass the access, lifecycle, surface and geometry filters described below.
+
+| Inferred layer                                                   | OSM tags/values that contribute                                                                                                                                                                                                                                                                                                                                               |
+| ---------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Class I — paths** (`class-I.geojson`)                          | `highway=cycleway`, or `highway=path/footway` with `bicycle=designated`, normally becomes a practical bicycle-path candidate without requiring `is_sidepath=no`. Explicit independence (`is_sidepath=no`) also supports I on cycleways or designated path/footway/track/bridleway/pedestrian ways. `bicycle=yes` alone is access evidence, not Class I evidence.              |
+| **Class II — lanes** (`class-II.geojson`)                        | On road-centerline ways, `cycleway=lane` or `cycleway:left/right/both=lane`. Deprecated `opposite_lane` also matches, with a warning. `cycleway:*:lane=exclusive/advisory` is subtype metadata; advisory lanes remain II with lower confidence.                                                                                                                               |
+| **Class III — shared lanes / bike routes** (`class-III.geojson`) | `cycleway=shared_lane` or `cycleway:left/right/both=shared_lane`. On eligible road types without an existing facility or separate-mapping/contraflow reference, `bicycle_road=yes` or `cyclestreet=yes` supplies a bicycle-priority-street fallback. Otherwise, `lcn/rcn/ncn/icn=yes` or active bicycle-route relation membership supplies a lower-confidence route fallback. |
+| **Class IV — protected tracks** (`class-IV.geojson`)             | On road-centerline ways, `cycleway=track` or `cycleway:left/right/both=track`; deprecated `opposite_track` also matches with a warning. A separately mapped `highway=cycleway` is IV with `cycleway=track`, or with both `is_sidepath=yes` and `foot=no`, subject to the path precedence below.                                                                               |
+
+For separately mapped paths, ordinary sidewalk classification takes precedence,
+then explicit independence (`is_sidepath=no`), then protected-track evidence. Thus
+a conflicting `highway=cycleway + is_sidepath=no + cycleway=track` currently matches
+I. Practical path promotion excludes crossing, traffic-island, link and
+separate-mapping contexts; see [the exact rules](scripts/bicycle-overlays/rules.mjs)
+for the tag-specific checks. `--path-policy strict` disables the practical
+promotion and requires independence evidence for I.
+
+**`highway=cycleway` takes precedence over `footway=sidewalk`.** Such a way can
+still appear as an inferred path, with sidewalk context retained. This does not
+promote ordinary `highway=footway + footway=sidewalk` ways or override access
+restrictions. A shared roadside cycleway (`is_sidepath=yes + foot=yes`) can be I in
+practical mode; the class does not establish independence from roads.
+
+### Sides, precedence and other tagging
+
+- `cycleway:left/right` overrides `cycleway:both`, which overrides `cycleway`.
+  Explicit `no`/`none` suppresses that side; `separate` records an independently
+  mapped facility reference instead of drawing another facility on the road.
+  Unsuffixed `cycleway=lane` alone does not invent two lanes.
+- Example: `cycleway:both=lane + cycleway:left=track` yields II on the right and IV
+  on the left. Adding `cycleway:right=no` removes the right-side match. A mixed
+  way may therefore occur in multiple class files, once per file by OSM way ID.
+- Left/right is relative to OSM way direction. Side-specific `:oneway` is honored;
+  otherwise the generator uses road oneway and right-hand-traffic conventions.
+  `oneway:bicycle=no` does not invent a contraflow lane. Plain `cycleway=opposite`
+  is direction/access evidence only. Deprecated `opposite_*` values are warned
+  and classified by their recognized suffix.
+- `share_busway` is an **other facility**, not II or IV; `shared_busway` is accepted
+  as a warned alias. Buffer metadata, `segregated=yes`, or `cycleway:*:separation`
+  alone does **not** establish IV. A lane with physical-separation metadata stays
+  II and is flagged for review; `segregated` concerns separation from pedestrians.
+- `cycleway:lanes` / `bicycle:lanes` arrays and `cycleway:forward/backward` facility
+  values are retained and warned, not parsed into facilities. Values such as
+  `buffered_lane`, `shared` and `yes` are not direct class matches. Width,
+  smoothness, lighting, speed, parking and crossing improvements are useful review
+  evidence, not additional implemented class-selection rules.
+- Relations with `route=bicycle` or `route_master=bicycle` retain network, reference,
+  name and roles, including nested memberships. Inactive or conditional memberships
+  cannot supply III fallback; mountain-bike-only relations are not used. Membership
+  does not prove signage or grant access, and a reference such as `lcn_ref` alone
+  does not trigger III. `route-network.geojson` is review metadata and can include
+  restricted ways.
+
+### Filters and three-layer compatibility exports
+
+Access precedence is `bicycle` → `vehicle` → `access`, with directional tags taking
+precedence within each mode. Effective `yes/designated/official`, unspecified
+access and qualified `permissive` can be retained; `no/private/dismount/use_sidepath`
+and limited or uncertain access are withheld in the affected direction. A feature
+can remain if at least one relevant direction is eligible. Bicycle/access/vehicle,
+oneway or cycleway `:conditional` tags are kept unevaluated and withhold the
+facility; motorcar-only conditions do not. Inactive lifecycle tags, steps (even
+with bicycle ramps), `area=yes`, motorway/motorway-link and `motorroad=yes` candidates
+are withheld. Missing or degenerate geometry is not drawn.
+
+The default `--surfaces all` includes paved, unpaved and unknown surfaces.
+`--surfaces paved` keeps only recognized pavement: `paved`, `asphalt`, `concrete`,
+`concrete:lanes`, `concrete:plates`, `paving_stones`, `sett`, `cobblestone` and
+`unhewn_cobblestone`. Compacted/fine gravel remain unpaved; missing/unrecognized
+surfaces are unknown. Side surface overrides both-side, then generic cycleway
+surface, then the way surface. Buffer, separation and lane-subtype attributes
+also use side → both → generic precedence. Review outputs retain filtered records.
+For commands, all output files and review metadata, see the
+[generator instructions](scripts/bicycle-overlays/README.md).
+
 ### Bikesy API
 
 The browser requests `https://api.bikesy.com/route` directly. For example:
