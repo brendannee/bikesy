@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { track } from '@vercel/analytics';
 import { useDispatch, useSelector } from 'react-redux';
 import _ from 'lodash';
 import classNames from 'classnames';
@@ -38,6 +39,7 @@ const Controls = ({
 
   const processForm = (event) => {
     event.preventDefault();
+    track('route_submit', { routeType, hillReluctance });
 
     updateControls({
       startAddress: startAddressInput,
@@ -71,10 +73,12 @@ const Controls = ({
   };
 
   const getGeolocation = () => {
+    track('geolocation_request');
     if ('geolocation' in navigator) {
       setGeolocationPending(true);
       navigator.geolocation.getCurrentPosition(
         (position) => {
+          track('geolocation_result', { status: 'success' });
           updateControls({
             startLocation: {
               lat: position.coords.latitude,
@@ -83,7 +87,8 @@ const Controls = ({
           });
           setGeolocationPending(false);
         },
-        () => {
+        (error) => {
+          track('geolocation_result', { status: 'error', errorCode: error.code });
           alert('Unable to use geolocation in your browser.');
           setGeolocationPending(false);
         },
@@ -92,6 +97,7 @@ const Controls = ({
         },
       );
     } else {
+      track('geolocation_result', { status: 'unsupported' });
       alert('Geolocation is not available in your browser.');
     }
   };
@@ -295,6 +301,7 @@ const Controls = ({
           className="clear-link"
           onClick={(event) => {
             event.preventDefault();
+            track('route_clear');
             setStartAddressInput('');
             setEndAddressInput('');
             setStartCoordinates();
