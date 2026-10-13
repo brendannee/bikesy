@@ -19,6 +19,11 @@ const config = {
     },
   ],
   DEFAULT_SCENARIO: '1',
+  // The shared Valhalla backend (api.bikesy.com) has no Tahoe coverage yet, so Tahoe keeps
+  // using the legacy routing server through our own /api/route proxy. The legacy server is
+  // plain http without CORS, so the browser can't call it directly.
+  // Remove BIKESY_API_URL and the per-scenario `server` entries once Tahoe has a Valhalla graph.
+  BIKESY_API_URL: '/api/route',
   SCENARIOS: {
     1: {
       routeType: '1',

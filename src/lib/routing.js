@@ -6,7 +6,8 @@ export async function requestRoute(
   scenario,
   { signal, url = BIKESY_ROUTE_URL } = {},
 ) {
-  const target = new URL(url);
+  // `url` may be relative (e.g. '/api/route'), so resolve it against the page origin.
+  const target = new URL(url, globalThis.location?.href);
   target.searchParams.set('lat1', start.lat);
   target.searchParams.set('lng1', start.lng);
   target.searchParams.set('lat2', end.lat);
