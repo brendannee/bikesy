@@ -1,4 +1,4 @@
-import sfConfig from './sf'
+import sfConfig from './sf.js'
 
 const config = {
   WELCOME_MODAL_TITLE: 'Welcome to Bike Mapper',

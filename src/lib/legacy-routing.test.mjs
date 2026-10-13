@@ -2,10 +2,15 @@ import assert from 'node:assert/strict';
 import { test } from 'node:test';
 import tahoe from '../appConfig/tahoe.js';
 import { proxyLegacyRoute } from './legacy-routing.js';
-import { requestRoute } from './routing.js';
+import { BIKESY_ROUTE_URL, requestRoute } from './routing.js';
 import { warmupRoutingBackend } from './routing-warmup.js';
 
+// appConfig reads the region at import time; each test file runs in its own process.
+process.env.NEXT_PUBLIC_REGION = 'tahoe';
+const { GET } = await import('../app/api/route/route.js');
+
 const query = '?lat1=39.1677&lng1=-120.1452&lat2=39.0968&lng2=-120.0324&scenario=2';
+const server = 'http://legacy.test';
 
 test('tahoe overrides the API url and keeps a legacy server for every scenario', () => {
   assert.equal(tahoe.BIKESY_API_URL, '/api/route');
@@ -14,15 +19,13 @@ test('tahoe overrides the API url and keeps a legacy server for every scenario',
   }
 });
 
-test('proxy forwards to the scenario server and returns its json', async (t) => {
+test('/api/route proxies scenarios with a configured server and returns its json', async (t) => {
   const calls = [];
   t.mock.method(globalThis, 'fetch', async (url, init) => {
     calls.push({ url, init });
     return Response.json({ path: ['p'] });
   });
-  const res = await proxyLegacyRoute(new Request('https://x.test/api/route' + query), {
-    'Access-Control-Allow-Origin': '*',
-  });
+  const res = await GET(new Request('https://x.test/api/route' + query));
   assert.equal(res.status, 200);
   assert.deepEqual(await res.json(), { path: ['p'] });
   assert.equal(res.headers.get('Access-Control-Allow-Origin'), '*');
@@ -30,10 +33,16 @@ test('proxy forwards to the scenario server and returns its json', async (t) => 
   assert.equal(calls[0].init.cache, 'no-store');
 });
 
+test('/api/route redirects scenarios without a configured server', async () => {
+  const res = await GET(new Request('https://x.test/api/route?scenario=9'));
+  assert.equal(res.status, 307);
+  assert.equal(res.headers.get('Location'), `${BIKESY_ROUTE_URL}?scenario=9`);
+});
+
 test('proxy validates input and maps upstream failures', async (t) => {
-  const get = (q) => proxyLegacyRoute(new Request('https://x.test/api/route' + q), {});
-  assert.equal((await get('?lat1=1')).status, 400);
-  assert.equal((await get(query.replace('scenario=2', 'scenario=9'))).status, 400);
+  const get = (q) =>
+    proxyLegacyRoute(new Request('https://x.test/api/route' + q), server, {});
+  assert.equal((await get('?lat1=1&scenario=2')).status, 400);
 
   t.mock.method(globalThis, 'fetch', async () => {
     throw new Error('boom');

@@ -1,13 +1,6 @@
-import tahoe from '../appConfig/tahoe.js';
-
-// Regions whose scenarios still define a `server` use the legacy routing server through
-// this proxy instead of the shared Valhalla backend. Currently only Tahoe.
-// Imports tahoe.js directly (not appConfig/index) so it also loads under `node --test`.
-function getLegacyServer(scenario) {
-  return tahoe.SCENARIOS[scenario]?.server;
-}
-
-export async function proxyLegacyRoute(request, headers) {
+// Proxies a route request to a legacy routing server (see `server` in appConfig SCENARIOS).
+// Legacy servers are plain http without CORS, so the browser can't call them directly.
+export async function proxyLegacyRoute(request, server, headers) {
   const respond = (data, status = 200) => Response.json(data, { status, headers });
   const { searchParams } = new URL(request.url);
   const params = new URLSearchParams();
@@ -20,8 +13,6 @@ export async function proxyLegacyRoute(request, headers) {
     }
     params.set(key, searchParams.get(key));
   }
-  const server = getLegacyServer(params.get('scenario'));
-  if (!server) return respond({ error: 'Invalid scenario.' }, 400);
 
   let upstream;
   try {

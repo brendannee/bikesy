@@ -1,7 +1,7 @@
-import defaults from './defaults';
-import sf from './sf';
-import tahoe from './tahoe';
-import contracosta from './contracosta';
+import defaults from './defaults.js';
+import sf from './sf.js';
+import tahoe from './tahoe.js';
+import contracosta from './contracosta.js';
 
 const configs = {
   defaults,
