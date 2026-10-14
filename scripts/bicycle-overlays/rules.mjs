@@ -1,4 +1,5 @@
 export const RULES_VERSION = '1.2.1';
+export const ROUTE_FALLBACKS = ['all', 'tags', 'none'];
 export const DEFAULT_SURFACES = {
   paved: [
     'paved',
@@ -187,7 +188,7 @@ export function classifyWay(
   tags,
   routes = [],
   surfaces = DEFAULT_SURFACES,
-  { pathPolicy = 'practical' } = {},
+  { pathPolicy = 'practical', routeFallback = 'all' } = {},
 ) {
   const warnings = new Set();
   const facilities = [];
@@ -434,19 +435,17 @@ export function classifyWay(
       add('bicycle_priority_street', 'III', 'medium', 'way', [
         tags.bicycle_road === 'yes' ? 'bicycle_road' : 'cyclestreet',
       ]);
-    else if (
-      tags.lcn === 'yes' ||
-      tags.rcn === 'yes' ||
-      tags.ncn === 'yes' ||
-      tags.icn === 'yes' ||
-      activeRoutes.length
-    ) {
-      add('route_network_road', 'III', 'low', 'way', [
-        activeRoutes.length
-          ? 'route_relation_membership'
-          : ['lcn', 'rcn', 'ncn', 'icn'].find((k) => tags[k] === 'yes'),
-      ]);
-      warnings.add('route_membership_does_not_prove_signage');
+    else if (routeFallback !== 'none') {
+      // `tags` ignores relation membership: long-distance relations (e.g. USBR routes on
+      // state highways) do not imply a locally signed route. Membership stays in `routes`.
+      const routeTag = ['lcn', 'rcn', 'ncn', 'icn'].find((k) => tags[k] === 'yes');
+      const byRelation = routeFallback === 'all' && activeRoutes.length > 0;
+      if (byRelation || routeTag) {
+        add('route_network_road', 'III', 'low', 'way', [
+          byRelation ? 'route_relation_membership' : routeTag,
+        ]);
+        warnings.add('route_membership_does_not_prove_signage');
+      }
     }
   }
   const candidate =

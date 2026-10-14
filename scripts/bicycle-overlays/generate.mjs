@@ -4,18 +4,41 @@ import { createHash } from 'node:crypto';
 import { createReadStream } from 'node:fs';
 import { mkdir, readFile, writeFile, open, stat } from 'node:fs/promises';
 import path from 'node:path';
-import { fileURLToPath } from 'node:url';
+import { fileURLToPath, pathToFileURL } from 'node:url';
 import { createInterface } from 'node:readline';
-import { classifyWay, DEFAULT_SURFACES, RULES_VERSION } from './rules.mjs';
+import {
+  classifyWay,
+  DEFAULT_SURFACES,
+  ROUTE_FALLBACKS,
+  RULES_VERSION,
+} from './rules.mjs';
 import { indexRelations, compareIds } from './relations.mjs';
 import { outputGeometry } from './geometry.mjs';
 
 const HERE = path.dirname(fileURLToPath(import.meta.url));
+const APP_CONFIG = path.resolve(HERE, '../../src/appConfig');
+const REGION_OPTION_FLAGS = {
+  surfaces: '--surfaces',
+  pathPolicy: '--path-policy',
+  routeFallback: '--route-fallback',
+  pavedClasses: '--paved-classes',
+  bbox: '--bbox',
+  precision: '--precision',
+  simplifyMeters: '--simplify-meters',
+};
 const HELP = `Generate reviewable bicycle overlays from local .osm or .osm.pbf.
 Usage: node scripts/bicycle-overlays/generate.mjs --input FILE --output NEW_DIRECTORY [options]
+  --region NAME             settings for an app region (src/appConfig/NAME.js): its
+                            BICYCLE_OVERLAY_OPTIONS plus SEARCH_BOUNDS as --bbox;
+                            flags given on the command line take precedence
   --python FILE             default: tool-local .venv/bin/python
   --surfaces all|paved       default: all; debug/review always retain all surfaces
   --path-policy practical|strict  default: practical inferred Class I paths
+  --route-fallback all|tags|none  Class III fallback for roads without facility tags;
+                            default all (lcn/rcn/ncn/icn=yes or route relation membership),
+                            tags ignores relation membership
+  --paved-classes I,II,...  with --surfaces all, require paved surfaces for these classes only
+  --bbox W,S,E,N            drop ways with no node inside these lon/lat bounds
   --surface-config FILE     JSON object with disjoint paved/unpaved string arrays
   --simplify-meters NUMBER   optional local metric RDP; default: preserve every point
   --precision INTEGER       optional 0–7 decimal places; default: preserve precision
@@ -27,6 +50,34 @@ Usage: node scripts/bicycle-overlays/generate.mjs --input FILE --output NEW_DIRE
 The output directory must not exist. No map assets, input data, or services are changed.
 Requires Node >=22 and the locally pinned Python requirements. Right-hand traffic defaults.
 `;
+
+// Flags for an app region, merged over defaults like src/appConfig/index.js does.
+// SEARCH_BOUNDS supplies --bbox unless BICYCLE_OVERLAY_OPTIONS sets its own `bbox`.
+async function regionArgs(name) {
+  if (!/^[a-z0-9-]+$/.test(name ?? ''))
+    throw new Error('--region must name a src/appConfig/*.js file.');
+  const load = async (file) => {
+    try {
+      return (await import(pathToFileURL(path.join(APP_CONFIG, `${file}.js`)))).default;
+    } catch (error) {
+      throw new Error(`Cannot load src/appConfig/${file}.js: ${error.message}`);
+    }
+  };
+  const config = { ...(await load('defaults')), ...(await load(name)) };
+  const { TOP, RIGHT, BOTTOM, LEFT } = config.SEARCH_BOUNDS;
+  const settings = {
+    bbox: [LEFT, BOTTOM, RIGHT, TOP],
+    ...config.BICYCLE_OVERLAY_OPTIONS,
+  };
+  return Object.entries(settings).flatMap(([key, value]) => {
+    if (!REGION_OPTION_FLAGS[key])
+      throw new Error(`Unknown BICYCLE_OVERLAY_OPTIONS key in ${name}.js: ${key}`);
+    return [
+      REGION_OPTION_FLAGS[key],
+      Array.isArray(value) ? value.join(',') : String(value),
+    ];
+  });
+}
 
 function options(argv) {
   const values = {};
@@ -43,6 +94,9 @@ function options(argv) {
         '--python',
         '--surfaces',
         '--path-policy',
+        '--route-fallback',
+        '--paved-classes',
+        '--bbox',
         '--surface-config',
         '--simplify-meters',
         '--precision',
@@ -81,12 +135,32 @@ function options(argv) {
     throw new Error('--path-policy must be practical or strict.');
   if (!['all', 'paved'].includes(surfaces))
     throw new Error('--surfaces must be all or paved.');
+  const routeFallback = values['--route-fallback'] ?? 'all';
+  if (!ROUTE_FALLBACKS.includes(routeFallback))
+    throw new Error(`--route-fallback must be ${ROUTE_FALLBACKS.join(', ')}.`);
+  const pavedClasses = values['--paved-classes']?.split(',') ?? [];
+  if (!pavedClasses.every((c) => ['I', 'II', 'III', 'IV'].includes(c)))
+    throw new Error('--paved-classes must list I, II, III and/or IV.');
+  if (pavedClasses.length && surfaces === 'paved')
+    throw new Error('--paved-classes needs --surfaces all.');
+  const bbox = values['--bbox']?.split(',').map(Number);
+  if (
+    bbox &&
+    (bbox.length !== 4 ||
+      !bbox.every(Number.isFinite) ||
+      bbox[0] >= bbox[2] ||
+      bbox[1] >= bbox[3])
+  )
+    throw new Error('--bbox must be W,S,E,N with W < E and S < N.');
   return {
     input,
     output: path.resolve(values['--output']),
     python: path.resolve(values['--python'] ?? path.join(HERE, '.venv/bin/python')),
     surfaces,
     pathPolicy,
+    routeFallback,
+    pavedClasses,
+    bbox,
     surfaceConfig: values['--surface-config'],
     simplify: numeric('--simplify-meters', 0, 0),
     precision,
@@ -96,6 +170,13 @@ function options(argv) {
     strict: !!values['--strict-geometry'],
   };
 }
+
+// Ways with missing nodes have no coordinates; keep them so the report still counts them.
+const touchesBbox = (coordinates, [west, south, east, north]) =>
+  !coordinates ||
+  coordinates.some(
+    ([lng, lat]) => lng >= west && lng <= east && lat >= south && lat <= north,
+  );
 
 const stable = (value) =>
   Array.isArray(value)
@@ -204,7 +285,17 @@ async function writeCollection(file, records, select) {
 }
 
 async function main() {
-  const config = options(process.argv.slice(2));
+  const argv = process.argv.slice(2);
+  const at = argv.indexOf('--region');
+  const region = at === -1 ? null : argv[at + 1];
+  if (at !== -1 && (!region || region.startsWith('--')))
+    throw new Error('Missing value for --region');
+  const config = options(
+    region
+      ? [...(await regionArgs(region)), ...argv.slice(0, at), ...argv.slice(at + 2)]
+      : argv,
+  );
+  config.region = region;
   if (config.help) {
     console.log(HELP);
     return;
@@ -253,6 +344,7 @@ async function main() {
     warn(code, null, amount);
   const candidates = new Map();
   let seen = 0;
+  let outsideBbox = 0;
   console.error(`Reading ways with coordinates (${relations.length} bicycle relations)…`);
   const wayMetrics = await readOsm(config, 'ways', (record) => {
     seen++;
@@ -260,9 +352,13 @@ async function main() {
       record.tags,
       routeIndex.ways.get(record.id) ?? [],
       surfaces,
-      { pathPolicy: config.pathPolicy },
+      { pathPolicy: config.pathPolicy, routeFallback: config.routeFallback },
     );
     if (!classification.candidate) return;
+    if (config.bbox && !touchesBbox(record.coordinates, config.bbox)) {
+      outsideBbox++;
+      return;
+    }
     const prior = candidates.get(record.id);
     if (prior) {
       if (
@@ -293,10 +389,11 @@ async function main() {
     candidates.set(record.id, { ...record, classification, geometry });
   });
   const records = [...candidates.values()].sort((a, b) => compareIds(a.id, b.id));
+  const surfaceFiltered = (f) =>
+    (config.surfaces === 'paved' || config.pavedClasses.includes(f.class_like)) &&
+    f.surface_state !== 'paved';
   const visible = (r) =>
-    r.classification.facilities.filter(
-      (f) => f.eligible && (config.surfaces === 'all' || f.surface_state === 'paved'),
-    );
+    r.classification.facilities.filter((f) => f.eligible && !surfaceFiltered(f));
   const compact = (f) => {
     const { access, warnings: facilityWarnings, ...rest } = f;
     return {
@@ -373,10 +470,7 @@ async function main() {
       (r.classification.warnings.length ||
         r.classification.references.length ||
         r.classification.facilities.some(
-          (f) =>
-            f.review_required ||
-            !f.eligible ||
-            (config.surfaces === 'paved' && f.surface_state !== 'paved'),
+          (f) => f.review_required || !f.eligible || surfaceFiltered(f),
         ))
         ? {
             ...lean(r, r.classification.facilities.map(compact)),
@@ -428,6 +522,7 @@ async function main() {
       bicycle_relations: relations.length,
       expanded_memberships: routeIndex.expandedMemberships,
       candidate_ways: records.length,
+      outside_bbox: outsideBbox,
       missing_geometry: records.filter((r) => !r.geometry).length,
       ...counts,
     },

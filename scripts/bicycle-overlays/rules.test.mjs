@@ -318,3 +318,22 @@ test('unknown cycleway value does not suppress explicit road route evidence, whi
     'IV',
   );
 });
+test('route fallback can ignore relation membership or be disabled', () => {
+  const classify = (tags, routeFallback) =>
+    classifyWay({ highway: 'primary', ...tags }, [route], undefined, { routeFallback });
+  assert.deepEqual(classify({}, 'all').facilities[0].evidence, [
+    'route_relation_membership',
+  ]);
+  // Relation-only membership: no facility, but the membership is still recorded.
+  const relationOnly = classify({}, 'tags');
+  assert.equal(relationOnly.facilities.length, 0);
+  assert.equal(relationOnly.routes.length, 1);
+  assert.equal(relationOnly.candidate, true);
+  assert.deepEqual(classify({ lcn: 'yes' }, 'tags').facilities[0].evidence, ['lcn']);
+  assert.equal(classify({ lcn: 'yes' }, 'none').facilities.length, 0);
+  // Explicit facilities are unaffected.
+  assert.equal(
+    classify({ cycleway: 'shared_lane' }, 'none').facilities[0].class_like,
+    'III',
+  );
+});
