@@ -28,8 +28,7 @@ const config = {
     {
       type: 'static',
       label: 'Bike Lane',
-      description:
-        'dedicated on-street bikeways, marked by striping on pavement',
+      description: 'dedicated on-street bikeways, marked by striping on pavement',
       iconClassName: 'sf-class2',
     },
     {
@@ -106,6 +105,6 @@ const config = {
       hillReluctance: '3',
     },
   },
-}
+};
 
-export default config
+export default config;
