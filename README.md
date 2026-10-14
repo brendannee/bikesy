@@ -1,94 +1,85 @@
 # Bikesy
 
-This is a web app for finding bike directions. It is available at https://bikesy.com.
+[Bikesy](https://bikesy.com) is a bike route planner that helps riders find directions
+based on their hill tolerance and preference for bike lanes, bike routes, or a more
+direct trip. Three hill settings and three bike-facility preferences provide nine
+routing combinations.
 
-It uses OpenStreetMap routes served by the Valhalla backend at [api.bikesy.com](https://api.bikesy.com).
+Routes use **OpenStreetMap (OSM)** data and are calculated by the
+[Valhalla backend](https://github.com/BlinkTagInc/bikesy-backend)
+at [api.bikesy.com](https://api.bikesy.com). This repository contains the Next.js
+frontend, with Mapbox maps and Google Places address search and geocoding.
+The routing backend currently covers the San Francisco Bay Area.
 
-It allows users to specify a start and end point to a route along with a hill tolerance (from avoiding hills to not weighting hills much at all). It allows users to choose between three different scenarios of bike facilities from mainly bike lanes and bike routes to a very direct route.
+## Bikesy API
 
-Routes are displayed using the mapbox API.
+The browser requests `https://api.bikesy.com/route` directly, passing the start and
+end coordinates and a routing scenario (`1`–`9`; the web controls default to `5`):
 
-## Google Analytics 4
-
-The frontend uses `GoogleAnalytics` and `sendGAEvent` from
-`@next/third-parties/google`, matching Next.js 16.3.8. This replaces the old direct
-Google scripts, unused Universal Analytics `react-ga` package, and Vercel Analytics.
-The public measurement ID is **G-S9DP8E6902**, shared across regional builds unless
-`NEXT_PUBLIC_GOOGLE_ANALYTICS_ID` overrides it. No secret is required for the client
-Google tag. See [Next.js integration](https://nextjs.org/docs/pages/guides/third-party-libraries#google-analytics).
-
-### Activation
-
-Analytics is **off by default**. Before enabling it, the GA4 stream owner must turn
-**Enhanced Measurement off** for this web data stream in Google Analytics Admin
-→ Data streams → the web stream. This prevents automatic history, form, search,
-and outbound-link events from collecting unsanitized inputs alongside our events.
-This repository does not change or verify that dashboard setting.
-
-Then set these public environment variables for the intended production build:
-
-```dotenv
-NEXT_PUBLIC_GOOGLE_ANALYTICS_ID=G-S9DP8E6902
-NEXT_PUBLIC_GOOGLE_ANALYTICS_ENABLED=true
+```sh
+curl 'https://api.bikesy.com/route?lat1=37.77201&lng1=-122.45189&lat2=37.76131&lng2=-122.42157&scenario=5'
 ```
 
-Only builds with `NODE_ENV=production`, an explicit `true` enable flag, and a valid
-`G-` ID load the tag. Leave the flag unset or false for previews and local use.
-Public variables are embedded at build time, so changing them requires rebuilding
-and deploying. No deployment or live analytics delivery has been verified here.
+Clients must inspect the JSON `error` field even on HTTP 200, which the backend uses
+for validation and no-route failures. Direct browser requests require the backend's
+CORS permission.
 
-The enable flag is an operator acknowledgement of the stream prerequisite, not an
-API check. Setting it before Enhanced Measurement is off can reintroduce automatic
-events. Google explicitly documents that `send_page_view: false` alone does not
-disable history-based pageviews; see [manual pageviews](https://developers.google.com/analytics/devguides/collection/ga4/views).
+The frontend's `/api/route` and legacy `/api.php` endpoints return a **307 temporary
+redirect** to the backend, preserving query parameters. An omitted or empty scenario
+uses the backend default of `1`. These compatibility endpoints require a Next.js
+server deployment.
 
-### Events and privacy
+## Setup
 
-| Event          | When                                                                                             | Custom properties                                                                                         |
-| -------------- | ------------------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------------------------- |
-| `page_view`    | Initial page and navigation to a different sanitized page                                        | None                                                                                                      |
-| `route_submit` | Each Get Directions form submission, or an accepted pin drag-end with the other endpoint present | `source: form` or `pin_drag`, `scenario: 1`–`9` or `unknown`                                              |
-| `geolocation`  | Use my location click, then its browser result                                                   | `outcome: requested`, `success`, `permission_denied`, `unavailable`, `timeout`, `unsupported`, or `error` |
-| `route_clear`  | Each Clear click                                                                                 | None                                                                                                      |
+Use Node.js 24 and **pnpm 12.8.1**, the version pinned in `package.json`.
 
-Privacy defaults are queued before the Next.js component initializes the tag.
-Initial automatic pageviews are disabled; the app sends one manual pageview per
-sanitized page transition. Rerenders, effect replays, trip hashes and query changes
-on the same page do not duplicate pageviews. Custom events run only in action
-handlers. Form submissions measure intent, not successful routing. A pin drag emits
-once at drag-end when the moved point is within bounds and the other endpoint is
-present, using the current scenario. Movement, rejected drops, and drags without
-a complete trip do not emit it. Routing from shared links, map clicks and scenario
-changes alone is not counted.
-Geolocation normally produces one request event and one result event.
+```sh
+pnpm install
+cp .env.example .env
+```
 
-Every manual event includes sanitized `page_location` and `page_referrer`, a fixed
-`page_title: Bikesy`, and the intended `send_to` ID. Query strings and trip hashes
-are removed, QR paths become `/qr`, other unrecognized paths become `/other`, and
-incoming referrers retain only their origin. SPA pageview referrers use the previous
-sanitized page. The actual trip links and routing state are untouched. The document
-uses an origin-only HTTP referrer policy. No addresses, coordinates, search text,
-polylines, QR identifiers, or raw errors are included in custom properties.
+If you already have a `.env` file, update it using `.env.example` as a reference.
+Configure these values:
 
-Blocked or failing analytics never interrupts routing, geolocation or clearing.
-The Google tag can still generate standard lifecycle events (such as session start);
-this integration does not claim that only our four named events exist. To report
-`scenario`, `source`, or `outcome` as GA4 report dimensions, register the relevant
-event-scoped custom dimensions in GA Admin. No remote settings are changed here.
+- `NEXT_PUBLIC_REGION`: use `sf` for the Bay Area. The `tahoe` configuration is
+  retained, but the current routing backend does not include Tahoe coverage.
+  See [regional configuration](src/appConfig/README.md) for other configurations.
+- `NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN`: Mapbox token for displaying maps.
+- `NEXT_PUBLIC_GOOGLE_MAPS_API_KEY`: Google Maps key for address search and geocoding.
+  Enable Maps JavaScript API, Places API (New), and Geocoding API. Allow your deployed
+  site and `http://localhost:3000/*` in the key's HTTP referrer restrictions, and
+  include these APIs in its API restrictions.
+- `OPEN_WEATHER_MAP_API_KEY` and `AIRNOW_API_KEY`: server-side keys for weather and
+  air-quality data.
 
-Checks: `node --test src/lib/*.test.mjs` and `pnpm exec next build`. Browser checks
-use a mocked Google tag and intercepted requests, not real collection traffic.
+Leave analytics disabled for local development; see [Analytics](#analytics) below.
 
-## Weather and air quality cache
+### Running locally
 
-Weather and AQI responses are cached in browser memory for **five minutes after a
-successful response**, separately for each exact latitude/longitude pair and API
-endpoint. Concurrent requests for the same location share one pending request.
-Network, HTTP and JSON errors are not cached; a later call can retry. Expired
-entries are removed on the next lookup. Location changes clear the displayed data,
-and late responses for a previous location or an unmounted view are ignored.
-There is no polling timer or shared server cache. Provider URLs and payloads remain
-unchanged; this browser cache does not replace server/API rate limits.
+```sh
+pnpm run dev
+```
+
+Open http://localhost:3000 in your browser.
+
+### Production build
+
+```sh
+pnpm exec next build
+PORT=3000 pnpm run start
+```
+
+The start script requires `PORT`. Deploy with a Next.js server to support the API
+routes, including weather, air quality, and routing compatibility redirects.
+
+### Tests and formatting
+
+```sh
+pnpm exec node --test src/lib/*.test.mjs
+pnpm exec prettier --check README.md
+```
+
+`pnpm run prettier` formats the entire repository in place.
 
 ## Bicycle overlay tags
 
@@ -172,21 +163,16 @@ also use side → both → generic precedence. Review outputs retain filtered re
 For commands, all output files and review metadata, see the
 [generator instructions](scripts/bicycle-overlays/README.md).
 
-### Bikesy API
+## Weather and air quality cache
 
-The browser requests `https://api.bikesy.com/route` directly. For example:
-
-```sh
-curl 'https://api.bikesy.com/route?lat1=37.77201&lng1=-122.45189&lat2=37.76131&lng2=-122.42157&scenario=5'
-```
-
-The existing frontend `/api/route` endpoint returns a **307 temporary redirect** to that URL, preserving all query parameters, including repeated keys and empty values. Next.js may normalize equivalent URL encoding (for example, `%20` to `+`). `/api.php` uses the same handler for older native clients; Next.js may first normalize a trailing slash. GET/HEAD redirects use `Cache-Control: no-store`; OPTIONS responds with CORS headers. Ordinary browser/native GET fetches follow the redirect and receive the backend JSON. No coordinates or scenario are rewritten, and the frontend performs no extra validation: an omitted/empty scenario uses the backend default `1`. The web controls still default to `5` and preserve all nine existing combinations.
-
-Clients must inspect the JSON `error` field even on HTTP 200, which the backend uses for legacy validation/no-route failures. The web client surfaces these failures, cancels superseded requests, ignores stale results and clears loading after failures. Direct cross-origin requests omit credentials and require the backend's CORS permission.
-
-The new data image covers the Bay Area. The regional configuration files remain available, but this migration does not add Tahoe graph coverage. Historical Tahoe server metadata is retained and is not used by the new redirect.
-
-The native source available for review uses ordinary `fetch` against `/api.php/`. Redirect-following and JSON compatibility can be checked locally, but the published iOS/Android binaries still need a device smoke test after the frontend is deployed. These local changes do not update the live bikesy.com redirects until publication.
+Weather and AQI responses are cached in browser memory for **five minutes after a
+successful response**, separately for each exact latitude/longitude pair and API
+endpoint. Concurrent requests for the same location share one pending request.
+Network, HTTP and JSON errors are not cached; a later call can retry. Expired
+entries are removed on the next lookup. Location changes clear the displayed data,
+and late responses for a previous location or an unmounted view are ignored.
+There is no polling timer or shared server cache. Provider URLs and payloads remain
+unchanged; this browser cache does not replace server/API rate limits.
 
 ## Planner page warmup
 
@@ -202,48 +188,13 @@ check runs on each planner mount (development effect replay can repeat it). It
 only runs in the browser and does not delay routing or change route cancellation.
 Deploy the frontend for this behavior to take effect.
 
-## Tests and production build
+## Analytics
 
-```sh
-node --test src/lib/*.test.mjs
-npx next build
-```
+Google Analytics 4 is optional and disabled by default. To enable it in a production
+build, first disable **Enhanced Measurement** in the GA4 web stream, then set
+`NEXT_PUBLIC_GOOGLE_ANALYTICS_ID` (the example uses `G-S9DP8E6902`) and
+`NEXT_PUBLIC_GOOGLE_ANALYTICS_ENABLED=true` in `.env` and rebuild.
 
-Use a Next.js server deployment for the compatibility routes; a static export cannot provide request-dependent redirects. The repository's older `next lint`/`next export` scripts predate its installed Next.js 16 version; avoid treating those commands as successful validation.
-
-## Setup
-
-Create a `.env` file by copying `.env.example`.
-
-    cp .env.example .env
-
-Add values to your `.env` config file for all fields. Choose a region, currently `sf` for San Francisco or `tahoe` for Lake Tahoe. Or, make your own file in the `src/appConfig` folder to support a new region and specify that as NEXT_PUBLIC_REGION in your `.env` file.
-
-The Google Maps key (`NEXT_PUBLIC_GOOGLE_MAPS_API_KEY`) needs **Maps JavaScript API**, **Places API (New)**, and **Geocoding API** enabled. Allow the deployed site and localhost in the key's HTTP referrer restrictions, and include these APIs in its API restrictions.
-
-Address autocomplete uses Google's `PlaceAutocompleteElement` with the region's search bounds and automatic autocomplete session handling. A selection fetches only `formattedAddress` and `location`, both Place Details Essentials fields. Do not add `displayName`, ratings, reviews, atmosphere fields, or a wildcard to the field list in `src/lib/places.js`; they are unnecessary for routing and can increase the billing tier.
-
-Typed addresses without a selected suggestion and reverse geocoding for map clicks or geolocation use `google.maps.Geocoder`. Places and geocoding share one Maps JavaScript loader and the same website-restricted key; the browser does not call the Geocoding REST endpoint directly. Geocoding requests do not request extra computations or Places details.
-
-Install dependencies:
-
-    yarn install
-
-## Running Locally
-
-To run locally:
-
-    yarn dev
-
-Then open http://localhost:3000 in your browser.
-
-## Compiling to static files
-
-    yarn export
-
-Files will be in the `/out` folder
-
-## Lints
-
-    yarn lint
-    yarn prettier
+The app tracks page views and basic routing interactions with sanitized URLs;
+custom events exclude addresses, coordinates, and search text. Analytics failures
+do not interrupt routing.
