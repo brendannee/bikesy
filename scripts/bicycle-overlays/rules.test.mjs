@@ -337,3 +337,10 @@ test('route fallback can ignore relation membership or be disabled', () => {
     'III',
   );
 });
+test('wooden boardwalks and bridges count as paved; metal stays unknown', () => {
+  const path = (surface) =>
+    classifyWay({ highway: 'cycleway', surface }).facilities[0].surface_state;
+  assert.equal(path('wood'), 'paved');
+  assert.equal(path('metal'), 'unknown');
+  assert.equal(path('woodchips'), 'unpaved');
+});

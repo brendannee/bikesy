@@ -11,6 +11,7 @@ export const DEFAULT_SURFACES = {
     'sett',
     'cobblestone',
     'unhewn_cobblestone',
+    'wood',
   ],
   unpaved: [
     'unpaved',
