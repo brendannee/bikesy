@@ -1,5 +1,5 @@
 const config = {
-  BIKESY_API_URL: 'https://bikesy-tahoe-backend.vercel.app/route',
+  BIKESY_API_URL: 'https://bikesy-backend.tahoebike.org/route',
   // Round elevation chart Y-axis to nearest 1000 feet to make hills more visible.
   // Previously the range was 0 to max, which made hills imperceptible at high elevations.
   // Dynamic rounding (vs static values) handles multiple service areas at different elevations
