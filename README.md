@@ -156,8 +156,10 @@ are withheld. Missing or degenerate geometry is not drawn.
 The default `--surfaces all` includes paved, unpaved and unknown surfaces.
 `--surfaces paved` keeps only recognized pavement: `paved`, `asphalt`, `concrete`,
 `concrete:lanes`, `concrete:plates`, `paving_stones`, `sett`, `cobblestone` and
-`unhewn_cobblestone`. Compacted/fine gravel remain unpaved; missing/unrecognized
-surfaces are unknown. Side surface overrides both-side, then generic cycleway
+`unhewn_cobblestone`, plus `wood`, `metal`, `metal_grid`, `bricks` and `chipseal`.
+Hard decking stays visible without admitting gravel/dirt trails; no bridge or
+short-length exception overrides surface or access rules. Compacted/fine gravel
+remain unpaved; missing/unrecognized surfaces are unknown. Side surface overrides both-side, then generic cycleway
 surface, then the way surface. Buffer, separation and lane-subtype attributes
 also use side → both → generic precedence. Review outputs retain filtered records.
 For commands, all output files and review metadata, see the

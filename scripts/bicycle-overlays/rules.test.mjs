@@ -337,10 +337,37 @@ test('route fallback can ignore relation membership or be disabled', () => {
     'III',
   );
 });
-test('wooden boardwalks and bridges count as paved; metal stays unknown', () => {
+test('hard decking and documented pavement count as paved; loose surfaces do not', () => {
   const path = (surface) =>
     classifyWay({ highway: 'cycleway', surface }).facilities[0].surface_state;
-  assert.equal(path('wood'), 'paved');
-  assert.equal(path('metal'), 'unknown');
-  assert.equal(path('woodchips'), 'unpaved');
+  for (const surface of [
+    'wood',
+    'metal',
+    'metal_grid',
+    'bricks',
+    'chipseal',
+    'concrete:plates',
+    'paving_stones',
+  ]) {
+    assert.equal(path(surface), 'paved', surface);
+  }
+  for (const surface of [
+    'woodchips',
+    'compacted',
+    'fine_gravel',
+    'gravel',
+    'dirt',
+    'ground',
+  ]) {
+    assert.equal(path(surface), 'unpaved', surface);
+  }
+  for (const surface of [
+    undefined,
+    'boardwalk',
+    'brick',
+    'artificial_wood',
+    'metal;gravel',
+  ]) {
+    assert.equal(path(surface), 'unknown', surface);
+  }
 });

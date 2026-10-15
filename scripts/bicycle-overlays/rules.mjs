@@ -1,4 +1,4 @@
-export const RULES_VERSION = '1.2.1';
+export const RULES_VERSION = '1.2.2';
 export const ROUTE_FALLBACKS = ['all', 'tags', 'none'];
 export const DEFAULT_SURFACES = {
   paved: [
@@ -12,6 +12,10 @@ export const DEFAULT_SURFACES = {
     'cobblestone',
     'unhewn_cobblestone',
     'wood',
+    'metal',
+    'metal_grid',
+    'bricks',
+    'chipseal',
   ],
   unpaved: [
     'unpaved',

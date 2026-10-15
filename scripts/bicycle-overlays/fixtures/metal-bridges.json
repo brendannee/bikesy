@@ -1,0 +1,66 @@
+{
+  "source": "region.osm.pbf, OSM timestamp 2026-09-30T20:22:42Z; SHA-256 d4981aa8350a53dffc4e4263d2df7c77f87a89716296b7bee5541ebd5a4e84b6",
+  "ways": [
+    {
+      "id": "27656674",
+      "tags": {
+        "bridge": "movable",
+        "bridge:alt_name": "Third Street Bridge",
+        "bridge:name": "Lefty O'Doul Bridge",
+        "bridge:old_name": "China Basin Bridge",
+        "cycleway:left": "track",
+        "cycleway:right": "opposite_track",
+        "hgv": "designated",
+        "highway": "primary",
+        "lanes": "1",
+        "layer": "1",
+        "lcn_ref": "5",
+        "lit": "yes",
+        "maxspeed": "30 mph",
+        "name": "3rd Street",
+        "oneway": "yes",
+        "sidewalk:left": "no",
+        "sidewalk:right": "separate",
+        "source:hgv": "https://sfplanninggis.org/TIM/?search=3591024#searchbox",
+        "surface": "metal",
+        "tiger:cfcc": "A45",
+        "tiger:county": "San Francisco, CA",
+        "tiger:name_base": "3rd",
+        "tiger:name_type": "St",
+        "tiger:zip_right": "94124",
+        "wikipedia": "en:Lefty O'Doul Bridge"
+      },
+      "geometry": {
+        "coordinates": [
+          [-122.3900544, 37.7765729],
+          [-122.390325, 37.7769156]
+        ],
+        "type": "LineString"
+      },
+      "timestamp": "2026-02-11 03:35:36+00:00",
+      "version": 33
+    },
+    {
+      "id": "834052363",
+      "tags": {
+        "bridge": "movable",
+        "foot": "no",
+        "highway": "cycleway",
+        "is_sidepath": "yes",
+        "is_sidepath:of:name": "3rd Street",
+        "lit": "yes",
+        "oneway": "no",
+        "surface": "metal"
+      },
+      "geometry": {
+        "coordinates": [
+          [-122.3900144, 37.7765959],
+          [-122.3902843, 37.7769326]
+        ],
+        "type": "LineString"
+      },
+      "timestamp": "2026-02-11 03:35:37+00:00",
+      "version": 5
+    }
+  ]
+}
