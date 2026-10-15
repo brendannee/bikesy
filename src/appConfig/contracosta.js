@@ -1,4 +1,4 @@
-import sfConfig from './sf'
+import sfConfig from './sf.js';
 
 const config = {
   WELCOME_MODAL_TITLE: 'Welcome to Bike Mapper',
@@ -51,8 +51,7 @@ const config = {
     {
       type: 'static',
       label: 'Bike Lane',
-      description:
-        'dedicated on-street bikeways, marked by striping on pavement',
+      description: 'dedicated on-street bikeways, marked by striping on pavement',
       iconClassName: 'sf-class2',
     },
     {
@@ -68,6 +67,6 @@ const config = {
   ROUTE_TYPE_OPTIONS: sfConfig.ROUTE_TYPE_OPTIONS,
   DEFAULT_SCENARIO: sfConfig.DEFAULT_SCENARIO,
   SCENARIOS: sfConfig.SCENARIOS,
-}
+};
 
-export default config
+export default config;

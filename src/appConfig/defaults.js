@@ -27,6 +27,7 @@ const config = {
     LEFT: -122.8,
     ALERT_TEXT: 'This tool only works for the San Francisco Bay Area.',
   },
+  BICYCLE_OVERLAY_OPTIONS: {},
   SHOULD_SHOW_WELCOME_MODAL: true,
   START_LOCATION_ZOOM: 13,
   WELCOME_MODAL_TITLE: 'Welcome to Bikesy',

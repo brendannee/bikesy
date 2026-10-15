@@ -318,3 +318,56 @@ test('unknown cycleway value does not suppress explicit road route evidence, whi
     'IV',
   );
 });
+test('route fallback can ignore relation membership or be disabled', () => {
+  const classify = (tags, routeFallback) =>
+    classifyWay({ highway: 'primary', ...tags }, [route], undefined, { routeFallback });
+  assert.deepEqual(classify({}, 'all').facilities[0].evidence, [
+    'route_relation_membership',
+  ]);
+  // Relation-only membership: no facility, but the membership is still recorded.
+  const relationOnly = classify({}, 'tags');
+  assert.equal(relationOnly.facilities.length, 0);
+  assert.equal(relationOnly.routes.length, 1);
+  assert.equal(relationOnly.candidate, true);
+  assert.deepEqual(classify({ lcn: 'yes' }, 'tags').facilities[0].evidence, ['lcn']);
+  assert.equal(classify({ lcn: 'yes' }, 'none').facilities.length, 0);
+  // Explicit facilities are unaffected.
+  assert.equal(
+    classify({ cycleway: 'shared_lane' }, 'none').facilities[0].class_like,
+    'III',
+  );
+});
+test('hard decking and documented pavement count as paved; loose surfaces do not', () => {
+  const path = (surface) =>
+    classifyWay({ highway: 'cycleway', surface }).facilities[0].surface_state;
+  for (const surface of [
+    'wood',
+    'metal',
+    'metal_grid',
+    'bricks',
+    'chipseal',
+    'concrete:plates',
+    'paving_stones',
+  ]) {
+    assert.equal(path(surface), 'paved', surface);
+  }
+  for (const surface of [
+    'woodchips',
+    'compacted',
+    'fine_gravel',
+    'gravel',
+    'dirt',
+    'ground',
+  ]) {
+    assert.equal(path(surface), 'unpaved', surface);
+  }
+  for (const surface of [
+    undefined,
+    'boardwalk',
+    'brick',
+    'artificial_wood',
+    'metal;gravel',
+  ]) {
+    assert.equal(path(surface), 'unknown', surface);
+  }
+});

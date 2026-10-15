@@ -1,24 +1,6 @@
-// Only fetch air quality info every 5 minutes
-const cacheWindow = 5 * 60 * 60 * 1000;
-let dataFetchTime;
-let dataResults;
+import { createCachedJsonFetch } from './cached-json.js';
 
-export const getAirQuality = async (lat, lng) => {
-  const url = `/api/air-quality?lat=${lat}&lng=${lng}`;
+const fetchAirQuality = createCachedJsonFetch('Air quality');
 
-  if (dataFetchTime && dataFetchTime + cacheWindow > Date.now()) {
-    return dataResults;
-  }
-
-  dataFetchTime = Date.now();
-
-  const response = await fetch(url);
-
-  if (!response.ok) {
-    throw new Error(`Air quality request failed with status ${response.status}.`);
-  }
-
-  dataResults = response.json();
-
-  return dataResults;
-};
+export const getAirQuality = (lat, lng) =>
+  fetchAirQuality(`/api/air-quality?${new URLSearchParams({ lat, lng })}`);

@@ -56,6 +56,7 @@ const IndexPage = () => {
   const qrCode = searchParams.get('qr');
 
   const [loading, setLoading] = useState(false);
+  const [routeSubmission, setRouteSubmission] = useState(0);
   const [mobileView, setMobileView] = useState('map');
   // window width is not known until after the component mounts
   const [isMobile, setIsMobile] = useState(undefined);
@@ -85,7 +86,6 @@ const IndexPage = () => {
     endAddress,
     endLocation,
   }) => {
-    dispatch(clearPath());
     setLoading(true);
     setShowWelcomeModal(false);
 
@@ -98,11 +98,15 @@ const IndexPage = () => {
       setLoading(false);
       return;
     }
+    dispatch(clearPath());
     dispatch(setStartAddress(startAddress));
     dispatch(setStartLocation(startLocation));
     dispatch(setEndAddress(endAddress));
     dispatch(setEndLocation(endLocation));
     setMobileView('map');
+    // Explicit submissions must also retry unchanged endpoints (including errors).
+    // Keep requests in the effect so endpoint/scenario updates batch into one fetch.
+    setRouteSubmission((submission) => submission + 1);
   };
 
   const fetchRoute = async (signal) => {
@@ -287,7 +291,7 @@ const IndexPage = () => {
       setLoading(false);
     }
     return () => controller.abort();
-  }, [startLocation, endLocation, scenario]);
+  }, [startLocation, endLocation, scenario, routeSubmission]);
 
   useEffect(() => {
     if (startAddress && startLocation && endAddress && endLocation) {

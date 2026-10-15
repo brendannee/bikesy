@@ -1,0 +1,46 @@
+.policy {
+  max-width: 48rem;
+  margin: 0 auto;
+  padding: 2rem 1.25rem 4rem;
+  line-height: 1.65;
+  overflow-wrap: anywhere;
+  color: #202b35;
+}
+.policy h1 {
+  margin-top: 1.25rem;
+}
+.policy h2 {
+  margin-top: 2.25rem;
+  font-size: 1.5rem;
+  scroll-margin-top: 1rem;
+}
+.updated {
+  color: #56616b;
+}
+.policy nav {
+  padding: 1rem;
+  background: #f3f6f8;
+  border-radius: 0.5rem;
+}
+.policy nav ul {
+  margin-bottom: 0;
+}
+.policy li {
+  margin-bottom: 0.6rem;
+}
+.policy a {
+  text-decoration: underline;
+}
+.policy a:focus-visible {
+  outline: 3px solid #226fbe;
+  outline-offset: 3px;
+}
+@media print {
+  .policy {
+    max-width: none;
+    padding: 0;
+  }
+  .policy nav {
+    display: none;
+  }
+}

@@ -171,3 +171,116 @@ test('Fort Mason cycleways with sidewalk context survive XML and PBF into Class 
     await rm(temp, { recursive: true, force: true });
   }
 });
+
+test('per-class pavement, bbox and route fallback options', async () => {
+  const temp = await mkdtemp(path.join(tmpdir(), 'bikesy-overlays-'));
+  const layer = async (dir, name) =>
+    JSON.parse(await readFile(path.join(temp, dir, `${name}.geojson`), 'utf8')).features;
+  const surfaces = (features, klass) =>
+    features.flatMap((f) =>
+      f.properties.facilities
+        .filter((x) => x.class_like === klass)
+        .map((x) => x.surface_state),
+    );
+  try {
+    for (const [dir, args] of [
+      ['all', ['--surfaces', 'all']],
+      ['paved-I', ['--surfaces', 'all', '--paved-classes', 'I']],
+      ['far', ['--bbox', '0,0,1,1']],
+      ['tags', ['--route-fallback', 'tags']],
+    ]) {
+      const result = run(fixture, path.join(temp, dir), args);
+      assert.equal(result.status, 0, result.stderr);
+    }
+    // Class I keeps only paved facilities; other classes match an unrestricted run.
+    const allI = surfaces(await layer('all', 'class-I'), 'I');
+    const pavedI = surfaces(await layer('paved-I', 'class-I'), 'I');
+    assert.ok(
+      allI.some((s) => s !== 'paved'),
+      'fixture needs a non-paved Class I path',
+    );
+    assert.ok(pavedI.length && pavedI.every((s) => s === 'paved'));
+    for (const name of ['class-II', 'class-III', 'class-IV'])
+      assert.deepEqual(await layer('paved-I', name), await layer('all', name), name);
+    // Every fixture way is outside the bbox; the report counts them.
+    assert.equal((await layer('far', 'class-II')).length, 0);
+    const report = JSON.parse(
+      await readFile(path.join(temp, 'far', 'report.json'), 'utf8'),
+    );
+    assert.ok(report.counts.outside_bbox > 0);
+    // Only the way with a missing node remains: without coordinates it cannot be placed.
+    assert.equal(report.counts.candidate_ways, report.counts.missing_geometry);
+    // No relation-only route roads with `tags`.
+    for (const f of await layer('tags', 'class-III'))
+      for (const x of f.properties.facilities)
+        assert.notDeepEqual(x.evidence, ['route_relation_membership']);
+  } finally {
+    await rm(temp, { recursive: true, force: true });
+  }
+});
+
+test('invalid generator option values are rejected', async () => {
+  const temp = await mkdtemp(path.join(tmpdir(), 'bikesy-overlays-'));
+  try {
+    for (const args of [
+      ['--route-fallback', 'some'],
+      ['--paved-classes', 'V'],
+      ['--surfaces', 'paved', '--paved-classes', 'I'],
+      ['--bbox', '1,1,0,0'],
+    ]) {
+      const result = run(fixture, path.join(temp, args.join('_')), args);
+      assert.notEqual(result.status, 0, args.join(' '));
+    }
+  } finally {
+    await rm(temp, { recursive: true, force: true });
+  }
+});
+
+test('--region applies app config options and SEARCH_BOUNDS; flags take precedence', async () => {
+  const temp = await mkdtemp(path.join(tmpdir(), 'bikesy-overlays-'));
+  const report = async (dir) =>
+    JSON.parse(await readFile(path.join(temp, dir, 'report.json'), 'utf8'));
+  try {
+    for (const [dir, args] of [
+      ['plain', []],
+      ['sf', ['--region', 'sf']],
+      ['tahoe', ['--region', 'tahoe']],
+      [
+        'tahoe-override',
+        ['--region', 'tahoe', '--route-fallback', 'all', '--bbox', '-123,37,-122,38'],
+      ],
+    ]) {
+      const result = run(fixture, path.join(temp, dir), args);
+      assert.equal(result.status, 0, result.stderr);
+    }
+    // The fixture is in San Francisco: SF bounds keep every way.
+    const sf = await report('sf');
+    assert.equal(sf.options.region, 'sf');
+    assert.deepEqual(sf.options.bbox, [-122.8, 37.3064, -121.637, 38.0534]);
+    assert.equal(sf.counts.outside_bbox, 0);
+    assert.equal(sf.options.routeFallback, 'all');
+    assert.equal(
+      await readFile(path.join(temp, 'sf', 'class-II.geojson'), 'utf8'),
+      await readFile(path.join(temp, 'plain', 'class-II.geojson'), 'utf8'),
+    );
+    // Tahoe options apply, and its bounds exclude the San Francisco fixture.
+    const tahoe = await report('tahoe');
+    assert.deepEqual(tahoe.options.pavedClasses, ['I']);
+    assert.equal(tahoe.options.routeFallback, 'tags');
+    assert.ok(tahoe.counts.outside_bbox > 0);
+    // Command-line flags override the region's settings.
+    const override = await report('tahoe-override');
+    assert.equal(override.options.routeFallback, 'all');
+    assert.deepEqual(override.options.pavedClasses, ['I']);
+    assert.equal(override.counts.outside_bbox, 0);
+    for (const name of ['../tahoe', 'nowhere']) {
+      const result = run(fixture, path.join(temp, `bad-${name.length}`), [
+        '--region',
+        name,
+      ]);
+      assert.notEqual(result.status, 0, name);
+    }
+  } finally {
+    await rm(temp, { recursive: true, force: true });
+  }
+});
