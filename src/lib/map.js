@@ -3,6 +3,7 @@
 import _ from 'lodash';
 import { length } from '@turf/turf';
 import appConfig from '../appConfig';
+import { addRouteLayer } from './map-layer-placement.js';
 
 const MAPBOX_DATASETS_API = 'https://api.mapbox.com/datasets/v1';
 
@@ -148,21 +149,12 @@ export function drawMap(handleMapClick, handleMarkerDrag) {
   const canvas = map.getCanvasContainer();
 
   map.on('load', () => {
-    // Find the index of the first symbol layer in the map style
-    let firstSymbolId;
-    for (const layer of map.getStyle().layers) {
-      if (layer.type === 'symbol') {
-        firstSymbolId = layer.id;
-        break;
-      }
-    }
-
     map.addSource('path', {
       type: 'geojson',
       data: pathGeoJSON,
     });
 
-    map.addLayer(pathLayer, firstSymbolId);
+    addRouteLayer(map, pathLayer);
 
     map.addSource('start', {
       type: 'geojson',
@@ -301,15 +293,7 @@ export function updatePath(path) {
     if (map.getSource('path')) {
       map.getSource('path').setData(pathGeoJSON);
       if (!map.getLayer('path')) {
-        // Find the index of the first symbol layer in the map style
-        let firstSymbolId;
-        for (const layer of map.getStyle().layers) {
-          if (layer.type === 'symbol') {
-            firstSymbolId = layer.id;
-            break;
-          }
-        }
-        map.addLayer(pathLayer, firstSymbolId);
+        addRouteLayer(map, pathLayer);
       }
     }
 

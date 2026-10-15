@@ -11,7 +11,7 @@ class MyApp extends App {
     return (
       <Provider store={store}>
         <Script
-          src="https://api.mapbox.com/mapbox-gl-js/v2.8.2/mapbox-gl.js"
+          src="https://api.mapbox.com/mapbox-gl-js/v3.33.0/mapbox-gl.js"
           strategy="beforeInteractive"
         ></Script>
         <Component {...pageProps} />
