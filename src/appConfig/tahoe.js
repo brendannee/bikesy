@@ -43,8 +43,13 @@ const config = {
   },
   // Settings for scripts/bicycle-overlays/generate.mjs --region tahoe. Multi-use Path is
   // paved only; Bike Route ignores relation-only membership, since US Bicycle Routes 50
-  // and 85 follow state highways around the lake.
-  BICYCLE_OVERLAY_OPTIONS: { pavedClasses: ['I'], routeFallback: 'tags' },
+  // and 85 follow state highways around the lake. The bbox is SEARCH_BOUNDS with LEFT moved
+  // east from -120.399814 to -120.375, to leave out a bike path far west of the lake.
+  BICYCLE_OVERLAY_OPTIONS: {
+    pavedClasses: ['I'],
+    routeFallback: 'tags',
+    bbox: [-120.375, 38.750276, -119.659482, 39.368232],
+  },
   LOGO_FILENAME_ROOT: 'ltbc-logo',
   LOGO_CLASSNAME: 'logo ltbc-logo',
   MAPBOX_STYLE_URL: 'mapbox://styles/tahoebike/ck3cbc5z81vr71clhw1rfylmy',
