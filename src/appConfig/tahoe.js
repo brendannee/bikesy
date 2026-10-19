@@ -26,12 +26,10 @@ const config = {
     1: {
       routeType: '1',
       hillReluctance: null,
-      server: 'http://ec2-52-35-131-66.us-west-2.compute.amazonaws.com',
     },
     2: {
       routeType: '2',
       hillReluctance: null,
-      server: 'http://ec2-52-35-131-66.us-west-2.compute.amazonaws.com',
     },
   },
   WELCOME_MODAL_TITLE: 'Welcome to the Tahoe Bike Map',
