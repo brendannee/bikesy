@@ -10,26 +10,29 @@ const config = {
     (dataMin) => Math.floor(dataMin / 1000) * 1000,
     (dataMax) => Math.ceil(dataMax / 1000) * 1000,
   ],
-  HILL_ROUTING_OPTIONS: [],
-  ROUTE_TYPE_OPTIONS: [
+  ROUTING_CONTROLS: [
     {
-      text: 'Mostly bike paths & lanes',
-      value: 1,
-    },
-    {
-      text: 'A more direct route',
-      value: 2,
+      key: 'routeType',
+      label: 'Route Type',
+      options: [
+        {
+          text: 'Mostly bike paths & lanes',
+          value: '1',
+        },
+        {
+          text: 'A more direct route',
+          value: '2',
+        },
+      ],
     },
   ],
   DEFAULT_SCENARIO: '1',
   SCENARIOS: {
     1: {
       routeType: '1',
-      hillReluctance: null,
     },
     2: {
       routeType: '2',
-      hillReluctance: null,
     },
   },
   WELCOME_MODAL_TITLE: 'Welcome to the Tahoe Bike Map',
