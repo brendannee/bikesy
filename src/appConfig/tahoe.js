@@ -12,28 +12,36 @@ const config = {
   ],
   ROUTING_CONTROLS: [
     {
-      key: 'routeType',
-      label: 'Route Type',
+      key: 'traffic',
+      className: 'stacked-control',
+      label: 'Traffic',
       options: [
-        {
-          text: 'Mostly bike paths & lanes',
-          value: '1',
-        },
-        {
-          text: 'A more direct route',
-          value: '2',
-        },
+        { text: 'Avoid Busy Roads', value: 'quiet' },
+        { text: 'Fastest Route', value: 'busy' },
+      ],
+    },
+    {
+      key: 'surface',
+      className: 'stacked-control',
+      label: 'Trail Surface',
+      options: [
+        { text: 'Prefer Paved', value: 'paved' },
+        { text: 'Paved and Dirt', value: 'mixed' },
+        { text: 'Prefer Dirt', value: 'dirt' },
       ],
     },
   ],
   DEFAULT_SCENARIO: '1',
+  // Scenario ids are stored in share links and sent to the routing API, so 1 and 2 keep
+  // their original meaning (quiet and busy, no surface preference). The backend
+  // config/tahoe.json defines the same six scenarios.
   SCENARIOS: {
-    1: {
-      routeType: '1',
-    },
-    2: {
-      routeType: '2',
-    },
+    1: { traffic: 'quiet', surface: 'mixed' },
+    2: { traffic: 'busy', surface: 'mixed' },
+    3: { traffic: 'quiet', surface: 'paved' },
+    4: { traffic: 'busy', surface: 'paved' },
+    5: { traffic: 'quiet', surface: 'dirt' },
+    6: { traffic: 'busy', surface: 'dirt' },
   },
   WELCOME_MODAL_TITLE: 'Welcome to the Tahoe Bike Map',
   SHOULD_SHOW_WELCOME_MODAL: true,

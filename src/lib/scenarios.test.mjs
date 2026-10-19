@@ -126,26 +126,51 @@ test('changing one SF select from every scenario gives the same scenario as befo
   }
 });
 
-test('Tahoe has one route type select with scenarios 1 and 2', () => {
+test('Tahoe has traffic and trail surface selects covering scenarios 1 to 6', () => {
   assert.deepEqual(validateRoutingControls(tahoeConfig), []);
   const controls = getRoutingControls(tahoeConfig);
   assert.deepEqual(
     controls.map((control) => [control.key, control.label, control.className]),
-    [['routeType', 'Route Type', 'route-type']],
+    [
+      ['traffic', 'Traffic', 'stacked-control'],
+      ['surface', 'Trail Surface', 'stacked-control'],
+    ],
   );
   assert.deepEqual(
     controls[0].options.map((option) => [option.text, option.value]),
     [
-      ['Mostly bike paths & lanes', '1'],
-      ['A more direct route', '2'],
+      ['Avoid Busy Roads', 'quiet'],
+      ['Fastest Route', 'busy'],
+    ],
+  );
+  assert.deepEqual(
+    controls[1].options.map((option) => [option.text, option.value]),
+    [
+      ['Prefer Paved', 'paved'],
+      ['Paved and Dirt', 'mixed'],
+      ['Prefer Dirt', 'dirt'],
     ],
   );
   assert.equal(tahoeConfig.DEFAULT_SCENARIO, '1');
-  for (const scenario of ['1', '2']) {
+  assert.equal(Object.keys(tahoeConfig.SCENARIOS).length, 6);
+  // Old share links: 1 is quiet and 2 is busy, both with no surface preference.
+  assert.deepEqual(scenarioToSelections(tahoeConfig, '1'), { traffic: 'quiet', surface: 'mixed' });
+  assert.deepEqual(scenarioToSelections(tahoeConfig, '2'), { traffic: 'busy', surface: 'mixed' });
+  for (const scenario of Object.keys(tahoeConfig.SCENARIOS)) {
     const selections = scenarioToSelections(tahoeConfig, scenario);
-    assert.deepEqual(selections, { routeType: scenario });
-    assert.equal(selectionsToScenario(tahoeConfig, selections, 'routeType'), scenario);
+    for (const key of ['traffic', 'surface']) {
+      assert.equal(selectionsToScenario(tahoeConfig, selections, key), scenario);
+    }
   }
+  // Changing one select keeps the other.
+  assert.equal(
+    selectionsToScenario(tahoeConfig, { traffic: 'busy', surface: 'dirt' }, 'traffic'),
+    '6',
+  );
+  assert.equal(
+    selectionsToScenario(tahoeConfig, { traffic: 'quiet', surface: 'paved' }, 'surface'),
+    '3',
+  );
 });
 
 test('a 2x3 config renders both controls and maps every cell to its scenario', () => {
