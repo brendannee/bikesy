@@ -6,11 +6,17 @@ import PlacesAutocomplete from './PlacesAutocomplete'
 
 import { clearRoute } from '../redux/slices/search'
 import appConfig from '../appConfig'
-import { scenarioToComponents, componentsToScenario } from '../lib/scenarios'
+import {
+  getRoutingControls,
+  scenarioToSelections,
+  selectionsToScenario,
+} from '../lib/scenarios'
 import crosshairIcon from './icons/crosshairs-solid.svg'
 import circleNotchIcon from './icons/circle-notch-solid.svg'
 import { geocode } from '../lib/geocode'
 import { trackEvent } from '../lib/analytics'
+
+const routingControls = getRoutingControls(appConfig)
 
 const Controls = ({
   updateRoute,
@@ -26,8 +32,8 @@ const Controls = ({
   const endAddress = useSelector((state) => state.search.endAddress)
   const endLocation = useSelector((state) => state.search.endLocation)
 
-  const [routeType, setRouteType] = useState('3')
-  const [hillReluctance, setHillReluctance] = useState('1')
+  // The selects always show the current scenario, so there is no separate state to sync.
+  const selections = scenarioToSelections(appConfig, scenario)
   const [errorFields, setErrorFields] = useState([])
   const [geolocationPending, setGeolocationPending] = useState(false)
   const [startAddressInput, setStartAddressInput] = useState('')
@@ -48,25 +54,14 @@ const Controls = ({
     handleForm()
   }
 
-  const handleRouteTypeChange = (event) => {
-    const scenario = componentsToScenario({
-      routeType: event.target.value,
-      hillReluctance,
-    })
+  const handleControlChange = (key) => (event) => {
+    const nextScenario = selectionsToScenario(
+      appConfig,
+      { ...selections, [key]: event.target.value },
+      key,
+    )
 
-    updateControls({ scenario })
-    if (startAddressInput && endAddressInput) {
-      handleForm()
-    }
-  }
-
-  const handleHillReluctanceChange = (event) => {
-    const scenario = componentsToScenario({
-      routeType,
-      hillReluctance: event.target.value,
-    })
-
-    updateControls({ scenario })
+    updateControls({ scenario: nextScenario })
     if (startAddressInput && endAddressInput) {
       handleForm()
     }
@@ -171,17 +166,6 @@ const Controls = ({
     return 'Start Address'
   }
 
-  useEffect(() => {
-    const components = scenarioToComponents(scenario)
-    if (components.hillReluctance !== hillReluctance) {
-      setHillReluctance(components.hillReluctance)
-    }
-
-    if (components.routeType !== routeType) {
-      setRouteType(components.routeType)
-    }
-  }, [hillReluctance, routeType, scenario])
-
   // If start address changes, update input to match
   useEffect(() => {
     if (startAddress !== startAddressInput) {
@@ -275,39 +259,25 @@ const Controls = ({
             onPendingChange={setEndPlacePending}
           />
         </div>
-        <div className="form-group form-inline route-type">
-          <label className="control-label">Route Type</label>
-          <select
-            className="form-control"
-            onChange={handleRouteTypeChange}
-            value={routeType}
+        {routingControls.map((control) => (
+          <div
+            key={control.key}
+            className={classNames('form-group', 'form-inline', control.className)}
           >
-            {appConfig.ROUTE_TYPE_OPTIONS.map((routeType) => (
-              <option key={routeType.value} value={routeType.value}>
-                {routeType.text}
-              </option>
-            ))}
-          </select>
-        </div>
-        {!!appConfig.HILL_ROUTING_OPTIONS.length && (
-          <div className="form-group form-inline hill-reluctance">
-            <label className="control-label">Hill Reluctance</label>
+            <label className="control-label">{control.label}</label>
             <select
               className="form-control"
-              onChange={handleHillReluctanceChange}
-              value={hillReluctance}
+              onChange={handleControlChange(control.key)}
+              value={selections[control.key]}
             >
-              {appConfig.HILL_ROUTING_OPTIONS.map((hillRoutingOption) => (
-                <option
-                  key={hillRoutingOption.value}
-                  value={hillRoutingOption.value}
-                >
-                  {hillRoutingOption.text}
+              {control.options.map((option) => (
+                <option key={option.value} value={option.value}>
+                  {option.text}
                 </option>
               ))}
             </select>
           </div>
-        )}
+        ))}
         <a
           href="#"
           className="clear-link"
