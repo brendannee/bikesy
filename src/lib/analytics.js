@@ -8,6 +8,10 @@ export const GA_ENABLED =
   /^G-[A-Z0-9]+$/.test(GA_ID)
 
 const STATIC_PATHS = new Set(['/', '/about', '/bikesy-api', '/privacy-policy'])
+const METERS_PER_MILE = 1609.344
+// Navigation events carry a scenario, a distance and a reroute count: never a location.
+const NAV_DISTANCE_EVENTS = new Set(['nav_start', 'nav_arrive', 'nav_end_early'])
+const NAV_REROUTE_EVENTS = new Set(['nav_reroute', 'nav_arrive', 'nav_end_early'])
 let initialized = false
 let lastPageLocation
 
@@ -29,6 +33,24 @@ export function analyticsPageContext(href, referrer = '') {
     page_referrer: safeReferrer,
     page_title: 'Bikesy',
   }
+}
+
+function safeScenario(value) {
+  const scenario = String(value)
+  return /^[1-9]$/.test(scenario) ? scenario : 'unknown'
+}
+
+// Out-of-range numbers are clamped; anything that isn't a finite number becomes -1.
+const isNumber = (value) => typeof value === 'number' && Number.isFinite(value)
+const clamp = (value, min, max) => Math.min(max, Math.max(min, value))
+
+function milesFromMeters(meters) {
+  if (!isNumber(meters)) return -1
+  return Math.round(clamp(meters / METERS_PER_MILE, 0, 500) * 10) / 10
+}
+
+function rerouteCount(reroutes) {
+  return isNumber(reroutes) ? Math.round(clamp(reroutes, 0, 20)) : -1
 }
 
 export function initializeAnalytics() {
@@ -69,10 +91,9 @@ export function trackEvent(name, properties = {}) {
   try {
     let data
     if (name === 'route_submit') {
-      const scenario = String(properties.scenario)
       data = {
         source: properties.source === 'pin_drag' ? 'pin_drag' : 'form',
-        scenario: /^[1-9]$/.test(scenario) ? scenario : 'unknown',
+        scenario: safeScenario(properties.scenario),
       }
     } else if (name === 'geolocation') {
       const outcomes = [
@@ -91,6 +112,14 @@ export function trackEvent(name, properties = {}) {
       }
     } else if (name === 'route_clear') {
       data = {}
+    } else if (NAV_DISTANCE_EVENTS.has(name) || NAV_REROUTE_EVENTS.has(name)) {
+      data = { scenario: safeScenario(properties.scenario) }
+      if (NAV_DISTANCE_EVENTS.has(name)) {
+        data.distance_mi = milesFromMeters(properties.distanceMeters)
+      }
+      if (NAV_REROUTE_EVENTS.has(name)) {
+        data.reroutes = rerouteCount(properties.reroutes)
+      }
     } else {
       return
     }
