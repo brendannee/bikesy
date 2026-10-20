@@ -53,18 +53,12 @@ const Map = ({
       if (type === 'start') {
         assignStartLocation(latlng);
         if (endLocationRef.current) {
-          trackEvent('route_submit', {
-            source: 'pin_drag',
-            scenario: scenarioRef.current,
-          });
+          trackEvent('route_submit', { source: 'pin_drag', scenario: scenarioRef.current });
         }
       } else if (type === 'end') {
         assignEndLocation(latlng);
         if (startLocationRef.current) {
-          trackEvent('route_submit', {
-            source: 'pin_drag',
-            scenario: scenarioRef.current,
-          });
+          trackEvent('route_submit', { source: 'pin_drag', scenario: scenarioRef.current });
         }
       }
     }

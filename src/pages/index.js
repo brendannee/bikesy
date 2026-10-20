@@ -251,13 +251,13 @@ const IndexPage = () => {
       const coords = appConfig.URL_LOCATIONS && appConfig.URL_LOCATIONS[Number(qrCode)];
       if (coords) {
         const latlng = { lat: coords[0], lng: coords[1] };
-
+        
         setShowWelcomeModal(false);
         setIsStartFromQR();
         assignStartLocation(latlng);
       }
 
-      router.replace('/');
+      router.replace('/')
     }
   }, [qrCode]);
 
