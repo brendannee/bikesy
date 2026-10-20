@@ -575,10 +575,20 @@
   margin-left: 0;
 }
 
-/* Keep the Mapbox logo and attribution above the trip bar. */
+/* Keep the Mapbox logo and attribution in view above the trip bar or arrival card. */
 .navigating .mapboxgl-ctrl-bottom-left,
 .navigating .mapboxgl-ctrl-bottom-right {
-  bottom: 120px;
+  bottom: 118px;
+}
+
+.navigating .map-container:has(.nav-sim) .mapboxgl-ctrl-bottom-left,
+.navigating .map-container:has(.nav-sim) .mapboxgl-ctrl-bottom-right {
+  bottom: 164px;
+}
+
+.navigating .map-container:has(.nav-arrival) .mapboxgl-ctrl-bottom-left,
+.navigating .map-container:has(.nav-arrival) .mapboxgl-ctrl-bottom-right {
+  bottom: 310px;
 }
 
 .nav-start {
@@ -795,7 +805,8 @@
   position: relative;
   display: flex;
   justify-content: flex-end;
-  padding: 0 10px 10px;
+  /* Clears the Mapbox attribution button. */
+  padding: 0 10px 40px;
 }
 
 .nav-map-buttons {

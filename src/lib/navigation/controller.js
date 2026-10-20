@@ -114,7 +114,11 @@ export class RideController {
       if (fix && isFarFromStart(fix, start)) from = { lat: fix.lat, lng: fix.lng };
     }
     if (signal.aborted) return;
-    const route = await this.fetchRoute(from, signal);
+    const route = await this.fetchRoute(from, signal).catch((error) => {
+      // The rider may not expect a route from where they are: say so.
+      if (from !== start) error.fromRider = true;
+      throw error;
+    });
     if (signal.aborted) return;
     this.begin(await this.engine, route, fix);
   }

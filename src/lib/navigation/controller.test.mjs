@@ -296,6 +296,18 @@ test('a backend without nav_route fails the start with a clear message', async (
   assert.deepEqual(events, []);
 });
 
+test('a failed route from where the rider is says so', async (t) => {
+  const { ride } = setup(t, {
+    simulate: false,
+    locate: async () => fixAt([37.77, -122.42], 1000),
+    responses: [Promise.reject(new Error('Location outside routing bounds'))],
+  });
+  await assert.rejects(
+    ride.start({ start: point(START), end: point(along(START, 1000)) }),
+    { message: 'Location outside routing bounds', fromRider: true },
+  );
+});
+
 test('a refused location fails the start', async (t) => {
   const { ride, requests } = setup(t, {
     simulate: false,

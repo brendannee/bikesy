@@ -61,10 +61,14 @@ const overviewIcon = (
 );
 
 function startErrorMessage(error) {
-  if (error instanceof TypeError) {
+  // fetch() rejects with a TypeError when the network or server is unreachable.
+  if (error instanceof TypeError && /fetch|load failed|network/i.test(error.message)) {
     return "Couldn't reach the routing service. Check your connection and try again.";
   }
-  return `Couldn't start navigation. ${error?.message ?? error}`;
+  const reason = String(error?.message ?? error).replace(/\.?$/, '.');
+  return error?.fromRider
+    ? `Couldn't find a route from your location. ${reason}`
+    : `Couldn't start navigation. ${reason}`;
 }
 
 // Turn-by-turn navigation: the Start ride button on the planning screen, then the
