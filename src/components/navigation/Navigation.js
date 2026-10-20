@@ -5,8 +5,8 @@ import appConfig from '../../appConfig';
 import { trackEvent } from '../../lib/analytics';
 import { getRoute } from '../../lib/api';
 import { getMap } from '../../lib/map';
-import { RideController } from '../../lib/navigation/controller';
 import { keepScreenOn, speech } from '../../lib/navigation/device';
+import { loadFerrostar } from '../../lib/navigation/ferrostar';
 import { devFlags, navigationEnabled } from '../../lib/navigation/flags';
 import { enableCompass } from '../../lib/navigation/heading';
 import {
@@ -60,6 +60,10 @@ const overviewIcon = (
   </svg>
 );
 
+// The ride controller, like Ferrostar, is only downloaded when a ride starts, so
+// regions and visitors that never navigate don't load it.
+const loadRideController = () => import('../../lib/navigation/controller');
+
 function startErrorMessage(error) {
   // fetch() rejects with a TypeError when the network or server is unreachable.
   if (error instanceof TypeError && /fetch|load failed|network/i.test(error.message)) {
@@ -89,6 +93,8 @@ const Navigation = ({ isMobile }) => {
   const [flags, setFlags] = useState(null);
   const [stepsOpen, setStepsOpen] = useState(false);
   const rideRef = useRef(null);
+  // Identifies the current Start ride tap, so a cancelled start can't carry on.
+  const attemptRef = useRef(null);
 
   useEffect(() => {
     const search = window.location.search;
@@ -101,6 +107,7 @@ const Navigation = ({ isMobile }) => {
   }, []);
 
   const finish = (error = null) => {
+    attemptRef.current = null;
     rideRef.current?.end();
     rideRef.current = null;
     setStepsOpen(false);
@@ -126,24 +133,33 @@ const Navigation = ({ isMobile }) => {
       enableCompass();
     }
 
-    const ride = new RideController({
-      map: getMap(),
-      scenario,
-      simulate: flags.simulate,
-      sim: { warp: flags.warp, noise: flags.noise },
-      getNavRoute: (from, to, { signal }) =>
-        getRoute(from, to, scenario, { signal, nav: true }),
-      publish: (patch) => dispatch(updateNavigation(patch)),
-      track: trackEvent,
-    });
-    rideRef.current = ride;
+    const attempt = {};
+    attemptRef.current = attempt;
     dispatch(startNavigation());
-    ride.start({ start: startLocation, end: endLocation }).catch((error) => {
-      // Cancelled, or replaced by another ride.
-      if (rideRef.current !== ride) return;
-      console.error(error);
-      finish(startErrorMessage(error));
-    });
+    // Start downloading the engine now; the controller picks up the same request.
+    loadFerrostar().catch(() => {});
+    loadRideController()
+      .then(({ RideController }) => {
+        if (attemptRef.current !== attempt) return;
+        const ride = new RideController({
+          map: getMap(),
+          scenario,
+          simulate: flags.simulate,
+          sim: { warp: flags.warp, noise: flags.noise },
+          getNavRoute: (from, to, { signal }) =>
+            getRoute(from, to, scenario, { signal, nav: true }),
+          publish: (patch) => dispatch(updateNavigation(patch)),
+          track: trackEvent,
+        });
+        rideRef.current = ride;
+        return ride.start({ start: startLocation, end: endLocation });
+      })
+      .catch((error) => {
+        // Cancelled, or replaced by another ride.
+        if (attemptRef.current !== attempt) return;
+        console.error(error);
+        finish(startErrorMessage(error));
+      });
   };
 
   const toggleMute = () => {
