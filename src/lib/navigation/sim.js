@@ -74,9 +74,10 @@ export class Simulator {
   }
 
   // Ride the route but go straight through one turn instead of taking it.
-  // route: a Ferrostar Route (geometry and steps with visualInstructions). Returns a
-  // [lat, lon][] path to give to setPath, or null if the route has no suitable turn.
-  planWrongTurn(route) {
+  // route: a Ferrostar Route (geometry and steps with visualInstructions). Only turns
+  // at least `after` meters along the route count. Returns a [lat, lon][] path to give
+  // to setPath, or null if the route has no suitable turn.
+  planWrongTurn(route, { after = 250 } = {}) {
     const geom = route.geometry.map((c) => [c.lat, c.lng]);
     let along = 0;
     for (let k = 0; k < route.steps.length - 1; k++) {
@@ -88,7 +89,7 @@ export class Simulator {
       const isTurn =
         banner?.maneuverType === 'turn' &&
         /left|right/.test(banner.maneuverModifier || '');
-      if (!isTurn || along < 250 || step.distance < 80) continue;
+      if (!isTurn || along < after || step.distance < 80) continue;
       const turnPoint = [next.geometry[0].lat, next.geometry[0].lng];
       // Index of the turn point in the full geometry.
       const idx = geom.findIndex((p) => distance(p, turnPoint) < 1);

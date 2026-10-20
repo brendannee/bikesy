@@ -2,6 +2,7 @@ import assert from 'node:assert/strict';
 import { test } from 'node:test';
 import {
   DeviceLocation,
+  currentFix,
   fixFromPosition,
   keepScreenOn,
   speech,
@@ -131,6 +132,43 @@ test('DeviceLocation: errors become Error objects with a readable message', (t) 
     'unknown error',
     'User denied Geolocation',
   ]);
+});
+
+test('currentFix: one high-accuracy fix, null when none comes in time, and refusal rejects', async (t) => {
+  const requests = [];
+  stubGlobals(t, {
+    navigator: {
+      geolocation: {
+        getCurrentPosition: (ok, fail, options) => requests.push({ ok, fail, options }),
+      },
+    },
+  });
+  const located = currentFix();
+  assert.deepEqual(requests[0].options, {
+    enableHighAccuracy: true,
+    timeout: 10000,
+    maximumAge: 5000,
+  });
+  requests[0].ok(position({ latitude: 1, longitude: 2, accuracy: 5, speed: 0 }));
+  assert.equal((await located).lat, 1);
+
+  const timedOut = currentFix({ timeout: 50 });
+  assert.equal(requests[1].options.timeout, 50);
+  requests[1].fail({ code: 3 });
+  assert.equal(await timedOut, null);
+
+  const unavailable = currentFix();
+  requests[2].fail({ code: 2 });
+  assert.equal(await unavailable, null);
+
+  const refused = currentFix();
+  requests[3].fail({ code: 1 });
+  await assert.rejects(refused, /use your location/);
+});
+
+test('currentFix rejects without geolocation', async (t) => {
+  stubGlobals(t, { navigator: {} });
+  await assert.rejects(currentFix(), /not available/);
 });
 
 test('DeviceLocation: reports when geolocation is unavailable', (t) => {

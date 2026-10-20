@@ -124,6 +124,30 @@ export function fixFromPosition(pos) {
   };
 }
 
+// One fix, to decide where a ride starts. Resolves to a fix, or to null if none came
+// in time (the ride then starts from the planned start and checks the first fix of
+// the watch instead). Rejects if location is unavailable or refused, since navigation
+// can't work without it.
+export function currentFix({ timeout = 10000 } = {}) {
+  return new Promise((resolve, reject) => {
+    if (typeof navigator === 'undefined' || !('geolocation' in navigator)) {
+      reject(new Error('Location is not available in this browser.'));
+      return;
+    }
+    navigator.geolocation.getCurrentPosition(
+      (pos) => resolve(fixFromPosition(pos)),
+      (err) => {
+        if (err.code === 1) {
+          reject(new Error('Allow this site to use your location to navigate.'));
+        } else {
+          resolve(null);
+        }
+      },
+      { enableHighAccuracy: true, timeout, maximumAge: 5000 },
+    );
+  });
+}
+
 export class DeviceLocation {
   constructor(onLocation, onError) {
     this.onLocation = onLocation;

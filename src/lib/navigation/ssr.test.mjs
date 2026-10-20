@@ -9,6 +9,7 @@ const modules = readdirSync(new URL('.', import.meta.url))
 test('there is a module for each piece of the navigation library', () => {
   assert.deepEqual(modules, [
     'camera.js',
+    'controller.js',
     'device.js',
     'ferrostar.js',
     'flags.js',

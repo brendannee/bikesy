@@ -260,6 +260,16 @@ test('planWrongTurn: skips a turn less than 250 m into the route and takes the n
   assert.deepEqual(sim.wrongTurn.at, [route.geometry[2].lat, route.geometry[2].lng]);
 });
 
+test('planWrongTurn: turns before `after` meters are skipped, for a wrong turn mid-ride', () => {
+  const route = turnRoute();
+  const { sim } = makeSim();
+  assert.ok(sim.planWrongTurn(route, { after: 400 }));
+  assert.equal(sim.wrongTurn.stepIndex, 1);
+  assert.ok(sim.planWrongTurn(route, { after: 401 }));
+  assert.equal(sim.wrongTurn.stepIndex, 2);
+  assert.equal(sim.planWrongTurn(route, { after: 701 }), null);
+});
+
 test('planWrongTurn: no suitable turn gives null and leaves wrongTurn unset', () => {
   const { sim } = makeSim();
 
