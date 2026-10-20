@@ -19,7 +19,9 @@ export const NAV_CONFIG = {
   // noise, 36% with 6 m. Entry 25 m gives the exit more fixes to land on, and the fallback
   // advances once the rider is 35 m from the step line (the off-route distance, so clearly
   // past the step end rather than noise). That completes 99.7-100% of rides at 0-10 m
-  // noise and 12-30 km/h, with the same early advances as entry 25 m alone.
+  // noise and 12-30 km/h, with the same early advances as entry 25 m alone. The fallback
+  // only counts within 80 m of the step end: a lone GPS spike mid-step would otherwise
+  // skip the step, and with it the next turn (9% of rides at 10 m noise, some by km).
   stepAdvanceCondition: {
     OrAdvanceConditions: {
       conditions: [
@@ -32,10 +34,17 @@ export const NAV_CONFIG = {
           },
         },
         {
-          DistanceFromStep: {
-            distance: 35,
-            minimumHorizontalAccuracy: 30,
-            calculationPolicy: 'Always',
+          AndAdvanceConditions: {
+            conditions: [
+              {
+                DistanceFromStep: {
+                  distance: 35,
+                  minimumHorizontalAccuracy: 30,
+                  calculationPolicy: 'Always',
+                },
+              },
+              { DistanceToEndOfStep: { distance: 80, minimumHorizontalAccuracy: 30 } },
+            ],
           },
         },
       ],

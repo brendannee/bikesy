@@ -132,8 +132,9 @@ function mulberry32(seed) {
   };
 }
 
-// Rides the route once. Reports whether it finished and, for every step advance, how far
-// the rider's true (noise-free) position was past the maneuver (negative: before it).
+// Rides the route once. Reports whether it finished, for every step advance how far the
+// rider's true (noise-free) position was past the maneuver (negative: before it), and the
+// largest gap between distanceAlongRoute and the true distance ridden.
 function ride({ route, ends, noiseM, speedKmh, seed }) {
   let fix;
   const sim = new Simulator((f) => (fix = f), { random: mulberry32(seed) });
@@ -145,13 +146,15 @@ function ride({ route, ends, noiseM, speedKmh, seed }) {
   const stepIndex = (t) => route.steps.length - t.Navigating.remainingSteps.length;
   let index = stepIndex(state);
   const offsets = [];
+  let drift = 0;
   for (let tick = 0; tick < 600; tick++) {
     sim.tick();
     state = navigator.update(fix);
     if (state.Complete) {
       navigator.free();
-      return { completed: true, offsets };
+      return { completed: true, offsets, drift };
     }
+    drift = Math.max(drift, Math.abs(navigator.distanceAlongRoute - sim.s));
     const now = stepIndex(state);
     // The jump into the arrival step comes from the arrival condition, not step advance.
     if (now > index && now < route.steps.length - 1) {
@@ -160,7 +163,7 @@ function ride({ route, ends, noiseM, speedKmh, seed }) {
     index = now;
   }
   navigator.free();
-  return { completed: false, offsets };
+  return { completed: false, offsets, drift };
 }
 
 function setup() {
@@ -205,4 +208,46 @@ test('step advance waits for the rider to pass each maneuver', { skip }, () => {
       `offsets at ${speedKmh} km/h: ${offsets.map((o) => o.toFixed(0))}`,
     );
   }
+});
+
+test('distance along the route follows the rider, not the GPS jitter', { skip }, () => {
+  const { route, ends } = setup();
+  let worst = 0;
+  for (const noiseM of [0, 3, 6, 10]) {
+    for (const speedKmh of [12, 18, 30]) {
+      for (let seed = 1; seed <= 5; seed++) {
+        worst = Math.max(worst, ride({ route, ends, noiseM, speedKmh, seed }).drift);
+      }
+    }
+  }
+  // Summing the snapped position's movement runs 27% over at 6 m of noise (170 m over
+  // this 640 m route). Progress only lags by a step advance (the banner's step caps it) or
+  // leads by the arrival step, which starts about 20 m before the end.
+  assert(worst < 60, `${worst.toFixed(0)} m off`);
+});
+
+test('a lone GPS spike mid-step does not skip the step', { skip }, () => {
+  const { route } = setup();
+  const start = [route.geometry[0].lat, route.geometry[0].lng];
+  const navigator = new Navigator(ferrostar, route);
+  const fixAt = (north, east, tick) => {
+    const [lat, lng] = destination(destination(start, 0, north), 90, east);
+    return { lat, lng, accuracy: 10, course: 0, speed: 5, timestamp: tick * 1000 };
+  };
+  navigator.start(fixAt(0, 0, 0));
+  // 40 m up the 150 m first leg, a few fixes 60 m to the side, then back on the route.
+  const track = [
+    [20, 0],
+    [40, 0],
+    [45, 60],
+    [50, 60],
+    [55, 60],
+    [60, 0],
+    [70, 0],
+  ];
+  track.forEach(([north, east], i) => {
+    const state = navigator.update(fixAt(north, east, i + 1));
+    assert.equal(state.Navigating.remainingSteps.length, route.steps.length);
+  });
+  navigator.free();
 });

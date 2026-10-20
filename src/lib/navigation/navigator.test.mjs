@@ -70,10 +70,15 @@ test('NAV_CONFIG keeps the thresholds tuned on real rides', () => {
     minimumHorizontalAccuracy: 30,
     hasReachedEndOfCurrentStep: false,
   });
-  assert.deepEqual(fallback.DistanceFromStep, {
+  const [pastStep, nearEnd] = fallback.AndAdvanceConditions.conditions;
+  assert.deepEqual(pastStep.DistanceFromStep, {
     distance: 35,
     minimumHorizontalAccuracy: 30,
     calculationPolicy: 'Always',
+  });
+  assert.deepEqual(nearEnd.DistanceToEndOfStep, {
+    distance: 80,
+    minimumHorizontalAccuracy: 30,
   });
   assert.deepEqual(NAV_CONFIG.arrivalStepAdvanceCondition, {
     DistanceToEndOfStep: { distance: 20, minimumHorizontalAccuracy: 40 },
