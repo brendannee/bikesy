@@ -3,6 +3,7 @@ import { test } from 'node:test';
 import { NO_NAV_ROUTE_MESSAGE, RideController } from './controller.js';
 import { destination, distance, pointToSegment } from './geo.js';
 import { speech } from './device.js';
+import { compass } from './heading.js';
 
 // --- Fakes ------------------------------------------------------------------------
 
@@ -105,6 +106,7 @@ function fakeFerrostar() {
   const sessions = [];
   class NavigationSession {
     constructor(route) {
+      if (route.broken) throw new Error('Ferrostar rejected the route');
       this.route = route;
       this.freed = false;
       sessions.push(this);
@@ -184,7 +186,10 @@ function deferred() {
 
 // A controller with fakes everywhere. getNavRoute answers with a route north from
 // wherever it is asked to start, unless a test queues its own responses.
-function setup(t, { simulate = true, locate, meters = 1000, responses = [] } = {}) {
+function setup(
+  t,
+  { simulate = true, locate, meters = 1000, responses = [], loadEngine } = {},
+) {
   const { ferrostar, sessions } = fakeFerrostar();
   const requests = [];
   const updates = [];
@@ -195,7 +200,7 @@ function setup(t, { simulate = true, locate, meters = 1000, responses = [] } = {
     scenario: '1',
     simulate,
     locate,
-    loadEngine: async () => ferrostar,
+    loadEngine: loadEngine ?? (async () => ferrostar),
     getNavRoute: (from, to, { signal }) => {
       requests.push({ from, to, signal });
       if (responses.length) return responses.shift();
@@ -342,6 +347,8 @@ test('3 s off route reroutes from the rider, and totals carry across to arrival'
   const off = fixAt(along(START, 300, 100), t0 + 64000);
   ride.onFix(off);
   assert.equal(requests.length, 2);
+  // The red banner says so; no "Rerouting…" notice on top of it.
+  assert.equal(state().toast, undefined);
   assert.ok(
     distance([requests[1].from.lat, requests[1].from.lng], [off.lat, off.lng]) < 0.01,
   );
@@ -365,6 +372,11 @@ test('3 s off route reroutes from the rider, and totals carry across to arrival'
   assert.equal(state().status, 'arrived');
   assert.equal(state().summary.distance, '0.8 mi');
   assert.equal(state().summary.note, 'Simulated ride · rerouted 1×');
+  // Nothing keeps running behind the arrival card.
+  assert.equal(ride.sim.running, false);
+  assert.equal(ride.sim.timer, null);
+  assert.equal(ride.camera.running, false);
+  assert.equal(compass.listeners.size, 0);
 
   assert.deepEqual(
     events.map((e) => e.name),
@@ -464,4 +476,96 @@ test('analytics never include a location', async (t) => {
       assert.ok(typeof value === 'string' || Number.isInteger(value), key);
     }
   }
+});
+
+test("only the route request blames the rider's location for a failed start", async (t) => {
+  const far = fixAt(along(START, -400), 1000);
+  const engineDown = Object.assign(new Error('Failed to load the navigation engine'), {
+    name: 'ChunkLoadError',
+  });
+  const noEngine = setup(t, {
+    simulate: false,
+    locate: async () => far,
+    loadEngine: () => Promise.reject(engineDown),
+  });
+  await assert.rejects(
+    noEngine.ride.start({ start: point(START), end: point(along(START, 1000)) }),
+    (error) => error.name === 'ChunkLoadError' && !error.fromRider,
+  );
+});
+
+test("a backend without nav=1 doesn't blame the rider's location either", async (t) => {
+  const far = fixAt(along(START, -400), 1000);
+  const oldBackend = setup(t, {
+    simulate: false,
+    locate: async () => far,
+    responses: [Promise.resolve({ path: ['legacy only'] })],
+  });
+  await assert.rejects(
+    oldBackend.ride.start({ start: point(START), end: point(along(START, 1000)) }),
+    (error) => error.message === NO_NAV_ROUTE_MESSAGE && !error.fromRider,
+  );
+});
+
+test('a nav_route with no route fails the start', async (t) => {
+  const { ride } = setup(t, {
+    responses: [Promise.resolve({ nav_route: { code: 'Ok', routes: [] } })],
+  });
+  await assert.rejects(
+    ride.start({ start: point(START), end: point(along(START, 1000)) }),
+    /no route/,
+  );
+});
+
+test('a coarse first fix never decides where the ride starts', async (t) => {
+  // ±500 m Wi-Fi position, 900 m away: start from the plan.
+  const { ride, requests, state } = setup(t, {
+    simulate: false,
+    locate: async () => fixAt(along(START, -900), 1000, { accuracy: 500 }),
+  });
+  await ride.start({ start: point(START), end: point(along(START, 1000)) });
+  assert.deepEqual(requests[0].from, point(START));
+  // Coarse watch fixes are not checked either; the first good one is.
+  ride.onFix(fixAt(along(START, -900), 2000, { accuracy: 300, course: null }));
+  assert.equal(requests.length, 1);
+  const here = along(START, -400);
+  ride.onFix(fixAt(here, 3000, { accuracy: 10 }));
+  assert.equal(requests.length, 2);
+  assert.ok(distance([requests[1].from.lat, requests[1].from.lng], here) < 0.01);
+  assert.equal(state().status, 'rerouting');
+});
+
+test('a new route that Ferrostar rejects keeps the current session running', async (t) => {
+  const broken = route(along(START, 100, 80), 900);
+  broken.broken = true;
+  const { ride, sessions, state } = setup(t, {
+    responses: [
+      Promise.resolve({ nav_route: { code: 'Ok', route: route(START, 1000) } }),
+      Promise.resolve({ nav_route: { code: 'Ok', route: broken } }),
+    ],
+  });
+  await ride.start({ start: point(START), end: point(along(START, 1000)) });
+  ride.sim.stop();
+  await ride.reroute(fixAt(along(START, 100, 80), 1));
+  assert.equal(
+    state().toast.text,
+    "Couldn't reroute: Ferrostar rejected the route. Retrying…",
+  );
+  assert.equal(sessions.length, 1);
+  assert.equal(sessions[0].freed, false);
+  assert.equal(ride.ride.reroutes, 0);
+  ride.onFix(fixAt(along(START, 200), ride.sim.clock + 40000));
+  assert.equal(state().status, 'navigating');
+  assert.equal(state().offRoute, false);
+});
+
+test("a GPS ride's arrival card has no label unless it was rerouted", async (t) => {
+  const { ride, state } = setup(t, {
+    simulate: false,
+    locate: async () => fixAt(START, 1000),
+  });
+  await ride.start({ start: point(START), end: point(along(START, 1000)) });
+  ride.onFix(fixAt(along(START, 998), 200000));
+  assert.equal(state().status, 'arrived');
+  assert.equal(state().summary.note, '');
 });
