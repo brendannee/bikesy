@@ -32,7 +32,7 @@ import { angleDiff, initialBearing, toPoints } from './geo.js';
 import { HeadingState, compass, disableCompass, onCompass } from './heading.js';
 import { RouteLayers } from './layers.js';
 import { Navigator, REROUTE_RETRY_MS, isOffRoute } from './navigator.js';
-import { Ride, isFarFromStart } from './ride.js';
+import { Ride, isFarFromStart, isStartFix } from './ride.js';
 import { Simulator } from './sim.js';
 
 export const NO_NAV_ROUTE_MESSAGE =
@@ -113,11 +113,13 @@ export class RideController {
     this.engine.catch(() => {});
 
     // The simulator always rides from the planned start. A real rider who is well
-    // away from it gets a route from where they are.
+    // away from it gets a route from where they are. A coarse fix doesn't decide: the
+    // ride starts from the plan and checks the first good fix from the GPS watch.
     let fix = null;
     let from = start;
     if (!this.simulate) {
       fix = await this.locate();
+      if (fix && !isStartFix(fix)) fix = null;
       if (fix && isFarFromStart(fix, start)) from = { lat: fix.lat, lng: fix.lng };
     }
     if (signal.aborted) return;
@@ -206,8 +208,8 @@ export class RideController {
     if (!this.riding || !this.navigator) return;
     this.lastFix = fix;
     this.ride.addFix(fix);
-    // If the first real fix is far from where the route starts, route from here.
-    if (!this.simulate && !this.ride.checkedStart) {
+    // If the first good fix is far from where the route starts, route from here.
+    if (!this.simulate && !this.ride.checkedStart && isStartFix(fix)) {
       this.ride.checkedStart = true;
       if (isFarFromStart(fix, this.navigator.route.geometry[0])) {
         this.reroute(fix, 'Routing from your location…');

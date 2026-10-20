@@ -1,19 +1,42 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
 import { destination } from './geo.js';
-import { Ride, START_REROUTE_METERS, averageSpeed, isFarFromStart } from './ride.js';
+import {
+  Ride,
+  START_FIX_ACCURACY,
+  START_REROUTE_METERS,
+  averageSpeed,
+  isFarFromStart,
+  isStartFix,
+} from './ride.js';
+
+const start = { lat: 38.9447, lng: -119.9772 };
+const at = (m, accuracy) => {
+  const [lat, lng] = destination([start.lat, start.lng], 135, m);
+  return { lat, lng, accuracy };
+};
 
 test('isFarFromStart: farther than 150 m from the route start', () => {
-  const start = { lat: 38.9447, lng: -119.9772 };
-  const at = (m) => {
-    const [lat, lng] = destination([start.lat, start.lng], 135, m);
-    return { lat, lng };
-  };
   assert.equal(START_REROUTE_METERS, 150);
   assert.equal(isFarFromStart(start, start), false);
   assert.equal(isFarFromStart(at(149), start), false);
   assert.equal(isFarFromStart(at(151), start), true);
   assert.equal(isFarFromStart(at(80), start, 50), true);
+});
+
+test('isFarFromStart: allows for the fix accuracy', () => {
+  assert.equal(isFarFromStart(at(170, 30), start), false);
+  assert.equal(isFarFromStart(at(181, 30), start), true);
+  assert.equal(isFarFromStart(at(600, 500), start), false);
+});
+
+test('isStartFix: only a fix within 50 m decides where a ride starts', () => {
+  assert.equal(START_FIX_ACCURACY, 50);
+  assert.equal(isStartFix(at(0, 8)), true);
+  assert.equal(isStartFix(at(0, 50)), true);
+  assert.equal(isStartFix(at(0, 51)), false);
+  assert.equal(isStartFix(at(0, 500)), false);
+  assert.equal(isStartFix(at(0)), true); // no accuracy reported
 });
 
 test('averageSpeed: metres per second, with elapsed time floored at one second', () => {
