@@ -47,17 +47,24 @@ export class Ride {
     this.track.push([lat, lng]);
   }
 
-  // Call when a reroute succeeds, before freeing the old navigator: its session's
-  // distance is added to the running total.
+  // Metres ridden so far: the finished routes plus the progress on the current one.
+  // Only progress along a route counts, so a detour off it isn't included.
+  distanceRidden(navigator) {
+    return this.distanceOffset + (navigator?.distanceAlongRoute ?? 0);
+  }
+
+  // Call when a reroute succeeds, before freeing the old navigator: the progress made
+  // on its route is added to the running total.
   rerouted(navigator) {
-    this.distanceOffset += navigator.snappedDistanceTraveled;
+    this.distanceOffset = this.distanceRidden(navigator);
     this.reroutes++;
   }
 
-  // Totals at arrival. complete: TripState.Complete. Pass `simClock` (the simulator's
-  // clock) for a simulated ride, whose time runs `warp` times faster than the wall clock.
-  summary(complete, { simClock = null } = {}) {
-    const meters = this.distanceOffset + complete.summary.snappedDistanceTraveled;
+  // Totals at arrival, when the navigator's whole route counts as ridden. Pass `simClock`
+  // (the simulator's clock) for a simulated ride, whose time runs `warp` times faster than
+  // the wall clock.
+  summary(navigator, { simClock = null } = {}) {
+    const meters = this.distanceRidden(navigator);
     const elapsedMs =
       simClock != null
         ? simClock - (this.firstFix?.timestamp ?? simClock)

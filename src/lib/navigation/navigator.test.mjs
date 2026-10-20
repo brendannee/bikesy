@@ -236,17 +236,35 @@ test('an off-route fix without a timestamp falls back to the wall clock', (t) =>
   assert.equal(nav.offRouteSince, 50_000);
 });
 
-test('snappedDistanceTraveled: this session distance, 0 until navigating', () => {
-  let traveled = 0;
+test('distanceAlongRoute: furthest progress on this route, all of it once complete', () => {
+  let remaining = 1000;
+  let done = false;
   const { ferrostar } = fakeFerrostar(() =>
-    onRoute({ summary: { snappedDistanceTraveled: traveled } }),
+    done
+      ? { Complete: { summary: { snappedDistanceTraveled: 1234 } } }
+      : onRoute({ progress: { distanceRemaining: remaining } }),
   );
-  const nav = new Navigator(ferrostar, {});
-  assert.equal(nav.snappedDistanceTraveled, 0);
+  const nav = new Navigator(ferrostar, { distance: 1000 });
+  assert.equal(nav.distanceAlongRoute, 0);
   nav.start(fix(0));
-  traveled = 412.5;
+  assert.equal(nav.distanceAlongRoute, 0);
+  remaining = 600;
   nav.update(fix(1000));
-  assert.equal(nav.snappedDistanceTraveled, 412.5);
+  assert.equal(nav.distanceAlongRoute, 400);
+  // Jitter moves the snapped position back and forth along the route: nothing is added.
+  for (const r of [640, 590, 630, 595, 600]) {
+    remaining = r;
+    nav.update(fix(2000));
+  }
+  assert.equal(nav.distanceAlongRoute, 410);
+  // Past the old furthest point it moves on again.
+  remaining = 450;
+  nav.update(fix(3000));
+  assert.equal(nav.distanceAlongRoute, 550);
+  // Arrival counts the whole route, wherever the last fix snapped.
+  done = true;
+  nav.update(fix(4000));
+  assert.equal(nav.distanceAlongRoute, 1000);
 });
 
 test('free releases the session once and later fixes are ignored', () => {

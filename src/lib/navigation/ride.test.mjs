@@ -53,13 +53,15 @@ test('Ride: distance carries across reroutes and the first fix is remembered', (
   ride.addFix({ lat: 3, lng: 4, timestamp: 20 });
   assert.equal(ride.firstFix, first);
 
-  ride.rerouted({ snappedDistanceTraveled: 400 });
-  ride.rerouted({ snappedDistanceTraveled: 250 });
+  ride.rerouted({ distanceAlongRoute: 400 });
+  ride.rerouted({ distanceAlongRoute: 250 });
   assert.equal(ride.reroutes, 2);
   assert.equal(ride.distanceOffset, 650);
 
   wall += 600_000; // ten minutes later
-  const summary = ride.summary({ summary: { snappedDistanceTraveled: 1350 } });
+  const summary = ride.summary({ distanceAlongRoute: 1350 });
+  assert.equal(ride.distanceRidden({ distanceAlongRoute: 100 }), 750);
+  assert.equal(ride.distanceRidden(null), 650);
   assert.equal(summary.meters, 2000);
   assert.equal(summary.elapsedMs, 600_000);
   assert.equal(summary.reroutes, 2);
@@ -69,20 +71,14 @@ test('Ride: distance carries across reroutes and the first fix is remembered', (
 test('Ride: a simulated ride is timed on the simulator clock, not the wall clock', () => {
   const ride = new Ride({ now: () => 5_000_000 });
   ride.addFix({ lat: 1, lng: 2, timestamp: 1_000_000 });
-  const summary = ride.summary(
-    { summary: { snappedDistanceTraveled: 900 } },
-    { simClock: 1_300_000 },
-  );
+  const summary = ride.summary({ distanceAlongRoute: 900 }, { simClock: 1_300_000 });
   assert.equal(summary.elapsedMs, 300_000);
   assert.equal(summary.averageSpeed, 3);
 });
 
 test('Ride: an arrival with no recorded fix does not produce NaN', () => {
   const ride = new Ride({ now: () => 0 });
-  const summary = ride.summary(
-    { summary: { snappedDistanceTraveled: 5 } },
-    { simClock: 123 },
-  );
+  const summary = ride.summary({ distanceAlongRoute: 5 }, { simClock: 123 });
   assert.equal(summary.elapsedMs, 0);
   assert.equal(summary.averageSpeed, 5);
 });

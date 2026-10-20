@@ -385,7 +385,8 @@ test('3 s off route reroutes from the rider, and totals carry across to arrival'
   assert.deepEqual(events[1].properties, { scenario: '1', reroutes: 1 });
   assert.equal(events[2].properties.scenario, '1');
   assert.equal(events[2].properties.reroutes, 1);
-  assert.ok(Math.abs(events[2].properties.distanceMeters - 1298) <= 2);
+  // The 300 m ridden on the first route and all 1000 m of the second.
+  assert.equal(events[2].properties.distanceMeters, 1300);
 
   // Done after arrival is not an early end.
   ride.end();
@@ -445,7 +446,10 @@ test('ending early tracks the distance ridden, frees the session and clears the 
   const { ride, sessions, events, map } = setup(t);
   await ride.start({ start: point(START), end: point(along(START, 1000)) });
   ride.sim.stop();
-  ride.onFix(fixAt(along(START, 250), ride.sim.clock + 50000));
+  // GPS jitter back and forth along the route adds no distance.
+  [180, 200, 170, 240, 215, 250, 230, 245].forEach((meters, i) => {
+    ride.onFix(fixAt(along(START, meters), ride.sim.clock + 50000 + i * 1000));
+  });
   ride.end();
   assert.equal(sessions[0].freed, true);
   assert.equal(map.layers.size, 0);

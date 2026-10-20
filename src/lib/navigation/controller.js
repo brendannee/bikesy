@@ -230,7 +230,7 @@ export class RideController {
   render(tripState, fix, { silent = false } = {}) {
     if (!tripState) return;
     if (tripState.Complete) {
-      this.arrive(tripState.Complete);
+      this.arrive();
       return;
     }
     const n = tripState.Navigating;
@@ -306,7 +306,7 @@ export class RideController {
       if (request.signal.aborted || !this.riding) return;
       // Build the new session first, so a failure leaves the current one running.
       const navigator = new Navigator(this.ferrostar, route);
-      // Each Ferrostar session counts its own distance; carry it across reroutes.
+      // Each Ferrostar session tracks its own route; carry the distance across reroutes.
       this.ride.rerouted(this.navigator);
       this.navigator.free();
       this.navigator = navigator;
@@ -340,14 +340,7 @@ export class RideController {
     }
   }
 
-  // Metres ridden so far, across reroutes.
-  distanceRidden() {
-    return (
-      (this.ride?.distanceOffset ?? 0) + (this.navigator?.snappedDistanceTraveled ?? 0)
-    );
-  }
-
-  arrive(complete) {
+  arrive() {
     if (!this.riding) return;
     // Nothing moves on the arrival card: stop the location source, the compass and
     // the camera animation. Speech carries on, to finish the arrival prompt.
@@ -357,7 +350,9 @@ export class RideController {
     this.status = 'arrived';
     this.rerouteAbort?.abort();
     this.layers.setManeuver(null);
-    const summary = this.ride.summary(complete, { simClock: this.sim?.clock ?? null });
+    const summary = this.ride.summary(this.navigator, {
+      simClock: this.sim?.clock ?? null,
+    });
     // Zoom out to the ride as ridden, detours included, above the arrival card.
     this.camera.showPuck(false);
     this.camera.stop();
@@ -404,7 +399,7 @@ export class RideController {
     if (this.riding) {
       this.track('nav_end_early', {
         scenario: this.scenario,
-        distanceMeters: Math.round(this.distanceRidden()),
+        distanceMeters: Math.round(this.ride.distanceRidden(this.navigator)),
         reroutes: this.ride.reroutes,
       });
     }
@@ -455,7 +450,7 @@ export class RideController {
   missNextTurn() {
     if (!this.sim || !this.riding) return;
     const detour = this.sim.planWrongTurn(this.navigator.route, {
-      after: this.navigator.snappedDistanceTraveled + 100,
+      after: this.navigator.distanceAlongRoute + 100,
     });
     if (!detour) {
       this.toast('No turn ahead to miss.');

@@ -96,10 +96,12 @@ export class Navigator {
     this.session = new ferrostar.NavigationSession(route, config);
     this.navState = null;
     this.offRouteSince = null;
+    this.furthest = 0; // metres of the route covered at the furthest point reached
   }
 
   start(location) {
     this.navState = this.session.getInitialState(toUserLocation(location));
+    this.noteProgress();
     return this.tripState;
   }
 
@@ -111,6 +113,7 @@ export class Navigator {
       toUserLocation(location),
       this.navState,
     );
+    this.noteProgress();
     const t = this.tripState;
     const off = isOffRoute(t);
     if (off && this.offRouteSince == null) {
@@ -128,10 +131,21 @@ export class Navigator {
     return isOffRoute(this.tripState);
   }
 
-  // Distance ridden on this route (m). Ferrostar's totals are per session, so the
-  // caller adds this to its running total when it swaps in a rerouted session.
-  get snappedDistanceTraveled() {
-    return this.tripState?.Navigating?.summary?.snappedDistanceTraveled ?? 0;
+  // Progress is the route length less Ferrostar's distance remaining; keep the furthest.
+  noteProgress() {
+    const remaining = this.tripState?.Navigating?.progress?.distanceRemaining;
+    if (remaining != null) {
+      this.furthest = Math.max(this.furthest, this.route.distance - remaining);
+    }
+  }
+
+  // Distance ridden on this route (m): the furthest point reached, and all of it once
+  // the trip is complete. Ferrostar's own total sums the snapped position's movement, so
+  // GPS jitter along the route inflates it (+27% at 6 m of noise); progress along the
+  // route can't be. The caller adds this to its running total when it swaps in a
+  // rerouted session.
+  get distanceAlongRoute() {
+    return this.tripState?.Complete ? this.route.distance : this.furthest;
   }
 
   // Off route continuously for `ms` (and not a lone GPS spike). `now` is in the same
