@@ -10,15 +10,18 @@ import {
   updateEndMarker,
   updatePath,
   updateMapSize,
+  setNavigationMode,
 } from '../lib/map';
 import MapLayers from '../components/MapLayers';
 
 const Map = ({
   isMobile,
+  isNavigating,
   mobileView,
   height,
   assignStartLocation,
   assignEndLocation,
+  children,
 }) => {
   const startLocation = useSelector((state) => state.search.startLocation);
   const endLocation = useSelector((state) => state.search.endLocation);
@@ -50,12 +53,18 @@ const Map = ({
       if (type === 'start') {
         assignStartLocation(latlng);
         if (endLocationRef.current) {
-          trackEvent('route_submit', { source: 'pin_drag', scenario: scenarioRef.current });
+          trackEvent('route_submit', {
+            source: 'pin_drag',
+            scenario: scenarioRef.current,
+          });
         }
       } else if (type === 'end') {
         assignEndLocation(latlng);
         if (startLocationRef.current) {
-          trackEvent('route_submit', { source: 'pin_drag', scenario: scenarioRef.current });
+          trackEvent('route_submit', {
+            source: 'pin_drag',
+            scenario: scenarioRef.current,
+          });
         }
       }
     }
@@ -96,6 +105,11 @@ const Map = ({
     updatePath(path);
   }, [path]);
 
+  // Before the resize below, so a ride's camera isn't overridden by fitting the route.
+  useEffect(() => {
+    setNavigationMode(isNavigating);
+  }, [isNavigating]);
+
   useEffect(() => {
     updateMapSize();
   }, [height]);
@@ -115,6 +129,7 @@ const Map = ({
       {isMobile !== undefined && isMapLoaded && (
         <MapLayers isInitiallyVisible={!isMobile} mapRef={mapRef} />
       )}
+      {isMapLoaded && children}
     </div>
   );
 };

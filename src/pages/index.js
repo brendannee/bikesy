@@ -4,11 +4,13 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { useDispatch } from 'react-redux';
 import polyline from '@mapbox/polyline';
 import { useSelector } from 'react-redux';
+import classNames from 'classnames';
 
 import Controls from '../components/Controls';
 import Directions from '../components/Directions';
 import Elevation from '../components/Elevation';
 import Map from '../components/Map';
+import Navigation from '../components/navigation/Navigation';
 import TitleBar from '../components/Titlebar';
 import WelcomeModal from '../components/WelcomeModal';
 
@@ -36,6 +38,7 @@ import {
   setDirections,
   setElevationProfile,
 } from '../redux/slices/search';
+import { isNavigating } from '../redux/slices/navigation';
 
 import appConfig from '../appConfig';
 import { formatLatLngForUrl, parseLatLngFromUrlParameter } from '../lib/url';
@@ -50,6 +53,7 @@ const IndexPage = () => {
   const startLocation = useSelector((state) => state.search.startLocation);
   const endLocation = useSelector((state) => state.search.endLocation);
   const elevationProfile = useSelector((state) => state.search.elevationProfile);
+  const navigating = useSelector((state) => isNavigating(state.navigation.status));
 
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -235,19 +239,25 @@ const IndexPage = () => {
     mapHeight -= titlebarHeight;
   }
 
+  // While navigating, the map fills the screen and the planning panels are hidden (but
+  // stay mounted, so planning comes back exactly as it was).
+  if (navigating) {
+    mapHeight = windowSize.height;
+  }
+
   useEffect(() => {
     if (qrCode) {
       // Map slug to lat-long using appConfig URL_LOCATIONS
       const coords = appConfig.URL_LOCATIONS && appConfig.URL_LOCATIONS[Number(qrCode)];
       if (coords) {
         const latlng = { lat: coords[0], lng: coords[1] };
-        
+
         setShowWelcomeModal(false);
         setIsStartFromQR();
         assignStartLocation(latlng);
       }
 
-      router.replace('/')
+      router.replace('/');
     }
   }, [qrCode]);
 
@@ -338,7 +348,7 @@ const IndexPage = () => {
         <link rel="mask-icon" href="favicon/safari-pinned-tab.svg" color="#5bbad5" />
         <meta name="theme-color" content="#ffffff" />
       </Head>
-      <div>
+      <div className={classNames({ navigating })}>
         <TitleBar
           changeMobileView={changeMobileView}
           isMobile={isMobile}
@@ -365,8 +375,11 @@ const IndexPage = () => {
           assignEndLocation={assignEndLocation}
           height={mapHeight}
           isMobile={isMobile}
+          isNavigating={navigating}
           mobileView={mobileView}
-        />
+        >
+          <Navigation isMobile={isMobile} />
+        </Map>
 
         <Elevation
           width={elevationWidth}
@@ -378,7 +391,7 @@ const IndexPage = () => {
         />
 
         <WelcomeModal
-          showWelcomeModal={showWelcomeModal}
+          showWelcomeModal={showWelcomeModal && !navigating}
           hideWelcomeModal={hideWelcomeModal}
         />
       </div>
