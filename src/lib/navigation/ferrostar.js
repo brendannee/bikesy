@@ -21,7 +21,7 @@ export function loadFerrostar() {
 }
 
 // Converts the backend's `nav_route` (Valhalla's OSRM-format response) into a Ferrostar
-// Route, a plain JS object. Throws if the response code isn't "Ok".
+// Route, a plain JS object. Throws if the response code isn't "Ok" or has no route.
 export function parseNavRoute(ferrostar, navRoute) {
   // The Valhalla provider pairs a Valhalla request generator with Ferrostar's OSRM
   // response parser (polyline6). We only use the parser; the URL is never called.
@@ -29,5 +29,7 @@ export function parseNavRoute(ferrostar, navRoute) {
     Valhalla: { endpointUrl: 'https://unused.invalid/route', profile: 'bicycle' },
   });
   const bytes = new TextEncoder().encode(JSON.stringify(navRoute));
-  return adapter.parseResponse(bytes)[0];
+  const [route] = adapter.parseResponse(bytes);
+  if (!route) throw new Error('The routing server returned no route.');
+  return route;
 }

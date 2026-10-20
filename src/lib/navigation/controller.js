@@ -121,21 +121,22 @@ export class RideController {
       if (fix && isFarFromStart(fix, start)) from = { lat: fix.lat, lng: fix.lng };
     }
     if (signal.aborted) return;
-    const route = await this.fetchRoute(from, signal).catch((error) => {
-      // The rider may not expect a route from where they are: say so.
-      if (from !== start) error.fromRider = true;
-      throw error;
-    });
+    const route = await this.fetchRoute(from, signal, { fromRider: from !== start });
     const ferrostar = await this.engine;
     if (signal.aborted) return;
     this.begin(ferrostar, route, fix);
   }
 
-  async fetchRoute(from, signal) {
-    const [ferrostar, response] = await Promise.all([
-      this.engine,
-      this.getNavRoute(from, this.destination, { signal }),
-    ]);
+  // fromRider: the route starts where the rider is rather than where they planned, so
+  // a failed route request says so.
+  async fetchRoute(from, signal, { fromRider = false } = {}) {
+    const request = this.getNavRoute(from, this.destination, { signal }).catch(
+      (error) => {
+        if (fromRider) error.fromRider = true;
+        throw error;
+      },
+    );
+    const [ferrostar, response] = await Promise.all([this.engine, request]);
     // A backend without nav=1 support answers with the planning response only.
     if (!response.nav_route) throw new Error(NO_NAV_ROUTE_MESSAGE);
     return parseNavRoute(ferrostar, response.nav_route);
@@ -300,10 +301,12 @@ export class RideController {
     try {
       const route = await this.fetchRoute({ lat: fix.lat, lng: fix.lng }, request.signal);
       if (request.signal.aborted || !this.riding) return;
+      // Build the new session first, so a failure leaves the current one running.
+      const navigator = new Navigator(this.ferrostar, route);
       // Each Ferrostar session counts its own distance; carry it across reroutes.
       this.ride.rerouted(this.navigator);
       this.navigator.free();
-      this.navigator = new Navigator(this.ferrostar, route);
+      this.navigator = navigator;
       const points = toPoints(route.geometry);
       this.layers.setRoute(points);
       // The simulated rider heads from where they are onto the new route.
