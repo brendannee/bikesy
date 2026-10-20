@@ -366,7 +366,13 @@ export class RideController {
         : toPoints(this.navigator.route.geometry);
     this.layers.setRoute(points);
     this.camera.fit(points, ARRIVAL_PADDING);
-    const kind = this.sim ? 'Simulated ride' : 'GPS ride';
+    // ?sim=1 rides say so, for screenshots and QA.
+    const note = [
+      this.sim && 'Simulated ride',
+      summary.reroutes && `rerouted ${summary.reroutes}×`,
+    ]
+      .filter(Boolean)
+      .join(' · ');
     this.publish({
       status: 'arrived',
       offRoute: false,
@@ -375,7 +381,7 @@ export class RideController {
         distance: formatDistance(summary.meters),
         time: formatDuration(summary.elapsedMs / 1000),
         speed: formatSpeed(summary.averageSpeed),
-        note: summary.reroutes ? `${kind} · rerouted ${summary.reroutes}×` : kind,
+        note: note.charAt(0).toUpperCase() + note.slice(1),
       },
     });
     this.track('nav_arrive', {

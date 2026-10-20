@@ -27,7 +27,6 @@ export const compass = {
   source: null, // 'webkitCompassHeading' | 'deviceorientationabsolute' | 'deviceorientation(absolute)'
   accuracy: null,
   lastEvent: 0, // performance.now() of the last valid reading
-  events: 0,
   rate: 0, // events/second, for the debug readout
   status: 'off', // off | requesting | listening | denied | unsupported
   listeners: new Set(),
@@ -66,7 +65,6 @@ function publish(value, source, raw, accuracy) {
   compass.source = source;
   compass.accuracy = accuracy;
   compass.lastEvent = now;
-  compass.events++;
   rateWindow.push(now);
   while (rateWindow.length && rateWindow[0] < now - 1000) rateWindow.shift();
   compass.rate = rateWindow.length;
@@ -153,7 +151,6 @@ export function disableCompass() {
     source: null,
     accuracy: null,
     lastEvent: 0,
-    events: 0,
     rate: 0,
     status: 'off',
   });

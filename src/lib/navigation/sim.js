@@ -15,7 +15,7 @@ function gaussian(random) {
 
 export class Simulator {
   // onLocation receives fixes in the same shape as DeviceLocation:
-  // { lat, lng, accuracy, course, speed, timestamp, done }.
+  // { lat, lng, accuracy, course, speed, timestamp }.
   //
   // The clock, timer and random source can be replaced for tests:
   //   now()                      -> ms since the epoch (default Date.now)
@@ -43,7 +43,6 @@ export class Simulator {
     this.running = false;
     this.clock = now(); // simulated "now" (ms); advances 1 s per tick
     this.paused = false;
-    this.wrongTurn = null;
   }
 
   // points: [lat, lon][]. Starts from the point on the path nearest `from` (if given).
@@ -99,7 +98,6 @@ export class Simulator {
       const detour = geom.slice(0, idx + 1);
       for (let d = 20; d <= 300; d += 20)
         detour.push(destination(turnPoint, approach, d));
-      this.wrongTurn = { stepIndex: k + 1, at: turnPoint };
       return detour;
     }
     return null;
@@ -146,7 +144,6 @@ export class Simulator {
       course: speed > 0 ? course + (this.noiseM ? gaussian(this.random) * 3 : 0) : null,
       speed,
       timestamp: this.clock,
-      done,
     };
   }
 

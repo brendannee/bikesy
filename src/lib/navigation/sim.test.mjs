@@ -63,7 +63,6 @@ test('a rider on a straight path moves 5 m per second at 18 km/h, heading along 
   assert.equal(fixes[2].speed, 5);
   near(angleDiff(fixes[2].course, 0), 0, 0.01);
   assert.equal(fixes[2].accuracy, 4);
-  assert.equal(fixes[2].done, false);
 });
 
 test('fix timestamps follow the simulated clock: one second per tick, whatever the warp', () => {
@@ -175,13 +174,13 @@ test('speed follows speedKmh and adjustSpeed clamps to the allowed range', () =>
   assert.equal(sim.speedKmh, MIN_SPEED_KMH);
 });
 
-test('the rider arrives, reports done with no speed, and stays at the end', () => {
+test('the rider arrives, stops with no speed, and stays at the end', () => {
   const { sim, fixes } = makeSim();
   sim.setPath([origin, north(12)]); // 12 m = three ticks
   for (let i = 0; i < 5; i++) sim.tick();
   assert.deepEqual(
-    fixes.map((f) => f.done),
-    [false, false, true, true, true],
+    fixes.map((f) => f.speed),
+    [5, 5, 0, 0, 0],
   );
   const last = fixes[4];
   assert.equal(last.speed, 0);
@@ -262,14 +261,15 @@ function turnRoute({ firstStep = 400 } = {}) {
   };
 }
 
+// The turn a detour misses: where it leaves the route for 15 points straight ahead.
+const missedTurn = (detour) => detour[detour.length - 16];
+const vertex = (route, i) => [route.geometry[i].lat, route.geometry[i].lng];
+
 test('planWrongTurn: goes straight through the first long enough right or left turn', () => {
   const route = turnRoute();
   const { sim } = makeSim();
   const detour = sim.planWrongTurn(route);
-  assert.deepEqual(sim.wrongTurn, {
-    stepIndex: 1,
-    at: [route.geometry[1].lat, route.geometry[1].lng],
-  });
+  assert.deepEqual(missedTurn(detour), vertex(route, 1));
   // The path follows the route up to the turn, then carries on north for 300 m.
   assert.deepEqual(detour[0], [route.geometry[0].lat, route.geometry[0].lng]);
   assert.deepEqual(detour[1], route.turn);
@@ -286,21 +286,24 @@ test('planWrongTurn: skips a turn less than 250 m into the route and takes the n
   const { sim } = makeSim();
   const detour = sim.planWrongTurn(route);
   assert.ok(detour);
-  assert.equal(sim.wrongTurn.stepIndex, 2);
-  assert.deepEqual(sim.wrongTurn.at, [route.geometry[2].lat, route.geometry[2].lng]);
+  assert.deepEqual(missedTurn(detour), vertex(route, 2));
 });
 
 test('planWrongTurn: turns before `after` meters are skipped, for a wrong turn mid-ride', () => {
   const route = turnRoute();
   const { sim } = makeSim();
-  assert.ok(sim.planWrongTurn(route, { after: 400 }));
-  assert.equal(sim.wrongTurn.stepIndex, 1);
-  assert.ok(sim.planWrongTurn(route, { after: 401 }));
-  assert.equal(sim.wrongTurn.stepIndex, 2);
+  assert.deepEqual(
+    missedTurn(sim.planWrongTurn(route, { after: 400 })),
+    vertex(route, 1),
+  );
+  assert.deepEqual(
+    missedTurn(sim.planWrongTurn(route, { after: 401 })),
+    vertex(route, 2),
+  );
   assert.equal(sim.planWrongTurn(route, { after: 701 }), null);
 });
 
-test('planWrongTurn: no suitable turn gives null and leaves wrongTurn unset', () => {
+test('planWrongTurn: no suitable turn gives null', () => {
   const { sim } = makeSim();
 
   const early = turnRoute({ firstStep: 200 });
@@ -315,7 +318,6 @@ test('planWrongTurn: no suitable turn gives null and leaves wrongTurn unset', ()
   const noBanner = turnRoute();
   noBanner.steps.forEach((step) => (step.visualInstructions = []));
   assert.equal(sim.planWrongTurn(noBanner), null);
-  assert.equal(sim.wrongTurn, null);
 });
 
 test('a rider on the wrong-turn path stays on the route to the turn, then leaves it', () => {

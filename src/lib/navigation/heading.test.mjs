@@ -262,7 +262,7 @@ test('iOS: an uncalibrated compass (-1) is ignored', async (t) => {
   listeners.deviceorientation({ webkitCompassHeading: -1 });
   listeners.deviceorientation({ webkitCompassHeading: 120, webkitCompassAccuracy: -1 });
   assert.equal(compass.heading, null);
-  assert.equal(compass.events, 0);
+  assert.equal(compass.lastEvent, 0);
   listeners.deviceorientation({ webkitCompassHeading: 120, webkitCompassAccuracy: 20 });
   assert.equal(compass.heading, 120);
 });

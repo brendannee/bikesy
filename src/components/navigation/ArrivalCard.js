@@ -30,7 +30,7 @@ const ArrivalCard = ({ onDone }) => {
           <span>avg</span>
         </div>
       </div>
-      <p className="nav-arrival-note">{summary.note}</p>
+      {summary.note && <p className="nav-arrival-note">{summary.note}</p>}
       <button className="btn btn-success btn-block btn-lg" onClick={onDone}>
         Done
       </button>
