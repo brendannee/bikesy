@@ -348,13 +348,18 @@ export class RideController {
 
   arrive(complete) {
     if (!this.riding) return;
+    // Nothing moves on the arrival card: stop the location source, the compass and
+    // the camera animation. Speech carries on, to finish the arrival prompt.
     this.stopSources();
+    this.stopCompass?.();
+    disableCompass();
     this.status = 'arrived';
     this.rerouteAbort?.abort();
     this.layers.setManeuver(null);
     const summary = this.ride.summary(complete, { simClock: this.sim?.clock ?? null });
     // Zoom out to the ride as ridden, detours included, above the arrival card.
     this.camera.showPuck(false);
+    this.camera.stop();
     const points =
       this.ride.track.length > 1
         ? this.ride.track

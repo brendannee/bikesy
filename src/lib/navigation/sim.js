@@ -40,6 +40,7 @@ export class Simulator {
     this.noiseM = 0;
     this.warp = 1;
     this.timer = null;
+    this.running = false;
     this.clock = now(); // simulated "now" (ms); advances 1 s per tick
     this.paused = false;
     this.wrongTurn = null;
@@ -157,16 +158,19 @@ export class Simulator {
 
   start() {
     this.stop();
+    this.running = true;
     this.clock = this.now();
     this.onLocation(this.fix());
+    // onLocation may stop the ride (arrival): never schedule a tick after stop().
     const loop = () => {
       this.tick();
-      this.timer = this.setTimer(loop, 1000 / this.warp);
+      if (this.running) this.timer = this.setTimer(loop, 1000 / this.warp);
     };
-    this.timer = this.setTimer(loop, 1000 / this.warp);
+    if (this.running) this.timer = this.setTimer(loop, 1000 / this.warp);
   }
 
   stop() {
+    this.running = false;
     this.clearTimer(this.timer);
     this.timer = null;
   }

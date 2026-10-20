@@ -100,6 +100,36 @@ test('start emits a fix straight away and schedules ticks every 1000 / warp ms',
   assert.equal(time.timers[0].ms, 250);
 });
 
+test('a stop from inside a tick, as at arrival, schedules nothing more', () => {
+  const time = fakeTime();
+  let fixes = 0;
+  const sim = new Simulator(
+    () => {
+      fixes++;
+      if (fixes === 3) sim.stop();
+    },
+    {
+      now: () => time.now(),
+      setTimer: (fn, ms) => time.setTimer(fn, ms),
+      clearTimer: (id) => time.clearTimer(id),
+    },
+  );
+  sim.setPath([origin, north(1000)]);
+  sim.start();
+  time.run();
+  time.run(); // the third fix stops the sim
+  assert.equal(fixes, 3);
+  assert.equal(time.timers.length, 0);
+  assert.equal(sim.running, false);
+
+  // Stopped by the very first fix.
+  const first = makeSim();
+  first.sim.onLocation = () => first.sim.stop();
+  first.sim.setPath([origin, north(1000)]);
+  first.sim.start();
+  assert.equal(first.time.timers.length, 0);
+});
+
 test('stop cancels the pending tick, and start again does not double up timers', () => {
   const { sim, time, fixes } = makeSim();
   sim.setPath([origin, north(1000)]);

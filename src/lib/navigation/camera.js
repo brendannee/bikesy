@@ -40,6 +40,7 @@ export class FollowCamera {
     };
     for (const type of GESTURES) map.on(type, this.onGesture);
     this.loop = this.loop.bind(this);
+    this.running = true;
     this.frame = requestAnimationFrame(this.loop);
   }
 
@@ -117,6 +118,7 @@ export class FollowCamera {
   }
 
   loop(now) {
+    if (!this.running) return;
     const dt = Math.min(100, now - (this.lastFrame ?? now));
     this.lastFrame = now;
     let changed = this.dirty;
@@ -167,9 +169,15 @@ export class FollowCamera {
     });
   }
 
+  // Stop animating; the map and puck stay as they are.
+  stop() {
+    this.running = false;
+    cancelAnimationFrame(this.frame);
+  }
+
   // Stop animating, remove the puck and leave the map flat and north-up.
   destroy() {
-    cancelAnimationFrame(this.frame);
+    this.stop();
     for (const type of GESTURES) this.map.off(type, this.onGesture);
     this.showPuck(false);
     this.following = false;
