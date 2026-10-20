@@ -5,7 +5,7 @@ import appConfig from '../../appConfig';
 import { trackEvent } from '../../lib/analytics';
 import { getRoute } from '../../lib/api';
 import { getMap } from '../../lib/map';
-import { keepScreenOn, speech } from '../../lib/navigation/device';
+import { keepScreenOn, releaseDevice, speech } from '../../lib/navigation/device';
 import { loadFerrostar } from '../../lib/navigation/ferrostar';
 import { sentence } from '../../lib/navigation/format';
 import { devFlags, navigationEnabled } from '../../lib/navigation/flags';
@@ -66,6 +66,15 @@ const overviewIcon = (
 const loadRideController = () => import('../../lib/navigation/controller');
 
 function startErrorMessage(error) {
+  // The ride code or the engine didn't download: webpack and Turbopack reject lazy
+  // chunks with a ChunkLoadError, browsers reject import() with a TypeError.
+  if (
+    error?.name === 'ChunkLoadError' ||
+    (error instanceof TypeError &&
+      /dynamically imported|module script/i.test(error.message))
+  ) {
+    return "Couldn't download navigation. Check your connection and try again.";
+  }
   // fetch() rejects with a TypeError when the network or server is unreachable.
   if (error instanceof TypeError && /fetch|load failed|network/i.test(error.message)) {
     return "Couldn't reach the routing service. Check your connection and try again.";
@@ -97,6 +106,18 @@ const Navigation = ({ isMobile }) => {
   // Identifies the current Start ride tap, so a cancelled start can't carry on.
   const attemptRef = useRef(null);
 
+  // Ends the ride. Before the ride controller has loaded, releases what the Start ride
+  // tap turned on instead.
+  const stopRide = () => {
+    if (rideRef.current) {
+      rideRef.current.end();
+    } else if (attemptRef.current) {
+      releaseDevice();
+    }
+    attemptRef.current = null;
+    rideRef.current = null;
+  };
+
   useEffect(() => {
     const search = window.location.search;
     setFlags({
@@ -104,13 +125,11 @@ const Navigation = ({ isMobile }) => {
       ...devFlags(search),
     });
     // Leaving the page mid-ride stops GPS, timers and the wake lock.
-    return () => rideRef.current?.end();
+    return () => stopRide();
   }, []);
 
   const finish = (error = null) => {
-    attemptRef.current = null;
-    rideRef.current?.end();
-    rideRef.current = null;
+    stopRide();
     setStepsOpen(false);
     dispatch(endNavigation({ error }));
   };

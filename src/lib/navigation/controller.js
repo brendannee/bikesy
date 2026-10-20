@@ -10,7 +10,13 @@
 // lock in the Start ride tap, before calling start(): iOS only allows those from a
 // user gesture, and start() awaits a location fix and the route first.
 import { FollowCamera } from './camera.js';
-import { DeviceLocation, currentFix, keepScreenOn, speech } from './device.js';
+import {
+  DeviceLocation,
+  currentFix,
+  keepScreenOn,
+  releaseDevice,
+  speech,
+} from './device.js';
 import { loadFerrostar, parseNavRoute } from './ferrostar.js';
 import {
   bannerText,
@@ -390,8 +396,7 @@ export class RideController {
     this.rerouteAbort?.abort();
     this.stopSources();
     this.stopCompass?.();
-    disableCompass();
-    speech.reset();
+    releaseDevice();
     this.navigator?.free();
     this.navigator = null;
     this.camera?.destroy();

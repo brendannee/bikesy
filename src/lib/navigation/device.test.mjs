@@ -5,9 +5,11 @@ import {
   currentFix,
   fixFromPosition,
   keepScreenOn,
+  releaseDevice,
   speech,
   wakeLockSupported,
 } from './device.js';
+import { compass, enableCompass } from './heading.js';
 
 // Install fake browser globals for one test and put the originals back afterwards.
 function stubGlobals(t, stubs) {
@@ -382,4 +384,29 @@ test('a browser without Screen Wake Lock is reported and tolerated', async (t) =
   await settle();
   assert.equal(sentinels.length, 0);
   keepScreenOn(false);
+});
+
+test('releaseDevice lets go of the wake lock, the compass and spoken prompts', async (t) => {
+  const { doc, sentinels } = fakeWakeLock(t);
+  const listeners = new Set();
+  stubGlobals(t, {
+    window: {
+      DeviceOrientationEvent: function DeviceOrientationEvent() {},
+      addEventListener: (type) => listeners.add(type),
+      removeEventListener: (type) => listeners.delete(type),
+    },
+  });
+  keepScreenOn(true);
+  await enableCompass();
+  speech.say('Turn left.', 'left');
+  await settle();
+  assert.equal(sentinels.length, 1);
+  assert.deepEqual([...listeners], ['deviceorientation']);
+
+  releaseDevice();
+  assert.equal(sentinels[0].released, true);
+  assert.equal(doc.handlers.size, 0);
+  assert.equal(listeners.size, 0);
+  assert.equal(compass.status, 'off');
+  assert.equal(speech.spoken.size, 0);
 });

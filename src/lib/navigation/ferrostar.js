@@ -10,7 +10,12 @@ export function loadFerrostar() {
   ferrostarPromise ??= import('@stadiamaps/ferrostar').catch((error) => {
     // Let the next tap retry after a failed download.
     ferrostarPromise = undefined;
-    throw error;
+    // Report it like any other lazily loaded code that didn't download.
+    const failure = new Error(`Failed to load the navigation engine: ${error.message}`, {
+      cause: error,
+    });
+    failure.name = 'ChunkLoadError';
+    throw failure;
   });
   return ferrostarPromise;
 }

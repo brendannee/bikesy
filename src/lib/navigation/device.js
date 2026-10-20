@@ -3,7 +3,7 @@
 //
 // Nothing here touches `window`, `document` or `navigator` at import time, so the
 // module is safe to import during SSR; every access happens inside a function.
-import { MIN_COURSE_SPEED } from './heading.js';
+import { MIN_COURSE_SPEED, disableCompass } from './heading.js';
 
 // --- Speech (Web Speech API) --------------------------------------------------
 function speechSupported() {
@@ -99,6 +99,14 @@ export function keepScreenOn(on) {
     wakeLock?.release().catch(() => {});
     wakeLock = null;
   }
+}
+
+// Releases what the Start ride tap turned on (wake lock, compass, speech) when the ride
+// ends, is cancelled, or fails to start, whether or not the ride ever got going.
+export function releaseDevice() {
+  keepScreenOn(false);
+  disableCompass();
+  speech.reset();
 }
 
 // --- Real GPS ---------------------------------------------------------------------
