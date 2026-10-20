@@ -66,7 +66,7 @@ function fakeMap() {
     addLayer: (layer) => layers.add(layer.id),
     getLayer: (id) => layers.has(id),
     removeLayer: (id) => layers.delete(id),
-    getContainer: () => ({ clientHeight: 800 }),
+    getContainer: () => ({ clientWidth: 390, clientHeight: 800 }),
     getBearing: () => 0,
     easeTo() {},
     jumpTo() {},

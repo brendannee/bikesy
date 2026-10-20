@@ -12,6 +12,10 @@ const PITCH = 50;
 const ZOOM = 17.3;
 // The puck sits about 68% of the way down the screen: top padding is 36% of the height.
 const TOP_PADDING = 0.36;
+// From this width up, the navigation panels sit on the left, 428 px wide (style.css),
+// so the puck centers in the map to their right.
+const WIDE_SCREEN = 667;
+const PANEL_WIDTH = 428;
 const NO_PADDING = { top: 0, bottom: 0, left: 0, right: 0 };
 const GESTURES = ['dragstart', 'rotatestart', 'pitchstart', 'zoomstart'];
 
@@ -98,13 +102,17 @@ export class FollowCamera {
   }
 
   camera(display) {
-    const height = this.map.getContainer().clientHeight;
+    const { clientWidth: width, clientHeight: height } = this.map.getContainer();
     return {
       center: [display.p[1], display.p[0]],
       bearing: display.course,
       pitch: PITCH,
       zoom: ZOOM,
-      padding: { ...NO_PADDING, top: Math.round(height * TOP_PADDING) },
+      padding: {
+        ...NO_PADDING,
+        top: Math.round(height * TOP_PADDING),
+        left: width >= WIDE_SCREEN ? PANEL_WIDTH : 0,
+      },
     };
   }
 

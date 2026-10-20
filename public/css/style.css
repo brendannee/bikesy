@@ -1199,22 +1199,45 @@
     height: 290px;
   }
 
+  /* Wider screens (a phone turned sideways): navigation panels on the left. */
+  .navigating .map-container .logo {
+    display: none;
+  }
+
   .nav-top {
     right: auto;
     width: 420px;
   }
 
-  .nav-bottom,
-  .nav-steps {
-    right: auto;
+  .nav-bottom {
     left: 8px;
     bottom: 8px;
-    width: 420px;
+    right: 0;
   }
 
   .nav-trip-bar,
   .nav-steps {
+    width: 420px;
     border-radius: 14px;
+  }
+
+  .nav-steps {
+    right: auto;
+    left: 8px;
+    bottom: 8px;
+  }
+
+  /* The map controls sit in the corner of the map, right of the panels. */
+  .nav-map-controls {
+    position: absolute;
+    left: 428px;
+    right: 0;
+    bottom: 0;
+  }
+
+  .navigating .map-container .mapboxgl-ctrl-bottom-right,
+  .navigating .map-container:has(.nav-sim) .mapboxgl-ctrl-bottom-right {
+    bottom: 0;
   }
 }
 
