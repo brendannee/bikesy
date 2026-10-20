@@ -4,6 +4,7 @@
 //
 // It keeps no React state. What the screen should show goes out through `publish` (the
 // navigation Redux slice) as display-ready values, and only when something changed.
+// Analytics go through `track` and never include a location.
 //
 // The caller requests the compass permission, unlocks speech and asks for the wake
 // lock in the Start ride tap, before calling start(): iOS only allows those from a
@@ -37,7 +38,7 @@ const ARRIVAL_PADDING = { top: 60, bottom: 360, left: 40, right: 40 };
 export class RideController {
   // map: the app's Mapbox map. scenario: the route type, as for planning.
   // getNavRoute(from, to, { signal }): resolves to a /route?nav=1 response.
-  // publish(patch): UI state for the navigation slice.
+  // publish(patch): UI state for the navigation slice. track(name, properties): analytics.
   // simulate: ride the simulator (?sim=1) instead of GPS; sim: { warp, noise }.
   // locate and loadEngine replace the location fix and the Ferrostar loader in tests.
   constructor({
@@ -45,12 +46,13 @@ export class RideController {
     scenario,
     getNavRoute,
     publish,
+    track = () => {},
     simulate = false,
     sim: { warp = 1, noise = 0 } = {},
     locate = currentFix,
     loadEngine = loadFerrostar,
   }) {
-    Object.assign(this, { map, scenario, getNavRoute, simulate, locate });
+    Object.assign(this, { map, scenario, getNavRoute, track, simulate, locate });
     this.loadEngine = loadEngine;
     this.sendUpdate = publish;
     this.published = {};
@@ -109,7 +111,7 @@ export class RideController {
     let from = start;
     if (!this.simulate) {
       fix = await this.locate();
-      if (fix && isFarFromStart(fix, start)) from = fix;
+      if (fix && isFarFromStart(fix, start)) from = { lat: fix.lat, lng: fix.lng };
     }
     if (signal.aborted) return;
     const route = await this.fetchRoute(from, signal);
@@ -151,6 +153,10 @@ export class RideController {
     this.status = 'navigating';
     this.publish({ status: 'navigating', following: true, offRoute: false });
     this.publishSim();
+    this.track('nav_start', {
+      scenario: this.scenario,
+      distanceMeters: Math.round(route.distance),
+    });
 
     if (this.sim) {
       this.sim.setPath(points);
@@ -299,6 +305,10 @@ export class RideController {
         speech.say('Make a U-turn when possible.', `uturn-${this.ride.reroutes}`);
       }
       this.toast(`New route · ${formatDistance(route.distance)}`);
+      this.track('nav_reroute', {
+        scenario: this.scenario,
+        reroutes: this.ride.reroutes,
+      });
       this.render(this.navigator.start(here), here);
     } catch (error) {
       if (request.signal.aborted || error.name === 'AbortError') return;
@@ -346,6 +356,11 @@ export class RideController {
         note: summary.reroutes ? `${kind} · rerouted ${summary.reroutes}×` : kind,
       },
     });
+    this.track('nav_arrive', {
+      scenario: this.scenario,
+      distanceMeters: Math.round(summary.meters),
+      reroutes: summary.reroutes,
+    });
   }
 
   stopSources() {
@@ -357,6 +372,13 @@ export class RideController {
   // End the ride (End, Done, or a failed start) and take everything off the map. The
   // caller restores the planning screen.
   end() {
+    if (this.riding) {
+      this.track('nav_end_early', {
+        scenario: this.scenario,
+        distanceMeters: Math.round(this.distanceRidden()),
+        reroutes: this.ride.reroutes,
+      });
+    }
     this.status = 'ended';
     this.startAbort?.abort();
     this.rerouteAbort?.abort();

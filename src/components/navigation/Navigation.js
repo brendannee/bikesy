@@ -2,6 +2,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import appConfig from '../../appConfig';
+import { trackEvent } from '../../lib/analytics';
 import { getRoute } from '../../lib/api';
 import { getMap } from '../../lib/map';
 import { RideController } from '../../lib/navigation/controller';
@@ -129,6 +130,7 @@ const Navigation = ({ isMobile }) => {
       getNavRoute: (from, to, { signal }) =>
         getRoute(from, to, scenario, { signal, nav: true }),
       publish: (patch) => dispatch(updateNavigation(patch)),
+      track: trackEvent,
     });
     rideRef.current = ride;
     dispatch(startNavigation());
