@@ -12,14 +12,33 @@
 
 export const NAV_CONFIG = {
   waypointAdvance: { WaypointWithinRange: 30 },
+  // Ferrostar 0.58 flips the snapped-exit "reached the end" flag on every fix inside the
+  // entry radius, so the exit is only checked on alternate fixes. A rider who leaves the
+  // radius with the flag off never advances, and the banner freezes on an old maneuver.
+  // Simulated rides at 18 km/h, 1 Hz, with entry 15 m: 62% completed with 3 m of GPS
+  // noise, 36% with 6 m. Entry 25 m gives the exit more fixes to land on, and the fallback
+  // advances once the rider is 35 m from the step line (the off-route distance, so clearly
+  // past the step end rather than noise). That completes 99.7-100% of rides at 0-10 m
+  // noise and 12-30 km/h, with the same early advances as entry 25 m alone.
   stepAdvanceCondition: {
-    // Advance once we've come within 15 m of the maneuver and then moved 8 m past it
-    // along the route; robust to GPS jitter around tight path junctions.
-    DistanceEntryAndSnappedExit: {
-      distanceToEndOfStep: 15,
-      distanceAfterEndStep: 8,
-      minimumHorizontalAccuracy: 30,
-      hasReachedEndOfCurrentStep: false,
+    OrAdvanceConditions: {
+      conditions: [
+        {
+          DistanceEntryAndSnappedExit: {
+            distanceToEndOfStep: 25,
+            distanceAfterEndStep: 8,
+            minimumHorizontalAccuracy: 30,
+            hasReachedEndOfCurrentStep: false,
+          },
+        },
+        {
+          DistanceFromStep: {
+            distance: 35,
+            minimumHorizontalAccuracy: 30,
+            calculationPolicy: 'Always',
+          },
+        },
+      ],
     },
   },
   arrivalStepAdvanceCondition: {

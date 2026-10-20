@@ -61,11 +61,19 @@ test('NAV_CONFIG keeps the thresholds tuned on real rides', () => {
     40,
   );
   assert.equal(NAV_CONFIG.waypointAdvance.WaypointWithinRange, 30);
-  assert.deepEqual(NAV_CONFIG.stepAdvanceCondition.DistanceEntryAndSnappedExit, {
-    distanceToEndOfStep: 15,
+  // Snapped exit as the main rule, with a fallback for when Ferrostar never checks it.
+  const [snappedExit, fallback] =
+    NAV_CONFIG.stepAdvanceCondition.OrAdvanceConditions.conditions;
+  assert.deepEqual(snappedExit.DistanceEntryAndSnappedExit, {
+    distanceToEndOfStep: 25,
     distanceAfterEndStep: 8,
     minimumHorizontalAccuracy: 30,
     hasReachedEndOfCurrentStep: false,
+  });
+  assert.deepEqual(fallback.DistanceFromStep, {
+    distance: 35,
+    minimumHorizontalAccuracy: 30,
+    calculationPolicy: 'Always',
   });
   assert.deepEqual(NAV_CONFIG.arrivalStepAdvanceCondition, {
     DistanceToEndOfStep: { distance: 20, minimumHorizontalAccuracy: 40 },
