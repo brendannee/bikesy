@@ -295,7 +295,8 @@ export class RideController {
       message.replace('…', '.'),
       `reroute-${this.ride.reroutes}-${this.lastRerouteAttempt}`,
     );
-    this.toast(message);
+    // Off route, the banner already says a new route is coming.
+    if (!this.navigator.offRoute) this.toast(message);
     this.publish({ status: 'rerouting' });
     // At most one request in flight: a newer reroute replaces a stale one.
     this.rerouteAbort?.abort();
