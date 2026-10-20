@@ -109,7 +109,10 @@ const Map = ({
   }, [height]);
 
   return (
-    <div className="map-container" hidden={isMobile && mobileView !== 'map'}>
+    <div
+      className="map-container"
+      hidden={isMobile && mobileView !== 'map' && !isNavigating}
+    >
       <div className={appConfig.LOGO_CLASSNAME}>
         <a href={appConfig.ABOUT_LINK_URL}>
           <img

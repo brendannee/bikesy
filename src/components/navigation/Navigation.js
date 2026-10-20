@@ -115,12 +115,13 @@ const Navigation = ({ isMobile }) => {
     dispatch(endNavigation({ error }));
   };
 
-  // A changed or cleared plan cancels a ride that is still starting.
+  // Any change to the plan (endpoints, route type, a new route) cancels a ride that is
+  // still starting, since it was asked for the old plan.
   useEffect(() => {
-    if (!path && status === 'starting') {
+    if (status === 'starting') {
       finish();
     }
-  }, [path]);
+  }, [path, startLocation, endLocation, scenario]);
 
   const startRide = () => {
     // Everything that needs the tap happens here, before anything async: iOS only shows

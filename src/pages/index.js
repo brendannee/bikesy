@@ -293,6 +293,13 @@ const IndexPage = () => {
     };
   }, []);
 
+  // A ride always shows the map, even if the Directions view was open while it started.
+  useEffect(() => {
+    if (navigating) {
+      setMobileView('map');
+    }
+  }, [navigating]);
+
   useEffect(() => {
     const controller = new AbortController();
     if (startLocation && endLocation) {
