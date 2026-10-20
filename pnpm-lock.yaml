@@ -175,6 +175,9 @@ importers:
       '@reduxjs/toolkit':
         specifier: ^2.13.0
         version: 2.13.0(react-redux@9.3.0(react@19.3.1)(redux@5.0.1))(react@19.3.1)
+      '@stadiamaps/ferrostar':
+        specifier: 0.58.0
+        version: 0.58.0
       '@turf/turf':
         specifier: ^7.4.0
         version: 7.4.0
@@ -656,6 +659,9 @@ packages:
 
   '@rtsao/scc@1.1.0':
     resolution: {integrity: sha512-zt6OdqaDoOnJ1ZYsCYGt9YmWzDXl4vQdKTyJev62gFhRGKdx7mcT54V9KIjg+d2wi9EXsPvAPKe7i7WjfVWB8g==}
+
+  '@stadiamaps/ferrostar@0.58.0':
+    resolution: {integrity: sha512-A2tUYegliZyiXDp4XLa/gnFD0Hv+qABXUHWkoISC8a3m9Ee0MNxKcK+rPNN6p51eYesOmLwR0uOEapiRA4N/eA==}
 
   '@standard-schema/spec@1.1.0':
     resolution: {integrity: sha512-l2aFy5jALhniG5HgqrD6jXLi/rUWrKvqN/qJx6yoJsgKhblVd+iqqU4RCXavm/jPityDo5TCvKMnpjKnOriy0w==}
@@ -3169,6 +3175,8 @@ snapshots:
       react-redux: 9.3.0(react@19.3.1)(redux@5.0.1)
 
   '@rtsao/scc@1.1.0': {}
+
+  '@stadiamaps/ferrostar@0.58.0': {}
 
   '@standard-schema/spec@1.1.0': {}
 
