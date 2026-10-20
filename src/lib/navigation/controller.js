@@ -18,6 +18,7 @@ import {
   formatDistance,
   formatDuration,
   formatSpeed,
+  sentence,
   stepList,
   thenInstruction,
 } from './format.js';
@@ -119,8 +120,9 @@ export class RideController {
       if (from !== start) error.fromRider = true;
       throw error;
     });
+    const ferrostar = await this.engine;
     if (signal.aborted) return;
-    this.begin(await this.engine, route, fix);
+    this.begin(ferrostar, route, fix);
   }
 
   async fetchRoute(from, signal) {
@@ -316,7 +318,7 @@ export class RideController {
       this.render(this.navigator.start(here), here);
     } catch (error) {
       if (request.signal.aborted || error.name === 'AbortError') return;
-      this.toast(`Couldn't reroute: ${error.message} Retrying…`, 4000);
+      this.toast(`Couldn't reroute: ${sentence(error.message)} Retrying…`, 4000);
     } finally {
       if (this.rerouteAbort === request) {
         this.rerouteAbort = null;

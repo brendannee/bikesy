@@ -44,6 +44,11 @@ export function bannerText(text) {
   return (text ?? '').replace(/\.$/, '');
 }
 
+// Messages for the rider end with a period; backend errors often don't.
+export function sentence(text) {
+  return String(text ?? '').replace(/\.?$/, '.');
+}
+
 // Show a "Then" strip under the banner when the following maneuver comes quickly
 // after this one.
 export const THEN_WITHIN_METERS = 150;

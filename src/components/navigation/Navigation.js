@@ -7,6 +7,7 @@ import { getRoute } from '../../lib/api';
 import { getMap } from '../../lib/map';
 import { keepScreenOn, speech } from '../../lib/navigation/device';
 import { loadFerrostar } from '../../lib/navigation/ferrostar';
+import { sentence } from '../../lib/navigation/format';
 import { devFlags, navigationEnabled } from '../../lib/navigation/flags';
 import { enableCompass } from '../../lib/navigation/heading';
 import {
@@ -69,7 +70,7 @@ function startErrorMessage(error) {
   if (error instanceof TypeError && /fetch|load failed|network/i.test(error.message)) {
     return "Couldn't reach the routing service. Check your connection and try again.";
   }
-  const reason = String(error?.message ?? error).replace(/\.?$/, '.');
+  const reason = sentence(error?.message ?? error);
   return error?.fromRider
     ? `Couldn't find a route from your location. ${reason}`
     : `Couldn't start navigation. ${reason}`;

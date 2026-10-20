@@ -2,6 +2,7 @@ import assert from 'node:assert/strict';
 import { test } from 'node:test';
 import {
   bannerText,
+  sentence,
   formatClock,
   formatDistance,
   formatDuration,
@@ -68,6 +69,15 @@ test('formatSpeed: metres per second as mph with one decimal', () => {
   assert.equal(formatSpeed(0), '0.0 mph');
   assert.equal(formatSpeed(5), '11.2 mph');
   assert.equal(formatSpeed(MILE / 3600), '1.0 mph');
+});
+
+test('sentence: ends a message with exactly one period', () => {
+  assert.equal(
+    sentence('Location outside routing bounds'),
+    'Location outside routing bounds.',
+  );
+  assert.equal(sentence('No route found.'), 'No route found.');
+  assert.equal(sentence(undefined), '.');
 });
 
 test('bannerText: drops the trailing period Valhalla puts on generic instructions', () => {
