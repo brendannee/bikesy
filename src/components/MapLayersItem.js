@@ -1,6 +1,7 @@
 import * as _ from 'lodash';
 import { useEffect, useState } from 'react';
 import { getMapboxDatasetURL } from '../lib/map';
+import { addOverlayLayer } from '../lib/map-layer-placement';
 
 const MapLayersItem = ({
   type,
@@ -14,6 +15,12 @@ const MapLayersItem = ({
   mapRef,
 }) => {
   const [isChecked, setIsChecked] = useState(isInitiallyChecked);
+  // layerProperties is one layer definition, or several drawn bottom first (e.g. a casing
+  // under a fill). The first keeps the label as its id so popups and clicks keep working.
+  const layerDefinitions = [].concat(layerProperties);
+  const layerIds = layerDefinitions.map((_definition, index) =>
+    index === 0 ? label : `${label} ${index + 1}`,
+  );
 
   const loadIconIntoMap = (imgUrl) => {
     if (imgUrl && !mapRef.current.hasImage(imgUrl)) {
@@ -31,7 +38,7 @@ const MapLayersItem = ({
   };
 
   useEffect(() => {
-    const imgUrl = _.get(layerProperties, 'layout.icon-image');
+    const imgUrl = _.get(layerDefinitions[0], 'layout.icon-image');
     // Icon layers need to be loaded into the map before we can addToMap
     if (imgUrl) {
       loadIconIntoMap(imgUrl);
@@ -49,13 +56,15 @@ const MapLayersItem = ({
         data: getMapboxDatasetURL(datasetId),
       });
     }
-    if (!mapRef.current.getLayer(label)) {
-      mapRef.current.addLayer({
-        ...layerProperties,
-        id: label,
-        source: label,
-      });
-    }
+    layerDefinitions.forEach((definition, index) => {
+      if (!mapRef.current.getLayer(layerIds[index])) {
+        addOverlayLayer(mapRef.current, {
+          ...definition,
+          id: layerIds[index],
+          source: label,
+        });
+      }
+    });
 
     if (popup) {
       // Change cursor to pointer on hover.
@@ -86,9 +95,11 @@ const MapLayersItem = ({
   };
 
   const removeFromMap = () => {
-    if (mapRef.current.getLayer(label)) {
-      mapRef.current.removeLayer(label);
-    }
+    layerIds.forEach((id) => {
+      if (mapRef.current.getLayer(id)) {
+        mapRef.current.removeLayer(id);
+      }
+    });
   };
 
   const onChange = () => {

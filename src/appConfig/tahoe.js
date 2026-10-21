@@ -1,3 +1,5 @@
+import { ROUND_LINE_LAYOUT, zoomScaledLineWidth } from '../lib/map-layer-styles.js';
+
 const config = {
   BIKESY_API_URL: 'https://bikesy-backend.tahoebike.org/route',
   // Round elevation chart Y-axis to nearest 1000 feet to make hills more visible.
@@ -156,15 +158,26 @@ const config = {
       label: 'Multi-use Path',
       description: 'paved, separated (off the street) bikeways',
       iconClassName: 'tahoe-class1',
-      layerProperties: {
-        type: 'line',
-        paint: {
-          'line-color': '#330066',
-          'line-width': 1,
-          'line-opacity': 0.8,
-          'line-gap-width': 2,
+      // Two layers, bottom first: a dark casing under a light fill. The fill is opaque so
+      // the basemap's grey trail line does not show through where the two geometries drift.
+      layerProperties: [
+        {
+          type: 'line',
+          layout: ROUND_LINE_LAYOUT,
+          paint: {
+            'line-color': '#330066',
+            'line-width': zoomScaledLineWidth(3.5, 7, 13),
+          },
         },
-      },
+        {
+          type: 'line',
+          layout: ROUND_LINE_LAYOUT,
+          paint: {
+            'line-color': '#e3d2fb',
+            'line-width': zoomScaledLineWidth(1.5, 4, 9),
+          },
+        },
+      ],
       datasetId: 'tahoebike/cl1sw0vau1rmm28rs0zwud8el',
       isInitiallyChecked: true,
     },
@@ -175,10 +188,11 @@ const config = {
       iconClassName: 'tahoe-class2',
       layerProperties: {
         type: 'line',
+        layout: ROUND_LINE_LAYOUT,
         paint: {
-          'line-color': '#660099',
-          'line-width': 3,
-          'line-opacity': 0.8,
+          'line-color': '#7a1fb3',
+          'line-width': zoomScaledLineWidth(1.5, 3.5, 6),
+          'line-opacity': 0.9,
         },
       },
       datasetId: 'tahoebike/cl1swsss40zax2emy7z7isg57',
@@ -191,11 +205,12 @@ const config = {
       iconClassName: 'tahoe-class3',
       layerProperties: {
         type: 'line',
+        layout: { 'line-join': 'round' },
         paint: {
           'line-color': '#9933CC',
-          'line-width': 3,
-          'line-opacity': 0.8,
-          'line-dasharray': [3, 5],
+          'line-width': zoomScaledLineWidth(1.5, 3, 5),
+          'line-opacity': 0.9,
+          'line-dasharray': [2, 2],
         },
       },
       datasetId: 'tahoebike/cl1swuzh0265221qxzoua365u',
@@ -209,11 +224,12 @@ const config = {
       iconClassName: 'tahoe-winter',
       layerProperties: {
         type: 'line',
+        layout: { 'line-join': 'round' },
         paint: {
           'line-color': '#ff0000',
-          'line-width': 3,
-          'line-opacity': 0.8,
-          'line-dasharray': [3, 5],
+          'line-width': zoomScaledLineWidth(1.5, 3, 5),
+          'line-opacity': 0.9,
+          'line-dasharray': [2, 2],
         },
       },
       /*

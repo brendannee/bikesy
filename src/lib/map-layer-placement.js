@@ -17,3 +17,23 @@ export function addRouteLayer(map, layer) {
     map.addLayer({ ...layer }, firstSymbol?.id ?? firstPin?.id);
   }
 }
+
+// Line and fill overlays (bikeways) go under the basemap labels so street and place
+// names stay readable, and under the route so it is never hidden by a toggled overlay.
+// Point overlays (construction, parking, shops) stay on top where they can be clicked.
+export function addOverlayLayer(map, layer) {
+  if (layer.type === 'symbol' || layer.type === 'circle') {
+    map.addLayer({ ...layer });
+    return;
+  }
+  if (map.getSlots?.().includes('middle')) {
+    map.addLayer({ ...layer, slot: 'middle' });
+    return;
+  }
+  const layers = map.getStyle().layers;
+  const before =
+    layers.find((item) => item.id === 'path') ??
+    layers.find((item) => item.type === 'symbol') ??
+    layers.find((item) => item.id === 'start' || item.id === 'end');
+  map.addLayer({ ...layer }, before?.id);
+}
