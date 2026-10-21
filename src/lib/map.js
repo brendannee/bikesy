@@ -3,7 +3,7 @@
 import _ from 'lodash';
 import { length } from '@turf/turf';
 import appConfig from '../appConfig';
-import { addRouteLayer } from './map-layer-placement.js';
+import { addRouteLayer, applyBasemapLayerOverrides } from './map-layer-placement.js';
 
 const MAPBOX_DATASETS_API = 'https://api.mapbox.com/datasets/v1';
 
@@ -149,6 +149,8 @@ export function drawMap(handleMapClick, handleMarkerDrag) {
   const canvas = map.getCanvasContainer();
 
   map.on('load', () => {
+    applyBasemapLayerOverrides(map, appConfig.BASEMAP_LAYER_OVERRIDES);
+
     map.addSource('path', {
       type: 'geojson',
       data: pathGeoJSON,

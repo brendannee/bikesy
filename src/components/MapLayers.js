@@ -9,32 +9,38 @@ const MapLayers = ({ isInitiallyVisible, mapRef }) => {
     setIsVisible(!isVisible);
   };
 
-  return isVisible ? (
-    <div className="map-layers d-print-none">
-      <div className="close-box" onClick={toggleLegendVisibility}>
-        &minus;
+  return (
+    <>
+      <div
+        className="map-layers d-print-none"
+        style={isVisible ? undefined : { display: 'none' }}
+      >
+        <div className="close-box" onClick={toggleLegendVisibility}>
+          &minus;
+        </div>
+        <div>
+          {appConfig.MAP_LAYERS.map((layer) => (
+            <MapLayersItem
+              type={layer.type}
+              label={layer.label}
+              popup={layer.popup}
+              description={layer.description}
+              iconClassName={layer.iconClassName}
+              layerProperties={layer.layerProperties}
+              datasetId={layer.datasetId}
+              isInitiallyChecked={layer.isInitiallyChecked}
+              mapRef={mapRef}
+              key={layer.label}
+            />
+          ))}
+        </div>
       </div>
-      <div>
-        {appConfig.MAP_LAYERS.map((layer) => (
-          <MapLayersItem
-            type={layer.type}
-            label={layer.label}
-            popup={layer.popup}
-            description={layer.description}
-            iconClassName={layer.iconClassName}
-            layerProperties={layer.layerProperties}
-            datasetId={layer.datasetId}
-            isInitiallyChecked={layer.isInitiallyChecked}
-            mapRef={mapRef}
-            key={layer.label}
-          />
-        ))}
-      </div>
-    </div>
-  ) : (
-    <div className="map-layers-open-box" onClick={toggleLegendVisibility}>
-      Toggle Map Legend
-    </div>
+      {!isVisible && (
+        <div className="map-layers-open-box" onClick={toggleLegendVisibility}>
+          Toggle Map Legend
+        </div>
+      )}
+    </>
   );
 };
 

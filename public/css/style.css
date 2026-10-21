@@ -456,22 +456,26 @@
 }
 
 .map-container .map-layers .map-legend-icon.tahoe-class1 {
-  background: #fcf4db;
-  border-top: 1px solid #330066;
-  border-bottom: 1px solid #330066;
-  height: 3px;
-  vertical-align: -2px;
+  background: #e3d2fb;
+  border-top: 2px solid #330066;
+  border-bottom: 2px solid #330066;
+  box-sizing: content-box;
+  height: 4px;
+  opacity: 1;
+  vertical-align: -3px;
 }
 
 .map-container .map-layers .map-legend-icon.tahoe-class2 {
-  border-top: 3px solid #660099;
+  border-top: 4px solid #7a1fb3;
   height: 0px;
+  opacity: 0.9;
   vertical-align: -2px;
 }
 
 .map-container .map-layers .map-legend-icon.tahoe-class3 {
   border-top: 3px dashed #9933cc;
   height: 0px;
+  opacity: 0.9;
   vertical-align: -2px;
 }
 

@@ -1,3 +1,18 @@
+// Bikeway overlay lines scale with zoom so they neither crowd the basemap when zoomed
+// out nor thin into hairlines when zoomed in. Widths are in pixels at zoom 12, 16 and 19.
+const overlayLineWidth = (z12, z16, z19) => [
+  'interpolate',
+  ['exponential', 1.5],
+  ['zoom'],
+  12,
+  z12,
+  16,
+  z16,
+  19,
+  z19,
+];
+const OVERLAY_LINE_LAYOUT = { 'line-join': 'round', 'line-cap': 'round' };
+
 const config = {
   BIKESY_API_URL: 'https://bikesy-backend.tahoebike.org/route',
   // Round elevation chart Y-axis to nearest 1000 feet to make hills more visible.
@@ -53,6 +68,17 @@ const config = {
   LOGO_FILENAME_ROOT: 'ltbc-logo',
   LOGO_CLASSNAME: 'logo ltbc-logo',
   MAPBOX_STYLE_URL: 'mapbox://styles/tahoebike/ck3cbc5z81vr71clhw1rfylmy',
+  // Applied to the style's own layers when the map loads. The basemap draws footpaths and
+  // trails as a solid dark grey line that competes with the Multi-use Path overlay; a
+  // lighter dashed line keeps unpaved trails visible without reading as a bikeway.
+  BASEMAP_LAYER_OVERRIDES: {
+    'pedestrian-path': {
+      paint: {
+        'line-color': '#8f8e8a',
+        'line-dasharray': [2, 2],
+      },
+    },
+  },
   INITIAL_CENTER_LAT: 39.086855,
   INITIAL_CENTER_LNG: -120.033305,
   ABOUT_LINK_TITLE: 'About the Lake Tahoe Bicycle Coalition',
@@ -156,15 +182,26 @@ const config = {
       label: 'Multi-use Path',
       description: 'paved, separated (off the street) bikeways',
       iconClassName: 'tahoe-class1',
-      layerProperties: {
-        type: 'line',
-        paint: {
-          'line-color': '#330066',
-          'line-width': 1,
-          'line-opacity': 0.8,
-          'line-gap-width': 2,
+      // Two layers, bottom first: a dark casing under a light fill. The fill is opaque so
+      // the basemap's grey trail line does not show through where the two geometries drift.
+      layerProperties: [
+        {
+          type: 'line',
+          layout: OVERLAY_LINE_LAYOUT,
+          paint: {
+            'line-color': '#330066',
+            'line-width': overlayLineWidth(3.5, 7, 13),
+          },
         },
-      },
+        {
+          type: 'line',
+          layout: OVERLAY_LINE_LAYOUT,
+          paint: {
+            'line-color': '#e3d2fb',
+            'line-width': overlayLineWidth(1.5, 4, 9),
+          },
+        },
+      ],
       datasetId: 'tahoebike/cl1sw0vau1rmm28rs0zwud8el',
       isInitiallyChecked: true,
     },
@@ -175,10 +212,11 @@ const config = {
       iconClassName: 'tahoe-class2',
       layerProperties: {
         type: 'line',
+        layout: OVERLAY_LINE_LAYOUT,
         paint: {
-          'line-color': '#660099',
-          'line-width': 3,
-          'line-opacity': 0.8,
+          'line-color': '#7a1fb3',
+          'line-width': overlayLineWidth(1.5, 3.5, 6),
+          'line-opacity': 0.9,
         },
       },
       datasetId: 'tahoebike/cl1swsss40zax2emy7z7isg57',
@@ -191,11 +229,12 @@ const config = {
       iconClassName: 'tahoe-class3',
       layerProperties: {
         type: 'line',
+        layout: { 'line-join': 'round' },
         paint: {
           'line-color': '#9933CC',
-          'line-width': 3,
-          'line-opacity': 0.8,
-          'line-dasharray': [3, 5],
+          'line-width': overlayLineWidth(1.5, 3, 5),
+          'line-opacity': 0.9,
+          'line-dasharray': [2, 2],
         },
       },
       datasetId: 'tahoebike/cl1swuzh0265221qxzoua365u',
@@ -209,11 +248,12 @@ const config = {
       iconClassName: 'tahoe-winter',
       layerProperties: {
         type: 'line',
+        layout: { 'line-join': 'round' },
         paint: {
           'line-color': '#ff0000',
-          'line-width': 3,
-          'line-opacity': 0.8,
-          'line-dasharray': [3, 5],
+          'line-width': overlayLineWidth(1.5, 3, 5),
+          'line-opacity': 0.9,
+          'line-dasharray': [2, 2],
         },
       },
       /*
