@@ -35,8 +35,6 @@ const config = {
   ABOUT_LINK_URL: 'https://bikesy.com/about',
   PAGE_TITLE: 'Bikesy',
   MAP_LAYERS: [],
-  // { [styleLayerId]: { paint: {...}, layout: {...} } } applied to the basemap style on load.
-  BASEMAP_LAYER_OVERRIDES: {},
   URL_LOCATIONS: {},
 };
 

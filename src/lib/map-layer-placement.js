@@ -37,19 +37,3 @@ export function addOverlayLayer(map, layer) {
     layers.find((item) => item.id === 'start' || item.id === 'end');
   map.addLayer({ ...layer }, before?.id);
 }
-
-// Restyle layers that belong to the basemap style, e.g. to make the basemap's trail
-// line defer to a bikeway overlay drawn on top of it.
-export function applyBasemapLayerOverrides(map, overrides = {}) {
-  for (const [id, { paint = {}, layout = {} }] of Object.entries(overrides)) {
-    if (!map.getLayer(id)) {
-      continue;
-    }
-    for (const [name, value] of Object.entries(paint)) {
-      map.setPaintProperty(id, name, value);
-    }
-    for (const [name, value] of Object.entries(layout)) {
-      map.setLayoutProperty(id, name, value);
-    }
-  }
-}

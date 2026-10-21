@@ -68,17 +68,6 @@ const config = {
   LOGO_FILENAME_ROOT: 'ltbc-logo',
   LOGO_CLASSNAME: 'logo ltbc-logo',
   MAPBOX_STYLE_URL: 'mapbox://styles/tahoebike/ck3cbc5z81vr71clhw1rfylmy',
-  // Applied to the style's own layers when the map loads. The basemap draws footpaths and
-  // trails as a solid dark grey line that competes with the Multi-use Path overlay; a
-  // lighter dashed line keeps unpaved trails visible without reading as a bikeway.
-  BASEMAP_LAYER_OVERRIDES: {
-    'pedestrian-path': {
-      paint: {
-        'line-color': '#8f8e8a',
-        'line-dasharray': [2, 2],
-      },
-    },
-  },
   INITIAL_CENTER_LAT: 39.086855,
   INITIAL_CENTER_LNG: -120.033305,
   ABOUT_LINK_TITLE: 'About the Lake Tahoe Bicycle Coalition',
