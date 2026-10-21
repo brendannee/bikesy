@@ -1,17 +1,4 @@
-// Bikeway overlay lines scale with zoom so they neither crowd the basemap when zoomed
-// out nor thin into hairlines when zoomed in. Widths are in pixels at zoom 12, 16 and 19.
-const overlayLineWidth = (z12, z16, z19) => [
-  'interpolate',
-  ['exponential', 1.5],
-  ['zoom'],
-  12,
-  z12,
-  16,
-  z16,
-  19,
-  z19,
-];
-const OVERLAY_LINE_LAYOUT = { 'line-join': 'round', 'line-cap': 'round' };
+import { ROUND_LINE_LAYOUT, zoomScaledLineWidth } from '../lib/map-layer-styles.js';
 
 const config = {
   BIKESY_API_URL: 'https://bikesy-backend.tahoebike.org/route',
@@ -176,18 +163,18 @@ const config = {
       layerProperties: [
         {
           type: 'line',
-          layout: OVERLAY_LINE_LAYOUT,
+          layout: ROUND_LINE_LAYOUT,
           paint: {
             'line-color': '#330066',
-            'line-width': overlayLineWidth(3.5, 7, 13),
+            'line-width': zoomScaledLineWidth(3.5, 7, 13),
           },
         },
         {
           type: 'line',
-          layout: OVERLAY_LINE_LAYOUT,
+          layout: ROUND_LINE_LAYOUT,
           paint: {
             'line-color': '#e3d2fb',
-            'line-width': overlayLineWidth(1.5, 4, 9),
+            'line-width': zoomScaledLineWidth(1.5, 4, 9),
           },
         },
       ],
@@ -201,10 +188,10 @@ const config = {
       iconClassName: 'tahoe-class2',
       layerProperties: {
         type: 'line',
-        layout: OVERLAY_LINE_LAYOUT,
+        layout: ROUND_LINE_LAYOUT,
         paint: {
           'line-color': '#7a1fb3',
-          'line-width': overlayLineWidth(1.5, 3.5, 6),
+          'line-width': zoomScaledLineWidth(1.5, 3.5, 6),
           'line-opacity': 0.9,
         },
       },
@@ -221,7 +208,7 @@ const config = {
         layout: { 'line-join': 'round' },
         paint: {
           'line-color': '#9933CC',
-          'line-width': overlayLineWidth(1.5, 3, 5),
+          'line-width': zoomScaledLineWidth(1.5, 3, 5),
           'line-opacity': 0.9,
           'line-dasharray': [2, 2],
         },
@@ -240,7 +227,7 @@ const config = {
         layout: { 'line-join': 'round' },
         paint: {
           'line-color': '#ff0000',
-          'line-width': overlayLineWidth(1.5, 3, 5),
+          'line-width': zoomScaledLineWidth(1.5, 3, 5),
           'line-opacity': 0.9,
           'line-dasharray': [2, 2],
         },
