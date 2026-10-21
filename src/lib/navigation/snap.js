@@ -7,16 +7,19 @@
 // rider is plainly following it.
 import { angleDiff } from './geo.js';
 
+// FIELD-TEST VALUES: deliberately low so GPS and compass noise show on the map rather
+// than being smoothed away. Earlier values: 12 m, 20 m, 30°, 5 m.
+
 // Puck on the line within this distance of it (m)...
-export const SNAP_ENTER_M = 12;
+export const SNAP_ENTER_M = 3;
 // ...and off it beyond this distance (hysteresis, so noise doesn't make it hop).
-export const SNAP_EXIT_M = 20;
+export const SNAP_EXIT_M = 5;
 // A moving rider whose GPS course is more than this from the route's bearing is not
 // following it (deg). GPS course at riding speed is good to about 10°.
-export const COURSE_AGREE_DEG = 30;
+export const COURSE_AGREE_DEG = 10;
 // ...and once they are this far from the line too (m), the puck comes off it. Mid-turn
 // at a corner the course disagrees for a second while the rider is still on the line.
-export const DISAGREE_EXIT_M = 5;
+export const DISAGREE_EXIT_M = 2;
 
 // gap: metres between the GPS fix and its snapped point. fixCourse: GPS course, null
 // unless moving. routeCourse: the route's bearing at the snapped point. wasOnLine: the

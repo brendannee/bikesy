@@ -9,7 +9,7 @@ import {
   speech,
   wakeLockSupported,
 } from './device.js';
-import { compass, enableCompass } from './heading.js';
+import { MIN_COURSE_SPEED, compass, enableCompass } from './heading.js';
 
 // Install fake browser globals for one test and put the originals back afterwards.
 function stubGlobals(t, stubs) {
@@ -31,7 +31,7 @@ const position = (coords, timestamp = 1234) => ({ coords, timestamp });
 
 // --- GPS ---------------------------------------------------------------------
 
-test('fixFromPosition: GPS course is passed on only when moving faster than 2 m/s', () => {
+test('fixFromPosition: GPS course is passed on only when moving faster than MIN_COURSE_SPEED', () => {
   const base = { latitude: 38.9, longitude: -120, accuracy: 8 };
   const moving = fixFromPosition(position({ ...base, heading: 90, speed: 5 }));
   assert.deepEqual(moving, {
@@ -44,11 +44,12 @@ test('fixFromPosition: GPS course is passed on only when moving faster than 2 m/
     timestamp: 1234,
   });
   assert.equal(
-    fixFromPosition(position({ ...base, heading: 90, speed: 2.01 })).course,
+    fixFromPosition(position({ ...base, heading: 90, speed: MIN_COURSE_SPEED + 0.01 }))
+      .course,
     90,
   );
   assert.equal(
-    fixFromPosition(position({ ...base, heading: 90, speed: 2 })).course,
+    fixFromPosition(position({ ...base, heading: 90, speed: MIN_COURSE_SPEED })).course,
     null,
   );
   assert.equal(fixFromPosition(position({ ...base, heading: 0, speed: 3 })).course, 0);

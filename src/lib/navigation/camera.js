@@ -8,6 +8,8 @@
 // Nothing here runs at import time, so the module is safe to import during SSR.
 import { angleDiff, distance } from './geo.js';
 
+// Field test: low, so heading noise shows. Was 120 ms.
+const HEADING_EASE_MS = 40;
 const PITCH = 50;
 const ZOOM = 17.3;
 // The puck sits about 68% of the way down the screen: top padding is 36% of the height.
@@ -131,10 +133,10 @@ export class FollowCamera {
       changed = true;
     }
     if (this.display && this.targetCourse != null) {
-      // Shortest-way exponential easing (wraps 359 -> 0), time constant ~120 ms.
+      // Shortest-way exponential easing (wraps 359 -> 0), time constant HEADING_EASE_MS.
       const diff = angleDiff(this.display.course, this.targetCourse);
       if (Math.abs(diff) > 0.05) {
-        const k = 1 - Math.exp(-dt / 120);
+        const k = 1 - Math.exp(-dt / HEADING_EASE_MS);
         this.display.course =
           (this.display.course + diff * (Math.abs(diff) < 0.5 ? 1 : k) + 360) % 360;
         changed = true;

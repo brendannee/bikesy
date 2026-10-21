@@ -15,16 +15,19 @@ import { angleDiff } from './geo.js';
 
 const rad = Math.PI / 180;
 
+// FIELD-TEST VALUES below are deliberately low so GPS and compass noise show on the
+// map. Earlier values: MIN_COURSE_SPEED 2, MOVING_GRACE_MS 3000, OFFSET_MIN_SPEED 3.
+
 // GPS course is only trustworthy while actually moving: DeviceLocation reports a
 // course only above this speed (m/s).
-export const MIN_COURSE_SPEED = 2;
+export const MIN_COURSE_SPEED = 0.5;
 // How long a compass reading counts as current.
 export const COMPASS_MAX_AGE_MS = 1500;
 // After a moving GPS fix, GPS course keeps priority over the compass for this long.
-export const MOVING_GRACE_MS = 3000;
+export const MOVING_GRACE_MS = 1000;
 // The compass offset (see HeadingState) is learnt from fixes at or above this speed
 // (m/s), where GPS course is good to a few degrees...
-export const OFFSET_MIN_SPEED = 3;
+export const OFFSET_MIN_SPEED = 1;
 // ...moving this fraction of the way toward each new sample (about 10 s to settle).
 export const OFFSET_GAIN = 0.15;
 

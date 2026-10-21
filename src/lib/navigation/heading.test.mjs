@@ -4,6 +4,7 @@ import {
   COMPASS_MAX_AGE_MS,
   HeadingState,
   MOVING_GRACE_MS,
+  OFFSET_MIN_SPEED,
   chooseHeading,
   compass,
   compassDrivesHeading,
@@ -134,24 +135,39 @@ test('chooseHeading: a simulated ride follows its own course and never the compa
   assert.deepEqual(lost, { source: 'hold', value: 82, moving: false });
 });
 
-test('compassDrivesHeading: GPS keeps priority for 3 s after a moving fix, otherwise the compass drives', () => {
-  assert.equal(MOVING_GRACE_MS, 3000);
+test('compassDrivesHeading: GPS keeps priority for MOVING_GRACE_MS after a moving fix, otherwise the compass drives', () => {
   const moving = { course: 90 };
   const stopped = { course: null };
   assert.equal(
-    compassDrivesHeading({ lastFix: moving, lastMovingAt: 10_000, now: 11_000 }),
+    compassDrivesHeading({
+      lastFix: moving,
+      lastMovingAt: 10_000,
+      now: 10_000 + MOVING_GRACE_MS / 3,
+    }),
     false,
   );
   assert.equal(
-    compassDrivesHeading({ lastFix: moving, lastMovingAt: 10_000, now: 12_999 }),
+    compassDrivesHeading({
+      lastFix: moving,
+      lastMovingAt: 10_000,
+      now: 10_000 + MOVING_GRACE_MS - 1,
+    }),
     false,
   );
   assert.equal(
-    compassDrivesHeading({ lastFix: moving, lastMovingAt: 10_000, now: 13_000 }),
+    compassDrivesHeading({
+      lastFix: moving,
+      lastMovingAt: 10_000,
+      now: 10_000 + MOVING_GRACE_MS,
+    }),
     true,
   );
   assert.equal(
-    compassDrivesHeading({ lastFix: stopped, lastMovingAt: 10_000, now: 10_500 }),
+    compassDrivesHeading({
+      lastFix: stopped,
+      lastMovingAt: 10_000,
+      now: 10_000 + MOVING_GRACE_MS / 6,
+    }),
     true,
   );
   assert.equal(compassDrivesHeading({ lastFix: null, lastMovingAt: 0, now: 100 }), true);
@@ -170,15 +186,15 @@ test('HeadingState: the compass takes over between fixes while stationary, GPS w
   assert.equal(state.current.source, 'compass');
   assert.equal(state.onFix({ course: null }, 140, 205), 205);
 
-  // The rider sets off: GPS course wins and the compass is ignored for 3 s.
+  // The rider sets off: GPS course wins and the compass is ignored for MOVING_GRACE_MS.
   now += 1000;
   assert.equal(state.onFix({ course: 95 }, 93), 93);
-  now += 1000;
+  now += MOVING_GRACE_MS / 2;
   assert.equal(state.onCompass(10), null);
   assert.equal(state.current.source, 'gps (snapped)');
 
-  // GPS goes quiet (last moving fix more than 3 s old): the compass drives again.
-  now += 2500;
+  // GPS goes quiet (last moving fix older than MOVING_GRACE_MS): the compass drives again.
+  now += MOVING_GRACE_MS;
   assert.equal(state.onCompass(10), 10);
   assert.equal(state.current.source, 'compass');
 });
@@ -387,7 +403,7 @@ test('HeadingState: the compass learns its offset from GPS course while riding, 
 
 test('HeadingState: no offset is learnt from slow fixes, simulated rides or a missing compass', () => {
   const slow = new HeadingState();
-  slow.onFix({ course: 45, speed: 2.5 }, null, 0);
+  slow.onFix({ course: 45, speed: OFFSET_MIN_SPEED - 0.1 }, null, 0);
   slow.onFix({ course: 45, speed: 5 }, null, null);
   assert.equal(slow.compassOffset, null);
   const sim = new HeadingState({ simulated: true });

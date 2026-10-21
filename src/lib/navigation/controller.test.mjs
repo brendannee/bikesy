@@ -4,6 +4,7 @@ import { NO_NAV_ROUTE_MESSAGE, RideController } from './controller.js';
 import { destination, distance, pointToSegment } from './geo.js';
 import { speech } from './device.js';
 import { compass } from './heading.js';
+import { COURSE_AGREE_DEG, DISAGREE_EXIT_M, SNAP_ENTER_M, SNAP_EXIT_M } from './snap.js';
 
 // --- Fakes ------------------------------------------------------------------------
 
@@ -334,22 +335,25 @@ test('a rider leaving the line shows where they are and which way they head, bef
   await ride.start({ start: point(START), end: point(along(START, 1000)) });
   ride.sim.stop();
   const t0 = ride.sim.clock;
+  const agree = COURSE_AGREE_DEG / 2;
+  const veer = COURSE_AGREE_DEG + 30;
 
   // On the line, heading its way: snapped, steadied by the route bearing.
-  ride.onFix(fixAt(along(START, 300, 3), t0 + 1000, { course: 8 }));
+  ride.onFix(fixAt(along(START, 300, SNAP_ENTER_M / 2), t0 + 1000, { course: agree }));
   assert.equal(ride.lock.onLine, true);
   assert.equal(ride.heading.current.value, 0);
   assert.ok(Math.abs(ride.camera.targetCourse) < 1e-9);
 
-  // Veering north-east: own course first, then off the line at 25 m (not yet off route).
-  ride.onFix(fixAt(along(START, 310, 4), t0 + 2000, { course: 60 }));
+  // Veering: own course first while still on the line...
+  ride.onFix(fixAt(along(START, 305, DISAGREE_EXIT_M / 2), t0 + 2000, { course: veer }));
   assert.equal(ride.lock.onLine, true);
-  assert.equal(ride.heading.current.value, 60);
-  const here = along(START, 320, 25);
-  ride.onFix(fixAt(here, t0 + 3000, { course: 60 }));
+  assert.equal(ride.heading.current.value, veer);
+  // ...then off the line well before the 35 m off-route call.
+  const here = along(START, 320, SNAP_EXIT_M + 5);
+  ride.onFix(fixAt(here, t0 + 3000, { course: veer }));
   assert.equal(state().offRoute, false);
   assert.equal(ride.lock.onLine, false);
-  assert.equal(ride.heading.current.value, 60);
+  assert.equal(ride.heading.current.value, veer);
   const shown = ride.camera.anim?.to ?? ride.camera.display.p;
   assert.ok(distance(shown, here) < 0.01, 'the puck is at the GPS position');
 });
