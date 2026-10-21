@@ -369,3 +369,36 @@ test('disableCompass: removes the listeners and forgets the reading', async (t) 
   await enableCompass();
   assert.ok(listeners.deviceorientation);
 });
+
+test('HeadingState: the compass learns its offset from GPS course while riding, so stopping does not swing the map', () => {
+  let now = 0;
+  const state = new HeadingState({ now: () => now });
+  // Riding north-east at 5 m/s; the compass reads 13° low (magnetic declination).
+  for (let i = 0; i < 40; i++) {
+    now += 1000;
+    state.onFix({ course: 45, speed: 5 }, null, 32);
+  }
+  assert.ok(Math.abs(state.compassOffset - 13) < 0.5);
+  // Stopped: the compass drives, corrected.
+  now += 5000;
+  assert.ok(Math.abs(state.onCompass(32) - 45) < 0.5);
+  assert.ok(Math.abs(state.onFix({ course: null, speed: 0 }, null, 122) - 135) < 0.5);
+});
+
+test('HeadingState: no offset is learnt from slow fixes, simulated rides or a missing compass', () => {
+  const slow = new HeadingState();
+  slow.onFix({ course: 45, speed: 2.5 }, null, 0);
+  slow.onFix({ course: 45, speed: 5 }, null, null);
+  assert.equal(slow.compassOffset, null);
+  const sim = new HeadingState({ simulated: true });
+  sim.onFix({ course: 45, speed: 5 }, null, 0);
+  assert.equal(sim.compassOffset, null);
+});
+
+test('HeadingState: the compass offset wraps around north', () => {
+  const state = new HeadingState();
+  state.onFix({ course: 5, speed: 5 }, null, 355);
+  assert.equal(state.compassOffset, 10);
+  state.onFix({ course: 175, speed: 5 }, null, 350);
+  assert.ok(state.compassOffset >= -180 && state.compassOffset < 180);
+});

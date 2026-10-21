@@ -28,12 +28,13 @@ import {
   stepList,
   thenInstruction,
 } from './format.js';
-import { angleDiff, initialBearing, toPoints } from './geo.js';
+import { angleDiff, distance, initialBearing, toPoints } from './geo.js';
 import { HeadingState, compass, disableCompass, onCompass } from './heading.js';
 import { RouteLayers } from './layers.js';
 import { Navigator, REROUTE_RETRY_MS, isOffRoute } from './navigator.js';
 import { Ride, isFarFromStart, isStartFix } from './ride.js';
 import { Simulator } from './sim.js';
+import { routeLock } from './snap.js';
 
 export const NO_NAV_ROUTE_MESSAGE =
   "This map's routing server doesn't support navigation yet.";
@@ -237,17 +238,25 @@ export class RideController {
     if (!n) return;
     const off = isOffRoute(tripState);
 
-    // Puck: snapped to the line while on route, raw GPS when off it.
-    const location = off ? n.userLocation : n.snappedUserLocation;
-    const { lat, lng } = location.coordinates;
+    // Puck: on the line only while the rider is plainly following it, else where the
+    // GPS says (see snap.js).
+    const raw = n.userLocation.coordinates;
+    const snapped = n.snappedUserLocation.coordinates;
+    this.lock = routeLock({
+      offRoute: off,
+      gap: distance([raw.lat, raw.lng], [snapped.lat, snapped.lng]),
+      fixCourse: fix.course,
+      routeCourse: n.snappedUserLocation.courseOverGround?.degrees ?? null,
+      wasOnLine: this.lock?.onLine,
+    });
+    const { lat, lng } = this.lock.onLine ? snapped : raw;
     if (!silent) this.ride.addTrackPoint(lat, lng);
-    // Heading: GPS or sim course while moving, else the compass, else hold.
-    const course = this.heading.onFix(
-      fix,
-      off ? null : location.courseOverGround?.degrees,
-    );
+    // Heading: GPS or sim course while moving (the route's bearing when it agrees),
+    // else the compass, else hold.
+    const course = this.heading.onFix(fix, this.lock.routeCourse);
     this.camera.moveTo([lat, lng], course, this.sim ? 1000 / this.sim.warp : 1000);
-    if (!off) this.layers.setProgress([lat, lng]);
+    // Route progress still comes from the snapped point while the rider is near it.
+    if (!off) this.layers.setProgress([snapped.lat, snapped.lng]);
     this.layers.setManeuver(off ? null : n.remainingSteps[1]?.geometry?.[0]);
 
     const instruction = n.visualInstruction?.primaryContent;
@@ -471,10 +480,10 @@ export class RideController {
     const bearing = ((this.map.getBearing() % 360) + 360) % 360;
     return [
       `compass  ${compass.status}  ${compass.source ?? 'no events'}`,
-      `  raw ${f(compass.raw, 1)}  hdg ${f(compass.heading, 1)}  ${compass.rate}/s  age ${age}s  acc ${f(compass.accuracy)}`,
+      `  raw ${f(compass.raw, 1)}  hdg ${f(compass.heading, 1)}  ${compass.rate}/s  age ${age}s  acc ${f(compass.accuracy)}  offset ${f(this.heading?.compassOffset, 1)}`,
       `  screen ${screen.orientation?.type ?? ''} ${f(screen.orientation?.angle ?? window.orientation)}°`,
       `gps  spd ${f(fix?.speed, 1)} m/s  hdg ${f(fix?.rawHeading)}  course ${f(fix?.course)}  ±${f(fix?.accuracy)} m`,
-      `use  ${this.heading?.current?.source ?? '–'} ${f(this.heading?.current?.value)}°`,
+      `use  ${this.heading?.current?.source ?? '–'} ${f(this.heading?.current?.value)}°  puck ${this.lock?.onLine ? 'on line' : 'gps'}`,
       `map  bearing ${f(bearing)}°  puck ${f(this.camera?.display?.course)}°  ${this.camera?.following ? 'follow' : 'free'}`,
     ];
   }

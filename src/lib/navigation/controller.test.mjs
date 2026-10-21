@@ -329,6 +329,31 @@ test('a refused location fails the start', async (t) => {
 
 // --- Riding, rerouting, arriving --------------------------------------------------
 
+test('a rider leaving the line shows where they are and which way they head, before the off-route call', async (t) => {
+  const { ride, state } = setup(t);
+  await ride.start({ start: point(START), end: point(along(START, 1000)) });
+  ride.sim.stop();
+  const t0 = ride.sim.clock;
+
+  // On the line, heading its way: snapped, steadied by the route bearing.
+  ride.onFix(fixAt(along(START, 300, 3), t0 + 1000, { course: 8 }));
+  assert.equal(ride.lock.onLine, true);
+  assert.equal(ride.heading.current.value, 0);
+  assert.ok(Math.abs(ride.camera.targetCourse) < 1e-9);
+
+  // Veering north-east: own course first, then off the line at 25 m (not yet off route).
+  ride.onFix(fixAt(along(START, 310, 4), t0 + 2000, { course: 60 }));
+  assert.equal(ride.lock.onLine, true);
+  assert.equal(ride.heading.current.value, 60);
+  const here = along(START, 320, 25);
+  ride.onFix(fixAt(here, t0 + 3000, { course: 60 }));
+  assert.equal(state().offRoute, false);
+  assert.equal(ride.lock.onLine, false);
+  assert.equal(ride.heading.current.value, 60);
+  const shown = ride.camera.anim?.to ?? ride.camera.display.p;
+  assert.ok(distance(shown, here) < 0.01, 'the puck is at the GPS position');
+});
+
 test('3 s off route reroutes from the rider, and totals carry across to arrival', async (t) => {
   const { ride, sessions, requests, events, state } = setup(t);
   const end = along(START, 1000);

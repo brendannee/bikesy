@@ -21,6 +21,7 @@ test('there is a module for each piece of the navigation library', () => {
     'navigator.js',
     'ride.js',
     'sim.js',
+    'snap.js',
   ]);
 });
 

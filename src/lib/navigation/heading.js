@@ -11,6 +11,8 @@
 // Nothing here touches browser globals at import time (SSR-safe): they are only
 // read inside functions that run after the rider taps Start ride.
 
+import { angleDiff } from './geo.js';
+
 const rad = Math.PI / 180;
 
 // GPS course is only trustworthy while actually moving: DeviceLocation reports a
@@ -20,6 +22,11 @@ export const MIN_COURSE_SPEED = 2;
 export const COMPASS_MAX_AGE_MS = 1500;
 // After a moving GPS fix, GPS course keeps priority over the compass for this long.
 export const MOVING_GRACE_MS = 3000;
+// The compass offset (see HeadingState) is learnt from fixes at or above this speed
+// (m/s), where GPS course is good to a few degrees...
+export const OFFSET_MIN_SPEED = 3;
+// ...moving this fraction of the way toward each new sample (about 10 s to settle).
+export const OFFSET_GAIN = 0.15;
 
 export const compass = {
   heading: null, // latest heading, degrees
@@ -177,8 +184,9 @@ export function onCompass(fn) {
 //   fix            { course, ... } as emitted by DeviceLocation / Simulator. `course` is
 //                  only set above MIN_COURSE_SPEED with a valid heading, so
 //                  `course != null` means "moving".
-//   snappedCourse  the route bearing at the snapped position (only meaningful while
-//                  moving along the route; pass null when off route)
+//   snappedCourse  the route bearing at the snapped position, only while the rider is
+//                  following the route and their GPS course agrees with it (see
+//                  snap.js); null otherwise, so the rider's own course is used
 //   simulated      the sim always follows its own course and never uses the compass
 //   compassHeading a fresh compass reading, or null (see freshCompassHeading)
 //   previous       the last result of this function, or null at the start of a ride
@@ -247,16 +255,40 @@ export class HeadingState {
     this.current = null; // { source, value, moving } for the ?debug=1 readout
     this.lastFix = null;
     this.lastMovingAt = 0;
+    // Degrees to add to the compass so it agrees with GPS course: magnetic declination
+    // (about 13° at Tahoe; iOS reports magnetic north) plus however the phone sits on
+    // the bars. Learnt while riding, so stopping doesn't swing the map. Null until then.
+    this.compassOffset = null;
+  }
+
+  // Nudge compassOffset toward (GPS course - compass) on a fast enough fix.
+  learnOffset(fix, compassHeading) {
+    if (this.simulated || compassHeading == null || fix.course == null) return;
+    if (!(fix.speed >= OFFSET_MIN_SPEED)) return;
+    const sample = angleDiff(compassHeading, fix.course);
+    this.compassOffset =
+      this.compassOffset == null
+        ? sample
+        : angleDiff(
+            0,
+            this.compassOffset + OFFSET_GAIN * angleDiff(this.compassOffset, sample),
+          );
+  }
+
+  corrected(compassHeading) {
+    if (compassHeading == null) return null;
+    return (compassHeading + (this.compassOffset ?? 0) + 360) % 360;
   }
 
   // Heading for a fix. `compassHeading` defaults to the live compass.
   onFix(fix, snappedCourse = null, compassHeading = freshCompassHeading()) {
     this.lastFix = fix;
+    this.learnOffset(fix, compassHeading);
     this.current = chooseHeading({
       fix,
       snappedCourse,
       simulated: this.simulated,
-      compassHeading,
+      compassHeading: this.corrected(compassHeading),
       previous: this.current,
       fallbackBearing: this.fallbackBearing,
     });
@@ -278,7 +310,8 @@ export class HeadingState {
     ) {
       return null;
     }
-    this.current = { source: 'compass', value: deg, moving: false };
-    return deg;
+    const value = this.corrected(deg);
+    this.current = { source: 'compass', value, moving: false };
+    return value;
   }
 }
