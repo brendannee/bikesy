@@ -8,8 +8,25 @@
 // Nothing here runs at import time, so the module is safe to import during SSR.
 import { angleDiff, distance } from './geo.js';
 
-// Field test: low, so heading noise shows. Was 120 ms.
-const HEADING_EASE_MS = 40;
+// Heading damper. GPS course arrives once a second, so a short easing time turns each
+// fix into a visible snap. With a time constant near the fix interval, the map turns
+// continuously between fixes instead; the rate cap keeps a big change (a U-turn, the
+// compass taking over) from spinning the whole map at once. Field-tested first at 40 ms
+// with no cap, which looked jumpy.
+export const HEADING_EASE_MS = 200;
+export const MAX_TURN_DEG_PER_S = 60;
+
+// Display heading `current` moved toward `target` over `dt` ms: shortest way round
+// (359 -> 0), exponential with HEADING_EASE_MS, at most MAX_TURN_DEG_PER_S.
+export function easeHeading(current, target, dt) {
+  const diff = angleDiff(current, target);
+  if (Math.abs(diff) < 0.05) return target;
+  const cap = (MAX_TURN_DEG_PER_S * dt) / 1000;
+  const step = diff * (1 - Math.exp(-dt / HEADING_EASE_MS));
+  const limited = Math.max(-cap, Math.min(cap, step));
+  return (current + limited + 360) % 360;
+}
+
 const PITCH = 50;
 const ZOOM = 17.3;
 // The puck sits about 68% of the way down the screen: top padding is 36% of the height.
@@ -133,12 +150,9 @@ export class FollowCamera {
       changed = true;
     }
     if (this.display && this.targetCourse != null) {
-      // Shortest-way exponential easing (wraps 359 -> 0), time constant HEADING_EASE_MS.
-      const diff = angleDiff(this.display.course, this.targetCourse);
-      if (Math.abs(diff) > 0.05) {
-        const k = 1 - Math.exp(-dt / HEADING_EASE_MS);
-        this.display.course =
-          (this.display.course + diff * (Math.abs(diff) < 0.5 ? 1 : k) + 360) % 360;
+      const course = easeHeading(this.display.course, this.targetCourse, dt);
+      if (course !== this.display.course) {
+        this.display.course = course;
         changed = true;
       }
     }
