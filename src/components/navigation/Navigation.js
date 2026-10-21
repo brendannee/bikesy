@@ -8,7 +8,7 @@ import { getMap } from '../../lib/map';
 import { keepScreenOn, releaseDevice, speech } from '../../lib/navigation/device';
 import { loadFerrostar } from '../../lib/navigation/ferrostar';
 import { sentence } from '../../lib/navigation/format';
-import { devFlags, navigationEnabled } from '../../lib/navigation/flags';
+import { devFlags } from '../../lib/navigation/flags';
 import { enableCompass } from '../../lib/navigation/heading';
 import {
   dismissNavigationError,
@@ -99,7 +99,7 @@ const Navigation = ({ isMobile }) => {
   const following = useSelector((state) => state.navigation.following);
   const muted = useSelector((state) => state.navigation.muted);
 
-  // Read from the page URL once mounted (?nav=1, ?sim=1, ?debug=1).
+  // Read from the page URL once mounted (?sim=1, ?debug=1).
   const [flags, setFlags] = useState(null);
   const [stepsOpen, setStepsOpen] = useState(false);
   const rideRef = useRef(null);
@@ -121,7 +121,7 @@ const Navigation = ({ isMobile }) => {
   useEffect(() => {
     const search = window.location.search;
     setFlags({
-      enabled: navigationEnabled(appConfig.NAVIGATION_ENABLED, search),
+      enabled: appConfig.NAVIGATION_ENABLED === true,
       ...devFlags(search),
     });
     // Leaving the page mid-ride stops GPS, timers and the wake lock.

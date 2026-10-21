@@ -37,8 +37,7 @@ const config = {
   MAP_LAYERS: [],
   URL_LOCATIONS: {},
   // Turn-by-turn navigation (a Start ride button on phones once a route is planned).
-  // true or false, or 'url' to show it only when the page URL includes ?nav=1. Needs a
-  // routing backend that supports /route?nav=1.
+  // Needs a routing backend that supports /route?nav=1.
   NAVIGATION_ENABLED: false,
 };
 

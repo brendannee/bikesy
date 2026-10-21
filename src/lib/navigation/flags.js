@@ -1,12 +1,4 @@
-// Feature and development flags, read from the region's config and the page URL.
-
-// Whether to offer navigation. `setting` is the region's NAVIGATION_ENABLED: true,
-// false, or 'url' to offer it only when the page URL includes ?nav=1 (field testing).
-// `search` is the page's query string (window.location.search).
-export function navigationEnabled(setting, search = '') {
-  if (setting === 'url') return new URLSearchParams(search).get('nav') === '1';
-  return setting === true;
-}
+// Feature and development flags, read from the page URL.
 
 const clamp = (value, min, max) => Math.min(max, Math.max(min, value));
 
