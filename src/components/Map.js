@@ -10,15 +10,18 @@ import {
   updateEndMarker,
   updatePath,
   updateMapSize,
+  setNavigationMode,
 } from '../lib/map';
 import MapLayers from '../components/MapLayers';
 
 const Map = ({
   isMobile,
+  isNavigating,
   mobileView,
   height,
   assignStartLocation,
   assignEndLocation,
+  children,
 }) => {
   const startLocation = useSelector((state) => state.search.startLocation);
   const endLocation = useSelector((state) => state.search.endLocation);
@@ -96,12 +99,20 @@ const Map = ({
     updatePath(path);
   }, [path]);
 
+  // Before the resize below, so a ride's camera isn't overridden by fitting the route.
+  useEffect(() => {
+    setNavigationMode(isNavigating);
+  }, [isNavigating]);
+
   useEffect(() => {
     updateMapSize();
   }, [height]);
 
   return (
-    <div className="map-container" hidden={isMobile && mobileView !== 'map'}>
+    <div
+      className="map-container"
+      hidden={isMobile && mobileView !== 'map' && !isNavigating}
+    >
       <div className={appConfig.LOGO_CLASSNAME}>
         <a href={appConfig.ABOUT_LINK_URL}>
           <img
@@ -115,6 +126,7 @@ const Map = ({
       {isMobile !== undefined && isMapLoaded && (
         <MapLayers isInitiallyVisible={!isMobile} mapRef={mapRef} />
       )}
+      {isMapLoaded && children}
     </div>
   );
 };
