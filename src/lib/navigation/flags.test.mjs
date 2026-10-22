@@ -1,18 +1,6 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
 import { devFlags } from './flags.js';
-import defaults from '../../appConfig/defaults.js';
-import sf from '../../appConfig/sf.js';
-import contracosta from '../../appConfig/contracosta.js';
-import tahoe from '../../appConfig/tahoe.js';
-
-test('regions: off everywhere except Tahoe', () => {
-  assert.equal(defaults.NAVIGATION_ENABLED, false);
-  assert.equal({ ...defaults, ...sf }.NAVIGATION_ENABLED, false);
-  assert.equal({ ...defaults, ...contracosta }.NAVIGATION_ENABLED, false);
-  assert.equal(tahoe.NAVIGATION_ENABLED, true);
-});
-
 test('dev hooks need their own flag', () => {
   const off = { simulate: false, debug: false, warp: 1, noise: 0 };
   assert.deepEqual(devFlags(''), off);

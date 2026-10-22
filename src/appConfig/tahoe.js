@@ -60,7 +60,6 @@ const config = {
   ABOUT_LINK_TITLE: 'About the Lake Tahoe Bicycle Coalition',
   ABOUT_LINK_URL: 'https://tahoebike.org',
   PAGE_TITLE: 'Tahoe Bike Map',
-  NAVIGATION_ENABLED: true,
   MAP_LAYERS: [
     {
       type: 'mapbox-dataset',

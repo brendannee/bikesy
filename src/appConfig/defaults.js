@@ -36,9 +36,6 @@ const config = {
   PAGE_TITLE: 'Bikesy',
   MAP_LAYERS: [],
   URL_LOCATIONS: {},
-  // Turn-by-turn navigation (a Start ride button on phones once a route is planned).
-  // Needs a routing backend that supports /route?nav=1.
-  NAVIGATION_ENABLED: false,
 };
 
 export default config;

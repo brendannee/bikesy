@@ -83,12 +83,11 @@ pnpm exec prettier --check README.md
 
 ## Turn-by-turn navigation
 
-Navigation is enabled per region with `NAVIGATION_ENABLED` in the region's app config
-(`src/appConfig/`). It is `false` by default and `true` for Tahoe, where it is on for
-everyone: there is no URL parameter to turn it on. Tapping Start ride loads the navigation
+Navigation is on in every region, for everyone: there is no region setting or URL
+parameter to turn it on. Tapping Start ride loads the navigation
 engine (Ferrostar) on demand, so visitors who never navigate don't download it.
 
-The region's backend must support `/route?nav=1`, which the frontend sends only for rides
+Every region's backend must support `/route?nav=1`, which the frontend sends only for rides
 and reroutes. Planning requests don't send it.
 
 For development, add `?sim=1` to ride a simulated rider (`&warp=8&noise=6` speeds it up and

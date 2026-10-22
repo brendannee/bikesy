@@ -1,7 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
-import appConfig from '../../appConfig';
 import { trackEvent } from '../../lib/analytics';
 import { getRoute } from '../../lib/api';
 import { getMap } from '../../lib/map';
@@ -120,10 +119,7 @@ const Navigation = ({ isMobile }) => {
 
   useEffect(() => {
     const search = window.location.search;
-    setFlags({
-      enabled: appConfig.NAVIGATION_ENABLED === true,
-      ...devFlags(search),
-    });
+    setFlags(devFlags(search));
     // Leaving the page mid-ride stops GPS, timers and the wake lock.
     return () => stopRide();
   }, []);
@@ -190,7 +186,7 @@ const Navigation = ({ isMobile }) => {
 
   const getDebugLines = useCallback(() => rideRef.current?.debugLines(), []);
 
-  if (!flags?.enabled) {
+  if (!flags) {
     return null;
   }
 
