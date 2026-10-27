@@ -79,11 +79,44 @@ export function setIsStartFromQR() {
   isStartFromQR = true;
 }
 
+// While navigating, the map belongs to the ride: taps don't place pins, the pins can't
+// be dragged and the planned route is hidden behind the ride's own route layers.
+let isNavigating = false;
+
+// The map instance, for navigation, which draws on the same map.
+export function getMap() {
+  return map;
+}
+
+export function setNavigationMode(navigating) {
+  if (navigating === isNavigating) {
+    return;
+  }
+
+  isNavigating = navigating;
+  if (!map) {
+    return;
+  }
+
+  if (map.getLayer('path')) {
+    map.setLayoutProperty('path', 'visibility', navigating ? 'none' : 'visible');
+  }
+
+  if (navigating) {
+    isDragging = false;
+    isCursorOverPoint = false;
+    map.getCanvasContainer().style.cursor = '';
+    map.dragPan.enable();
+  } else {
+    fitBounds();
+  }
+}
+
 export function drawMap(handleMapClick, handleMarkerDrag) {
   mapboxgl.accessToken = process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN;
 
   function mouseDown(type) {
-    if (!isCursorOverPoint) {
+    if (!isCursorOverPoint || isNavigating) {
       return;
     }
 
@@ -179,6 +212,10 @@ export function drawMap(handleMapClick, handleMarkerDrag) {
     );
 
     map.on('click', (event) => {
+      if (isNavigating) {
+        return;
+      }
+
       // Don't trigger this event if there is a marker with a popup at the clicked location
       if (mapLayersWithPopup) {
         const features = map.queryRenderedFeatures(event.point, {
@@ -198,6 +235,10 @@ export function drawMap(handleMapClick, handleMarkerDrag) {
 
     // When the cursor enters a feature in the point layer, prepare for dragging.
     function markerDragStyle(type) {
+      if (isNavigating) {
+        return;
+      }
+
       map.setPaintProperty(type, 'circle-color', '#3bb2d0');
       canvas.style.cursor = 'move';
       isCursorOverPoint = true;
@@ -333,7 +374,10 @@ export function updateMapSize() {
   }
 
   map.resize();
-  fitBounds();
+  // While navigating, the follow camera decides what the map shows.
+  if (!isNavigating) {
+    fitBounds();
+  }
 }
 
 export function getCenter(point1, point2) {

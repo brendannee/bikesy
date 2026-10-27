@@ -1,3 +1,5 @@
+import { ROUND_LINE_LAYOUT, zoomScaledLineWidth } from '../lib/map-layer-styles.js';
+
 const config = {
   BIKESY_API_URL: 'https://bikesy-backend.tahoebike.org/route',
   // Round elevation chart Y-axis to nearest 1000 feet to make hills more visible.
@@ -8,29 +10,38 @@ const config = {
     (dataMin) => Math.floor(dataMin / 1000) * 1000,
     (dataMax) => Math.ceil(dataMax / 1000) * 1000,
   ],
-  HILL_ROUTING_OPTIONS: [],
-  ROUTE_TYPE_OPTIONS: [
+  ROUTING_CONTROLS: [
     {
-      text: 'Mostly bike paths & lanes',
-      value: 1,
+      key: 'traffic',
+      className: 'stacked-control',
+      label: 'Traffic',
+      options: [
+        { text: 'Avoid Busy Roads', value: 'quiet' },
+        { text: 'Fastest Route', value: 'busy' },
+      ],
     },
     {
-      text: 'A more direct route',
-      value: 2,
+      key: 'surface',
+      className: 'stacked-control',
+      label: 'Trail Surface',
+      options: [
+        { text: 'Prefer Paved', value: 'paved' },
+        { text: 'Paved and Dirt', value: 'mixed' },
+        { text: 'Prefer Dirt', value: 'dirt' },
+      ],
     },
   ],
   DEFAULT_SCENARIO: '1',
+  // Scenario ids are stored in share links and sent to the routing API, so 1 and 2 keep
+  // their original meaning (quiet and busy, no surface preference). The backend
+  // config/tahoe.json defines the same six scenarios.
   SCENARIOS: {
-    1: {
-      routeType: '1',
-      hillReluctance: null,
-      server: 'http://ec2-52-35-131-66.us-west-2.compute.amazonaws.com',
-    },
-    2: {
-      routeType: '2',
-      hillReluctance: null,
-      server: 'http://ec2-52-35-131-66.us-west-2.compute.amazonaws.com',
-    },
+    1: { traffic: 'quiet', surface: 'mixed' },
+    2: { traffic: 'busy', surface: 'mixed' },
+    3: { traffic: 'quiet', surface: 'paved' },
+    4: { traffic: 'busy', surface: 'paved' },
+    5: { traffic: 'quiet', surface: 'dirt' },
+    6: { traffic: 'busy', surface: 'dirt' },
   },
   WELCOME_MODAL_TITLE: 'Welcome to the Tahoe Bike Map',
   SHOULD_SHOW_WELCOME_MODAL: true,
@@ -43,8 +54,13 @@ const config = {
   },
   // Settings for scripts/bicycle-overlays/generate.mjs --region tahoe. Multi-use Path is
   // paved only; Bike Route ignores relation-only membership, since US Bicycle Routes 50
-  // and 85 follow state highways around the lake.
-  BICYCLE_OVERLAY_OPTIONS: { pavedClasses: ['I'], routeFallback: 'tags' },
+  // and 85 follow state highways around the lake. The bbox is SEARCH_BOUNDS with LEFT moved
+  // east from -120.399814 to -120.375, to leave out a bike path far west of the lake.
+  BICYCLE_OVERLAY_OPTIONS: {
+    pavedClasses: ['I'],
+    routeFallback: 'tags',
+    bbox: [-120.375, 38.750276, -119.659482, 39.368232],
+  },
   LOGO_FILENAME_ROOT: 'ltbc-logo',
   LOGO_CLASSNAME: 'logo ltbc-logo',
   MAPBOX_STYLE_URL: 'mapbox://styles/tahoebike/ck3cbc5z81vr71clhw1rfylmy',
@@ -151,15 +167,26 @@ const config = {
       label: 'Multi-use Path',
       description: 'paved, separated (off the street) bikeways',
       iconClassName: 'tahoe-class1',
-      layerProperties: {
-        type: 'line',
-        paint: {
-          'line-color': '#330066',
-          'line-width': 1,
-          'line-opacity': 0.8,
-          'line-gap-width': 2,
+      // Two layers, bottom first: a dark casing under a light fill. The fill is opaque so
+      // the basemap's grey trail line does not show through where the two geometries drift.
+      layerProperties: [
+        {
+          type: 'line',
+          layout: ROUND_LINE_LAYOUT,
+          paint: {
+            'line-color': '#330066',
+            'line-width': zoomScaledLineWidth(3.5, 7, 13),
+          },
         },
-      },
+        {
+          type: 'line',
+          layout: ROUND_LINE_LAYOUT,
+          paint: {
+            'line-color': '#e3d2fb',
+            'line-width': zoomScaledLineWidth(1.5, 4, 9),
+          },
+        },
+      ],
       datasetId: 'tahoebike/cl1sw0vau1rmm28rs0zwud8el',
       isInitiallyChecked: true,
     },
@@ -170,10 +197,11 @@ const config = {
       iconClassName: 'tahoe-class2',
       layerProperties: {
         type: 'line',
+        layout: ROUND_LINE_LAYOUT,
         paint: {
-          'line-color': '#660099',
-          'line-width': 3,
-          'line-opacity': 0.8,
+          'line-color': '#7a1fb3',
+          'line-width': zoomScaledLineWidth(1.5, 3.5, 6),
+          'line-opacity': 0.9,
         },
       },
       datasetId: 'tahoebike/cl1swsss40zax2emy7z7isg57',
@@ -186,11 +214,12 @@ const config = {
       iconClassName: 'tahoe-class3',
       layerProperties: {
         type: 'line',
+        layout: { 'line-join': 'round' },
         paint: {
           'line-color': '#9933CC',
-          'line-width': 3,
-          'line-opacity': 0.8,
-          'line-dasharray': [3, 5],
+          'line-width': zoomScaledLineWidth(1.5, 3, 5),
+          'line-opacity': 0.9,
+          'line-dasharray': [2, 2],
         },
       },
       datasetId: 'tahoebike/cl1swuzh0265221qxzoua365u',
@@ -204,11 +233,12 @@ const config = {
       iconClassName: 'tahoe-winter',
       layerProperties: {
         type: 'line',
+        layout: { 'line-join': 'round' },
         paint: {
           'line-color': '#ff0000',
-          'line-width': 3,
-          'line-opacity': 0.8,
-          'line-dasharray': [3, 5],
+          'line-width': zoomScaledLineWidth(1.5, 3, 5),
+          'line-opacity': 0.9,
+          'line-dasharray': [2, 2],
         },
       },
       /*

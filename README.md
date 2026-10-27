@@ -81,6 +81,19 @@ pnpm exec prettier --check README.md
 
 `pnpm run prettier` formats the entire repository in place.
 
+## Turn-by-turn navigation
+
+Navigation is on in every region, for everyone: there is no region setting or URL
+parameter to turn it on. Tapping Start ride loads the navigation
+engine (Ferrostar) on demand, so visitors who never navigate don't download it.
+
+Every region's backend must support `/route?nav=1`, which the frontend sends only for rides
+and reroutes. Planning requests don't send it.
+
+For development, add `?sim=1` to ride a simulated rider (`&warp=8&noise=6` speeds it up and
+adds GPS noise) and `?debug=1` for a heading and GPS readout. Set
+`NEXT_PUBLIC_BIKESY_API_URL` to point at a different backend.
+
 ## Bicycle overlay tags
 
 The [overlay generator](scripts/bicycle-overlays/README.md) infers display classes

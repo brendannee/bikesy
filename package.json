@@ -22,6 +22,7 @@
     "@mapbox/polyline": "^1.2.1",
     "@next/third-parties": "16.4.1",
     "@reduxjs/toolkit": "^2.13.0",
+    "@stadiamaps/ferrostar": "0.58.0",
     "@turf/turf": "^7.4.0",
     "babel-runtime": "^6.26.0",
     "classnames": "^2.5.1",
@@ -37,8 +38,7 @@
   "devDependencies": {
     "eslint": "^10.12.0",
     "eslint-config-next": "^16",
-    "prettier": "^3.9.10",
-    "redux-logger": "^3.0.6"
+    "prettier": "^3.9.10"
   },
   "packageManager": "pnpm@12.11.2"
 }
