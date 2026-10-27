@@ -72,7 +72,8 @@ export function trackEvent(name, properties = {}) {
       const scenario = String(properties.scenario)
       data = {
         source: properties.source === 'pin_drag' ? 'pin_drag' : 'form',
-        scenario: /^[1-9]$/.test(scenario) ? scenario : 'unknown',
+        // Scenario ids are small integers (1-999); anything else could be user input.
+        scenario: /^[1-9][0-9]{0,2}$/.test(scenario) ? scenario : 'unknown',
       }
     } else if (name === 'geolocation') {
       const outcomes = [
