@@ -78,6 +78,7 @@ for (const overrides of [
     assert.equal(analytics.initializeAnalytics(), false)
     analytics.trackPageView()
     analytics.trackEvent('route_submit', { scenario: 5 })
+    analytics.trackEvent('nav_start', { scenario: 5, distanceMeters: 4186 })
     assert.equal(window.dataLayer, undefined)
   })
 }
@@ -175,6 +176,91 @@ test('custom events contain bounded metadata and sanitized context through the r
   assert(!JSON.stringify(commands()).match(/Private|37,-122|address=Home/))
 })
 
+const navData = (events) =>
+  events.map(
+    ([, name, { page_location, page_referrer, page_title, send_to, ...data }]) => ({
+      name,
+      data,
+    }),
+  )
+
+test('navigation events send a scenario, rounded miles and a reroute count only', async (t) => {
+  const analytics = await setup(t)
+  analytics.initializeAnalytics()
+  const where = { lat: 38.9399, lng: -119.9772, coordinates: [38.9, -119.9] }
+  analytics.trackEvent('nav_start', {
+    scenario: 1,
+    distanceMeters: 4186,
+    reroutes: 3,
+    ...where,
+  })
+  analytics.trackEvent('nav_reroute', {
+    scenario: '5',
+    reroutes: 2,
+    distanceMeters: 999,
+    ...where,
+  })
+  analytics.trackEvent('nav_arrive', {
+    scenario: 3,
+    distanceMeters: 22807,
+    reroutes: 1,
+    address: 'Private',
+    ...where,
+  })
+  analytics.trackEvent('nav_end_early', {
+    scenario: 9,
+    distanceMeters: 800,
+    reroutes: 0,
+    ...where,
+  })
+  const events = commands().filter(([command]) => command === 'event')
+  assert.deepEqual(navData(events), [
+    { name: 'nav_start', data: { scenario: '1', distance_mi: 2.6 } },
+    { name: 'nav_reroute', data: { scenario: '5', reroutes: 2 } },
+    { name: 'nav_arrive', data: { scenario: '3', distance_mi: 14.2, reroutes: 1 } },
+    { name: 'nav_end_early', data: { scenario: '9', distance_mi: 0.5, reroutes: 0 } },
+  ])
+  assert(
+    events.every(
+      ([, , data]) =>
+        data.send_to === 'G-S9DP8E6902' &&
+        data.page_location === 'https://bikesy.com/' &&
+        data.page_referrer === 'https://referrer.example/',
+    ),
+  )
+  assert(!JSON.stringify(commands()).match(/lat|lng|coordinates|Private|38\.9|119\.9/))
+})
+
+test('navigation event numbers are clamped and invalid values use -1', async (t) => {
+  const analytics = await setup(t)
+  analytics.initializeAnalytics()
+  const send = (properties) =>
+    analytics.trackEvent('nav_end_early', { scenario: 2, ...properties })
+  send({ distanceMeters: 1e9, reroutes: 99 })
+  send({ distanceMeters: -50, reroutes: -3 })
+  send({ distanceMeters: 1609.344 * 12.34, reroutes: 2.6 })
+  send({ distanceMeters: '4186', reroutes: '2' })
+  send({ distanceMeters: NaN, reroutes: Infinity })
+  send({ distanceMeters: null, reroutes: null })
+  send({})
+  analytics.trackEvent('nav_arrive', { scenario: '37,-122' })
+  const events = commands().filter(([command]) => command === 'event')
+  assert.deepEqual(
+    navData(events).map(({ data }) => data),
+    [
+      { scenario: '2', distance_mi: 500, reroutes: 20 },
+      { scenario: '2', distance_mi: 0, reroutes: 0 },
+      { scenario: '2', distance_mi: 12.3, reroutes: 3 },
+      { scenario: '2', distance_mi: -1, reroutes: -1 },
+      { scenario: '2', distance_mi: -1, reroutes: -1 },
+      { scenario: '2', distance_mi: -1, reroutes: -1 },
+      { scenario: '2', distance_mi: -1, reroutes: -1 },
+      { scenario: 'unknown', distance_mi: -1, reroutes: -1 },
+    ],
+  )
+  assert(!JSON.stringify(commands()).match(/37,-122/))
+})
+
 test('throwing or blocked analytics cannot interrupt actions', async (t) => {
   const analytics = await setup(t)
   window.dataLayer = {
@@ -189,7 +275,15 @@ test('throwing or blocked analytics cannot interrupt actions', async (t) => {
     throw Error('blocked')
   }
   assert.doesNotThrow(() => analytics.trackPageView())
-  for (const name of ['route_submit', 'geolocation', 'route_clear']) {
+  for (const name of [
+    'route_submit',
+    'geolocation',
+    'route_clear',
+    'nav_start',
+    'nav_reroute',
+    'nav_arrive',
+    'nav_end_early',
+  ]) {
     assert.doesNotThrow(() => analytics.trackEvent(name))
   }
 })

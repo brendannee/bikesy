@@ -107,3 +107,19 @@ test('cancellation reaches an in-flight fetch and is retained during response-bo
     (error) => error.name === 'AbortError',
   );
 });
+
+test('nav routes add nav=1, and planning requests never send it', async (t) => {
+  const calls = [];
+  t.mock.method(globalThis, 'fetch', async (url) => {
+    calls.push(url);
+    return Response.json({ path: ['encoded', 'levels'] });
+  });
+  await requestRoute(start, end, 1);
+  await requestRoute(start, end, 1, { nav: false });
+  await requestRoute(start, end, 2, { nav: true });
+  assert.equal(calls[0].searchParams.has('nav'), false);
+  assert.equal(calls[1].searchParams.has('nav'), false);
+  assert.equal(calls[2].searchParams.get('nav'), '1');
+  assert.equal(calls[2].searchParams.get('scenario'), '2');
+  assert.equal(calls[2].searchParams.get('lat1'), String(start.lat));
+});

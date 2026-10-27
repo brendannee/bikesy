@@ -4,7 +4,7 @@ export async function requestRoute(
   start,
   end,
   scenario,
-  { signal, url = BIKESY_ROUTE_URL } = {},
+  { signal, url = BIKESY_ROUTE_URL, nav = false } = {},
 ) {
   const target = new URL(url);
   target.searchParams.set('lat1', start.lat);
@@ -14,6 +14,8 @@ export async function requestRoute(
   if (scenario !== undefined && scenario !== null && scenario !== '') {
     target.searchParams.set('scenario', scenario);
   }
+  // Also return turn-by-turn instructions (`nav_route`) and the full route shape.
+  if (nav) target.searchParams.set('nav', '1');
   const response = await fetch(target, { signal, credentials: 'omit' });
   let payload;
   try {
