@@ -1084,6 +1084,23 @@
   }
 }
 
+/* Controls with long option text (Tahoe): label above a full-width select. */
+.controls .stacked-control {
+  display: block;
+  margin-top: 6px;
+  margin-bottom: 6px;
+}
+
+.controls .stacked-control .control-label {
+  display: block;
+  line-height: 24px;
+  margin-bottom: 2px;
+}
+
+.controls .stacked-control .form-control {
+  width: 100%;
+}
+
 @media only screen and (min-width: 667px) {
   .controls {
     width: 340px;

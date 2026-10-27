@@ -125,6 +125,11 @@ test('custom events contain bounded metadata and sanitized context through the r
   analytics.trackEvent('route_submit', { scenario: '37,-122' })
   analytics.trackEvent('route_submit', { scenario: 9, source: 'pin_drag', coordinates: [37, -122] })
   analytics.trackEvent('route_submit', { scenario: 5, source: 'Private' })
+  analytics.trackEvent('route_submit', { scenario: 10 })
+  analytics.trackEvent('route_submit', { scenario: '123' })
+  for (const scenario of [0, '05', 1000, '1.5', '10 Main St', '', undefined, null]) {
+    analytics.trackEvent('route_submit', { scenario })
+  }
   analytics.trackEvent('geolocation', {
     outcome: 'permission_denied',
     error: 'Private',
@@ -149,6 +154,12 @@ test('custom events contain bounded metadata and sanitized context through the r
       { name: 'route_submit', data: { source: 'form', scenario: 'unknown' } },
       { name: 'route_submit', data: { source: 'pin_drag', scenario: '9' } },
       { name: 'route_submit', data: { source: 'form', scenario: '5' } },
+      { name: 'route_submit', data: { source: 'form', scenario: '10' } },
+      { name: 'route_submit', data: { source: 'form', scenario: '123' } },
+      ...Array(8).fill({
+        name: 'route_submit',
+        data: { source: 'form', scenario: 'unknown' },
+      }),
       { name: 'geolocation', data: { outcome: 'permission_denied' } },
       { name: 'geolocation', data: { outcome: 'error' } },
       { name: 'route_clear', data: {} },

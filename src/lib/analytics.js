@@ -37,7 +37,7 @@ export function analyticsPageContext(href, referrer = '') {
 
 function safeScenario(value) {
   const scenario = String(value)
-  return /^[1-9]$/.test(scenario) ? scenario : 'unknown'
+  return /^[1-9][0-9]{0,2}$/.test(scenario) ? scenario : 'unknown'
 }
 
 // Out-of-range numbers are clamped; anything that isn't a finite number becomes -1.
