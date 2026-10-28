@@ -172,6 +172,9 @@ export function drawMap(handleMapClick, handleMarkerDrag) {
     container: 'map',
     center: [appConfig.INITIAL_CENTER_LNG, appConfig.INITIAL_CENTER_LAT],
     zoom: appConfig.INITIAL_ZOOM,
+    // When set, bounds overrides center and zoom so the whole region fits any screen size.
+    bounds: appConfig.INITIAL_BOUNDS,
+    fitBoundsOptions: { padding: 20 },
     minZoom: appConfig.MIN_ZOOM,
     style: appConfig.MAPBOX_STYLE_URL,
   });
