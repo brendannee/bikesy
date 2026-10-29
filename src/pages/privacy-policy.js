@@ -11,7 +11,6 @@ const PrivacyPolicy = () => (
         content="How Bikesy handles location, routes, search, analytics and other information, and your privacy choices."
       />
       <link rel="canonical" href="https://bikesy.com/privacy-policy" />
-      <link rel="icon" href="/favicon/favicon-32x32.png" />
     </Head>
 
     <main className={styles.policy}>

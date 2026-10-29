@@ -9,6 +9,10 @@ const config = {
   BIKESY_HIGH_BIKE_SPEED_MPH: 10,
   LOGO_FILENAME_ROOT: 'bikesy-logo',
   LOGO_CLASSNAME: 'logo',
+  // Directory in public/ with favicon-16x16.png, favicon-32x32.png and apple-touch-icon.png.
+  // When FAVICON_MASK_ICON_COLOR is set, it also has safari-pinned-tab.svg.
+  FAVICON_DIR: '/favicon',
+  FAVICON_MASK_ICON_COLOR: '#5bbad5',
   ELEVATION_CHART_Y_DOMAIN: [0, 'auto'],
 
   // Expected to be overridden for all regions:

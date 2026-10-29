@@ -63,6 +63,9 @@ const config = {
   },
   LOGO_FILENAME_ROOT: 'ltbc-logo',
   LOGO_CLASSNAME: 'logo ltbc-logo',
+  // The LTBC emblem without text, from the tahoebike.org logo files.
+  FAVICON_DIR: '/favicon/tahoe',
+  FAVICON_MASK_ICON_COLOR: null,
   MAPBOX_STYLE_URL: 'mapbox://styles/tahoebike/ck3cbc5z81vr71clhw1rfylmy',
   INITIAL_CENTER_LAT: 39.086855,
   INITIAL_CENTER_LNG: -120.033305,
