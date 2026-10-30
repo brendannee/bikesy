@@ -16,6 +16,8 @@ const config = {
   MAPBOX_STYLE_URL: 'mapbox://styles/bikesy/ckmec4z6h3ekg17lr1fas6kwx',
   INITIAL_CENTER_LAT: 37.7749,
   INITIAL_CENTER_LNG: -122.4194,
+  // [[west, south], [east, north]] to fit on load in place of the initial center and zoom.
+  INITIAL_BOUNDS: null,
   // Route preference selects, see README.md. When null, they are built from
   // ROUTE_TYPE_OPTIONS and HILL_ROUTING_OPTIONS.
   ROUTING_CONTROLS: null,

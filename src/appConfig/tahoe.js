@@ -66,6 +66,13 @@ const config = {
   MAPBOX_STYLE_URL: 'mapbox://styles/tahoebike/ck3cbc5z81vr71clhw1rfylmy',
   INITIAL_CENTER_LAT: 39.086855,
   INITIAL_CENTER_LNG: -120.033305,
+  // Truckee to Meyers, Tahoe City to Stateline.
+  INITIAL_BOUNDS: [
+    [-120.25, 38.84],
+    [-119.9, 39.35],
+  ],
+  // Low enough for INITIAL_BOUNDS to fit on a phone in landscape.
+  MIN_ZOOM: 8,
   ABOUT_LINK_TITLE: 'About the Lake Tahoe Bicycle Coalition',
   ABOUT_LINK_URL: 'https://tahoebike.org',
   PAGE_TITLE: 'Tahoe Bike Map',
