@@ -10,6 +10,10 @@ const MAPBOX_DATASETS_API = 'https://api.mapbox.com/datasets/v1';
 let map;
 let isDragging;
 let dragType;
+// Until the user or a route moves the map, resizes refit the region, since the map is
+// created before its container has its final height.
+let isShowingInitialBounds = Boolean(appConfig.INITIAL_BOUNDS);
+const INITIAL_BOUNDS_PADDING = 20;
 let isCursorOverPoint;
 const startLayer = {
   id: 'start',
@@ -172,9 +176,21 @@ export function drawMap(handleMapClick, handleMarkerDrag) {
     container: 'map',
     center: [appConfig.INITIAL_CENTER_LNG, appConfig.INITIAL_CENTER_LAT],
     zoom: appConfig.INITIAL_ZOOM,
+    // When set, bounds overrides center and zoom so the whole region fits any screen size.
+    bounds: appConfig.INITIAL_BOUNDS,
+    fitBoundsOptions: { padding: INITIAL_BOUNDS_PADDING },
     minZoom: appConfig.MIN_ZOOM,
     style: appConfig.MAPBOX_STYLE_URL,
   });
+
+  // Not movestart, which window resizes also fire with an originalEvent.
+  for (const type of ['dragstart', 'rotatestart', 'pitchstart', 'zoomstart']) {
+    map.on(type, (e) => {
+      if (e.originalEvent) {
+        isShowingInitialBounds = false;
+      }
+    });
+  }
 
   // Add zoom and rotation controls to the map.
   map.addControl(new mapboxgl.NavigationControl());
@@ -286,6 +302,7 @@ export function updateStartMarker(latlng) {
     const hasPath = pathGeoJSON.geometry.coordinates.length > 0;
     if (isStartFromQR && !hasEndMarker && !hasPath) {
       isStartFromQR = false;
+      isShowingInitialBounds = false;
       map.flyTo({
         center: [latlng.lng, latlng.lat],
         zoom: appConfig.START_LOCATION_ZOOM,
@@ -320,6 +337,7 @@ function fitBounds() {
   }, new mapboxgl.LngLatBounds());
 
   if (!bounds.isEmpty()) {
+    isShowingInitialBounds = false;
     map.fitBounds(bounds, { padding: 40 });
   }
 }
@@ -374,8 +392,13 @@ export function updateMapSize() {
   }
 
   map.resize();
-  // While navigating, the follow camera decides what the map shows.
-  if (!isNavigating) {
+  if (isShowingInitialBounds) {
+    map.fitBounds(appConfig.INITIAL_BOUNDS, {
+      padding: INITIAL_BOUNDS_PADDING,
+      animate: false,
+    });
+  } else if (!isNavigating) {
+    // While navigating, the follow camera decides what the map shows.
     fitBounds();
   }
 }
