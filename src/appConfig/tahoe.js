@@ -1,5 +1,11 @@
 import { ROUND_LINE_LAYOUT, zoomScaledLineWidth } from '../lib/map-layer-styles.js';
 
+// True from Nov 1 through May 1 (inclusive), in the viewer's local time.
+const isWinterSeason = (date = new Date()) => {
+  const month = date.getMonth(); // 0 = January
+  return month >= 10 || month <= 3 || (month === 4 && date.getDate() === 1);
+};
+
 const config = {
   BIKESY_API_URL: 'https://bikesy-backend.tahoebike.org/route',
   // Round elevation chart Y-axis to nearest 1000 feet to make hills more visible.
@@ -261,7 +267,8 @@ const config = {
             - Exclude routes with install dates in the future
       */
       datasetId: 'tahoebike/cmod6xwi31ykt1npixuglmko7',
-      isInitiallyChecked: false,
+      // Shown by default during the snow season, opt-in the rest of the year.
+      isInitiallyChecked: isWinterSeason(),
     },
   ],
   // QR Code Mappings allows physical QR codes with short links like bikesy.com/qr/1
