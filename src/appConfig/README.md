@@ -53,3 +53,10 @@ used; ties go to the first one in `SCENARIOS`. See `selectionsToScenario` in
 Regions without `ROUTING_CONTROLS` (San Francisco, Contra Costa) get a "Route Type" control
 from `ROUTE_TYPE_OPTIONS` and a "Hill Reluctance" control from `HILL_ROUTING_OPTIONS`, with
 `routeType` and `hillReluctance` values in `SCENARIOS`.
+
+## Favicons
+
+`FAVICON_DIR` is the directory under `public/` that holds the region's `favicon-16x16.png`,
+`favicon-32x32.png` and `apple-touch-icon.png` (180×180, opaque). The links are added to every
+page in `src/pages/_app.js`. Set `FAVICON_MASK_ICON_COLOR` only if the directory also has a
+monochrome `safari-pinned-tab.svg`; Tahoe sets it to `null`.
